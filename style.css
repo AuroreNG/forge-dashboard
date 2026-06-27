@@ -1035,8 +1035,8 @@ nav {
 
 .agents-layout {
   display: grid;
-  grid-template-columns: 480px 2fr;
-  gap: 24px;
+  grid-template-columns: 430px 2fr;
+  gap: 20px;
   height: 100%;
   overflow: hidden;
 }
@@ -3173,4 +3173,39 @@ grid-template-columns: 30% 70%;  gap: 24px;
 
 .delete-pipeline-agent:hover {
   background: #fecaca;
+}
+
+
+.agent-list{
+    width: 540px;      /* was 600 */
+}
+
+.agent-profile{
+    padding: 28px;     /* was 36 */
+}
+
+.agent-avatar{
+    width: 90px;      /* was 110 */
+    height: 90px;
+    font-size: 38px;
+}
+
+.agent-name{
+    font-size: 3.2rem; /* was around 3.8rem */
+}
+
+.agent-card{
+    padding:16px;      /* was 20 */
+}
+
+.agent-card h3{
+    font-size:1.5rem;
+}
+
+.info-card{
+    padding:20px;
+}
+
+.next-action-card{
+    padding:22px;
 }
