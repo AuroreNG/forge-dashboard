@@ -135,21 +135,44 @@ function parseCSV(text) {
 
 function normalizeAgent(row) {
   const status = String(row["Team Status"] || "").trim();
-  const cleanStatus = status.toLowerCase();
 
-  let stage = "Not Placed";
+  const validStages = [
+    "Not Placed",
+    "Not Started",
+    "Quiz Sent",
+    "Quiz Passed",
+    "XCEL Completed",
+    "Simulation Exams",
+    "Exam Scheduled",
+    "Exam Passed",
+    "Fingerprints",
+    "Applied For License",
+    "Continuing Education",
+    "Licensed",
+    "Contracted"
+  ];
 
-  if (
-    cleanStatus.includes("non-licensed") ||
-    cleanStatus.includes("non licensed") ||
-    cleanStatus.includes("unlicensed") ||
-    cleanStatus.includes("not licensed")
-  ) {
-    stage = "Not Placed";
-  } else if (cleanStatus.includes("contracted")) {
-    stage = "Contracted";
-  } else if (cleanStatus.includes("licensed")) {
-    stage = "Licensed";
+  let stage = validStages.find(
+    s => s.toLowerCase() === status.toLowerCase()
+  );
+
+  if (!stage) {
+    const cleanStatus = status.toLowerCase();
+
+    if (
+      cleanStatus.includes("non-licensed") ||
+      cleanStatus.includes("non licensed") ||
+      cleanStatus.includes("unlicensed") ||
+      cleanStatus.includes("not licensed")
+    ) {
+      stage = "Not Placed";
+    } else if (cleanStatus.includes("contracted")) {
+      stage = "Contracted";
+    } else if (cleanStatus.includes("licensed")) {
+      stage = "Licensed";
+    } else {
+      stage = "Not Placed";
+    }
   }
 
   return {
