@@ -53,10 +53,8 @@ const boardStages = {
 
 async function loadCSV() {
   try {
-    // Always clear old saved roster so every computer loads the newest CSV
-    localStorage.removeItem("forgeAgents");
 
-    // Cache-buster forces Netlify/browser to fetch the latest team.csv
+    // Always try to load the newest CSV
     const response = await fetch("team.csv?v=" + Date.now());
 
     if (!response.ok) {
@@ -68,20 +66,27 @@ async function loadCSV() {
 
     allAgents = rows.map(normalizeAgent);
 
-    console.log("Loaded fresh team.csv:", allAgents.length);
+    console.log("Loaded fresh CSV:", allAgents.length);
 
-    saveAgentsToLocalStorage();
+    // Save for offline use
+    localStorage.setItem("forgeAgents", JSON.stringify(allAgents));
+
     renderAllPages();
 
   } catch (error) {
-    console.error("CSV load failed:", error);
+
+    console.warn("Couldn't load CSV. Using saved data.");
+
+    const saved = localStorage.getItem("forgeAgents");
+
+    if (saved) {
+      allAgents = JSON.parse(saved);
+      renderAllPages();
+    }
+
+    console.error(error);
   }
 }
-document.querySelectorAll(".import-csv-btn").forEach((button) => {
-  button.addEventListener("click", () => {
-    document.getElementById("csvImportInput")?.click();
-  });
-});
 function renderAllPages() {
   updateTime();
   renderDashboard("all");
