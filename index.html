@@ -122,42 +122,54 @@
       </section>
 
       <aside class="today card">
-        <h3>Today</h3>
+  <h3>Today</h3>
 
-        <div class="momentum">
-          <div>
-            <span>Contracting Rate</span>
-            <strong id="momentumScore">0</strong>
-            <small>Contracted ÷ Licensed</small>
-          </div>
+  <div class="rate-cards">
+    <div class="rate-card">
+      <h4>Licensing Rate</h4>
+      <small>Licensed ÷ Total Team</small>
 
-          <div class="ring" id="momentumRing">
-            <b id="momentumPercent">0%</b>
-          </div>
-        </div>
+      <div class="mini-ring" id="licensingRing">
+        <span id="licensingRate">0%</span>
+      </div>
 
-        <div class="today-grid">
-          <div>
-            <span class="dot green-dot"></span>Total Team
-            <strong id="todayActive">0</strong>
-          </div>
+      <strong id="licensingFraction">0 / 0</strong>
+    </div>
 
-          <div>
-            <span class="dot red-dot"></span>Pipeline
-            <strong id="todayInactive">0</strong>
-          </div>
+    <div class="rate-card">
+      <h4>Contracting Rate</h4>
+      <small>Contracted ÷ Total Team</small>
 
-          <div>
-            <span class="dot blue-dot"></span>Licensed
-            <strong id="todayLicensed">0</strong>
-          </div>
+      <div class="mini-ring" id="contractingRing">
+        <span id="contractingRate">0%</span>
+      </div>
 
-          <div>
-            <span class="dot green-dot"></span>Contracted
-            <strong id="todayContracted">0</strong>
-          </div>
-        </div>
-      </aside>
+      <strong id="contractingFraction">0 / 0</strong>
+    </div>
+  </div>
+
+  <div class="today-grid">
+    <div>
+      <span class="dot green-dot"></span>Total Team
+      <strong id="todayActive">0</strong>
+    </div>
+
+    <div>
+      <span class="dot red-dot"></span>Pipeline
+      <strong id="todayInactive">0</strong>
+    </div>
+
+    <div>
+      <span class="dot blue-dot"></span>Licensed
+      <strong id="todayLicensed">0</strong>
+    </div>
+
+    <div>
+      <span class="dot green-dot"></span>Contracted
+      <strong id="todayContracted">0</strong>
+    </div>
+  </div>
+</aside>
     </main>
 
     <section class="lower brief-layout">
