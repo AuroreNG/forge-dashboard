@@ -567,10 +567,6 @@ document.addEventListener("click", (event) => {
   renderAllPages();
 });
 
-  saveAgentsToLocalStorage();
-  renderAllPages();
-});
-
 document.getElementById("journeySearch")?.addEventListener("input", () => {
   renderJourneyPage();
 });
@@ -723,22 +719,21 @@ document.getElementById("csvImportInput")?.addEventListener("change", (event) =>
 
   reader.onload = () => {
     const rows = parseCSV(reader.result);
+    const csvAgents = rows.map(normalizeAgent);
 
-    allAgents = rows.map(normalizeAgent);
+    const saved =
+      JSON.parse(localStorage.getItem("forgeAgents")) || [];
+
+    allAgents = mergeCsvWithSavedPipeline(csvAgents, saved);
 
     saveAgentsToLocalStorage();
 
-    renderDashboard("all");
-    renderJourneyPage();
-    renderAgentsPage();
-    renderCommandCenter();
-    renderGrowthPage();
+    renderAllPages();
 
     alert(`${allAgents.length} agents imported successfully.`);
   };
 
   reader.readAsText(file);
-
   event.target.value = "";
 });
 
