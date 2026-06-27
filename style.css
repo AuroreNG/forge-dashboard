@@ -3209,3 +3209,68 @@ grid-template-columns: 30% 70%;  gap: 24px;
 .next-action-card{
     padding:22px;
 }
+
+/*rates */
+
+.rate-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.rate-card {
+  background: #ffffff;
+  border: 1px solid #dbe6f5;
+  border-radius: 22px;
+  padding: 16px;
+  text-align: center;
+}
+
+.rate-card h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 900;
+  color: #07132b;
+}
+
+.rate-card small {
+  display: block;
+  color: #64748b;
+  font-weight: 700;
+  margin: 4px 0 10px;
+  font-size: 11px;
+}
+
+.mini-ring {
+  width: 92px;
+  height: 92px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.mini-ring::before {
+  content: "";
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+.mini-ring span {
+  position: relative;
+  z-index: 1;
+  font-size: 20px;
+  font-weight: 900;
+  color: #07132b;
+}
+
+.rate-card strong {
+  font-size: 18px;
+  font-weight: 900;
+  color: #07132b;
+}
