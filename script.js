@@ -409,6 +409,24 @@ function renderJourneyPage() {
   };
 
   const currentStages = stageConfig[currentJourneyMode];
+  const activeStageNames = currentStages.map((stage) => stage[0]);
+
+const stageAgentsTotal = filteredAgents.filter((agent) =>
+  activeStageNames.includes(agent.stage)
+).length;
+
+const completedCount = filteredAgents.filter((agent) =>
+  currentJourneyMode === "launch"
+    ? agent.stage === "XCEL Completed"
+    : agent.stage === "Contracted"
+).length;
+
+const progress = stageAgentsTotal
+  ? Math.round((completedCount / stageAgentsTotal) * 100)
+  : 0;
+
+setText("journeyStageAgents", stageAgentsTotal);
+setText("journeyStageProgress", progress + "%");
 
   document.querySelectorAll(".launch-column").forEach((col) =>
     col.classList.toggle("hidden", currentJourneyMode !== "launch")
