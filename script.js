@@ -2062,29 +2062,25 @@ function buildRecommendedMessage(agent,action){
 Complete Action
 ===================================== */
 
-    document
-  .getElementById("sendAction")
-  ?.addEventListener("click",completeCoordinatorAction);
-
 
 document.getElementById("closeActionModal")?.addEventListener("click", () => {
   document.getElementById("actionModal").classList.add("hidden");
 });
 
-// Cancel
-document.getElementById("cancelAction").onclick = () => {
-    document.getElementById("actionModal").classList.add("hidden");
-};
+document.getElementById("cancelAction")?.addEventListener("click", () => {
+  document.getElementById("actionModal")?.classList.add("hidden");
+});
 
-// Save Draft
-document.getElementById("saveDraft").onclick = () => {
+document.getElementById("saveDraft")?.addEventListener("click", () => {
+  const message = document.getElementById("actionMessage")?.value || "";
 
-    saveDraft(selectedAgent);
+  if (selectedAgent) {
+    logCoordinatorActivity(selectedAgent, "Draft", message);
+  }
 
-    alert("Draft saved.");
-
-    document.getElementById("actionModal").classList.add("hidden");
-};
+  alert("Draft saved.");
+  document.getElementById("actionModal")?.classList.add("hidden");
+});
 
 
 document.addEventListener("click", (event) => {
