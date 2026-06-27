@@ -492,10 +492,16 @@ setText("journeyStageProgress", progress + "%");
           <div class="journey-agent-badge">${agent.stage}</div>
 
           ${
-            currentJourneyMode === "launch"
-              ? `<button class="move-to-activate" data-move-agent="${key}">Activate</button>`
-              : ""
-          }
+currentJourneyMode === "launch"
+? `<button class="move-to-activate"
+     data-move-agent="${key}">
+     Activate →
+   </button>`
+: `<button class="move-to-launch"
+     data-back-agent="${key}">
+     ← Launch
+   </button>`
+}
 
           <button class="delete-pipeline-agent" data-delete-agent="${key}">
             Delete
@@ -507,6 +513,29 @@ setText("journeyStageProgress", progress + "%");
     });
   });
 }
+document.addEventListener("click", (event) => {
+
+  const btn = event.target.closest("[data-back-agent]");
+  if (!btn) return;
+
+  const key = btn.dataset.backAgent;
+
+  const agent = allAgents.find(a =>
+    (a.code || a.email || a.name) === key
+  );
+
+  if (!agent) return;
+
+  agent.stage = "XCEL Completed";
+  agent.pipelineStage = "XCEL Completed";
+
+  saveAgentsToLocalStorage();
+
+  currentJourneyMode = "launch";
+
+  renderAllPages();
+
+});
 
 document.addEventListener("click", (event) => {
   const moveBtn = event.target.closest("[data-move-agent]");
@@ -537,22 +566,6 @@ document.addEventListener("click", (event) => {
 
   renderAllPages();
 });
-
-document.addEventListener("click", (event) => {
-  const deleteBtn = event.target.closest("[data-delete-agent]");
-  if (!deleteBtn) return;
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  const key = deleteBtn.dataset.deleteAgent;
-
-  if (!confirm("Delete this agent from the pipeline?")) return;
-
-  allAgents = allAgents.filter((agent) => {
-    const agentKey = agent.code || agent.email || agent.name;
-    return agentKey !== key;
-  });
 
   saveAgentsToLocalStorage();
   renderAllPages();
@@ -674,27 +687,6 @@ document.addEventListener("dragleave", (event) => {
   zone.classList.remove("drag-over");
 });
 
-document.addEventListener("drop", (event) => {
-  const zone = event.target.closest(".drop-zone");
-  if (!zone) return;
-
-  event.preventDefault();
-  zone.classList.remove("drag-over");
-
-  const agentName = event.dataTransfer.getData("text/plain");
-  const newStage = zone.dataset.stage;
-
-  const agent = allAgents.find((item) => item.name === agentName);
-  if (!agent) return;
-
- agent.stage = newStage;
-agent.pipelineStage = newStage;
-
-saveAgentsToLocalStorage();
-
-renderJourneyPage();
-renderAgentsPage();
-});
 function saveAgentsToLocalStorage() {
   localStorage.setItem("forgeAgents", JSON.stringify(allAgents));
 }
