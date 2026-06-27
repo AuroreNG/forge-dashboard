@@ -53,8 +53,9 @@ const boardStages = {
 
 async function loadCSV() {
   try {
+    const savedAgents =
+      JSON.parse(localStorage.getItem("forgeAgents")) || [];
 
-    // Always try to load the newest CSV
     const response = await fetch("team.csv?v=" + Date.now());
 
     if (!response.ok) {
@@ -64,28 +65,46 @@ async function loadCSV() {
     const text = await response.text();
     const rows = parseCSV(text);
 
-    allAgents = rows.map(normalizeAgent);
+    const csvAgents = rows.map(normalizeAgent);
 
-    console.log("Loaded fresh CSV:", allAgents.length);
+    allAgents = mergeCsvWithSavedPipeline(csvAgents, savedAgents);
 
-    // Save for offline use
     localStorage.setItem("forgeAgents", JSON.stringify(allAgents));
+
+    console.log("Loaded CSV with saved pipeline stages:", allAgents.length);
 
     renderAllPages();
 
   } catch (error) {
+    console.error("CSV load failed:", error);
 
-    console.warn("Couldn't load CSV. Using saved data.");
+    const savedAgents =
+      JSON.parse(localStorage.getItem("forgeAgents")) || [];
 
-    const saved = localStorage.getItem("forgeAgents");
-
-    if (saved) {
-      allAgents = JSON.parse(saved);
-      renderAllPages();
-    }
-
-    console.error(error);
+    allAgents = savedAgents;
+    renderAllPages();
   }
+}
+
+function mergeCsvWithSavedPipeline(csvAgents, savedAgents) {
+  return csvAgents.map((csvAgent) => {
+    const csvKey = csvAgent.code || csvAgent.email || csvAgent.name;
+
+    const savedAgent = savedAgents.find((saved) => {
+      const savedKey = saved.code || saved.email || saved.name;
+      return savedKey === csvKey;
+    });
+
+    if (!savedAgent) return csvAgent;
+
+    return {
+      ...csvAgent,
+
+      // Keep manual pipeline movement
+      stage: savedAgent.stage || csvAgent.stage,
+      pipelineStage: savedAgent.pipelineStage || savedAgent.stage || csvAgent.stage
+    };
+  });
 }
 function renderAllPages() {
   updateTime();
