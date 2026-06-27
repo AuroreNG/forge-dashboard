@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FORGE Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">F</div>
+        <h1>FORGE</h1>
+      </div>
+
+      <nav>
+        <button class="nav-btn active">Home</button>
+        <button class="nav-btn">Journey</button>
+        <button class="nav-btn">Agents</button>
+        <button class="nav-btn">Command</button>
+        <button class="nav-btn">Growth</button>
+      </nav>
+
+      <div class="coordinator">
+        <small>Coordinator</small>
+        <select id="coordinatorSelect">
+          <option value="All">All</option>
+          <option value="Miranda">Miranda</option>
+          <option value="Prince">Prince</option>
+          <option value="Freddy">Freddy</option>
+          <option value="Georgette">Georgette</option>
+        </select>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="hero card">
+        <div class="date-row">
+          <span id="todayDate"></span>
+          <span id="todayTime"></span>
+        </div>
+
+        <h2 id="greeting">Good evening, Team.</h2>
+        <p>License tracker and coordination dashboard.</p>
+
+        <div class="filters">
+          <button class="filter active" data-filter="all">All</button>
+          <button class="filter" data-filter="pipeline">Pipeline</button>
+          <button class="filter" data-filter="licensed">Licensed</button>
+          <button class="filter" data-filter="contracted">Contracted</button>
+        </div>
+
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="7" r="2.8"/>
+                <path d="M8.5 15c0-2 1.6-3.5 3.5-3.5s3.5 1.5 3.5 3.5"/>
+                <circle cx="6" cy="9" r="2.3"/>
+                <path d="M2.8 15c0-1.6 1.3-2.8 3.2-2.8 1 0 1.8.3 2.5.8"/>
+                <circle cx="18" cy="9" r="2.3"/>
+                <path d="M21.2 15c0-1.6-1.3-2.8-3.2-2.8-1 0-1.8.3-2.5.8"/>
+              </svg>
+            </div>
+
+            <div>
+              <span>Total Team</span>
+              <strong id="totalCount">0</strong>
+              <small>Everyone</small>
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="icon pipeline">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M4 18C4 10 10 14 10 8C10 4 14 4 20 4"/>
+                <circle cx="4" cy="18" r="2"/>
+                <circle cx="10" cy="8" r="2"/>
+                <circle cx="20" cy="4" r="2"/>
+              </svg>
+            </div>
+
+            <div>
+              <span>Pipeline</span>
+              <strong id="pipelineCount">0</strong>
+              <small>In licensing</small>
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="icon licensed">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="8" r="5"/>
+                <path d="M9.5 13L8 21l4-2 4 2-1.5-8"/>
+                <path d="M10 8l1.5 1.5L14 7"/>
+              </svg>
+            </div>
+
+            <div>
+              <span>Licensed</span>
+              <strong id="licensedCount">0</strong>
+              <small>State approved</small>
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M8 12.5l2.5 2.5L16.5 9"></path>
+              </svg>
+            </div>
+
+            <div>
+              <span>Contracted</span>
+              <strong id="contractedCount">0</strong>
+              <small>Ready to write</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="today card">
+        <h3>Today</h3>
+
+        <div class="momentum">
+          <div>
+            <span>Contracting Rate</span>
+            <strong id="momentumScore">0</strong>
+            <small>Contracted ÷ Licensed</small>
+          </div>
+
+          <div class="ring" id="momentumRing">
+            <b id="momentumPercent">0%</b>
+          </div>
+        </div>
+
+        <div class="today-grid">
+          <div>
+            <span class="dot green-dot"></span>Total Team
+            <strong id="todayActive">0</strong>
+          </div>
+
+          <div>
+            <span class="dot red-dot"></span>Pipeline
+            <strong id="todayInactive">0</strong>
+          </div>
+
+          <div>
+            <span class="dot blue-dot"></span>Licensed
+            <strong id="todayLicensed">0</strong>
+          </div>
+
+          <div>
+            <span class="dot green-dot"></span>Contracted
+            <strong id="todayContracted">0</strong>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <section class="lower brief-layout">
+  <div class="card brief-card">
+    <div class="section-head">
+      <h3>Today's Brief</h3>
+    </div>
+
+    <div class="brief-summary">
+      <div class="brief-title-row">
+        <div>
+          <h2>Pipeline Progress</h2>
+          <p>Quick view of where the team stands today.</p>
+        </div>
+
+        <button class="view-btn">Open Journey →</button>
+      </div>
+
+      <div class="brief-list">
+        <div class="brief-item">
+          <span>Not Placed</span>
+          <strong id="notStartedCount">0</strong>
+        </div>
+
+        <div class="brief-item">
+          <span>Quiz Sent</span>
+          <strong id="quizSentCount">0</strong>
+        </div>
+
+        <div class="brief-item">
+          <span>XCEL</span>
+          <strong id="xcelCount">0</strong>
+        </div>
+
+        <div class="brief-item">
+          <span>Exam</span>
+          <strong id="examCount">0</strong>
+        </div>
+
+        <div class="brief-item">
+          <span>Licensed</span>
+          <strong id="licensedPipelineCount">0</strong>
+        </div>
+
+        <div class="brief-item">
+          <span>Contracted</span>
+          <strong id="contractedPipelineCount">0</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card focus-card focus-section">
+    <div class="focus-header">
+      <div>
+        <h3>Focus</h3>
+        <p>People who need action now</p>
+      </div>
+
+      <button id="viewAgents">Open Agents →</button>
+    </div>
+
+    <div id="focusList" class="focus-list"></div>
+  </div>
+
+</section> 
+
+<section id="journeyPage" class="journey-page hidden">
+  <div class="journey-shell card">
+
+    <div class="journey-top-row">
+
+      <!-- LEFT SIDE -->
+      <div class="journey-left">
+
+    <div class="journey-title-row">
+  <div class="journey-icon">
+    <span>➤</span>
+    <b>✦</b>
+  </div>
+
+  <div>
+    <h1>Journey</h1>
+    <p>
+      Imported members are placed from Team Status.
+      Manual movement can be added next.
+    </p>
+  </div>
+</div>
+
+        <div class="journey-mode-tabs">
+          <button class="journey-mode active" data-mode="launch">
+            🚀 Launch
+          </button>
+
+          <button class="journey-mode" data-mode="activate">
+            ⚡ Activate
+          </button>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDE -->
+      <div class="journey-right">
+
+        <div class="journey-actions">
+          <button class="import-csv-btn">
+            Import CSV
+          </button>
+
+          <button class="add-agent-btn">
+            + Add Agent
+          </button>
+        </div>
+
+        <div class="journey-toolbar">
+          <input
+            id="journeySearch"
+            placeholder="Search agent..."
+          />
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="journey-metric-strip">
+
+      <div>
+        <strong id="journeyStageAgents">0</strong>
+        <span>Agents in Stage</span>
+      </div>
+
+      <div>
+        <strong id="journeyStageProgress">0%</strong>
+        <span>Stage Progress</span>
+      </div>
+
+      <div>
+        <strong>—</strong>
+        <span>Avg. Days in Stage</span>
+      </div>
+
+      <div>
+        <strong>—</strong>
+        <span>Moved This Week</span>
+      </div>
+
+    </div>
+
+    <div class="journey-board">
+
+      <div class="journey-column launch-column">
+        <div class="journey-column-header">
+          <h3>Not Placed</h3>
+          <span id="journeyNotPlacedCount">0</span>
+        </div>
+        <div id="journeyNotPlacedList" class="drop-zone" data-stage="Not Placed"></div>
+      </div>
+
+      <div class="journey-column launch-column">
+        <div class="journey-column-header">
+          <h3>Quiz Sent</h3>
+          <span id="journeyQuizSentCount">0</span>
+        </div>
+        <div id="journeyQuizSentList" class="drop-zone" data-stage="Quiz Sent"></div>
+      </div>
+
+      <div class="journey-column launch-column">
+        <div class="journey-column-header">
+          <h3>Quiz Passed</h3>
+          <span id="journeyQuizPassedCount">0</span>
+        </div>
+        <div id="journeyQuizPassedList" class="drop-zone" data-stage="Quiz Passed"></div>
+      </div>
+
+      <div class="journey-column launch-column">
+        <div class="journey-column-header">
+          <h3>XCEL</h3>
+          <span id="journeyXCELCount">0</span>
+        </div>
+        <div id="journeyXCELList" class="drop-zone" data-stage="XCEL Completed"></div>
+      </div>
+
+      <div class="journey-column activate-column hidden">
+        <div class="journey-column-header">
+          <h3>Exam Passed</h3>
+          <span id="journeyExamPassedCount">0</span>
+        </div>
+        <div id="journeyExamPassedList" class="drop-zone" data-stage="Exam Passed"></div>
+      </div>
+
+      <div class="journey-column activate-column hidden">
+        <div class="journey-column-header">
+          <h3>Continuing Education</h3>
+          <span id="journeyCECount">0</span>
+        </div>
+        <div id="journeyCEList" class="drop-zone" data-stage="Continuing Education"></div>
+      </div>
+
+    <div class="journey-column activate-column hidden">
+  <div class="journey-column-header">
+    <h3>Licensed</h3>
+    <span id="journeyLicensedCount">0</span>
+  </div>
+  <div id="journeyLicensedList" class="drop-zone" data-stage="Licensed"></div>
+</div>
+
+      <div class="journey-column activate-column hidden">
+        <div class="journey-column-header">
+          <h3>Contracted</h3>
+          <span id="journeyContractedCount">0</span>
+        </div>
+        <div id="journeyContractedList" class="drop-zone" data-stage="Contracted"></div>
+      </div>
+
+    </div>
+  </div>
+  
+</section>
+
+<div id="addAgentModal" class="modal hidden">
+  <div class="modal-card">
+
+    <h3>Agent Details</h3>
+
+    <input id="newAgentName" placeholder="Full Name">
+
+    <input id="newAgentEmail" placeholder="Email Address">
+
+    <input id="newAgentPhone" placeholder="Phone Number">
+
+    <input id="newAgentCode" placeholder="Agent Code">
+
+    <select id="newAgentCoordinator">
+      <option value="" disabled selected>
+      Select Coordinator Responsible For This Agent
+      </option>
+      <option value="Miranda">Miranda</option>
+      <option value="Prince">Prince</option>
+      <option value="Freddy">Freddy</option>
+      <option value="Georgette">Georgette</option>
+    </select>
+
+    <select id="newAgentStage">
+      <option value="" disabled selected>
+      Select Current Pipeline Stage
+      </option>
+      <option value="Not Placed">Not Placed</option>
+      <option value="Not Started">Not Started</option>
+      <option value="Quiz Sent">Quiz Sent</option>
+      <option value="Quiz Passed">Quiz Passed</option>
+      <option value="XCEL Completed">XCEL Completed</option>
+      <option value="Simulation Exams">Simulation Exams</option>
+      <option value="Exam Scheduled">Exam Scheduled</option>
+      <option value="Exam Passed">Exam Passed</option>
+      <option value="Fingerprints">Fingerprints</option>
+      <option value="Applied For License">Applied For License</option>
+      <option value="Licensed">Licensed</option>
+      <option value="Compliance">Compliance</option>
+      <option value="Contracted">Contracted</option>
+    </select>
+
+    <div class="modal-actions">
+      <button id="cancelAddAgent">Cancel</button>
+      <button id="saveAddAgent">Save Agent</button>
+    </div>
+
+  </div>
+</div>
+
+<button class="import-csv-btn">Import CSV</button>
+<input type="file" id="csvImportInput" accept=".csv" hidden>
+<div id="importReviewModal" class="modal hidden">
+  <div class="modal-card import-review">
+
+    <h3>CSV Import Review</h3>
+
+    <div class="import-stats">
+
+      <div>
+        <span>Total Records</span>
+        <strong id="importTotal">0</strong>
+      </div>
+
+      <div>
+        <span>New Agents</span>
+        <strong id="importNew">0</strong>
+      </div>
+
+      <div>
+        <span>Existing Agents</span>
+        <strong id="importExisting">0</strong>
+      </div>
+
+      <div>
+        <span>Duplicates</span>
+        <strong id="importDuplicates">0</strong>
+      </div>
+
+    </div>
+
+    <div class="modal-actions">
+      <button id="cancelImport">Cancel</button>
+      <button id="confirmImport">Import Agents</button>
+    </div>
+
+  </div>
+</div>
+
+<section id="agentsPage" class="agents-page hidden">
+  <div class="agents-layout">
+    <aside class="agents-sidebar card">
+      <h2>Agents</h2>
+
+      <input id="agentsSearch" placeholder="Search agents..." />
+
+      <div id="agentsList" class="agents-list"></div>
+    </aside>
+
+<section class="agent-profile card">
+  <div id="agentProfileEmpty">
+        <h2>Select an agent</h2>
+        <p>Choose an agent from the left to view details.</p>
+      </div>
+
+    <div id="agentProfile" class="hidden">
+  <div class="profile-header">
+    <div class="profile-avatar" id="profileAvatar">--</div>
+
+    <div class="profile-info">
+      <h1 id="profileName"></h1>
+      <p id="profileMeta"></p>
+    </div>
+
+    <button class="edit-agent-btn">Edit Agent</button>
+  </div>
+
+  <div class="profile-grid">
+    <div class="profile-card">
+      <span>Upline</span>
+      <strong id="profileCoordinator"></strong>
+    </div>
+
+    <div class="profile-card">
+      <span>Status</span>
+      <strong id="profileStatus"></strong>
+    </div>
+
+    <div class="profile-card">
+      <span>Pipeline Stage</span>
+      <strong id="profileStage"></strong>
+    </div>
+
+    <div class="profile-card">
+      <span>Agent Code</span>
+      <strong id="profileCode"></strong>
+    </div>
+
+    <div class="profile-card">
+      <span>Phone</span>
+      <strong id="profilePhone"></strong>
+    </div>
+
+    <div class="profile-card">
+      <span>Email</span>
+      <strong id="profileEmail"></strong>
+    </div>
+  </div>
+
+  <div class="agent-action-layout">
+    <div class="agent-action-card">
+      <div class="action-icon">⚡</div>
+
+      <h3>Next Action</h3>
+
+      <p id="profileNextAction">
+        Select an agent to see the next action.
+      </p>
+
+      <button class="command-btn">
+        Open Command Center
+      </button>
+    </div>
+
+   <div class="journey-progress">
+
+    <div class="journey-step" id="statusOne">
+        <div class="step-circle">
+            🚀
+            <span class="step-check">✓</span>
+        </div>
+        <p>Launched</p>
+    </div>
+
+    <div class="journey-line"></div>
+
+    <div class="journey-step" id="statusTwo">
+        <div class="step-circle">
+            🪪
+            <span class="step-check">✓</span>
+        </div>
+        <p>Licensed</p>
+    </div>
+
+    <div class="journey-line"></div>
+
+    <div class="journey-step" id="statusThree">
+        <div class="step-circle">
+            🤝
+            <span class="step-check">✓</span>
+        </div>
+        <p>Contracted</p>
+    </div>
+
+</div>
+</div>
+  </div>
+</div>
+
+<div class="agents-sidebar">
+
+    <h2>Agents</h2>
+
+    <input
+        id="agentsSearch"
+        placeholder="Search agents..."
+    >
+
+    <div id="agentList" class="agent-list-scroll"></div>
+
+</div>
+</section>
+<section id="commandPage" class="command-page hidden">
+  <div class="command-layout">
+
+    <aside class="command-sidebar card">
+  <button class="import-csv-btn">Import CSV</button>
+  <h2>Command Center</h2>
+  <p>Smart licensing actions based on each agent’s stage.</p>
+  <input id="commandSearch" placeholder="Search agents..." />
+  <div id="commandAgentList"></div>
+  <div id="commandPagination"></div>
+</aside>
+
+    <main class="command-main card">
+
+      <div id="commandEmpty">
+        <h2>Select an agent</h2>
+        <p>Choose an agent to see recommended actions.</p>
+      </div>
+
+      <div id="commandProfile" class="hidden">
+
+  <div class="command-agent-header">
+    <div class="profile-avatar" id="commandAvatar">--</div>
+
+    <div>
+      <h1 id="commandName"></h1>
+      <p id="commandMeta"></p>
+    </div>
+
+    <span id="commandStageBadge" class="stage-badge">Stage</span>
+
+    <button class="more-btn">•••</button>
+  </div>
+
+  <div class="recommended-card">
+    <div>
+      <span>Recommended Next Action</span>
+      <h2 id="recommendedTitle"></h2>
+      <p id="recommendedText"></p>
+    </div>
+
+    <div class="recommended-actions">
+     <button id="openGuideBtn" class="guide-btn">
+  ✨ AI Guide
+</button>
+
+<button id="takeActionBtn" class="take-action-btn">
+  Take Action
+</button>
+    </div>
+  </div>
+  
+
+ <div class="quick-actions">
+  <button data-method="Call">📞 Call</button>
+  <button data-method="Text">💬 Text</button>
+  <button data-method="Email">✉️ Email</button>
+  <button data-method="WhatsApp">🟢 WhatsApp</button>
+  <button data-method="Zoom">🎥 Zoom</button>
+  <button data-note="true">📝 Add Note</button>
+</div>
+  <div id="messageComposer" class="message-composer hidden">
+  <div class="composer-header">
+    <h3>Message Composer</h3>
+    <button id="closeComposer">×</button>
+  </div>
+
+  <label>Method</label>
+  <select id="composerMethod">
+  <option>Text</option>
+  <option>Email</option>
+  <option>WhatsApp</option>
+  <option>Note</option>
+</select>
+
+  <label>Message</label>
+  <textarea id="composerMessage"></textarea>
+
+  <div class="composer-actions">
+    <button id="makeShorter">Shorter</button>
+    <button id="makeFriendly">Friendly</button>
+    <button id="copyMessage">Copy</button>
+    <button id="saveActivity">Save Activity</button>
+  </div>
+</div>
+
+  <div class="command-grid">
+
+    <section class="command-panel">
+      <div class="panel-header">
+        <h3>Coordinator Actions</h3>
+        <button>Manage All</button>
+      </div>
+
+      <div id="coordinatorActions"></div>
+    </section>
+  
+
+    <section class="command-panel">
+      <div class="panel-header">
+        <h3>Licensing Checklist</h3>
+        <span id="checklistProgress">0 / 8 completed</span>
+      </div>
+
+      <div class="progress-bar">
+        <div id="checklistProgressBar"></div>
+      </div>
+
+      <div id="licensingChecklist"></div>
+    </section>
+
+    <section class="command-panel">
+      <div class="panel-header">
+        <h3>Activity Timeline</h3>
+        <button>View All</button>
+      </div>
+
+      <div id="activityTimeline"></div>
+    </section>
+
+    <section class="command-panel">
+
+<div class="panel-header">
+
+<h3>Today's Queue</h3>
+
+  <span id="todayCount">0 Tasks</span>
+
+  </div>
+
+  <div id="todayQueue"></div>
+
+  </section>
+
+      </div>
+
+    </div>
+  </section>
+
+  <div id="guideModal" class="guide-modal hidden">
+
+  <div class="guide-panel">
+
+    <div class="guide-header">
+
+      <div>
+        <h2 id="guideTitle">Coordinator Guide</h2>
+        <p id="guideStage"></p>
+      </div>
+
+      <button id="closeGuide">✕</button>
+
+    </div>
+
+    <div id="guideBody"></div>
+
+ </div>
+</div>
+
+<!-- ==========================================
+FORGE AI ACTION MODAL
+Appears when coordinator clicks Take Action
+========================================== -->
+  <div id="actionModal" class="modal hidden">
+
+    <div class="action-panel">
+
+        <button id="closeActionModal" class="close-btn">
+            ✕
+        </button>
+
+        <span class="action-badge">
+            Recommended Next Action
+        </span>
+
+        <h2 id="actionTitle">
+            Send Welcome
+        </h2>
+
+        <p id="actionSubtitle">
+            Introduce yourself as the Licensing Coordinator.
+        </p>
+
+        <div class="action-info">
+
+            <div class="info-card">
+                <small>Priority</small>
+                <strong id="actionPriority">
+                    ★★★★★ High
+                </strong>
+            </div>
+
+            <div class="info-card">
+                <small>Estimated Time</small>
+                <strong>
+                    2 minutes
+                </strong>
+            </div>
+
+        </div>
+
+        <h3>Choose Delivery</h3>
+
+        <div class="delivery-buttons">
+
+            <button class="delivery active">📱 Text</button>
+            <button class="delivery">📧 Email</button>
+            <button class="delivery">💬 WhatsApp</button>
+            <button class="delivery">📞 Call</button>
+            <button class="delivery">🎥 Zoom</button>
+
+        </div>
+
+        <h3>Message</h3>
+
+        <textarea
+            id="actionMessage"
+            rows="9"
+        ></textarea>
+
+        <div class="ai-toolbar">
+
+            <button>✨ Rewrite</button>
+
+            <button>😊 Friendlier</button>
+
+            <button>✂ Shorter</button>
+
+            <button>📈 Professional</button>
+
+            <button>🌍 Translate</button>
+          </div>
+
+        <!-- Footer -->
+        <div class="action-footer">
+          <button id="cancelAction" class="action-btn secondary">
+          ✕ Cancel
+          </button>
+
+          <button id="saveDraft" class="action-btn ghost">
+              💾 Save Draft
+          </button>
+
+          <button id="sendAction" class="action-btn primary">
+              ✨ Send & Complete Step
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>  
+
+  <section id="growthPage" class="growth-page hidden">
+
+  <div class="growth-title">
+    <h1>Growth Overview</h1>
+    <p>Track team performance and growth momentum at a glance.</p>
+  </div>
+
+ <div class="growth-kpis">
+
+  <div class="growth-kpi">
+    <div>👥</div>
+
+    <span>Total Teams</span>
+
+    <strong id="growthTotalTeams">0</strong>
+
+    <p>Across all programs</p>
+  </div>
+
+  <div class="growth-kpi">
+    <div>📈</div>
+
+    <span>Avg. Progress</span>
+
+    <strong id="growthAvgMomentum">0</strong>
+
+    <p class="up" id="growthTrend">
+      Calculated automatically
+    </p>
+  </div>
+
+  <div class="growth-kpi">
+    <div>🏆</div>
+
+    <span>Top Team</span>
+
+    <strong id="growthTopTeam">--</strong>
+
+    <p class="up" id="growthTopMomentum">
+      Progress 0%
+    </p>
+  </div>
+
+  <div class="growth-kpi">
+    <div>⚠️</div>
+
+    <span>Needs Attention</span>
+
+    <strong id="growthNeedsAttention">0</strong>
+
+    <p>Teams below target</p>
+  </div>
+
+</div>
+
+  <div class="growth-main">
+
+    <div class="growth-panel team-performance">
+      <div class="growth-panel-head">
+        <h2>Team Performance</h2>
+        <div class="legend">
+          <span><b class="green-dot"></b>Strong</span>
+          <span><b class="blue-dot"></b>Healthy</span>
+          <span><b class="orange-dot"></b>At Risk</span>
+          <span><b class="red-dot"></b>Needs Help</span>
+        </div>
+      </div>
+
+      <div id="teamPerformanceList"></div>
+    </div>
+
+    <div class="growth-panel spotlight-panel">
+  <h2>Team Spotlight</h2>
+
+  <div class="spotlight-dark">
+    <div class="trophy">🏆</div>
+
+    <span>Top Performing Team</span>
+
+    <h3 id="spotlightTeamName">--</h3>
+
+    <p>Progress</p>
+
+    <strong id="spotlightMomentum">0%</strong>
+
+    <em id="spotlightTrend">#1 Ranked Team</em>
+
+    <small id="spotlightMessage">
+      Leading in licensing and contracting.
+    </small>
+  </div>
+
+  <div class="spotlight-list">
+    <h4>What sets them apart</h4>
+
+    <p id="spotlightReason1">🔵 High active engagement</p>
+    <p id="spotlightReason2">🔵 Strong licensing conversion</p>
+    <p id="spotlightReason3">🔵 Strong contracting performance</p>
+  </div>
+</div>
+
+  </div>
+
+  <div class="growth-note">ⓘ Momentum reflects overall team growth activity and engagement.</div>
+
+</section>
+
+
+
+</body>
+
+<script src="script.js"></script>
+</body>
+</html>
