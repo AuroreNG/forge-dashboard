@@ -118,34 +118,35 @@ function parseCSV(text) {
 }
 
 function normalizeAgent(row) {
-  const status = row["Team Status"] || "";
+  const status = String(row["Team Status"] || "").trim();
   const cleanStatus = status.toLowerCase();
 
   let stage = "Not Placed";
 
-  if (cleanStatus.includes("contracted")) {
+  if (
+    cleanStatus.includes("non-licensed") ||
+    cleanStatus.includes("non licensed") ||
+    cleanStatus.includes("unlicensed") ||
+    cleanStatus.includes("not licensed")
+  ) {
+    stage = "Not Placed";
+  } else if (cleanStatus.includes("contracted")) {
     stage = "Contracted";
-  } 
-  else if (cleanStatus.includes("non-licensed")) {
-    stage = "Not Placed";
-  } 
-  else if (cleanStatus.includes("license")) {
+  } else if (cleanStatus.includes("licensed")) {
     stage = "Licensed";
-  } 
-  else {
-    stage = "Not Placed";
   }
 
   return {
-    name: row["Full name"] || "",
-    email: row["Email"] || "",
-    phone: row["Phone"] || "",
-    code: row["Agent Code"] || "",
-    coordinator: row["Upline Name"] || "",
-    uplineCode: row["Upline Code"] || "",
+    name: (row["Full name"] || "").trim(),
+    email: (row["Email"] || "").trim(),
+    phone: (row["Phone"] || "").trim(),
+    code: (row["Agent Code"] || "").trim(),
+    coordinator: (row["Upline Name"] || "").trim(),
+    uplineCode: (row["Upline Code"] || "").trim(),
     teamStatus: status,
+    status: status,
     stage,
-    pipelineStage: stage,
+    pipelineStage: stage
   };
 }
 function getMetrics(list) {
