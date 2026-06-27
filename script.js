@@ -2297,3 +2297,23 @@ function renderGrowthCards(growthTeams) {
   setText("growthTrend", `${avgProgress}% average across all teams`);
 }
 
+document.addEventListener("click", (event) => {
+  const deleteBtn = event.target.closest("[data-delete-agent]");
+  if (!deleteBtn) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const key = deleteBtn.dataset.deleteAgent;
+
+  if (!confirm("Delete this agent from the pipeline?")) return;
+
+  allAgents = allAgents.filter((agent) => {
+    const agentKey = agent.code || agent.email || agent.name;
+    return agentKey !== key;
+  });
+
+  saveAgentsToLocalStorage();
+
+  renderAllPages();
+});
