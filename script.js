@@ -456,15 +456,21 @@ function renderJourneyPage() {
       card.dataset.agentName = agent.name;
 
       card.innerHTML = `
-        <div class="journey-agent-top">
-          <div class="journey-avatar">${getInitials(agent.name)}</div>
-          <div>
-            <div class="journey-agent-name">${agent.name}</div>
-            <div class="journey-agent-coordinator">${agent.coordinator}</div>
-          </div>
-        </div>
-        <div class="journey-agent-badge">${agent.stage}</div>
-      `;
+  <div class="journey-agent-top">
+    <div class="journey-avatar">${getInitials(agent.name)}</div>
+    <div>
+      <div class="journey-agent-name">${agent.name}</div>
+      <div class="journey-agent-coordinator">${agent.coordinator}</div>
+    </div>
+  </div>
+
+  <div class="journey-agent-bottom">
+    <div class="journey-agent-badge">${agent.stage}</div>
+    <button class="delete-pipeline-agent" data-delete-agent="${agent.code || agent.email || agent.name}">
+      Delete
+    </button>
+  </div>
+`;
 
       list.appendChild(card);
     });
