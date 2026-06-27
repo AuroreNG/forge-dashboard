@@ -385,7 +385,6 @@ document.querySelectorAll(".nav-btn").forEach((button) => {
   });
 
 });
-
 function renderJourneyPage() {
   const searchValue =
     document.getElementById("journeySearch")?.value.toLowerCase() || "";
@@ -409,6 +408,118 @@ function renderJourneyPage() {
     ],
   };
 
+  const currentStages = stageConfig[currentJourneyMode];
+
+  document.querySelectorAll(".launch-column").forEach((col) =>
+    col.classList.toggle("hidden", currentJourneyMode !== "launch")
+  );
+
+  document.querySelectorAll(".activate-column").forEach((col) =>
+    col.classList.toggle("hidden", currentJourneyMode !== "activate")
+  );
+
+  currentStages.forEach(([stageName, listId, countId]) => {
+    const list = document.getElementById(listId);
+    if (!list) return;
+
+    const stageAgents = filteredAgents.filter(
+      (agent) => agent.stage === stageName
+    );
+
+    setText(countId, stageAgents.length);
+    list.innerHTML = "";
+
+    if (stageAgents.length === 0) {
+      list.innerHTML = `<div class="empty-stage">No agents yet</div>`;
+      return;
+    }
+
+    stageAgents.forEach((agent) => {
+      const key = agent.code || agent.email || agent.name;
+
+      const card = document.createElement("div");
+      card.className = "journey-agent-card";
+      card.draggable = true;
+      card.dataset.agentName = agent.name;
+
+      card.innerHTML = `
+        <div class="journey-agent-top">
+          <div class="journey-avatar">${getInitials(agent.name)}</div>
+          <div>
+            <div class="journey-agent-name">${agent.name}</div>
+            <div class="journey-agent-coordinator">${agent.coordinator}</div>
+          </div>
+        </div>
+
+        <div class="journey-agent-bottom">
+          <div class="journey-agent-badge">${agent.stage}</div>
+
+          ${
+            currentJourneyMode === "launch"
+              ? `<button class="move-to-activate" data-move-agent="${key}">Activate</button>`
+              : ""
+          }
+
+          <button class="delete-pipeline-agent" data-delete-agent="${key}">
+            Delete
+          </button>
+        </div>
+      `;
+
+      list.appendChild(card);
+    });
+  });
+}
+
+document.addEventListener("click", (event) => {
+  const moveBtn = event.target.closest("[data-move-agent]");
+  if (!moveBtn) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const key = moveBtn.dataset.moveAgent;
+
+  const agent = allAgents.find((agent) => {
+    const agentKey = agent.code || agent.email || agent.name;
+    return agentKey === key;
+  });
+
+  if (!agent) return;
+
+  agent.stage = "Exam Passed";
+  agent.pipelineStage = "Exam Passed";
+
+  saveAgentsToLocalStorage();
+
+  currentJourneyMode = "activate";
+
+  document.querySelectorAll(".journey-mode").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.mode === "activate");
+  });
+
+  renderAllPages();
+});
+
+document.addEventListener("click", (event) => {
+  const deleteBtn = event.target.closest("[data-delete-agent]");
+  if (!deleteBtn) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const key = deleteBtn.dataset.deleteAgent;
+
+  if (!confirm("Delete this agent from the pipeline?")) return;
+
+  allAgents = allAgents.filter((agent) => {
+    const agentKey = agent.code || agent.email || agent.name;
+    return agentKey !== key;
+  });
+
+  saveAgentsToLocalStorage();
+  renderAllPages();
+});
   const currentStages = stageConfig[currentJourneyMode];
 
   document.querySelectorAll(".launch-column").forEach((col) =>
