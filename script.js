@@ -53,19 +53,11 @@ const boardStages = {
 
 async function loadCSV() {
   try {
-    const savedAgents = localStorage.getItem("forgeAgents");
+    // Always clear old saved roster so every computer loads the newest CSV
+    localStorage.removeItem("forgeAgents");
 
-    if (savedAgents) {
-      allAgents = JSON.parse(savedAgents);
-
-      if (allAgents.length > 0) {
-        console.log("Loaded from localStorage:", allAgents.length);
-        renderAllPages();
-        return;
-      }
-    }
-
-    const response = await fetch("team.csv");
+    // Cache-buster forces Netlify/browser to fetch the latest team.csv
+    const response = await fetch("team.csv?v=" + Date.now());
 
     if (!response.ok) {
       throw new Error("team.csv not found");
@@ -76,7 +68,7 @@ async function loadCSV() {
 
     allAgents = rows.map(normalizeAgent);
 
-    console.log("Loaded from team.csv:", allAgents.length);
+    console.log("Loaded fresh team.csv:", allAgents.length);
 
     saveAgentsToLocalStorage();
     renderAllPages();
