@@ -203,15 +203,31 @@ function getMetrics(list) {
   ).length;
 
   const licensed = list.filter((agent) =>
-    licensedStages.includes(agent.stage)
+    agent.stage === "Licensed" || agent.stage === "Contracted"
   ).length;
 
-  const contracted = list.filter((agent) => agent.stage === "Contracted").length;
+  const contracted = list.filter((agent) =>
+    agent.stage === "Contracted"
+  ).length;
+
+  const licensingRate =
+    totalTeam > 0 ? Math.round((licensed / totalTeam) * 100) : 0;
 
   const contractingRate =
-    licensed > 0 ? Math.round((contracted / licensed) * 100) : 0;
+    totalTeam > 0 ? Math.round((contracted / totalTeam) * 100) : 0;
 
-  return { totalTeam, pipeline, licensed, contracted, contractingRate };
+  const activationRate =
+    totalTeam > 0 ? Math.round(((licensed + contracted) / totalTeam) * 100) : 0;
+
+  return {
+    totalTeam,
+    pipeline,
+    licensed,
+    contracted,
+    licensingRate,
+    contractingRate,
+    activationRate
+  };
 }
 
 function getVisibleAgents() {
@@ -247,14 +263,6 @@ function renderDashboard(filter) {
   setText("licensedCount", filteredMetrics.licensed);
   setText("contractedCount", filteredMetrics.contracted);
 
-  setText("momentumScore", allMetrics.contractingRate);
-  setText("momentumPercent", allMetrics.contractingRate + "%");
-
-  const ring = document.getElementById("momentumRing");
-  if (ring) {
-    ring.style.background = `conic-gradient(#12b94f 0 ${allMetrics.contractingRate}%, #315f90 ${allMetrics.contractingRate}% 100%)`;
-  }
-
   setText("todayActive", allMetrics.totalTeam);
   setText("todayInactive", allMetrics.pipeline);
   setText("todayLicensed", allMetrics.licensed);
@@ -265,8 +273,29 @@ function renderDashboard(filter) {
   setText("journeyLicensed", allMetrics.licensed);
   setText("journeyContracted", allMetrics.contracted);
 
+  setText("licensingRate", allMetrics.licensingRate + "%");
+  setText("contractingRate", allMetrics.contractingRate + "%");
+  setText("activationRate", allMetrics.activationRate + "%");
+
+  setText("licensingFraction", `${allMetrics.licensed} / ${allMetrics.totalTeam}`);
+  setText("contractingFraction", `${allMetrics.contracted} / ${allMetrics.totalTeam}`);
+  setText(
+    "activationFraction",
+    `${allMetrics.licensed + allMetrics.contracted} / ${allMetrics.totalTeam}`
+  );
+
+  setRing("licensingRing", allMetrics.licensingRate, "#2563eb");
+  setRing("contractingRing", allMetrics.contractingRate, "#16a34a");
+  setRing("activationRing", allMetrics.activationRate, "#7c3aed");
+
   renderFocusList(visibleAgents);
   renderPipelineBoard(visibleAgents);
+}
+function setRing(id, percent, color) {
+  const ring = document.getElementById(id);
+  if (!ring) return;
+
+  ring.style.background = `conic-gradient(${color} 0 ${percent}%, #e8edf5 ${percent}% 100%)`;
 }
 
 function renderFocusList(agents) {
