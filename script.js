@@ -2066,19 +2066,6 @@ Complete Action
   .getElementById("sendAction")
   ?.addEventListener("click",completeCoordinatorAction);
 
-function completeCoordinatorAction(){
-
-  const action=
-    document.getElementById("actionTitle").innerText;
-
-   logCoordinatorActivity(action);
-
-    document
-    .getElementById("actionModal")
-    .classList.add("hidden");
-
-    }
-
 
 document.getElementById("closeActionModal")?.addEventListener("click", () => {
   document.getElementById("actionModal").classList.add("hidden");
@@ -2099,25 +2086,6 @@ document.getElementById("saveDraft").onclick = () => {
     document.getElementById("actionModal").classList.add("hidden");
 };
 
-// Send
-document.getElementById("sendAction").onclick = () => {
-
-    sendCurrentMessage();
-
-    completeChecklistStep();
-
-    logCoordinatorActivity(
-        selectedMethod,
-        document.getElementById("actionMessage").value
-    );
-
-    document.getElementById("actionModal").classList.add("hidden");
-
-    renderLicensingChecklist(selectedAgent);
-    renderActivityTimeline(selectedAgent);
-    updateCommandInsights(selectedAgent);
-
-};
 
 document.addEventListener("click", (event) => {
   const methodBtn = event.target.closest("[data-method]");
