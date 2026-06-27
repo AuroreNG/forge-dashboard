@@ -3153,3 +3153,24 @@ grid-template-columns: 30% 70%;  gap: 24px;
   top: 0;
   z-index: 5;
 }
+
+.journey-agent-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.delete-pipeline-agent {
+  border: none;
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.delete-pipeline-agent:hover {
+  background: #fecaca;
+}
