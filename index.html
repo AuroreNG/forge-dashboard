@@ -484,39 +484,68 @@
   </div>
 </div>
 
-    <div id="importGuideModal" class="modal hidden">
-  <div class="modal-card import-guide">
-    <h3>CSV Import Guide</h3>
+   <div id="importGuideModal" class="modal hidden">
+  <div class="modal-card import-guide-modern">
 
-    <p>Your CSV must include these columns:</p>
+    <button id="closeImportGuide" class="guide-close">×</button>
 
-    <ul>
-      <li>Full name</li>
-      <li>Email</li>
-      <li>Phone</li>
-      <li>Agent Code</li>
-      <li>Upline Name</li>
-      <li>Upline Code</li>
-      <li>Team Status</li>
-    </ul>
-
-    <p>Accepted stages inside Team Status:</p>
-
-    <ul>
-      <li>Not Placed</li>
-      <li>Quiz Sent</li>
-      <li>Quiz Passed</li>
-      <li>XCEL</li>
-      <li>Exam Passed</li>
-      <li>Continuing Education</li>
-      <li>Licensed</li>
-      <li>Contracted</li>
-    </ul>
-
-    <div class="modal-actions">
-      <button id="closeImportGuide">Cancel</button>
-      <button id="startCSVImport">Import CSV</button>
+    <div class="guide-header-modern">
+      <div class="guide-file-icon">CSV</div>
+      <div>
+        <h3>CSV Import Guide</h3>
+        <p>Follow these guidelines to import your team data successfully.</p>
+      </div>
     </div>
+
+    <div class="guide-grid">
+      <div class="guide-box">
+        <h4>Required Columns</h4>
+        <p>Your CSV file must include these columns exactly as listed.</p>
+
+        <div class="guide-list">
+          <div><b>Full name</b><span>The agent’s full name</span></div>
+          <div><b>Email</b><span>Valid email address</span></div>
+          <div><b>Phone</b><span>Contact phone number</span></div>
+          <div><b>Agent Code</b><span>Unique agent identifier</span></div>
+          <div><b>Upline Name</b><span>Name of the upline</span></div>
+          <div><b>Upline Code</b><span>Upline agent code</span></div>
+          <div><b>Team Status</b><span>Current stage/status</span></div>
+        </div>
+      </div>
+
+      <div class="guide-box">
+        <h4>Team Status Options</h4>
+        <p>Use one of these values in the Team Status column.</p>
+
+        <div class="status-list">
+          <div><span>🟢 Not Placed</span><b>01</b></div>
+          <div><span>🔵 Quiz Sent</span><b>02</b></div>
+          <div><span>🟡 Quiz Passed</span><b>03</b></div>
+          <div><span>🟣 XCEL</span><b>04</b></div>
+          <div><span>🔹 Exam Passed</span><b>05</b></div>
+          <div><span>🟠 Continuing Education</span><b>06</b></div>
+          <div><span>🟢 Licensed</span><b>07</b></div>
+          <div><span>🔵 Contracted</span><b>08</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pro-tips">
+      <h4>Pro Tips</h4>
+      <p>✓ Ensure upline names match exactly.</p>
+      <p>✓ Remove extra rows or empty columns.</p>
+      <p>✓ Save your file as CSV UTF-8.</p>
+    </div>
+
+    <div class="guide-footer-modern">
+      <span>Your data is safe and secure.</span>
+
+      <div>
+        <button id="cancelImportGuide">Cancel</button>
+        <button id="startCSVImport" class="primary-import">Import CSV</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
