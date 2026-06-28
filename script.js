@@ -2376,15 +2376,47 @@ function renderGrowthCards(growthTeams) {
   setText("growthTrend", `${avgProgress}% average across all teams`);
 }
 
-document.querySelectorAll(".import-csv-btn, .import-csv, .import-csv-btn, .import-csv-button")
-  .forEach((button) => {
-    button.addEventListener("click", () => {
-      document.getElementById("csvImportInput")?.click();
-    });
+document.addEventListener("DOMContentLoaded", () => {
+
+  document.addEventListener("click", (event) => {
+    const navBtn = event.target.closest(".nav-btn");
+    if (!navBtn) return;
+
+    const pageName = navBtn.textContent.trim();
+
+    document.querySelectorAll(".nav-btn").forEach((btn) =>
+      btn.classList.remove("active")
+    );
+
+    navBtn.classList.add("active");
+    showPage(pageName);
   });
 
-loadCSV();
-setInterval(updateTime, 30000);
+  document.addEventListener("click", (event) => {
+    const importBtn = event.target.closest(
+      ".import-csv-btn, .import-csv, .import-csv-button"
+    );
+
+    if (!importBtn) return;
+
+    document.getElementById("csvImportInput")?.click();
+  });
+
+  document.addEventListener("click", (event) => {
+    const filterBtn = event.target.closest(".filter");
+    if (!filterBtn) return;
+
+    document.querySelectorAll(".filter").forEach((btn) =>
+      btn.classList.remove("active")
+    );
+
+    filterBtn.classList.add("active");
+    renderDashboard(filterBtn.dataset.filter || "all");
+  });
+
+  loadCSV();
+  setInterval(updateTime, 30000);
+});
 
 document.addEventListener("click", (event) => {
   const deleteBtn = event.target.closest("[data-delete-agent]");
