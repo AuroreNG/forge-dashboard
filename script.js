@@ -2397,15 +2397,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showPage(pageName);
   });
 
-  document.addEventListener("click", (event) => {
-    const importBtn = event.target.closest(
-      ".import-csv-btn, .import-csv, .import-csv-button"
-    );
 
-    if (!importBtn) return;
-
-    document.getElementById("csvImportInput")?.click();
-  });
 
   document.addEventListener("click", (event) => {
     const filterBtn = event.target.closest(".filter");
