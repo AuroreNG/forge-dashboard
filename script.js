@@ -2438,3 +2438,19 @@ document.addEventListener("click", (event) => {
 
   renderAllPages();
 });
+
+document.addEventListener("click", (event) => {
+  const btn = event.target.closest(".import-csv-btn");
+  if (!btn) return;
+
+  document.getElementById("importGuideModal")?.classList.remove("hidden");
+});
+
+document.getElementById("closeImportGuide")?.addEventListener("click", () => {
+  document.getElementById("importGuideModal")?.classList.add("hidden");
+});
+
+document.getElementById("startCSVImport")?.addEventListener("click", () => {
+  document.getElementById("importGuideModal")?.classList.add("hidden");
+  document.getElementById("csvImportInput")?.click();
+});
