@@ -51,32 +51,6 @@ const boardStages = {
   contracted: "Contracted",
 };
 
-async function loadCSV() {
-
-    const saved =
-        JSON.parse(localStorage.getItem("forgeAgents"));
-
-    // FIRST use saved data
-    if(saved && saved.length){
-
-        allAgents = saved;
-        renderAllPages();
-        return;
-
-    }
-
-    // Only FIRST TIME read CSV
-
-    const response = await fetch("team.csv");
-    const text = await response.text();
-
-    allAgents = parseCSV(text).map(normalizeAgent);
-
-    saveAgentsToLocalStorage();
-
-    renderAllPages();
-
-}
 
 function mergeCsvWithSavedPipeline(csvAgents, savedAgents) {
   const savedMap = new Map();
@@ -439,35 +413,28 @@ document
   });
 
 async function loadCSV() {
-  try {
-    const savedAgents =
-      JSON.parse(localStorage.getItem("forgeAgents")) || [];
 
-    const response = await fetch("team.csv?v=" + Date.now());
+    const saved =
+        JSON.parse(localStorage.getItem("forgeAgents")) || [];
 
-    if (!response.ok) {
-      throw new Error("team.csv not found");
+    // Use saved data if it exists
+    if (saved.length > 0) {
+        allAgents = saved;
+        renderAllPages();
+        return;
     }
 
+    // First time only
+    const response = await fetch("team.csv");
     const text = await response.text();
-    const rows = parseCSV(text);
-    const csvAgents = rows.map(normalizeAgent);
 
-    allAgents = mergeCsvWithSavedPipeline(csvAgents, savedAgents);
+    allAgents = parseCSV(text).map(normalizeAgent);
 
     saveAgentsToLocalStorage();
+
     renderAllPages();
-
-  } catch (error) {
-    console.error("CSV load failed:", error);
-
-    const savedAgents =
-      JSON.parse(localStorage.getItem("forgeAgents")) || [];
-
-    allAgents = savedAgents;
-    renderAllPages();
-  }
 }
+
 function renderJourneyPage() {
   const searchValue =
     document.getElementById("journeySearch")?.value.toLowerCase() || "";
