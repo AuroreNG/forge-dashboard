@@ -598,6 +598,9 @@ document.getElementById("saveAddAgent")?.addEventListener("click", () => {
   const phone = document.getElementById("newAgentPhone").value.trim();
   const code = document.getElementById("newAgentCode").value.trim();
   const coordinator = document.getElementById("newAgentCoordinator").value;
+  const upline =
+document.getElementById("newAgentUpline").value =
+    selectedAgent.upline || "";
   const stage = document.getElementById("newAgentStage").value;
 
   if (!name) {
@@ -630,21 +633,23 @@ document.getElementById("saveAddAgent")?.addEventListener("click", () => {
     existingAgent.phone = phone;
     existingAgent.code = code;
     existingAgent.coordinator = coordinator;
+    existingAgent.upline = upline;
     existingAgent.stage = stage;
     existingAgent.pipelineStage = stage;
 
     selectedAgent = existingAgent;
   } else {
-    selectedAgent = {
-      name,
-      email,
-      phone,
-      code,
-      coordinator,
-      teamStatus: "",
-      stage,
-      pipelineStage: stage,
-    };
+   selectedAgent = {
+    name,
+    email,
+    phone,
+    code,
+    coordinator,
+    upline,
+    teamStatus: "",
+    stage,
+    pipelineStage: stage
+};
 
     allAgents.push(selectedAgent);
   }
