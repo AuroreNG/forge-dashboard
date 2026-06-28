@@ -111,44 +111,24 @@ function parseCSV(text) {
 
 function normalizeAgent(row) {
   const status = String(row["Team Status"] || "").trim();
+  const cleanStatus = status.toLowerCase();
 
-  const validStages = [
-    "Not Placed",
-    "Not Started",
-    "Quiz Sent",
-    "Quiz Passed",
-    "XCEL Completed",
-    "Simulation Exams",
-    "Exam Scheduled",
-    "Exam Passed",
-    "Fingerprints",
-    "Applied For License",
-    "Continuing Education",
-    "Licensed",
-    "Contracted"
-  ];
+  let stage = "Not Placed";
 
-  let stage = validStages.find(
-    s => s.toLowerCase() === status.toLowerCase()
-  );
-
-  if (!stage) {
-    const cleanStatus = status.toLowerCase();
-
-    if (
-      cleanStatus.includes("non-licensed") ||
-      cleanStatus.includes("non licensed") ||
-      cleanStatus.includes("unlicensed") ||
-      cleanStatus.includes("not licensed")
-    ) {
-      stage = "Not Placed";
-    } else if (cleanStatus.includes("contracted")) {
-      stage = "Contracted";
-    } else if (cleanStatus.includes("licensed")) {
-      stage = "Licensed";
-    } else {
-      stage = "Not Placed";
-    }
+  if (cleanStatus.includes("contracted")) {
+    stage = "Contracted";
+  } else if (cleanStatus.includes("continuing education")) {
+    stage = "Continuing Education";
+  } else if (cleanStatus.includes("exam passed")) {
+    stage = "Exam Passed";
+  } else if (cleanStatus.includes("xcel")) {
+    stage = "XCEL Completed";
+  } else if (cleanStatus.includes("quiz passed")) {
+    stage = "Quiz Passed";
+  } else if (cleanStatus.includes("quiz sent")) {
+    stage = "Quiz Sent";
+  } else if (cleanStatus.includes("licensed") || cleanStatus.includes("license")) {
+    stage = "Licensed";
   }
 
   return {
@@ -159,7 +139,7 @@ function normalizeAgent(row) {
     coordinator: (row["Upline Name"] || "").trim(),
     uplineCode: (row["Upline Code"] || "").trim(),
     teamStatus: status,
-    status: status,
+    status,
     stage,
     pipelineStage: stage
   };
@@ -2395,6 +2375,16 @@ function renderGrowthCards(growthTeams) {
   setText("spotlightReason3", `${topTeam.contracted} Contracted Agents`);
   setText("growthTrend", `${avgProgress}% average across all teams`);
 }
+
+document.querySelectorAll(".import-csv-btn, .import-csv, .import-csv-btn, .import-csv-button")
+  .forEach((button) => {
+    button.addEventListener("click", () => {
+      document.getElementById("csvImportInput")?.click();
+    });
+  });
+
+loadCSV();
+setInterval(updateTime, 30000);
 
 document.addEventListener("click", (event) => {
   const deleteBtn = event.target.closest("[data-delete-agent]");
