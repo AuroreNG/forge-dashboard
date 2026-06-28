@@ -3275,30 +3275,6 @@ grid-template-columns: 30% 70%;  gap: 24px;
   color: #07132b;
 }
 
-.import-guide-modal {
-  width: 860px;
-  max-width: 92vw;
-  max-height: 88vh;
-  overflow-y: auto;
-  background: white;
-  border-radius: 28px;
-  padding: 34px;
-  position: relative;
-  box-shadow: 0 25px 80px rgba(0,0,0,.22);
-}
-
-.guide-x {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  border: 1px solid #dbe5f4;
-  background: white;
-  font-size: 26px;
-}
-
 .import-guide-header {
   display: flex;
   gap: 22px;
