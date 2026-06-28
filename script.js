@@ -100,16 +100,9 @@ function mergeCsvWithSavedPipeline(csvAgents, savedAgents) {
     return {
       ...csvAgent,
 
-      // Keep anything manually changed inside FORGE
+      // KEEP whatever you moved manually in the pipeline
       stage: savedAgent.stage || csvAgent.stage,
-      pipelineStage: savedAgent.pipelineStage || savedAgent.stage || csvAgent.stage,
-
-      notes: savedAgent.notes || "",
-      lastAction: savedAgent.lastAction || "",
-      followUpDate: savedAgent.followUpDate || "",
-      assignedCoordinator: savedAgent.assignedCoordinator || csvAgent.assignedCoordinator || "",
-      checklist: savedAgent.checklist || csvAgent.checklist || {},
-      activity: savedAgent.activity || csvAgent.activity || []
+      pipelineStage: savedAgent.pipelineStage || savedAgent.stage || csvAgent.stage
     };
   });
 }
