@@ -79,22 +79,32 @@ async function loadCSV() {
 }
 
 function mergeCsvWithSavedPipeline(csvAgents, savedAgents) {
+  const savedMap = new Map();
+
+  savedAgents.forEach((saved) => {
+    const key = saved.code || saved.email || saved.name;
+    if (key) savedMap.set(key.trim().toLowerCase(), saved);
+  });
+
   return csvAgents.map((csvAgent) => {
-    const csvKey = csvAgent.code || csvAgent.email || csvAgent.name;
+    const key = csvAgent.code || csvAgent.email || csvAgent.name;
+    const savedAgent = savedMap.get(key.trim().toLowerCase());
 
-    const savedAgent = savedAgents.find((saved) => {
-      const savedKey = saved.code || saved.email || saved.name;
-      return savedKey === csvKey;
-    });
+    // New person from CSV
+    if (!savedAgent) {
+      return csvAgent;
+    }
 
-    if (!savedAgent) return csvAgent;
-
+    // Existing person: update info, keep pipeline work
     return {
       ...csvAgent,
 
-      // KEEP whatever you moved manually in the pipeline
       stage: savedAgent.stage || csvAgent.stage,
-      pipelineStage: savedAgent.pipelineStage || savedAgent.stage || csvAgent.stage
+      pipelineStage: savedAgent.pipelineStage || savedAgent.stage || csvAgent.stage,
+
+      notes: savedAgent.notes || "",
+      lastAction: savedAgent.lastAction || "",
+      followUpDate: savedAgent.followUpDate || ""
     };
   });
 }
@@ -428,26 +438,36 @@ document
     renderDashboard("all");
   });
 
-loadCSV();
-setInterval(updateTime, 30000);
+async function loadCSV() {
+  try {
+    const savedAgents =
+      JSON.parse(localStorage.getItem("forgeAgents")) || [];
 
-document.querySelectorAll(".nav-btn").forEach((button) => {
+    const response = await fetch("team.csv?v=" + Date.now());
 
-  button.addEventListener("click", () => {
+    if (!response.ok) {
+      throw new Error("team.csv not found");
+    }
 
-    const pageName = button.textContent.trim();
+    const text = await response.text();
+    const rows = parseCSV(text);
+    const csvAgents = rows.map(normalizeAgent);
 
-    document.querySelectorAll(".nav-btn").forEach((item) => {
-      item.classList.remove("active");
-    });
+    allAgents = mergeCsvWithSavedPipeline(csvAgents, savedAgents);
 
-    button.classList.add("active");
+    saveAgentsToLocalStorage();
+    renderAllPages();
 
-    showPage(pageName);
+  } catch (error) {
+    console.error("CSV load failed:", error);
 
-  });
+    const savedAgents =
+      JSON.parse(localStorage.getItem("forgeAgents")) || [];
 
-});
+    allAgents = savedAgents;
+    renderAllPages();
+  }
+}
 function renderJourneyPage() {
   const searchValue =
     document.getElementById("journeySearch")?.value.toLowerCase() || "";
