@@ -52,38 +52,30 @@ const boardStages = {
 };
 
 async function loadCSV() {
-  try {
-    const savedAgents =
-      JSON.parse(localStorage.getItem("forgeAgents")) || [];
 
-    const response = await fetch("team.csv?v=" + Date.now());
+    const saved =
+        JSON.parse(localStorage.getItem("forgeAgents"));
 
-    if (!response.ok) {
-      throw new Error("team.csv not found");
+    // FIRST use saved data
+    if(saved && saved.length){
+
+        allAgents = saved;
+        renderAllPages();
+        return;
+
     }
 
+    // Only FIRST TIME read CSV
+
+    const response = await fetch("team.csv");
     const text = await response.text();
-    const rows = parseCSV(text);
 
-    const csvAgents = rows.map(normalizeAgent);
+    allAgents = parseCSV(text).map(normalizeAgent);
 
-    allAgents = mergeCsvWithSavedPipeline(csvAgents, savedAgents);
-
-    localStorage.setItem("forgeAgents", JSON.stringify(allAgents));
-
-    console.log("Loaded CSV with saved pipeline stages:", allAgents.length);
+    saveAgentsToLocalStorage();
 
     renderAllPages();
 
-  } catch (error) {
-    console.error("CSV load failed:", error);
-
-    const savedAgents =
-      JSON.parse(localStorage.getItem("forgeAgents")) || [];
-
-    allAgents = savedAgents;
-    renderAllPages();
-  }
 }
 
 function mergeCsvWithSavedPipeline(csvAgents, savedAgents) {
