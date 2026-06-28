@@ -2448,14 +2448,27 @@ document.addEventListener("click", (event) => {
   const btn = event.target.closest(".import-csv-btn");
   if (!btn) return;
 
+  event.preventDefault();
+  event.stopPropagation();
+
   document.getElementById("importGuideModal")?.classList.remove("hidden");
 });
 
-document.getElementById("closeImportGuide")?.addEventListener("click", () => {
-  document.getElementById("importGuideModal")?.classList.add("hidden");
+document.addEventListener("click", (event) => {
+  if (
+    event.target.id === "closeImportGuide" ||
+    event.target.id === "cancelImportGuide"
+  ) {
+    document.getElementById("importGuideModal")?.classList.add("hidden");
+  }
 });
 
-document.getElementById("startCSVImport")?.addEventListener("click", () => {
+document.addEventListener("click", (event) => {
+  if (event.target.id !== "startCSVImport") return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
   document.getElementById("importGuideModal")?.classList.add("hidden");
   document.getElementById("csvImportInput")?.click();
 });
