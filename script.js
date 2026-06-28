@@ -753,48 +753,6 @@ document.getElementById("csvImportInput")?.addEventListener("change", (event) =>
   event.target.value = "";
 });
 
-document
-.getElementById("confirmImport")
-?.addEventListener("click", () => {
-
-  pendingImportAgents.forEach((row) => {
-
-    const status =
-      (row["Team Status"] || "").toLowerCase();
-
-    let stage = "Not Placed";
-
-    if (status.includes("contracted")) {
-      stage = "Contracted";
-    }
-    else if (status.includes("licensed")) {
-      stage = "Licensed";
-    }
-
-    allAgents.push({
-      name: row["Full name"] || "",
-      email: row["Email"] || "",
-      phone: row["Phone"] || "",
-      code: row["Agent Code"] || "",
-      coordinator: row["Coordinator"] || "",
-      teamStatus: row["Team Status"] || "",
-      stage,
-      pipelineStage: stage,
-    });
-
-  });
-
-  saveAgentsToLocalStorage();
-
-  renderDashboard("all");
-  renderJourneyPage();
-
-  document
-    .getElementById("importReviewModal")
-    .classList.add("hidden");
-
-});
-
 function showPage(pageName) {
   document.querySelector(".dashboard").style.display =
     pageName === "Home" ? "grid" : "none";
