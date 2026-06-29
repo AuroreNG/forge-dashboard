@@ -89,7 +89,7 @@ function renderAllPages() {
   renderAgentsPage();
   renderCommandCenter();
   renderGrowthPage();
-  renderForgeLive();
+  updateForgeLive();
 }
 
 function parseCSV(text) {
@@ -2425,29 +2425,27 @@ document.addEventListener("click", (event) => {
 });
 
 /*Live data*/
-function renderForgeLive() {
-  const el = document.getElementById("forgeLiveContent");
-  if (!el) return;
+function updateForgeLive() {
+  const ticker = document.getElementById("forgeLiveTicker");
+  if (!ticker) return;
 
-  const metrics = getMetrics(allAgents);
+  const total = allAgents.length;
+  const notPlaced = allAgents.filter(a => a.stage === "Not Placed").length;
+  const quizSent = allAgents.filter(a => a.stage === "Quiz Sent").length;
+  const quizPassed = allAgents.filter(a => a.stage === "Quiz Passed").length;
+  const xcel = allAgents.filter(a => a.stage === "XCEL Completed").length;
+  const examPassed = allAgents.filter(a => a.stage === "Exam Passed").length;
+  const licensed = allAgents.filter(a => a.stage === "Licensed" || a.stage === "Contracted").length;
+  const contracted = allAgents.filter(a => a.stage === "Contracted").length;
 
-  const stuck = allAgents.filter(agent =>
-    ["Not Placed", "Quiz Sent", "Quiz Passed", "XCEL Completed"].includes(agent.stage)
-  ).length;
-
-  el.innerHTML = `
-    🔵 ${metrics.totalTeam} total agents
-    &nbsp; • &nbsp;
-    🟠 ${metrics.pipeline} in licensing pipeline
-    &nbsp; • &nbsp;
-    🔵 ${metrics.licensed} licensed
-    &nbsp; • &nbsp;
-    🟢 ${metrics.contracted} contracted
-    &nbsp; • &nbsp;
-    🚨 ${stuck} need coordinator action
-    &nbsp; • &nbsp;
-    ⚡ ${metrics.licensingRate}% licensing rate
-    &nbsp; • &nbsp;
-    🤝 ${metrics.contractingRate}% contracting rate
+  ticker.innerHTML = `
+    <span class="live-item">👥 ${total} Total Agents</span>
+    <span class="live-item">📍 ${notPlaced} Not Placed</span>
+    <span class="live-item">📝 ${quizSent} Quiz Sent</span>
+    <span class="live-item">✅ ${quizPassed} Quiz Passed</span>
+    <span class="live-item">📘 ${xcel} XCEL Completed</span>
+    <span class="live-item">🎉 ${examPassed} Exam Passed</span>
+    <span class="live-item">🏅 ${licensed} Licensed</span>
+    <span class="live-item">🤝 ${contracted} Contracted</span>
   `;
 }
