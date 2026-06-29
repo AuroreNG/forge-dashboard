@@ -3600,18 +3600,20 @@ grid-template-columns: 30% 70%;  gap: 24px;
 }
 .forge-live-ticker {
   display: inline-block;
-  animation: forgeMove 55s linear infinite;
-  font-size: 13px;
+  animation: forgeMove 28s linear infinite;  /* was 35s — faster */
+  font-size: 12px;                            /* was 14px — smaller */
   font-weight: 800;
-  padding-left: 40px;
+  padding-left: 100%;                         /* always enters from right */
 }
+
 @keyframes forgeMove {
   0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(-100%); }      /* was -50% — fixes the gap */
 }
-.live-sep  { color: rgba(255,255,255,0.3); margin: 0 14px; }
-.live-green  { color: #4ade80; }
-.live-yellow { color: #fbbf24; }
-.live-blue   { color: #93c5fd; }
-.live-red    { color: #f87171; }
-.live-muted  { color: rgba(255,255,255,0.6); }
+
+.live-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 52px;   /* more spacing between items */
+}
