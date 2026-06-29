@@ -1379,19 +1379,13 @@ document.getElementById("makeShorter")?.addEventListener("click", () => {
 });
 
 document.getElementById("makeFriendly")?.addEventListener("click", () => {
-  const box = document.getElementById("composerMessage");
+    const box = document.getElementById("composerMessage");
 
-  box.value =
-    "Hi " +
-    (selectedAgent?.name || "") +
-    ", 😊\n\n" +
-    box.value.replace(/^Hi .*?,\s*/i, "");
-});
-
-  saveActivityLog();
-  renderActivityTimeline(selectedAgent);
-
-  alert("Activity saved.");
+    box.value =
+        "Hi " +
+        (selectedAgent?.name || "") +
+        ", 😊\n\n" +
+        box.value.replace(/^Hi .*?,\s*/i, "");
 });
 function saveActivityLog() {
   localStorage.setItem("forgeActivityLog", JSON.stringify(activityLog));
@@ -1979,26 +1973,6 @@ document.addEventListener("click", (event) => {
 
   openSmartComposer(method);
 });
-
-  const composer = document.getElementById("messageComposer");
-  if (!composer) return;
-
-  const stage = selectedAgent.stage || "Not Placed";
-  const template = getStageMessageTemplate(stage, method, selectedAgent);
-
-  document.getElementById("composerMethod").value = method;
-
-  const subjectInput = document.getElementById("composerSubject");
-  if (subjectInput) {
-    subjectInput.value = template.subject || "";
-    subjectInput.closest(".composer-subject-wrap").style.display =
-      method === "Email" ? "block" : "none";
-  }
-
-  document.getElementById("composerMessage").value = template.body;
-
-  composer.classList.remove("hidden");
-}
 
 function getGuideCoachText(stage) {
   const tips = {
