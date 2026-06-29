@@ -3536,4 +3536,27 @@ grid-template-columns: 30% 70%;  gap: 24px;
   margin-left: 10px;
 }
 
+.command-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 32px;
+  width: 100%;
+}
 
+.command-panel {
+  display: block !important;
+  background: #fff;
+  border: 1px solid #dbe7fb;
+  border-radius: 28px;
+  padding: 26px;
+  min-height: 180px;
+}
+
+#coordinatorActions,
+#licensingChecklist,
+#activityTimeline,
+#todayQueue {
+  display: block !important;
+  min-height: 80px;
+}
