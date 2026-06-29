@@ -89,7 +89,6 @@ function renderAllPages() {
   renderAgentsPage();
   renderCommandCenter();
   renderGrowthPage();
-  updateForgeLive();
 }
 
 function parseCSV(text) {
@@ -2424,44 +2423,3 @@ document.addEventListener("click", (event) => {
   document.getElementById("csvImportInput")?.click();
 });
 
-/*Live data*/
-function updateForgeLive() {
-  const ticker = document.getElementById("forgeLiveTicker");
-  if (!ticker) return;
-
-  const total      = allAgents.length;
-  const notPlaced  = allAgents.filter(a => a.stage === "Not Placed").length;
-  const quizSent   = allAgents.filter(a => a.stage === "Quiz Sent").length;
-  const quizPassed = allAgents.filter(a => a.stage === "Quiz Passed").length;
-  const xcel       = allAgents.filter(a => a.stage === "XCEL Completed").length;
-  const examPassed = allAgents.filter(a => a.stage === "Exam Passed").length;
-  const ce         = allAgents.filter(a => a.stage === "Continuing Education").length;
-  const licensed   = allAgents.filter(a => a.stage === "Licensed" || a.stage === "Contracted").length;
-  const contracted = allAgents.filter(a => a.stage === "Contracted").length;
-  const pipeline   = allAgents.filter(a => !["Licensed","Contracted"].includes(a.stage)).length;
-
-  const licensingRate   = total    > 0 ? ((licensed   / total)    * 100).toFixed(1) : "0.0";
-  const contractingRate = licensed > 0 ? ((contracted / licensed) * 100).toFixed(1) : "0.0";
-  const now = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-
-  const buildItems = () => [
-    `<span class="live-item">👥 ${total} Total Agents</span>`,
-    `<span class="live-item live-yellow">📋 ${pipeline} In Pipeline</span>`,
-    `<span class="live-item live-muted">📍 ${notPlaced} Not Placed</span>`,
-    `<span class="live-item">📝 ${quizSent} Quiz Sent</span>`,
-    `<span class="live-item live-green">✅ ${quizPassed} Quiz Passed</span>`,
-    `<span class="live-item live-blue">📘 ${xcel} XCEL Completed</span>`,
-    `<span class="live-item live-blue">🎯 ${examPassed} Exam Passed</span>`,
-    `<span class="live-item live-yellow">📚 ${ce} Continuing Education</span>`,
-    `<span class="live-item live-green">🏅 ${licensed} Licensed</span>`,
-    `<span class="live-item live-green">🤝 ${contracted} Contracted</span>`,
-    `<span class="live-item live-blue">📊 Licensing: ${licensingRate}%</span>`,
-    `<span class="live-item live-blue">📈 Contracting: ${contractingRate}%</span>`,
-    `<span class="live-item live-muted">🕐 ${now}</span>`,
-  ].join('<span class="live-sep">•</span>');
-
-  // Repeat 3x so there's always content visible during the scroll
-  ticker.innerHTML = buildItems() + '<span class="live-sep">•</span>'
-                   + buildItems() + '<span class="live-sep">•</span>'
-                   + buildItems();
-}
