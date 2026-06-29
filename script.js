@@ -1605,19 +1605,25 @@ document.getElementById("closeComposer")?.addEventListener("click", () => {
 });
 
 function openSmartComposer(method = "Text") {
-  ...
-}
 
-document.getElementById("saveActivity")?.addEventListener("click", () => {
   if (!selectedAgent) return;
 
-  const message = document.getElementById("composerMessage").value;
-  const method = document.getElementById("composerMethod").value;
+  const composer = document.getElementById("actionModal");
+  if (!composer) return;
 
-  logCoordinatorActivity(selectedAgent, method, message);
+  composer.classList.remove("hidden");
 
-  alert("Activity saved.");
-});
+  document.getElementById("composerMethod").value = method;
+
+  document.getElementById("composerTitle").innerText =
+      method + " • " + selectedAgent.name;
+
+  document.getElementById("composerMessage").value =
+      buildRecommendedMessage(
+          selectedAgent,
+          recommendedActionMap[selectedAgent.stage]?.title || "Send Welcome"
+      );
+}
 
 document.addEventListener("click", (event) => {
   const noteBtn = event.target.closest("[data-note]");
