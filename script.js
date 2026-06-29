@@ -2429,23 +2429,39 @@ function updateForgeLive() {
   const ticker = document.getElementById("forgeLiveTicker");
   if (!ticker) return;
 
-  const total = allAgents.length;
-  const notPlaced = allAgents.filter(a => a.stage === "Not Placed").length;
-  const quizSent = allAgents.filter(a => a.stage === "Quiz Sent").length;
+  const total      = allAgents.length;
+  const notPlaced  = allAgents.filter(a => a.stage === "Not Placed").length;
+  const quizSent   = allAgents.filter(a => a.stage === "Quiz Sent").length;
   const quizPassed = allAgents.filter(a => a.stage === "Quiz Passed").length;
-  const xcel = allAgents.filter(a => a.stage === "XCEL Completed").length;
+  const xcel       = allAgents.filter(a => a.stage === "XCEL Completed").length;
   const examPassed = allAgents.filter(a => a.stage === "Exam Passed").length;
-  const licensed = allAgents.filter(a => a.stage === "Licensed" || a.stage === "Contracted").length;
+  const ce         = allAgents.filter(a => a.stage === "Continuing Education").length;
+  const licensed   = allAgents.filter(a => a.stage === "Licensed" || a.stage === "Contracted").length;
   const contracted = allAgents.filter(a => a.stage === "Contracted").length;
+  const pipeline   = allAgents.filter(a => !["Licensed","Contracted"].includes(a.stage)).length;
 
-  ticker.innerHTML = `
-    <span class="live-item">👥 ${total} Total Agents</span>
-    <span class="live-item">📍 ${notPlaced} Not Placed</span>
-    <span class="live-item">📝 ${quizSent} Quiz Sent</span>
-    <span class="live-item">✅ ${quizPassed} Quiz Passed</span>
-    <span class="live-item">📘 ${xcel} XCEL Completed</span>
-    <span class="live-item">🎉 ${examPassed} Exam Passed</span>
-    <span class="live-item">🏅 ${licensed} Licensed</span>
-    <span class="live-item">🤝 ${contracted} Contracted</span>
-  `;
+  const licensingRate    = total    > 0 ? ((licensed   / total)    * 100).toFixed(1) : "0.0";
+  const contractingRate  = licensed > 0 ? ((contracted / licensed) * 100).toFixed(1) : "0.0";
+  const now = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+
+  const sep = '<span class="live-sep">•</span>';
+
+  const items = [
+    `<span class="live-green">👥 ${total} Total Agents</span>`,
+    `<span class="live-yellow">📋 ${pipeline} In Pipeline</span>`,
+    `<span class="live-muted">📍 ${notPlaced} Not Placed</span>`,
+    `<span>📝 ${quizSent} Quiz Sent</span>`,
+    `<span class="live-green">✅ ${quizPassed} Quiz Passed</span>`,
+    `<span class="live-blue">📘 ${xcel} XCEL Completed</span>`,
+    `<span class="live-blue">🎯 ${examPassed} Exam Passed</span>`,
+    `<span class="live-yellow">📚 ${ce} Continuing Education</span>`,
+    `<span class="live-green">🏅 ${licensed} Licensed</span>`,
+    `<span class="live-green">🤝 ${contracted} Fully Contracted</span>`,
+    `<span class="live-blue">📊 Licensing Rate: <b>${licensingRate}%</b></span>`,
+    `<span class="live-blue">📈 Contracting Rate: <b>${contractingRate}%</b></span>`,
+    `<span class="live-muted">🕐 Updated: ${now}</span>`,
+  ].join(sep);
+
+  // Double the content so the scroll loops seamlessly
+  ticker.innerHTML = items + sep + items;
 }
