@@ -1360,28 +1360,6 @@ Let me know once you are inside.`,
 The next step is contracting. Please complete the contracting requirements so we can appoint you quickly.`
 };
 
-document.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-action]");
-  if (!button || !selectedAgent) return;
-
-  const action = button.dataset.action;
-
-  const template =
-    actionMessages[action] || `Hi {agent}, following up on your licensing journey.`;
-
-  const message = template
-    .replaceAll("{agent}", selectedAgent.name)
-    .replaceAll("{coordinator}", selectedCoordinator || "your coordinator")
-    .replaceAll("{upline}", selectedAgent.coordinator || "your upline");
-
-  alert(message);
-});
-document.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-compose]");
-  if (!button || !selectedAgent) return;
-
-  openComposer(button.dataset.compose, selectedAgent);
-});
 document.getElementById("copyMessage")?.addEventListener("click", () => {
   const message = document.getElementById("composerMessage").value;
 
@@ -1409,24 +1387,6 @@ document.getElementById("makeFriendly")?.addEventListener("click", () => {
     ", 😊\n\n" +
     box.value.replace(/^Hi .*?,\s*/i, "");
 });
-
-document.getElementById("saveActivity")?.addEventListener("click", () => {
-  if (!selectedAgent) return;
-
-  const message = document.getElementById("composerMessage").value;
-  const method = document.getElementById("composerMethod").value;
-
-  const key = selectedAgent.code || selectedAgent.email || selectedAgent.name;
-
-  if (!activityLog[key]) {
-    activityLog[key] = [];
-  }
-
-  activityLog[key].unshift({
-    method,
-    message,
-    date: new Date().toLocaleString()
-  });
 
   saveActivityLog();
   renderActivityTimeline(selectedAgent);
@@ -1640,56 +1600,12 @@ function openActionModal() {
 
   document.getElementById("actionModal").classList.remove("hidden");
 }
-function openComposer(action, agent) {
-  const template =
-    actionMessages[action] ||
-    `Hi {agent}, following up on your licensing journey.`;
-
-  const message = template
-    .replaceAll("{agent}", agent.name)
-    .replaceAll("{coordinator}", selectedCoordinator || "your coordinator")
-    .replaceAll("{upline}", agent.coordinator || "your upline");
-
-  document.getElementById("messageComposer")?.classList.remove("hidden");
-  document.getElementById("composerMessage").value = message;
-}
 document.getElementById("closeComposer")?.addEventListener("click", () => {
   document.getElementById("messageComposer")?.classList.add("hidden");
 });
 
-document.addEventListener("click", (event) => {
-  const methodBtn = event.target.closest("[data-method], [data-note]");
-  if (!methodBtn || !selectedAgent) return;
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  const method = methodBtn.dataset.method || "Note";
-  openSmartComposer(method);
-});
-
 function openSmartComposer(method = "Text") {
-  const composer = document.getElementById("messageComposer");
-  if (!composer || !selectedAgent) return;
-
-  const template = getStageMessageTemplate(
-    selectedAgent.stage || "Not Placed",
-    method,
-    selectedAgent
-  );
-
-  document.getElementById("composerMethod").value = method;
-  document.getElementById("composerMessage").value = template.body;
-
-  const subjectWrap = document.querySelector(".composer-subject-wrap");
-  const subjectInput = document.getElementById("composerSubject");
-
-  if (subjectWrap && subjectInput) {
-    subjectWrap.classList.toggle("hidden", method !== "Email");
-    subjectInput.value = template.subject || "";
-  }
-
-  composer.classList.remove("hidden");
+  ...
 }
 
 document.getElementById("saveActivity")?.addEventListener("click", () => {
@@ -2058,12 +1974,6 @@ document.addEventListener("click", (event) => {
   openSmartComposer(method);
 });
 
-function openSmartComposer(method = "Text") {
-  if (!selectedAgent) {
-    alert("Please select an agent first.");
-    return;
-  }
-
   const composer = document.getElementById("messageComposer");
   if (!composer) return;
 
@@ -2119,9 +2029,6 @@ document.getElementById("sendAction")?.addEventListener("click", () => {
   renderActivityTimeline(selectedAgent);
 });
 
-document.getElementById("closeActionModal")?.addEventListener("click", () => {
-  document.getElementById("actionModal")?.classList.add("hidden");
-});
 /* =====================================
 Generate Smart Message
 ===================================== */
@@ -2183,48 +2090,6 @@ document.getElementById("saveDraft")?.addEventListener("click", () => {
   document.getElementById("actionModal")?.classList.add("hidden");
 });
 
-
-document.addEventListener("click", (event) => {
-  const methodBtn = event.target.closest("[data-method]");
-  if (!methodBtn || !selectedAgent) return;
-
-  const method = methodBtn.dataset.method;
-  const message = getActionMessage(
-    recommendedActionMap[selectedAgent.stage]?.title || "Send Welcome",
-    selectedAgent
-  );
-
-  const phone = (selectedAgent.phone || "").replace(/\D/g, "");
-  const email = selectedAgent.email || "";
-
-  if (method === "Call") {
-    if (!phone) return alert("No phone number for this agent.");
-    window.location.href = `tel:${phone}`;
-    logCoordinatorActivity(selectedAgent, "Call", "Call started.");
-  }
-
-  if (method === "Text") {
-    if (!phone) return alert("No phone number for this agent.");
-    window.location.href = `sms:${phone}?&body=${encodeURIComponent(message)}`;
-    logCoordinatorActivity(selectedAgent, "Text", message);
-  }
-
-  if (method === "WhatsApp") {
-    if (!phone) return alert("No phone number for this agent.");
-    window.open(
-      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
-      "_blank"
-    );
-    logCoordinatorActivity(selectedAgent, "WhatsApp", message);
-  }
-
-  if (method === "Email") {
-    if (!email) return alert("No email for this agent.");
-    window.location.href =
-      `mailto:${email}?subject=${encodeURIComponent("Licensing Follow-Up")}&body=${encodeURIComponent(message)}`;
-    logCoordinatorActivity(selectedAgent, "Email", message);
-  }
-});
 
 
 function getDirectDownlineCount(leaderName, agents) {
