@@ -2440,28 +2440,28 @@ function updateForgeLive() {
   const contracted = allAgents.filter(a => a.stage === "Contracted").length;
   const pipeline   = allAgents.filter(a => !["Licensed","Contracted"].includes(a.stage)).length;
 
-  const licensingRate    = total    > 0 ? ((licensed   / total)    * 100).toFixed(1) : "0.0";
-  const contractingRate  = licensed > 0 ? ((contracted / licensed) * 100).toFixed(1) : "0.0";
+  const licensingRate   = total    > 0 ? ((licensed   / total)    * 100).toFixed(1) : "0.0";
+  const contractingRate = licensed > 0 ? ((contracted / licensed) * 100).toFixed(1) : "0.0";
   const now = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 
-  const sep = '<span class="live-sep">•</span>';
+  const buildItems = () => [
+    `<span class="live-item">👥 ${total} Total Agents</span>`,
+    `<span class="live-item live-yellow">📋 ${pipeline} In Pipeline</span>`,
+    `<span class="live-item live-muted">📍 ${notPlaced} Not Placed</span>`,
+    `<span class="live-item">📝 ${quizSent} Quiz Sent</span>`,
+    `<span class="live-item live-green">✅ ${quizPassed} Quiz Passed</span>`,
+    `<span class="live-item live-blue">📘 ${xcel} XCEL Completed</span>`,
+    `<span class="live-item live-blue">🎯 ${examPassed} Exam Passed</span>`,
+    `<span class="live-item live-yellow">📚 ${ce} Continuing Education</span>`,
+    `<span class="live-item live-green">🏅 ${licensed} Licensed</span>`,
+    `<span class="live-item live-green">🤝 ${contracted} Contracted</span>`,
+    `<span class="live-item live-blue">📊 Licensing: ${licensingRate}%</span>`,
+    `<span class="live-item live-blue">📈 Contracting: ${contractingRate}%</span>`,
+    `<span class="live-item live-muted">🕐 ${now}</span>`,
+  ].join('<span class="live-sep">•</span>');
 
-  const items = [
-    `<span class="live-green">👥 ${total} Total Agents</span>`,
-    `<span class="live-yellow">📋 ${pipeline} In Pipeline</span>`,
-    `<span class="live-muted">📍 ${notPlaced} Not Placed</span>`,
-    `<span>📝 ${quizSent} Quiz Sent</span>`,
-    `<span class="live-green">✅ ${quizPassed} Quiz Passed</span>`,
-    `<span class="live-blue">📘 ${xcel} XCEL Completed</span>`,
-    `<span class="live-blue">🎯 ${examPassed} Exam Passed</span>`,
-    `<span class="live-yellow">📚 ${ce} Continuing Education</span>`,
-    `<span class="live-green">🏅 ${licensed} Licensed</span>`,
-    `<span class="live-green">🤝 ${contracted} Fully Contracted</span>`,
-    `<span class="live-blue">📊 Licensing Rate: <b>${licensingRate}%</b></span>`,
-    `<span class="live-blue">📈 Contracting Rate: <b>${contractingRate}%</b></span>`,
-    `<span class="live-muted">🕐 Updated: ${now}</span>`,
-  ].join(sep);
-
-  // Double the content so the scroll loops seamlessly
-  ticker.innerHTML = items + sep + items;
+  // Repeat 3x so there's always content visible during the scroll
+  ticker.innerHTML = buildItems() + '<span class="live-sep">•</span>'
+                   + buildItems() + '<span class="live-sep">•</span>'
+                   + buildItems();
 }
