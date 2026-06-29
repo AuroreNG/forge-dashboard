@@ -3560,3 +3560,56 @@ grid-template-columns: 30% 70%;  gap: 24px;
   display: block !important;
   min-height: 80px;
 }
+
+.improved-command-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 28px;
+}
+
+.command-panel {
+  display: block !important;
+  background: #ffffff;
+  border: 1px solid #dbe7fb;
+  border-radius: 26px;
+  padding: 26px;
+  min-height: 220px;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.panel-header h3 {
+  font-size: 22px;
+  color: #071225;
+}
+
+.action-row,
+.checklist-row,
+.queue-card,
+.timeline-entry {
+  background: #fff;
+  border: 1px solid #dbe7fb;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e8edf5;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 14px 0 20px;
+}
+
+#checklistProgressBar {
+  height: 100%;
+  width: 0%;
+  background: #16a34a;
+}
