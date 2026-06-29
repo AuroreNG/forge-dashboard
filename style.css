@@ -3535,3 +3535,48 @@ grid-template-columns: 30% 70%;  gap: 24px;
   border-color: #2563eb !important;
   margin-left: 10px;
 }
+
+/* Live data*/
+.forge-live {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid #dbe7fb;
+  border-radius: 22px;
+  padding: 14px 18px;
+  overflow: hidden;
+}
+
+.forge-live-label {
+  background: #082f6f;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 16px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.forge-live-track {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.forge-live-content {
+  display: inline-block;
+  padding-left: 100%;
+  animation: forgeTicker 28s linear infinite;
+  font-weight: 800;
+  color: #071225;
+}
+
+@keyframes forgeTicker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
