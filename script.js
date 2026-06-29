@@ -89,6 +89,7 @@ function renderAllPages() {
   renderAgentsPage();
   renderCommandCenter();
   renderGrowthPage();
+  renderForgeLive();
 }
 
 function parseCSV(text) {
@@ -2422,3 +2423,31 @@ document.addEventListener("click", (event) => {
   document.getElementById("importGuideModal")?.classList.add("hidden");
   document.getElementById("csvImportInput")?.click();
 });
+
+/*Live data*/
+function renderForgeLive() {
+  const el = document.getElementById("forgeLiveContent");
+  if (!el) return;
+
+  const metrics = getMetrics(allAgents);
+
+  const stuck = allAgents.filter(agent =>
+    ["Not Placed", "Quiz Sent", "Quiz Passed", "XCEL Completed"].includes(agent.stage)
+  ).length;
+
+  el.innerHTML = `
+    🔵 ${metrics.totalTeam} total agents
+    &nbsp; • &nbsp;
+    🟠 ${metrics.pipeline} in licensing pipeline
+    &nbsp; • &nbsp;
+    🔵 ${metrics.licensed} licensed
+    &nbsp; • &nbsp;
+    🟢 ${metrics.contracted} contracted
+    &nbsp; • &nbsp;
+    🚨 ${stuck} need coordinator action
+    &nbsp; • &nbsp;
+    ⚡ ${metrics.licensingRate}% licensing rate
+    &nbsp; • &nbsp;
+    🤝 ${metrics.contractingRate}% contracting rate
+  `;
+}
