@@ -1658,17 +1658,39 @@ document.getElementById("closeComposer")?.addEventListener("click", () => {
 });
 
 document.addEventListener("click", (event) => {
-  const methodBtn = event.target.closest("[data-method]");
+  const methodBtn = event.target.closest("[data-method], [data-note]");
   if (!methodBtn || !selectedAgent) return;
 
-  const method = methodBtn.dataset.method;
+  event.preventDefault();
+  event.stopPropagation();
 
-  logCoordinatorActivity(
-    selectedAgent,
-    method,
-    `${method} action logged.`
-  );
+  const method = methodBtn.dataset.method || "Note";
+  openSmartComposer(method);
 });
+
+function openSmartComposer(method = "Text") {
+  const composer = document.getElementById("messageComposer");
+  if (!composer || !selectedAgent) return;
+
+  const template = getStageMessageTemplate(
+    selectedAgent.stage || "Not Placed",
+    method,
+    selectedAgent
+  );
+
+  document.getElementById("composerMethod").value = method;
+  document.getElementById("composerMessage").value = template.body;
+
+  const subjectWrap = document.querySelector(".composer-subject-wrap");
+  const subjectInput = document.getElementById("composerSubject");
+
+  if (subjectWrap && subjectInput) {
+    subjectWrap.classList.toggle("hidden", method !== "Email");
+    subjectInput.value = template.subject || "";
+  }
+
+  composer.classList.remove("hidden");
+}
 
 document.getElementById("saveActivity")?.addEventListener("click", () => {
   if (!selectedAgent) return;
@@ -2020,16 +2042,47 @@ document
 });
 
 document.addEventListener("click", (event) => {
-  const actionBtn = event.target.closest("#takeActionBtn");
+  const actionBtn = event.target.closest(
+    ".quick-actions button, #takeActionBtn, .take-action-btn"
+  );
+
   if (!actionBtn) return;
 
   event.preventDefault();
-  event.stopPropagation();
 
-  if (!selectedAgent) return;
+  const method =
+    actionBtn.dataset.method ||
+    actionBtn.textContent.replace(/[^\w\s]/g, "").trim() ||
+    "Text";
 
-  openActionModal();
+  openSmartComposer(method);
 });
+
+function openSmartComposer(method = "Text") {
+  if (!selectedAgent) {
+    alert("Please select an agent first.");
+    return;
+  }
+
+  const composer = document.getElementById("messageComposer");
+  if (!composer) return;
+
+  const stage = selectedAgent.stage || "Not Placed";
+  const template = getStageMessageTemplate(stage, method, selectedAgent);
+
+  document.getElementById("composerMethod").value = method;
+
+  const subjectInput = document.getElementById("composerSubject");
+  if (subjectInput) {
+    subjectInput.value = template.subject || "";
+    subjectInput.closest(".composer-subject-wrap").style.display =
+      method === "Email" ? "block" : "none";
+  }
+
+  document.getElementById("composerMessage").value = template.body;
+
+  composer.classList.remove("hidden");
+}
 
 function getGuideCoachText(stage) {
   const tips = {
@@ -2422,4 +2475,155 @@ document.addEventListener("click", (event) => {
   document.getElementById("importGuideModal")?.classList.add("hidden");
   document.getElementById("csvImportInput")?.click();
 });
+
+//Message stage templates**/
+
+function getStageMessageTemplate(stage, method, agent) {
+  const name = agent?.name || "there";
+  const coordinator = selectedCoordinator === "All"
+    ? "your licensing coordinator"
+    : selectedCoordinator;
+
+  const templates = {
+    "Not Placed": {
+      subject: "Welcome — Let’s Get You Started",
+      body: `Hi ${name},
+
+Welcome to the team. My name is ${coordinator}, and I will help guide you through your licensing journey.
+
+The first step is simple: we need to confirm where you are so we can place you on the right path.
+
+Please reply and let me know if you have already started your licensing process, completed any course, or taken any exam.
+
+Once I know where you are, I can help you move to the next step quickly.`
+    },
+
+    "Quiz Sent": {
+      subject: "Your Licensing Quiz Is Ready",
+      body: `Hi ${name},
+
+Your licensing quiz has been sent.
+
+This quiz helps us understand where you are in the licensing process and what support you need next.
+
+Please complete it today so we can move you forward without delay.
+
+Once you finish, reply “Done” so I can update your status and help you get to the next step.`
+    },
+
+    "Quiz Passed": {
+      subject: "Great Job — Let’s Move You to XCEL",
+      body: `Hi ${name},
+
+Congratulations on passing your quiz.
+
+This means you are ready to move into the next important step: starting your XCEL pre-licensing course and preparing to schedule your state exam.
+
+Please confirm once you have access to XCEL, and let me know if you need help getting started.`
+    },
+
+    "XCEL Completed": {
+      subject: "XCEL Completed — Time to Schedule Your Exam",
+      body: `Hi ${name},
+
+Congratulations on completing XCEL.
+
+That is a major milestone. The next step is to schedule your state exam while the information is still fresh.
+
+Please schedule your exam as soon as possible and send me the date once it is confirmed.
+
+You are very close. Let’s keep the momentum going.`
+    },
+
+    "Exam Passed": {
+      subject: "Congratulations on Passing Your Life Exam",
+      body: `Hi ${name},
+
+Congratulations on passing your Life Exam.
+
+This is a big accomplishment and a major step toward becoming fully active in the business.
+
+The next step is to complete the remaining licensing requirements, including your license application, fingerprints or state requirements if applicable, and any required follow-up items.
+
+Please send me a quick update on what you have completed so far so I can help you move to the next stage.`
+    },
+
+    "Continuing Education": {
+      subject: "Let’s Get Your CE Completed",
+      body: `Hi ${name},
+
+You are currently at the Continuing Education step.
+
+This step is important because it keeps your licensing progress moving and helps you stay compliant with the requirements.
+
+Please complete your CE as soon as possible and send me confirmation once it is done.
+
+If you are stuck, unsure where to log in, or not sure what is missing, reply to this message and I will help you figure it out.`
+    },
+
+    "Licensed": {
+      subject: "Congratulations on Becoming Licensed",
+      body: `Hi ${name},
+
+Congratulations on becoming licensed.
+
+This is a major achievement. Now we need to help you move from licensed to fully contracted and ready to write business.
+
+The next step is to complete your contracting requirements and submit everything needed for appointment.
+
+Please check your email for contracting instructions and let me know once you have started.`
+    },
+
+    "Contracted": {
+      subject: "Let’s Get You Appointed Through Tevah",
+      body: `Hi ${name},
+
+Congratulations on reaching the contracting stage.
+
+You are now very close to being fully ready to write business. The next step is to complete your appointment process through Tevah.
+
+Please log in, complete the appointment steps, and confirm once submitted.
+
+Let’s get you fully appointed and ready for production.`
+    }
+  };
+
+  const selected = templates[stage] || templates["Not Placed"];
+
+  if (method === "Text" || method === "WhatsApp") {
+    return {
+      subject: "",
+      body: selected.body.replace(/\n+/g, " ").replace(/\s+/g, " ").slice(0, 420)
+    };
+  }
+
+  if (method === "Call") {
+    return {
+      subject: "",
+      body: `Call ${name}. Goal: help them move forward from ${stage}. Ask what is blocking them, confirm the next step, and update their stage after the call.`
+    };
+  }
+
+  if (method === "Zoom") {
+    return {
+      subject: "Quick Licensing Support Zoom",
+      body: `Hi ${name},
+
+Let’s schedule a quick Zoom to help you move forward from your current stage: ${stage}.
+
+We will review where you are, what is missing, and the exact next step to complete.
+
+Please reply with a good time today or tomorrow.`
+    };
+  }
+
+  if (method === "Note") {
+    return {
+      subject: "",
+      body: `${name} is currently in ${stage}. Add coordinator notes here.`
+    };
+  }
+
+  return selected;
+}
 
