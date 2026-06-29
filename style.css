@@ -3537,25 +3537,39 @@ grid-template-columns: 30% 70%;  gap: 24px;
 }
 
 /* Live data*/
-.forge-live {
-  margin-top: 24px;
+.forge-live-bar {
+  margin: 0 30px 20px;
+  height: 58px;
+  border-radius: 18px;
+  background: #062b66;
   display: flex;
   align-items: center;
-  gap: 14px;
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid #dbe7fb;
-  border-radius: 22px;
-  padding: 14px 18px;
   overflow: hidden;
+  color: white;
 }
 
 .forge-live-label {
-  background: #082f6f;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 24px;
   font-weight: 900;
   white-space: nowrap;
+}
+
+.live-dot {
+  width: 12px;
+  height: 12px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(34,197,94,.8);
+  animation: livePulse 1.2s infinite;
+}
+
+@keyframes livePulse {
+  0% { box-shadow: 0 0 0 0 rgba(34,197,94,.8); }
+  70% { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
 }
 
 .forge-live-track {
@@ -3564,19 +3578,29 @@ grid-template-columns: 30% 70%;  gap: 24px;
   white-space: nowrap;
 }
 
-.forge-live-content {
+.forge-live-ticker {
   display: inline-block;
   padding-left: 100%;
-  animation: forgeTicker 28s linear infinite;
+  animation: forgeMove 35s linear infinite;
   font-weight: 800;
-  color: #071225;
 }
 
-@keyframes forgeTicker {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
+@keyframes forgeMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+.live-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 42px;
+}
+
+.live-up {
+  color: #22c55e;
+}
+
+.live-alert {
+  color: #ff6b6b;
 }
