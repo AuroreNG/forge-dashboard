@@ -739,18 +739,21 @@
  </div>
  <div class="command-grid improved-command-grid">
 
-  <section class="command-panel">
+  <section class="command-panel coordinator-panel">
     <div class="panel-header">
       <h3>Coordinator Actions</h3>
-      <button>Manage All</button>
+      <button id="manageTemplatesBtn">Manage Templates</button>
     </div>
     <div id="coordinatorActions"></div>
   </section>
 
-  <section class="command-panel">
+  <section class="command-panel checklist-panel">
     <div class="panel-header">
-      <h3>Licensing Checklist</h3>
-      <span id="checklistProgress">0 / 8 completed</span>
+      <div>
+        <h3>Licensing Checklist</h3>
+        <span id="checklistProgress">0 / 8 completed</span>
+      </div>
+      <button class="collapse-btn">⌄</button>
     </div>
 
     <div class="progress-bar">
@@ -760,7 +763,7 @@
     <div id="licensingChecklist"></div>
   </section>
 
-  <section class="command-panel">
+  <section class="command-panel activity-panel">
     <div class="panel-header">
       <h3>Activity Timeline</h3>
       <button>View All</button>
@@ -768,7 +771,7 @@
     <div id="activityTimeline"></div>
   </section>
 
-  <section class="command-panel">
+  <section class="command-panel queue-panel">
     <div class="panel-header">
       <h3>Today’s Queue</h3>
       <span id="todayCount">0 Tasks</span>
