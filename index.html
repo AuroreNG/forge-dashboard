@@ -736,8 +736,45 @@
   <button data-method="WhatsApp">🟢 WhatsApp</button>
   <button data-method="Zoom">🎥 Zoom</button>
   <button data-note="true">📝 Add Note</button>
-   <div style="margin-top:30px; padding:30px; background:red; color:white; font-size:30px;">
-  TEST COMMAND GRID
+ <div class="command-grid improved-command-grid">
+
+  <section class="command-panel">
+    <div class="panel-header">
+      <h3>Coordinator Actions</h3>
+      <button>Manage All</button>
+    </div>
+    <div id="coordinatorActions"></div>
+  </section>
+
+  <section class="command-panel">
+    <div class="panel-header">
+      <h3>Licensing Checklist</h3>
+      <span id="checklistProgress">0 / 8 completed</span>
+    </div>
+
+    <div class="progress-bar">
+      <div id="checklistProgressBar"></div>
+    </div>
+
+    <div id="licensingChecklist"></div>
+  </section>
+
+  <section class="command-panel">
+    <div class="panel-header">
+      <h3>Activity Timeline</h3>
+      <button>View All</button>
+    </div>
+    <div id="activityTimeline"></div>
+  </section>
+
+  <section class="command-panel">
+    <div class="panel-header">
+      <h3>Today’s Queue</h3>
+      <span id="todayCount">0 Tasks</span>
+    </div>
+    <div id="todayQueue"></div>
+  </section>
+
 </div>
 </div>
   <div id="messageComposer" class="message-composer hidden">
