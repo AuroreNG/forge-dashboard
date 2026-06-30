@@ -3543,82 +3543,62 @@ grid-template-columns: 30% 70%;  gap: 24px;
   display: block !important;
   min-height: 80px;
 }
-
 .improved-command-grid {
   display: grid !important;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-top: 28px;
-}
-
-.command-panel {
-  display: block !important;
-  background: #ffffff;
-  border: 1px solid #dbe7fb;
-  border-radius: 26px;
-  padding: 26px;
-  min-height: 220px;
-}
-
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 18px;
-}
-
-.panel-header h3 {
-  font-size: 22px;
-  color: #071225;
-}
-
-.action-row,
-.checklist-row,
-.queue-card,
-.timeline-entry {
-  background: #fff;
-  border: 1px solid #dbe7fb;
-  border-radius: 18px;
-  padding: 16px;
-  margin-bottom: 14px;
-}
-
-.progress-bar {
-  height: 8px;
-  background: #e8edf5;
-  border-radius: 999px;
-  overflow: hidden;
-  margin: 14px 0 20px;
-}
-
-#checklistProgressBar {
-  height: 100%;
-  width: 0%;
-  background: #16a34a;
-}
-
-.command-grid {
-  display: grid !important;
-  grid-template-columns: minmax(420px, 1fr) minmax(420px, 1fr) !important;
+  grid-template-columns: 1fr 1fr !important;
   gap: 24px !important;
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
-.command-profile,
-#commandProfile {
-  width: 100% !important;
-  max-width: none !important;
-  overflow: visible !important;
+  margin-top: 24px !important;
 }
 
 .command-panel {
-  min-width: 0 !important;
-  width: 100% !important;
+  background: #fff !important;
+  border: 1px solid #dbe7fb !important;
+  border-radius: 24px !important;
+  padding: 24px !important;
+  min-height: 260px !important;
 }
 
-.command-layout,
-.command-main,
-.command-detail {
-  grid-template-columns: 360px 1fr !important;
+.coordinator-panel,
+.checklist-panel {
+  min-height: 320px !important;
+}
+
+.activity-panel,
+.queue-panel {
+  min-height: 260px !important;
+}
+
+#licensingChecklist {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+}
+
+.action-row {
+  display: grid !important;
+  grid-template-columns: 56px 1fr auto !important;
+  align-items: center !important;
+  gap: 16px !important;
+  border: none !important;
+  border-bottom: 1px solid #e8eef8 !important;
+  border-radius: 0 !important;
+  padding: 18px 0 !important;
+}
+
+.action-row:last-child {
+  border-bottom: none !important;
+}
+
+.action-buttons button {
+  min-width: 120px;
+}
+
+.queue-card strong {
+  display: block;
+}
+
+.queue-card span {
+  display: block;
+  font-size: 12px;
+  color: #66758f;
 }
