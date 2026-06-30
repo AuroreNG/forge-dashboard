@@ -1564,23 +1564,6 @@ grid-template-columns: 30% 70%;  gap: 24px;
   background: #082b67;
   color: white;
 }
-
-.command-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-top: 24px;
-}
-
-.command-panel {
-  border: 1px solid rgba(180, 205, 240, 0.75);
-  border-radius: 22px;
-  padding: 22px;
-  min-height: 260px;
-  background: rgba(255, 255, 255, 0.78);
-  box-shadow: 0 14px 35px rgba(8, 43, 103, 0.06);
-}
-
 .panel-header {
   display: flex;
   justify-content: space-between;
@@ -3612,4 +3595,30 @@ grid-template-columns: 30% 70%;  gap: 24px;
   height: 100%;
   width: 0%;
   background: #16a34a;
+}
+
+.command-grid {
+  display: grid !important;
+  grid-template-columns: minmax(420px, 1fr) minmax(420px, 1fr) !important;
+  gap: 24px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.command-profile,
+#commandProfile {
+  width: 100% !important;
+  max-width: none !important;
+  overflow: visible !important;
+}
+
+.command-panel {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+.command-layout,
+.command-main,
+.command-detail {
+  grid-template-columns: 360px 1fr !important;
 }
