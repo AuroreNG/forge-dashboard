@@ -651,7 +651,7 @@ function renderAgentsPage() {
     item.innerHTML = `
       <b>${agent.name}</b>
       <span>
-        ${agent.coordinator || "No coordinator"}
+       ${agent.upline || agent.coordinator || "No upline"}
         <small class="stage-dot ${getStageColor(agent.stage)}"></small>
         ${agent.stage}
       </span>
@@ -688,7 +688,7 @@ function showAgentProfile(agent) {
   setText("profileAvatar",     getInitials(agent.name));
   setText("profileName",       agent.name);
   setText("profileMeta",       agent.coordinator || "No coordinator");
-  setText("profileCoordinator",agent.coordinator || "—");
+  setText("profileCoordinator", agent.upline || agent.coordinator || "—");
   setText("profileStatus",     agent.teamStatus  || "—");
   setText("profileStage",      agent.stage       || "—");
   setText("profileCode",       agent.code        || "—");
@@ -881,7 +881,7 @@ function showCommandProfile(agent) {
 
   setText("commandAvatar",    getInitials(agent.name));
   setText("commandName",      agent.name);
-  setText("commandMeta",      `${agent.coordinator || "No coordinator"} • ${agent.stage}`);
+  setText("commandMeta",      `${agent.upline || agent.coordinator || "No upline"} • ${agent.stage}`);
   setText("commandStageBadge",agent.stage || "Not Placed");
 
   const recommended = recommendedActionMap[agent.stage] || { title: "Review Agent", text: "Review this agent's current licensing status." };
