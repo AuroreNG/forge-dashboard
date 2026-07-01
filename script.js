@@ -1142,6 +1142,40 @@ document.addEventListener("click", (event) => {
 
   openSmartComposer(method);
 });
+
+//---make the delivery buttons inside the modal switch the message type.
+document.addEventListener("click", (event) => {
+  const deliveryBtn = event.target.closest(".delivery");
+  if (!deliveryBtn || !selectedAgent) return;
+
+  event.preventDefault();
+
+  document.querySelectorAll(".delivery").forEach((btn) =>
+    btn.classList.remove("active")
+  );
+
+  deliveryBtn.classList.add("active");
+
+  const text = deliveryBtn.textContent.toLowerCase();
+
+  let method = "Text";
+  if (text.includes("email")) method = "Email";
+  if (text.includes("whatsapp")) method = "WhatsApp";
+  if (text.includes("call")) method = "Call";
+  if (text.includes("zoom")) method = "Zoom";
+
+  const template = getStageMessageTemplate(
+    selectedAgent.stage || "Not Placed",
+    method,
+    selectedAgent
+  );
+
+  setText("actionTitle", `${method} • ${selectedAgent.name}`);
+  setText("actionSubtitle", `Stage: ${selectedAgent.stage || "Not Placed"}`);
+
+  const messageEl = document.getElementById("actionMessage");
+  if (messageEl) messageEl.value = template.body;
+});
 // ─── ACTIVITY LOG ─────────────────────────────────────────────────────────────
 
 function saveActivityLog() {
