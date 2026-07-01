@@ -366,7 +366,7 @@ function renderJourneyPage() {
           <div class="journey-avatar">${getInitials(agent.name)}</div>
           <div>
             <div class="journey-agent-name">${agent.name}</div>
-            <div class="journey-agent-coordinator">${agent.coordinator}</div>
+           <div class="journey-agent-coordinator">${agent.upline || agent.coordinator || "—"}</div>
           </div>
         </div>
         <div class="journey-agent-bottom">
@@ -385,7 +385,16 @@ function renderJourneyPage() {
 }
 
 document.getElementById("journeySearch")?.addEventListener("input", renderJourneyPage);
-
+//---Clear form after saving-------------
+function clearAgentForm() {
+  document.getElementById("newAgentName").value = "";
+  document.getElementById("newAgentEmail").value = "";
+  document.getElementById("newAgentPhone").value = "";
+  document.getElementById("newAgentCode").value = "";
+  document.getElementById("newAgentUpline").value = "";
+  document.getElementById("newAgentCoordinator").value = "";
+  document.getElementById("newAgentStage").value = "";
+}
 // ─── JOURNEY MODE TOGGLE ─────────────────────────────────────────────────────
 
 document.addEventListener("click", (event) => {
@@ -469,6 +478,8 @@ document.addEventListener("click", (event) => {
 const addAgentModal = document.getElementById("addAgentModal");
 
 document.querySelector(".add-agent-btn")?.addEventListener("click", () => {
+  selectedAgent = null;
+  clearAgentForm();
   addAgentModal.classList.remove("hidden");
 });
 
@@ -517,7 +528,7 @@ document.getElementById("saveAddAgent")?.addEventListener("click", () => {
 
   saveAgentsToLocalStorage();
   document.getElementById("addAgentModal").classList.add("hidden");
-
+  clearAgentForm();
   renderDashboard("all");
   renderJourneyPage();
   renderAgentsPage();
