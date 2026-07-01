@@ -1045,18 +1045,38 @@ document.getElementById("cancelAction")?.addEventListener("click", () => {
 
 document.getElementById("sendAction")?.addEventListener("click", () => {
   if (!selectedAgent) return;
-  const message = document.getElementById("actionMessage")?.value || "";
-  logCoordinatorActivity(selectedAgent, "Action", message);
-  document.getElementById("actionModal")?.classList.add("hidden");
-  renderActivityTimeline(selectedAgent);
-});
 
-document.getElementById("saveDraft")?.addEventListener("click", () => {
+  const title = document.getElementById("actionTitle")?.innerText || "Action";
+  const method = title.split("•")[0].trim();
   const message = document.getElementById("actionMessage")?.value || "";
-  if (selectedAgent) logCoordinatorActivity(selectedAgent, "Draft", message);
-  alert("Draft saved.");
+
+  logCoordinatorActivity(selectedAgent, method, message);
+
+  markChecklistFromMethod(method, selectedAgent.stage);
+
   document.getElementById("actionModal")?.classList.add("hidden");
+
+  renderLicensingChecklist(selectedAgent);
+  renderActivityTimeline(selectedAgent);
+  renderTodayQueue();
+
+  alert(`${method} completed and logged.`);
 });
+function markChecklistFromMethod(method, stage) {
+  if (!selectedAgent) return;
+
+  const key = selectedAgent.code || selectedAgent.email || selectedAgent.name;
+  if (!checklistLog[key]) checklistLog[key] = {};
+
+  if (stage === "Not Placed") checklistLog[key]["Welcome Sent"] = true;
+  if (stage === "Quiz Sent") checklistLog[key]["Quiz Reminder Sent"] = true;
+  if (stage === "Quiz Passed") checklistLog[key]["XCEL Login Sent"] = true;
+  if (stage === "XCEL Completed") checklistLog[key]["Exam Follow-Up"] = true;
+  if (stage === "Licensed") checklistLog[key]["Contracting Sent"] = true;
+  if (stage === "Contracted") checklistLog[key]["Contracted"] = true;
+
+  saveChecklistLog();
+}
 
 document.getElementById("copyMessage")?.addEventListener("click", () => {
   const message = document.getElementById("actionMessage")?.value || "";
