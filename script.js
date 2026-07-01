@@ -1002,21 +1002,32 @@ Thank you!`;
 }
 
 function openSmartComposer(method = "Text") {
-  if (!selectedAgent) return;
+  if (!selectedAgent) {
+    alert("Please select an agent first.");
+    return;
+  }
 
-  const composer = document.getElementById("actionModal");
-  if (!composer) return;
+  const modal = document.getElementById("actionModal");
+  if (!modal) return;
 
-  composer.classList.remove("hidden");
+  modal.classList.remove("hidden");
 
-  const recommendedTitle = recommendedActionMap[selectedAgent.stage]?.title || "Send Welcome";
+  const stage = selectedAgent.stage || "Not Placed";
+  const template = getStageMessageTemplate(stage, method, selectedAgent);
 
-  // FIX 5: use correct element IDs that exist in the action modal
-  setText("actionTitle",    `${method} • ${selectedAgent.name}`);
-  setText("actionSubtitle", recommendedActionMap[selectedAgent.stage]?.text || "");
+  setText("actionTitle", `${method} • ${selectedAgent.name}`);
+  setText("actionSubtitle", `Stage: ${stage}`);
 
   const messageEl = document.getElementById("actionMessage");
-  if (messageEl) messageEl.value = buildRecommendedMessage(selectedAgent, recommendedTitle);
+  if (messageEl) messageEl.value = template.body;
+
+  const deliveryButtons = document.querySelectorAll(".delivery");
+  deliveryButtons.forEach((btn) => {
+    btn.classList.toggle(
+      "active",
+      btn.textContent.toLowerCase().includes(method.toLowerCase())
+    );
+  });
 }
 
 function openActionModal() {
@@ -1080,10 +1091,19 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  const actionBtn = event.target.closest(".quick-actions button, #takeActionBtn, .take-action-btn");
+  const actionBtn = event.target.closest(
+    ".quick-actions button, #takeActionBtn, .take-action-btn, [data-compose]"
+  );
+
   if (!actionBtn) return;
+
   event.preventDefault();
-  const method = actionBtn.dataset.method || actionBtn.textContent.replace(/[^\w\s]/g, "").trim() || "Text";
+  event.stopPropagation();
+
+  const method =
+    actionBtn.dataset.method ||
+    (actionBtn.dataset.compose ? "Text" : "Text");
+
   openSmartComposer(method);
 });
 
