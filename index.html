@@ -728,84 +728,17 @@
     </div>
   </div>
   
-
- <div class="quick-actions">
+<div class="quick-actions">
   <button data-method="Call">📞 Call</button>
   <button data-method="Text">💬 Text</button>
   <button data-method="Email">✉️ Email</button>
   <button data-method="WhatsApp">🟢 WhatsApp</button>
   <button data-method="Zoom">🎥 Zoom</button>
-  <button data-note="true">📝 Add Note</button>
- </div>
- <div class="command-grid improved-command-grid">
-
-  <section class="command-panel coordinator-panel">
-    <div class="panel-header">
-      <h3>Coordinator Actions</h3>
-      <button id="manageTemplatesBtn">Manage Templates</button>
-    </div>
-    <div id="coordinatorActions"></div>
-  </section>
-
-  <section class="command-panel checklist-panel">
-    <div class="panel-header">
-      <div>
-        <h3>Licensing Checklist</h3>
-        <span id="checklistProgress">0 / 8 completed</span>
-      </div>
-      <button class="collapse-btn">⌄</button>
-    </div>
-
-    <div class="progress-bar">
-      <div id="checklistProgressBar"></div>
-    </div>
-
-    <div id="licensingChecklist"></div>
-  </section>
-
-  <section class="command-panel activity-panel">
-    <div class="panel-header">
-      <h3>Activity Timeline</h3>
-      <button>View All</button>
-    </div>
-    <div id="activityTimeline"></div>
-  </section>
-
-  <section class="command-panel queue-panel">
-    <div class="panel-header">
-      <h3>Today’s Queue</h3>
-      <span id="todayCount">0 Tasks</span>
-    </div>
-    <div id="todayQueue"></div>
-  </section>
-
+  <button data-method="Note">📝 Add Note</button>
 </div>
-</div>
-  <div id="messageComposer" class="message-composer hidden">
-  <div class="composer-header">
-    <h3>Message Composer</h3>
-    <button id="closeComposer">×</button>
 
-  <label>Method</label>
-  <select id="composerMethod">
-  <option>Text</option>
-  <option>Email</option>
-  <option>WhatsApp</option>
-  <option>Note</option>
-</select>
+<div class="command-grid improved-command-grid">
 
-  <label>Message</label>
-  <textarea id="composerMessage"></textarea>
-
-  <div class="composer-actions">
-    <button id="makeShorter">Shorter</button>
-    <button id="makeFriendly">Friendly</button>
-    <button id="copyMessage">Copy</button>
-    <button id="saveActivity">Save Activity</button>
-  </div>
-</div>
-  
-  <!-- Licensing Checklist -->
   <section class="command-panel">
     <div class="panel-header">
       <h3>Coordinator Actions</h3>
@@ -829,7 +762,7 @@
 
   <section class="command-panel">
     <div class="panel-header">
-      <h3>Activity Timeline</h3>
+      <h3>Comments & Activity</h3>
       <button>View All</button>
     </div>
     <div id="activityTimeline"></div>
@@ -837,33 +770,13 @@
 
   <section class="command-panel">
     <div class="panel-header">
-      <h3>Today’s Queue</h3>
+      <h3>Next Recommended Actions</h3>
       <span id="todayCount">0 Tasks</span>
     </div>
     <div id="todayQueue"></div>
   </section>
 
 </div>
- 
-
-    <section class="command-panel">
-
-<div class="panel-header">
-
-<h3>Today's Queue</h3>
-
-  <span id="todayCount">0 Tasks</span>
-
-  </div>
-
-  <div id="todayQueue"></div>
-
-  </section>
-
-      </div>
-
-    </div>
-  </section>
 
   <div id="guideModal" class="guide-modal hidden">
 
