@@ -1081,22 +1081,61 @@ document.getElementById("cancelAction")?.addEventListener("click", () => {
 document.getElementById("sendAction")?.addEventListener("click", () => {
   if (!selectedAgent) return;
 
-  const title = document.getElementById("actionTitle")?.innerText || "Action";
-  const method = title.split("•")[0].trim();
-  const message = document.getElementById("actionMessage")?.value || "";
+  const method =
+    document.getElementById("smartMethodBadge")?.innerText || "Text";
+
+  const message =
+    document.getElementById("actionMessage")?.value || "";
+
+  const subject =
+    document.getElementById("actionSubject")?.value || "";
+
+  completeSmartAction(method, message, subject);
+});
+
+function completeSmartAction(method, message, subject = "") {
+  const phone = (selectedAgent.phone || "").replace(/\D/g, "");
+  const email = selectedAgent.email || "";
 
   logCoordinatorActivity(selectedAgent, method, message);
-
   markChecklistFromMethod(method, selectedAgent.stage);
+
+  if (method === "Call" && phone) {
+    window.location.href = `tel:${phone}`;
+  }
+
+  if (method === "Text" && phone) {
+    window.location.href = `sms:${phone}?&body=${encodeURIComponent(message)}`;
+  }
+
+  if (method === "Email" && email) {
+    window.location.href =
+      `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+  }
+
+  if (method === "WhatsApp" && phone) {
+    window.open(
+      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
+  }
+
+  if (method === "Zoom") {
+    navigator.clipboard.writeText(message);
+    alert("Zoom invite copied. Paste it into text, email, or WhatsApp.");
+  }
+
+  if (method === "Note") {
+    alert("Note saved.");
+  }
 
   document.getElementById("actionModal")?.classList.add("hidden");
 
   renderLicensingChecklist(selectedAgent);
   renderActivityTimeline(selectedAgent);
   renderTodayQueue();
+}
 
-  alert(`${method} completed and logged.`);
-});
 function markChecklistFromMethod(method, stage) {
   if (!selectedAgent) return;
 
