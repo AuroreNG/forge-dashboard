@@ -802,94 +802,80 @@
 FORGE AI ACTION MODAL
 Appears when coordinator clicks Take Action
 ========================================== -->
-  <div id="actionModal" class="modal hidden">
+ <div id="actionModal" class="modal hidden">
+  <div class="smart-action-panel">
 
-    <div class="action-panel">
+    <button id="closeActionModal" class="smart-close">✕</button>
 
-        <button id="closeActionModal" class="close-btn">
-            ✕
-        </button>
-
-        <span class="action-badge">
-            Recommended Next Action
-        </span>
-
-        <h2 id="actionTitle">
-            Send Welcome
-        </h2>
-
-        <p id="actionSubtitle">
-            Introduce yourself as the Licensing Coordinator.
-        </p>
-
-        <div class="action-info">
-
-            <div class="info-card">
-                <small>Priority</small>
-                <strong id="actionPriority">
-                    ★★★★★ High
-                </strong>
-            </div>
-
-            <div class="info-card">
-                <small>Estimated Time</small>
-                <strong>
-                    2 minutes
-                </strong>
-            </div>
-
-        </div>
-
-        <h3>Choose Delivery</h3>
-
-        <div class="delivery-buttons">
-
-            <button class="delivery active">📱 Text</button>
-            <button class="delivery">📧 Email</button>
-            <button class="delivery">💬 WhatsApp</button>
-            <button class="delivery">📞 Call</button>
-            <button class="delivery">🎥 Zoom</button>
-
-        </div>
-
-        <h3>Message</h3>
-
-        <textarea
-            id="actionMessage"
-            rows="9"
-        ></textarea>
-
-        <div class="ai-toolbar">
-
-            <button>✨ Rewrite</button>
-
-            <button>😊 Friendlier</button>
-
-            <button>✂ Shorter</button>
-
-            <button>📈 Professional</button>
-
-            <button>🌍 Translate</button>
-          </div>
-
-        <!-- Footer -->
-        <div class="action-footer">
-          <button id="cancelAction" class="action-btn secondary">
-          ✕ Cancel
-          </button>
-
-          <button id="saveDraft" class="action-btn ghost">
-              💾 Save Draft
-          </button>
-
-          <button id="sendAction" class="action-btn primary">
-              ✨ Send & Complete Step
-          </button>
-
-        </div>
+    <div class="smart-action-head">
+      <span id="smartMethodBadge">Text</span>
+      <div>
+        <h2 id="actionTitle">Take Action</h2>
+        <p id="actionSubtitle">Choose a communication method.</p>
       </div>
     </div>
-  </div>  
+
+    <div class="smart-agent-box">
+      <div>
+        <small>Agent</small>
+        <strong id="smartAgentName">—</strong>
+      </div>
+      <div>
+        <small>Stage</small>
+        <strong id="smartAgentStage">—</strong>
+      </div>
+      <div>
+        <small>Upline</small>
+        <strong id="smartAgentUpline">—</strong>
+      </div>
+    </div>
+
+    <div class="delivery-buttons">
+      <button class="delivery active" data-delivery="Text">💬 Text</button>
+      <button class="delivery" data-delivery="Email">✉️ Email</button>
+      <button class="delivery" data-delivery="WhatsApp">🟢 WhatsApp</button>
+      <button class="delivery" data-delivery="Call">📞 Call</button>
+      <button class="delivery" data-delivery="Zoom">🎥 Zoom</button>
+      <button class="delivery" data-delivery="Note">📝 Note</button>
+    </div>
+
+    <div id="emailSubjectWrap" class="smart-field hidden">
+      <label>Email Subject</label>
+      <input id="actionSubject" placeholder="Subject line" />
+    </div>
+
+    <div class="smart-field">
+      <label id="messageLabel">Message</label>
+      <textarea id="actionMessage" rows="9"></textarea>
+    </div>
+
+    <div id="callOutcomeWrap" class="smart-field hidden">
+      <label>Call Outcome</label>
+      <select id="callOutcome">
+        <option>No Answer</option>
+        <option>Left Voicemail</option>
+        <option>Spoke With Agent</option>
+        <option>Completed Step</option>
+        <option>Needs Help</option>
+        <option>Scheduled Follow-Up</option>
+      </select>
+    </div>
+
+    <div class="ai-toolbar">
+      <button id="rewriteProfessional">📈 Professional</button>
+      <button id="rewriteFriendly">😊 Friendlier</button>
+      <button id="rewriteShorter">✂ Shorter</button>
+      <button id="copyActionMessage">📋 Copy</button>
+    </div>
+
+    <div class="action-footer">
+      <button id="cancelAction" class="action-btn secondary">Cancel</button>
+      <button id="saveDraft" class="action-btn ghost">Save Draft</button>
+      <button id="sendAction" class="action-btn primary">Send & Complete Step</button>
+    </div>
+
+  </div>
+</div>
 
   <section id="growthPage" class="growth-page hidden">
 
