@@ -1023,23 +1023,47 @@ function openSmartComposer(method = "Text") {
 
   modal.classList.remove("hidden");
 
+  setActiveDelivery(method);
+
   const stage = selectedAgent.stage || "Not Placed";
   const template = getStageMessageTemplate(stage, method, selectedAgent);
 
+  setText("smartMethodBadge", method);
   setText("actionTitle", `${method} • ${selectedAgent.name}`);
-  setText("actionSubtitle", `Stage: ${stage}`);
+  setText("actionSubtitle", getActionSubtitle(method, stage));
 
+  setText("smartAgentName", selectedAgent.name || "—");
+  setText("smartAgentStage", stage);
+  setText("smartAgentUpline", selectedAgent.upline || selectedAgent.coordinator || "—");
+
+  const subjectWrap = document.getElementById("emailSubjectWrap");
+  const subjectEl = document.getElementById("actionSubject");
   const messageEl = document.getElementById("actionMessage");
-  if (messageEl) messageEl.value = template.body;
+  const callWrap = document.getElementById("callOutcomeWrap");
 
-  const deliveryButtons = document.querySelectorAll(".delivery");
-  deliveryButtons.forEach((btn) => {
-    btn.classList.toggle(
-      "active",
-      btn.textContent.toLowerCase().includes(method.toLowerCase())
-    );
+  subjectWrap?.classList.toggle("hidden", method !== "Email");
+  callWrap?.classList.toggle("hidden", method !== "Call");
+
+  if (subjectEl) subjectEl.value = template.subject || "";
+  if (messageEl) messageEl.value = template.body || "";
+}
+
+/*Helper*/
+function setActiveDelivery(method) {
+  document.querySelectorAll(".delivery").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.delivery === method);
   });
 }
+
+function getActionSubtitle(method, stage) {
+  if (method === "Call") return `Call script for ${stage}.`;
+  if (method === "Email") return `Email template for ${stage}.`;
+  if (method === "WhatsApp") return `WhatsApp message for ${stage}.`;
+  if (method === "Zoom") return `Zoom invite for ${stage}.`;
+  if (method === "Note") return `Coordinator note for ${stage}.`;
+  return `Text message for ${stage}.`;
+}
+
 
 function openActionModal() {
   if (!selectedAgent) { alert("Please select an agent first."); return; }
@@ -1131,10 +1155,7 @@ document.addEventListener("click", (event) => {
   event.preventDefault();
   event.stopPropagation();
 
-  const method =
-    actionBtn.dataset.method ||
-    (actionBtn.dataset.compose ? "Text" : "Text");
-
+  const method = actionBtn.dataset.method || "Text";
   openSmartComposer(method);
 });
 
@@ -1160,10 +1181,11 @@ document.addEventListener("click", (event) => {
   if (!deliveryBtn || !selectedAgent) return;
 
   event.preventDefault();
+  event.stopPropagation();
 
-  document.querySelectorAll(".delivery").forEach((btn) =>
-    btn.classList.remove("active")
-  );
+  openSmartComposer(deliveryBtn.dataset.delivery || "Text");
+});
+
 
   deliveryBtn.classList.add("active");
 
