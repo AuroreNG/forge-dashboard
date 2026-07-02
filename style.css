@@ -3602,3 +3602,146 @@ grid-template-columns: 30% 70%;  gap: 24px;
   font-size: 12px;
   color: #66758f;
 }
+
+/*command center improvement*/
+.smart-action-panel {
+  width: min(780px, 94vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 28px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 30px 80px rgba(7, 18, 38, 0.25);
+}
+
+.smart-close {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  border: 1px solid #dbe7fb;
+  background: white;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 18px;
+}
+
+.smart-action-head {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+#smartMethodBadge {
+  background: #2563eb;
+  color: #fff;
+  padding: 14px 18px;
+  border-radius: 18px;
+  font-weight: 800;
+}
+
+.smart-agent-box {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.smart-agent-box div {
+  border: 1px solid #dbe7fb;
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.smart-agent-box small {
+  display: block;
+  color: #64748b;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.delivery-buttons {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.delivery {
+  border: 1px solid #dbe7fb;
+  background: white;
+  border-radius: 14px;
+  padding: 13px;
+  font-weight: 800;
+}
+
+.delivery.active {
+  background: #0b2f6b;
+  color: white;
+  border-color: #0b2f6b;
+}
+
+.smart-field {
+  margin-bottom: 18px;
+}
+
+.smart-field label {
+  display: block;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.smart-field input,
+.smart-field textarea,
+.smart-field select {
+  width: 100%;
+  border: 1px solid #dbe7fb;
+  border-radius: 16px;
+  padding: 14px;
+  font-size: 15px;
+}
+
+.ai-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.ai-toolbar button {
+  border: 1px solid #dbe7fb;
+  background: white;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 800;
+}
+
+.action-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid #eef3fb;
+  padding-top: 18px;
+}
+
+.action-btn {
+  border: none;
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-weight: 900;
+}
+
+.action-btn.primary {
+  background: #2563eb;
+  color: white;
+}
+
+.action-btn.secondary {
+  background: #f1f5f9;
+}
+
+.action-btn.ghost {
+  background: #eef4ff;
+  color: #2563eb;
+}
