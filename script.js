@@ -1351,6 +1351,54 @@ function updateCommandInsights(agent) {
   setText("aiCoachText",  coachText);
 }
 
+// AI buttons --------
+document.getElementById("rewriteProfessional")?.addEventListener("click", () => {
+  rewriteActionMessage("professional");
+});
+
+document.getElementById("rewriteFriendly")?.addEventListener("click", () => {
+  rewriteActionMessage("friendly");
+});
+
+document.getElementById("rewriteShorter")?.addEventListener("click", () => {
+  rewriteActionMessage("shorter");
+});
+
+document.getElementById("copyActionMessage")?.addEventListener("click", () => {
+  const message = document.getElementById("actionMessage")?.value || "";
+  navigator.clipboard.writeText(message);
+  alert("Message copied.");
+});
+
+function rewriteActionMessage(style) {
+  const box = document.getElementById("actionMessage");
+  if (!box) return;
+
+  let text = box.value.trim();
+
+  if (style === "professional") {
+    box.value = text
+      .replace(/Hi /i, "Hello ")
+      .replace(/😊/g, "")
+      + "\n\nThank you.";
+  }
+
+  if (style === "friendly") {
+    box.value =
+      `Hi ${selectedAgent?.name || ""}, 😊\n\n` +
+      text.replace(/^Hi .*?,\s*/i, "");
+  }
+
+  if (style === "shorter") {
+    box.value = text
+      .split(".")
+      .filter(Boolean)
+      .slice(0, 3)
+      .join(". ")
+      .trim() + ".";
+  }
+}
+
 // ─── TODAY QUEUE ─────────────────────────────────────────────────────────────
 
 function renderTodayQueue() {
