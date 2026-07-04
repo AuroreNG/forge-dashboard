@@ -95,12 +95,12 @@ function normalizeAgent(row) {
   const cleanStatus = status.toLowerCase();
 
   let stage = "Not Placed";
-  if (cleanStatus.includes("contracted"))            stage = "Contracted";
+  if (cleanStatus.includes("contracted")) stage = "Contracted";
   else if (cleanStatus.includes("continuing education")) stage = "Continuing Education";
-  else if (cleanStatus.includes("exam passed"))      stage = "Exam Passed";
-  else if (cleanStatus.includes("xcel"))             stage = "XCEL Completed";
-  else if (cleanStatus.includes("quiz passed"))      stage = "Quiz Passed";
-  else if (cleanStatus.includes("quiz sent"))        stage = "Quiz Sent";
+  else if (cleanStatus.includes("exam passed")) stage = "Exam Passed";
+  else if (cleanStatus.includes("xcel")) stage = "XCEL Completed";
+  else if (cleanStatus.includes("quiz passed")) stage = "Quiz Passed";
+  else if (cleanStatus.includes("quiz sent")) stage = "Quiz Sent";
   else if (cleanStatus.includes("licensed") || cleanStatus.includes("license")) stage = "Licensed";
 
   return {
@@ -108,8 +108,12 @@ function normalizeAgent(row) {
     email: (row["Email"] || "").trim(),
     phone: (row["Phone"] || "").trim(),
     code: (row["Agent Code"] || "").trim(),
-    coordinator: (row["Upline Name"] || "").trim(),
+
+    upline: (row["Upline Name"] || "").trim(),
     uplineCode: (row["Upline Code"] || "").trim(),
+
+    coordinator: (row["Coordinator"] || "").trim() || "Unassigned",
+
     teamStatus: status,
     status,
     stage,
