@@ -1040,6 +1040,26 @@ function openSmartComposer(method = "Text") {
   setText("smartAgentStage", stage);
   setText("smartAgentUpline", selectedAgent.upline || selectedAgent.coordinator || "—");
 
+  // Phone Number
+const phoneEl = document.getElementById("smartAgentPhone");
+
+if (phoneEl) {
+    if (selectedAgent.phone) {
+        phoneEl.innerHTML = `
+            <a href="tel:${selectedAgent.phone.replace(/\D/g, "")}"
+               class="phone-link">
+               📱 ${selectedAgent.phone}
+            </a>
+        `;
+    } else {
+        phoneEl.innerHTML = `
+            <span class="missing-phone">
+                No phone number on file
+            </span>
+        `;
+    }
+}
+
   const subjectWrap = document.getElementById("emailSubjectWrap");
   const subjectEl = document.getElementById("actionSubject");
   const messageEl = document.getElementById("actionMessage");
@@ -1820,17 +1840,3 @@ function rewriteActionMessage(style) {
   }
 }
 
-//---logic for phone call------
-function cleanPhone(phone) {
-  return phone.replace(/\D/g, "");
-}
-
-function callAgent(agent) {
-  if (!agent.phone) {
-    alert("No phone number on file.");
-    return;
-  }
-
-  const phone = cleanPhone(agent.phone);
-  window.location.href = `tel:+1${phone}`;
-}
