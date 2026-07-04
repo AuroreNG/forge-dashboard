@@ -1040,6 +1040,20 @@ function openSmartComposer(method = "Text") {
   setText("smartAgentStage", stage);
   setText("smartAgentUpline", selectedAgent.upline || selectedAgent.coordinator || "—");
 
+  //---phone 
+  const smartPhone = document.getElementById("smartAgentPhone");
+
+if (smartPhone) {
+  const phone = selectedAgent.phone || "";
+
+  if (phone) {
+    const cleanPhone = phone.replace(/\D/g, "");
+    smartPhone.innerHTML = `<a href="tel:${cleanPhone}" class="phone-link">📱 ${phone}</a>`;
+  } else {
+    smartPhone.textContent = "No phone";
+  }
+}
+
   // Phone Number
 const phoneEl = document.getElementById("smartAgentPhone");
 
