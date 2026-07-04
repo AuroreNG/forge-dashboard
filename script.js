@@ -1202,21 +1202,7 @@ document.addEventListener("click", (event) => {
   openSmartComposer(method);
 });
 
-document.addEventListener("click", (event) => {
-  const btn = event.target.closest(
-    ".quick-actions button, #takeActionBtn, [data-compose], [data-note]"
-  );
 
-  if (!btn || !selectedAgent) return;
-
-  event.preventDefault();
-
-  const method =
-    btn.dataset.method ||
-    (btn.dataset.note ? "Note" : "Text");
-
-  openSmartComposer(method);
-});
 
 //---make the delivery buttons inside the modal switch the message type.
 document.addEventListener("click", (event) => {
