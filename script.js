@@ -1819,3 +1819,18 @@ function rewriteActionMessage(style) {
       .trim() + ".";
   }
 }
+
+//---logic for phone call------
+function cleanPhone(phone) {
+  return phone.replace(/\D/g, "");
+}
+
+function callAgent(agent) {
+  if (!agent.phone) {
+    alert("No phone number on file.");
+    return;
+  }
+
+  const phone = cleanPhone(agent.phone);
+  window.location.href = `tel:+1${phone}`;
+}
