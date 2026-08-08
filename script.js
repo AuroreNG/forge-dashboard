@@ -283,18 +283,11 @@ document.getElementById("coordinatorSelect")?.addEventListener("change", (event)
 // ─── LOAD CSV ─────────────────────────────────────────────────────────────────
 
 async function loadCSV() {
-  const { data } =
-await supabase
-.from("agents")
-.select("*");
+ const { data, error } = await forgeSupabase
+  .from("agents")
+  .select("*");
 
 allAgents = data || [];
-
-  if (saved.length > 0) {
-    allAgents = saved;
-    renderAllPages();
-    return;
-  }
 
   try {
     const response = await fetch("team.csv");
@@ -1898,14 +1891,3 @@ function rewriteActionMessage(style) {
       .trim() + ".";
   }
 }
-// Create a new file : supabase-config.js
-const SUPABASE_URL = "https://czqdmrkjqdnzjmvjslmr.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_rHv_DYV8oIGrSklR2uOL8Q_bVHhgnyR";
-
-const forgeSupabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-let currentUserProfile = null;
-console.log("Supabase connected:", forgeSupabase);
