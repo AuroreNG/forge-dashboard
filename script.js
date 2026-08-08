@@ -6,11 +6,63 @@ let commandCurrentPage = 1;
 const commandPageSize = 11;
 
 let currentJourneyMode = "launch";
-let activityLog = JSON.parse(localStorage.getItem("forgeActivityLog")) || {};
-let checklistLog = JSON.parse(localStorage.getItem("forgeChecklistLog")) || {};
+
+let activityLog =
+  JSON.parse(localStorage.getItem("forgeActivityLog")) || {};
+
+let checklistLog =
+  JSON.parse(localStorage.getItem("forgeChecklistLog")) || {};
 
 function saveChecklistLog() {
-  localStorage.setItem("forgeChecklistLog", JSON.stringify(checklistLog));
+  localStorage.setItem(
+    "forgeChecklistLog",
+    JSON.stringify(checklistLog)
+  );
+}
+
+/* ==========================================================
+   CURRENT LOGGED-IN USER
+========================================================== */
+
+async function loadCurrentUserProfile() {
+  try {
+
+    const {
+      data: { user },
+      error: userError
+    } = await forgeSupabase.auth.getUser();
+
+    if (userError) {
+      console.error(userError);
+      return null;
+    }
+
+    if (!user) {
+      console.log("No logged in user.");
+      return null;
+    }
+
+    const { data: profile, error } = await forgeSupabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    if (error) {
+      console.error(error);
+      return null;
+    }
+
+    currentUserProfile = profile;
+
+    console.log("Current Profile:", profile);
+
+    return profile;
+
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 }
 
 const pipelineStages = [
@@ -1842,12 +1894,15 @@ function isLeader(agent, agents) {
 
 // ─── DOM READY ────────────────────────────────────────────────────────────────
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   document.addEventListener("click", (event) => {
     const navBtn = event.target.closest(".nav-btn");
     if (!navBtn) return;
 
-    document.querySelectorAll(".nav-btn").forEach((btn) => btn.classList.remove("active"));
+    document.querySelectorAll(".nav-btn").forEach((btn) =>
+      btn.classList.remove("active")
+    );
+
     navBtn.classList.add("active");
     showPage(navBtn.textContent.trim());
   });
@@ -1856,12 +1911,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterBtn = event.target.closest(".filter");
     if (!filterBtn) return;
 
-    document.querySelectorAll(".filter").forEach((btn) => btn.classList.remove("active"));
+    document.querySelectorAll(".filter").forEach((btn) =>
+      btn.classList.remove("active")
+    );
+
     filterBtn.classList.add("active");
     renderDashboard(filterBtn.dataset.filter || "all");
   });
 
-  loadCSV();
+  await loadCurrentUserProfile();
+  await loadCSV();
+
   setInterval(updateTime, 30000);
 });
 
