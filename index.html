@@ -448,7 +448,6 @@
   </div>
 </div>
 
-<input type="file" id="csvImportInput" accept=".csv" hidden>
 <div id="importReviewModal" class="modal hidden">
   <div class="modal-card import-review">
 
@@ -554,16 +553,66 @@
       </div>
     </div>
 
-    <div class="guide-footer">
-      <span>🛡️ Your data is safe and secure.</span>
-      <div>
-        <button id="cancelImportGuide">Cancel</button>
-        <button id="startCSVImport" class="import-primary">Import CSV</button>
-      </div>
-    </div>
+   <!-- =========================================================
+IMPORT GUIDE FOOTER
+Gives the user separate import choices
+========================================================= -->
+<div class="guide-footer">
+
+  <span>🛡️ Your data is safe and secure.</span>
+
+  <div class="import-choice-actions">
+
+    <!-- Close the import guide -->
+    <button id="cancelImportGuide">
+      Cancel
+    </button>
+
+    <!-- Existing FORGE/team CSV -->
+    <button
+      id="startCSVImport"
+      class="import-primary"
+    >
+      Import Team CSV
+    </button>
+
+    <!-- Tevah compliance CSV -->
+    <button
+      id="startComplianceImport"
+      class="import-primary"
+    >
+      Import Compliance CSV
+    </button>
 
   </div>
+
 </div>
+<!-- Close .import-guide-modal -->
+</div>
+
+<!-- Close #importGuideModal -->
+</div>
+<!-- =========================================================
+HIDDEN CSV FILE INPUTS
+JavaScript opens these when an import button is clicked.
+========================================================= -->
+
+<!-- Your original/team CSV importer -->
+<input
+  type="file"
+  id="csvImportInput"
+  accept=".csv"
+  hidden
+/>
+
+<!-- Tevah compliance CSV importer -->
+<input
+  type="file"
+  id="complianceImportInput"
+  accept=".csv"
+  hidden
+/>
+
     
 <section id="agentsPage" class="agents-page hidden">
   <div class="agents-layout">
