@@ -882,6 +882,76 @@ function showAgentProfile(agent) {
   setComplianceValue("profileEO", agent.eoStatus);
   setComplianceValue("profileAML", agent.amlStatus);
 }
+// ==========================================================
+// AGENT PROFILE - COMPLIANCE STATUS
+// ==========================================================
+
+function setComplianceValue(elementId, value) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+
+  const normalized =
+    String(value || "").trim().toLowerCase();
+
+  // Default text
+  let displayValue = value || "—";
+
+  // Remove old status classes
+  el.classList.remove(
+    "compliance-active",
+    "compliance-warning",
+    "compliance-empty"
+  );
+
+  // Active = green
+  if (normalized === "active") {
+    displayValue = "✓ Active";
+    el.classList.add("compliance-active");
+  }
+
+  // Expired / inactive = warning
+  else if (
+    normalized === "expired" ||
+    normalized === "inactive"
+  ) {
+    displayValue = "⚠ " + value;
+    el.classList.add("compliance-warning");
+  }
+
+  // Blank / -- = neutral
+  else if (
+    !normalized ||
+    normalized === "--"
+  ) {
+    displayValue = "—";
+    el.classList.add("compliance-empty");
+  }
+
+  el.textContent = displayValue;
+}
+
+
+// Add these inside showAgentProfile(agent)
+
+setComplianceValue(
+  "profileResidentLicense",
+  agent.residentLicense
+);
+
+setComplianceValue(
+  "profileEO",
+  agent.eoStatus
+);
+
+setComplianceValue(
+  "profileAML",
+  agent.amlStatus
+);
+
+setComplianceValue(
+  "profileTevahFee",
+  agent.tevahPlatformFee
+);
 
 function updateJourneyStatus(stage) {
   const statusOne   = document.getElementById("statusOne");
