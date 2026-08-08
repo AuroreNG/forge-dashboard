@@ -875,28 +875,51 @@ function showAgentProfile(agent) {
 
   updateJourneyStatus(agent.stage);
 
-  // ==========================================================
-  // Compliance indicators
-  // ==========================================================
-setComplianceValue(
-  "profileResidentLicense",
-  agent.residentLicense
-);
+  // Compliance
+  setComplianceValue("profileResidentLicense", agent.residentLicense);
+  setComplianceValue("profileEO", agent.eoStatus);
+  setComplianceValue("profileAML", agent.amlStatus);
+  setComplianceValue("profileTevahFee", agent.tevahPlatformFee);
+}
 
-setComplianceValue(
-  "profileEO",
-  agent.eoStatus
-);
 
-setComplianceValue(
-  "profileAML",
-  agent.amlStatus
-);
+// ==========================================================
+// COMPLIANCE DISPLAY HELPER
+// This stays OUTSIDE showAgentProfile()
+// ==========================================================
+function setComplianceValue(elementId, value) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
 
-setComplianceValue(
-  "profileTevahFee",
-  agent.tevahPlatformFee
-);
+  const normalized =
+    String(value || "").trim().toLowerCase();
+
+  let displayValue = value || "—";
+
+  el.classList.remove(
+    "compliance-active",
+    "compliance-warning",
+    "compliance-empty"
+  );
+
+  if (normalized === "active") {
+    displayValue = "✓ Active";
+    el.classList.add("compliance-active");
+  } else if (
+    normalized === "expired" ||
+    normalized === "inactive"
+  ) {
+    displayValue = "⚠ " + value;
+    el.classList.add("compliance-warning");
+  } else if (
+    !normalized ||
+    normalized === "--"
+  ) {
+    displayValue = "—";
+    el.classList.add("compliance-empty");
+  }
+
+  el.textContent = displayValue;
 }
 // ==========================================================
 // AGENT PROFILE - COMPLIANCE STATUS
