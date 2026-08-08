@@ -187,6 +187,29 @@ function normalizeAgent(row) {
   };
 }
 
+function normalizeComplianceAgent(row) {
+  return {
+    name: String(row["AGENT NAME"] || "").trim(),
+    code: String(row["CODE"] || "").trim(),
+
+    // Automatically comes from the compliance export
+    upline: String(row["UPLINE AGENT"] || "").trim(),
+
+    // Optional: keep the higher leader too
+    uplineLeader: String(row["UPLINE LEADER"] || "").trim(),
+
+    email: String(row["EMAIL"] || "").trim(),
+    level: String(row["LEVEL"] || "").trim(),
+
+    residentState: String(row["RESI. STATE"] || "").trim(),
+    residentLicense: String(row["RESI. LICENSE"] || "").trim(),
+    eoStatus: String(row["E&O"] || "").trim(),
+    tevahPlatformFee: String(row["TEVAH PLATFORM FEE"] || "").trim(),
+    amlStatus: String(row["AML"] || "").trim(),
+    teamStatus: String(row["STATUS"] || "").trim(),
+    npn: String(row["NPN"] || "").trim()
+  };
+}
 // ─── METRICS ─────────────────────────────────────────────────────────────────
 
 function getMetrics(list) {
@@ -1724,6 +1747,182 @@ document.addEventListener("click", (event) => {
     .getElementById("csvImportInput")
     ?.click();
 });
+
+// ─── COMPLIANCE CSV IMPORT ────────────────────────────────────────────────────
+// This importer reads the Tevah compliance CSV.
+// It uses CODE + organization_id to update the correct agent.
+// It does NOT create duplicates if the same agent already exists.
+
+document.getElementById("complianceImportInput")?.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = async () => {
+    try {
+      console.log("Starting Compliance CSV import...");
+
+      // Parse the CSV and convert each Tevah row
+      // into the format FORGE understands.
+      const complianceAgents =
+        parseCSV(reader.result).map(normalizeComplianceAgent);
+
+      console.log(
+        "Compliance agents parsed:",
+        complianceAgents.length
+      );
+
+      // FORGE must know which organization this user belongs to.
+      if (!currentUserProfile?.organization_id) {
+        throw new Error(
+          "Your FORGE profile does not have an organization assigned."
+        );
+      }
+
+      // Do not import rows that do not have an Agent Code.
+      // Agent Code is what FORGE uses to safely match records.
+      const validAgents = complianceAgents.filter((agent) =>
+        agent.code && agent.code.trim() !== ""
+      );
+
+      const skippedCount =
+        complianceAgents.length - validAgents.length;
+
+      console.log(
+        "Compliance rows skipped because Code is blank:",
+        skippedCount
+      );
+
+      // Convert the normalized data to Supabase column names.
+      const rows = validAgents.map((agent) => ({
+        organization_id: currentUserProfile.organization_id,
+
+        name: agent.name,
+        agent_code: agent.code,
+
+        email: agent.email || null,
+
+        // Compliance file already tells us the upline.
+        upline_name: agent.upline || null,
+
+        agent_level: agent.level || null,
+        resident_state: agent.residentState || null,
+        resident_license: agent.residentLicense || null,
+        eo_status: agent.eoStatus || null,
+        tevah_platform_fee: agent.tevahPlatformFee || null,
+        aml_status: agent.amlStatus || null,
+        team_status: agent.teamStatus || "",
+        npn: agent.npn || null,
+
+        import_source: "Tevah Compliance"
+      }));
+
+      console.log(
+        "Compliance rows being sent to Supabase:",
+        rows
+      );
+
+      // UPSERT means:
+      // new Agent Code      → create agent
+      // existing Agent Code → update same agent
+      //
+      // organization_id is included so different organizations
+      // remain completely separate.
+      const { data, error } = await forgeSupabase
+        .from("agents")
+        .upsert(rows, {
+          onConflict: "organization_id,agent_code",
+          ignoreDuplicates: false
+        })
+        .select();
+
+      if (error) {
+        console.error(
+          "COMPLIANCE IMPORT ERROR:",
+          error
+        );
+
+        alert(
+          "Compliance import failed: " +
+          error.message
+        );
+
+        return;
+      }
+
+      console.log(
+        "Compliance agents saved:",
+        data
+      );
+
+      // Reload the full team from Supabase.
+      await loadCSV();
+
+      const importedCount =
+        Array.isArray(data)
+          ? data.length
+          : rows.length;
+
+      alert(
+        `${importedCount} compliance records imported successfully.` +
+        (skippedCount
+          ? ` ${skippedCount} rows were skipped because they had no Agent Code.`
+          : "")
+      );
+
+    } catch (error) {
+      console.error(
+        "COMPLIANCE CSV CRASH:",
+        error
+      );
+
+      alert(
+        "Compliance import error: " +
+        (error?.message || String(error))
+      );
+
+    } finally {
+      // Allows you to select the same file again later.
+      event.target.value = "";
+    }
+  };
+
+  reader.onerror = () => {
+    console.error(
+      "COMPLIANCE FILE READ ERROR:",
+      reader.error
+    );
+
+    alert(
+      "FORGE could not read the compliance CSV file."
+    );
+
+    event.target.value = "";
+  };
+
+  reader.readAsText(file);
+});
+
+ // Open the Compliance CSV file picker
+document.addEventListener("click", (event) => {
+  if (event.target.id !== "startComplianceImport") {
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  document
+    .getElementById("importGuideModal")
+    ?.classList.add("hidden");
+
+  document
+    .getElementById("complianceImportInput")
+    ?.click();
+});
+
 // ─── STORAGE ─────────────────────────────────────────────────────────────────
 
 function saveAgentsToLocalStorage() {
