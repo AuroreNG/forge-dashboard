@@ -342,14 +342,6 @@
 
       <div class="journey-column launch-column">
         <div class="journey-column-header">
-          <h3>Quiz Passed</h3>
-          <span id="journeyQuizPassedCount">0</span>
-        </div>
-        <div id="journeyQuizPassedList" class="drop-zone" data-stage="Quiz Passed"></div>
-      </div>
-
-      <div class="journey-column launch-column">
-        <div class="journey-column-header">
           <h3>XCEL</h3>
           <span id="journeyXCELCount">0</span>
         </div>
@@ -362,14 +354,6 @@
           <span id="journeyExamPassedCount">0</span>
         </div>
         <div id="journeyExamPassedList" class="drop-zone" data-stage="Exam Passed"></div>
-      </div>
-
-      <div class="journey-column activate-column hidden">
-        <div class="journey-column-header">
-          <h3>Continuing Education</h3>
-          <span id="journeyCECount">0</span>
-        </div>
-        <div id="journeyCEList" class="drop-zone" data-stage="Continuing Education"></div>
       </div>
 
     <div class="journey-column activate-column hidden">
@@ -673,6 +657,41 @@ JavaScript opens these when an import button is clicked.
       <strong id="profileEmail"></strong>
     </div>
   </div>
+      
+<!-- =========================================================
+AGENT COMPLIANCE STATUS
+Shows licensing/compliance checks separately from Journey stage
+========================================================= -->
+
+<div class="profile-compliance-card">
+
+  <h3>Compliance</h3>
+
+  <div class="compliance-grid">
+
+    <div class="compliance-item">
+      <span>Resident License</span>
+      <strong id="profileResidentLicense">—</strong>
+    </div>
+
+    <div class="compliance-item">
+      <span>E&O</span>
+      <strong id="profileEO">—</strong>
+    </div>
+
+    <div class="compliance-item">
+      <span>AML</span>
+      <strong id="profileAML">—</strong>
+    </div>
+
+    <div class="compliance-item">
+      <span>Tevah Fee</span>
+      <strong id="profileTevahFee">—</strong>
+    </div>
+
+  </div>
+
+</div>
 
   <div class="agent-action-layout">
     <div class="agent-action-card">
