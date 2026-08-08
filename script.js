@@ -1620,9 +1620,12 @@ document.getElementById("csvImportInput")?.addEventListener("change", (event) =>
       console.log("Rows being sent to Supabase:", rows);
 
       const { data, error } = await forgeSupabase
-        .from("agents")
-        .insert(rows)
-        .select();
+  .from("agents")
+  .upsert(rows, {
+    onConflict: "organization_id,agent_code",
+    ignoreDuplicates: false
+  })
+  .select();
 
       if (error) {
         console.error("SUPABASE IMPORT ERROR:", error);
