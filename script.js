@@ -1,3 +1,4 @@
+console.log("✅ FORGE SCRIPT LOADED - NEW VERSION");
 let allAgents = [];
 let pendingImportAgents = [];
 let selectedCoordinator = "All";
