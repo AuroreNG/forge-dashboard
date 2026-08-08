@@ -1498,14 +1498,48 @@ document.getElementById("csvImportInput")?.addEventListener("change", (event) =>
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = () => {
-    const csvAgents = parseCSV(reader.result).map(normalizeAgent);
-    const saved     = JSON.parse(localStorage.getItem("forgeAgents")) || [];
-    allAgents       = mergeCsvWithSavedPipeline(csvAgents, saved);
-    saveAgentsToLocalStorage();
-    renderAllPages();
-    alert(`${allAgents.length} agents imported successfully.`);
+
+  reader.onload = async () => {
+    try {
+      const csvAgents = parseCSV(reader.result).map(normalizeAgent);
+
+      const rows = csvAgents.map((agent) => ({
+        organization_id: currentUserProfile.organization_id,
+
+        name: agent.name,
+        email: agent.email,
+        phone: agent.phone,
+        agent_code: agent.code,
+
+        upline_name: agent.upline,
+        upline_code: agent.uplineCode,
+
+        stage: agent.stage,
+        team_status: agent.teamStatus || ""
+      }));
+
+      const { data, error } = await forgeSupabase
+        .from("agents")
+        .insert(rows)
+        .select();
+
+      if (error) {
+        console.error("Import error:", error);
+        alert("Import failed: " + error.message);
+        return;
+      }
+
+      allAgents = await loadAgentsFromSupabase();
+
+      renderAllPages();
+
+      alert(`${data.length} agents imported successfully.`);
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong while importing.");
+    }
   };
+
   reader.readAsText(file);
   event.target.value = "";
 });
@@ -1864,4 +1898,14 @@ function rewriteActionMessage(style) {
       .trim() + ".";
   }
 }
+// Create a new file : supabase-config.js
+const SUPABASE_URL = "https://czqdmrkjqdnzjmvjslmr.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_rHv_DYV8oIGrSklR2uOL8Q_bVHhgnyR";
 
+const forgeSupabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+let currentUserProfile = null;
+console.log("Supabase connected:", forgeSupabase);
