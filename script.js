@@ -1602,21 +1602,34 @@ document.getElementById("csvImportInput")?.addEventListener("change", (event) =>
         );
       }
 
-      const rows = csvAgents.map((agent) => ({
-        organization_id: currentUserProfile.organization_id,
+      // Only import agents that have an Agent Code.
+// This prevents blank/NULL Agent Codes from creating
+// incomplete duplicate records again.
 
-        name: agent.name,
-        email: agent.email || null,
-        phone: agent.phone || null,
-        agent_code: agent.code || null,
+const validAgents = csvAgents.filter((agent) => {
+  return agent.code && agent.code.trim() !== "";
+});
 
-        upline_name: agent.upline || null,
-        upline_code: agent.uplineCode || null,
+const skippedAgents = csvAgents.length - validAgents.length;
 
-        stage: agent.stage || "Not Placed",
-        team_status: agent.teamStatus || ""
-      }));
+console.log(
+  `Valid agents: ${validAgents.length}. Skipped without Agent Code: ${skippedAgents}`
+);
 
+const rows = validAgents.map((agent) => ({
+  organization_id: currentUserProfile.organization_id,
+
+  name: agent.name,
+  email: agent.email || null,
+  phone: agent.phone || null,
+  agent_code: agent.code,
+
+  upline_name: agent.upline || null,
+  upline_code: agent.uplineCode || null,
+
+  stage: agent.stage || "Not Placed",
+  team_status: agent.teamStatus || ""
+}));
       console.log("Rows being sent to Supabase:", rows);
 
      // UPSERT =
