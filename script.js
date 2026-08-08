@@ -1733,19 +1733,49 @@ document.addEventListener("click", (event) => {
 });
 
 
+// ==========================================================
+// IMPORT TEAM CSV
+// ==========================================================
 document.addEventListener("click", (event) => {
+
   if (event.target.id !== "startCSVImport") return;
 
   event.preventDefault();
   event.stopPropagation();
 
+  // Close modal
   document
     .getElementById("importGuideModal")
     ?.classList.add("hidden");
 
+  // Open Team CSV picker
   document
     .getElementById("csvImportInput")
     ?.click();
+
+});
+
+
+// ==========================================================
+// IMPORT COMPLIANCE CSV
+// ==========================================================
+document.addEventListener("click", (event) => {
+
+  if (event.target.id !== "startComplianceImport") return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  // Close modal
+  document
+    .getElementById("importGuideModal")
+    ?.classList.add("hidden");
+
+  // Open Compliance CSV picker
+  document
+    .getElementById("complianceImportInput")
+    ?.click();
+
 });
 
 // ─── COMPLIANCE CSV IMPORT ────────────────────────────────────────────────────
