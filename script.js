@@ -188,45 +188,54 @@ function parseCSV(text) {
 // Everything else -> Not Placed
 // ==========================================================
 
+// ==========================================================
+// NORMALIZE MAIN TEAM CSV
+// This decides where each person belongs in the Journey.
+//
+// Examples:
+// Active, License, Contracted  → Contracted
+// Active, Contracted, License  → Contracted
+// Active, License              → Licensed
+// Inactive, License            → Licensed
+// Active, Non-Licensed         → XCEL
+// Inactive, Non-Licensed       → Not Placed
+// ==========================================================
+
 function normalizeAgent(row) {
 
-  const name =
-    String(row["Full name"] || "").trim();
+  // Basic information
+  const name = String(row["Full name"] || "").trim();
+  const code = String(row["Agent Code"] || "").trim();
+  const email = String(row["Email"] || "").trim();
+  const phone = String(row["Phone"] || "").trim();
 
-  const code =
-    String(row["Agent Code"] || "").trim();
+  // Team hierarchy
+  const upline = String(row["Upline Name"] || "").trim();
+  const uplineCode = String(row["Upline Code"] || "").trim();
 
-  const email =
-    String(row["Email"] || "").trim();
+  // Team status from your CSV
+  const teamStatus = String(row["Team Status"] || "").trim();
 
-  const phone =
-    String(row["Phone"] || "").trim();
-
-  const upline =
-    String(row["Upline Name"] || "").trim();
-
-  const uplineCode =
-    String(row["Upline Code"] || "").trim();
-
-  const teamStatus =
-    String(row["Team Status"] || "").trim();
-
+  // Recruit date
   const recruitDate =
     String(row["Recruit Date ( CST )"] || "").trim();
 
-  // Convert Team Status to a FORGE Journey stage
-  const status =
-    teamStatus.toLowerCase();
+  // Make status easier to compare
+  const status = teamStatus.toLowerCase();
 
   let stage = "Not Placed";
 
-  // Highest priority:
-  // If Contracted appears anywhere, they are Contracted.
+  // ----------------------------------------------------------
+  // 1. CONTRACTED has highest priority
+  // ----------------------------------------------------------
   if (status.includes("contracted")) {
     stage = "Contracted";
   }
 
-  // If licensed but not contracted, they are Licensed.
+  // ----------------------------------------------------------
+  // 2. LICENSED
+  // Must contain "license" but NOT "non-licensed"
+  // ----------------------------------------------------------
   else if (
     status.includes("license") &&
     !status.includes("non-licensed")
@@ -234,8 +243,10 @@ function normalizeAgent(row) {
     stage = "Licensed";
   }
 
-  // Active + Non-Licensed means they are working
-  // through the licensing process.
+  // ----------------------------------------------------------
+  // 3. ACTIVE NON-LICENSED
+  // They are working through licensing, so place in XCEL.
+  // ----------------------------------------------------------
   else if (
     status.includes("active") &&
     status.includes("non-licensed")
@@ -243,8 +254,9 @@ function normalizeAgent(row) {
     stage = "XCEL Completed";
   }
 
-  // Inactive / Non-Licensed / missing status
-  // stays Not Placed.
+  // ----------------------------------------------------------
+  // 4. Everyone else starts Not Placed
+  // ----------------------------------------------------------
   else {
     stage = "Not Placed";
   }
