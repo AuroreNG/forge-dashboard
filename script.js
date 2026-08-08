@@ -20,51 +20,6 @@ function saveChecklistLog() {
   );
 }
 
-/* ==========================================================
-   CURRENT LOGGED-IN USER
-========================================================== */
-
-async function loadCurrentUserProfile() {
-  try {
-
-    const {
-      data: { user },
-      error: userError
-    } = await forgeSupabase.auth.getUser();
-
-    if (userError) {
-      console.error(userError);
-      return null;
-    }
-
-    if (!user) {
-      console.log("No logged in user.");
-      return null;
-    }
-
-    const { data: profile, error } = await forgeSupabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
-
-    if (error) {
-      console.error(error);
-      return null;
-    }
-
-    currentUserProfile = profile;
-
-    console.log("Current Profile:", profile);
-
-    return profile;
-
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
-}
-
 const pipelineStages = [
   "Not Placed",
   "Not Started",
@@ -90,6 +45,64 @@ const boardStages = {
   contracted: "Contracted",
 };
 
+/* ==========================================================
+   CURRENT LOGGED-IN USER
+========================================================== */
+
+async function loadCurrentUserProfile() {
+  try {
+    const { data: sessionData } =
+      await forgeSupabase.auth.getSession();
+
+    const session = sessionData?.session;
+
+    if (!session) {
+      console.log("No FORGE session. Redirecting to login.");
+      window.location.href = "login.html";
+      return null;
+    }
+
+    const user = session.user;
+
+    const { data: profile, error: profileError } =
+      await forgeSupabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle();
+
+    if (profileError) {
+      console.error("Profile load error:", profileError);
+      return null;
+    }
+
+    if (!profile) {
+      console.log(
+        "User is authenticated but has no FORGE profile yet."
+      );
+
+      window.location.href = "setup.html";
+      return null;
+    }
+
+    currentUserProfile = profile;
+
+    console.log(
+      "Current FORGE profile:",
+      currentUserProfile
+    );
+
+    return currentUserProfile;
+
+  } catch (error) {
+    console.error(
+      "Profile loading error:",
+      error
+    );
+
+    return null;
+  }
+}
 // ─── MERGE ────────────────────────────────────────────────────────────────────
 
 function mergeCsvWithSavedPipeline(csvAgents, savedAgents) {
@@ -1918,9 +1931,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     filterBtn.classList.add("active");
     renderDashboard(filterBtn.dataset.filter || "all");
   });
+  // your click listeners stay here...
 
-  await loadCurrentUserProfile();
-  await loadCSV();
+ const profile = await loadCurrentUserProfile();
+
+if (!profile) return;
+
+await loadCSV();
 
   setInterval(updateTime, 30000);
 });
