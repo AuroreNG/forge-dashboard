@@ -878,9 +878,25 @@ function showAgentProfile(agent) {
   // ==========================================================
   // Compliance indicators
   // ==========================================================
-  setComplianceValue("profileLicense", agent.residentLicense);
-  setComplianceValue("profileEO", agent.eoStatus);
-  setComplianceValue("profileAML", agent.amlStatus);
+setComplianceValue(
+  "profileResidentLicense",
+  agent.residentLicense
+);
+
+setComplianceValue(
+  "profileEO",
+  agent.eoStatus
+);
+
+setComplianceValue(
+  "profileAML",
+  agent.amlStatus
+);
+
+setComplianceValue(
+  "profileTevahFee",
+  agent.tevahPlatformFee
+);
 }
 // ==========================================================
 // AGENT PROFILE - COMPLIANCE STATUS
@@ -930,28 +946,6 @@ function setComplianceValue(elementId, value) {
   el.textContent = displayValue;
 }
 
-
-// Add these inside showAgentProfile(agent)
-
-setComplianceValue(
-  "profileResidentLicense",
-  agent.residentLicense
-);
-
-setComplianceValue(
-  "profileEO",
-  agent.eoStatus
-);
-
-setComplianceValue(
-  "profileAML",
-  agent.amlStatus
-);
-
-setComplianceValue(
-  "profileTevahFee",
-  agent.tevahPlatformFee
-);
 
 function updateJourneyStatus(stage) {
   const statusOne   = document.getElementById("statusOne");
