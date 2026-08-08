@@ -1134,14 +1134,45 @@ function showCommandProfile(agent) {
   document.getElementById("commandProfile")?.classList.remove("hidden");
   document.getElementById("messageComposer")?.classList.add("hidden");
 
-  setText("commandAvatar",    getInitials(agent.name));
-  setText("commandName",      agent.name);
-  setText("commandMeta",      `${agent.upline || agent.coordinator || "No upline"} • ${agent.stage}`);
-  setText("commandStageBadge",agent.stage || "Not Placed");
+  setText("commandAvatar", getInitials(agent.name));
+  setText("commandName", agent.name);
+  setText(
+    "commandMeta",
+    `${agent.upline || agent.coordinator || "No upline"} • ${agent.stage}`
+  );
+  setText("commandStageBadge", agent.stage || "Not Placed");
 
-  const recommended = recommendedActionMap[agent.stage] || { title: "Review Agent", text: "Review this agent's current licensing status." };
+  // ==========================================================
+  // COMMAND CENTER - COMPLIANCE STATUS
+  // ==========================================================
+  setComplianceValue(
+    "commandResidentLicense",
+    agent.residentLicense
+  );
+
+  setComplianceValue(
+    "commandEO",
+    agent.eoStatus
+  );
+
+  setComplianceValue(
+    "commandAML",
+    agent.amlStatus
+  );
+
+  setComplianceValue(
+    "commandTevahFee",
+    agent.tevahPlatformFee
+  );
+
+  const recommended =
+    recommendedActionMap[agent.stage] || {
+      title: "Review Agent",
+      text: "Review this agent's current licensing status."
+    };
+
   setText("recommendedTitle", recommended.title);
-  setText("recommendedText",  recommended.text);
+  setText("recommendedText", recommended.text);
 
   renderCoordinatorActions(agent);
   renderLicensingChecklist(agent);
