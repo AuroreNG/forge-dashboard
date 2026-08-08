@@ -1590,64 +1590,117 @@ document.getElementById("csvImportInput")?.addEventListener("change", (event) =>
 
   reader.onload = async () => {
     try {
+      console.log("Starting CSV import...");
+
       const csvAgents = parseCSV(reader.result).map(normalizeAgent);
+
+      console.log("CSV agents parsed:", csvAgents.length);
+
+      if (!currentUserProfile?.organization_id) {
+        throw new Error(
+          "Your FORGE profile does not have an organization assigned."
+        );
+      }
 
       const rows = csvAgents.map((agent) => ({
         organization_id: currentUserProfile.organization_id,
 
         name: agent.name,
-        email: agent.email,
-        phone: agent.phone,
-        agent_code: agent.code,
+        email: agent.email || null,
+        phone: agent.phone || null,
+        agent_code: agent.code || null,
 
-        upline_name: agent.upline,
-        upline_code: agent.uplineCode,
+        upline_name: agent.upline || null,
+        upline_code: agent.uplineCode || null,
 
-        stage: agent.stage,
+        stage: agent.stage || "Not Placed",
         team_status: agent.teamStatus || ""
       }));
 
-   const { data, error } = await forgeSupabase
-  .from("agents")
-  .insert(rows)
-  .select();
+      console.log("Rows being sent to Supabase:", rows);
 
-if (error) {
-  console.error("Import error:", error);
-  alert("Import failed: " + error.message);
-  return;
-}
+      const { data, error } = await forgeSupabase
+        .from("agents")
+        .insert(rows)
+        .select();
 
-await loadCSV(); // Reload agents from Supabase and refresh the dashboard
+      if (error) {
+        console.error("SUPABASE IMPORT ERROR:", error);
+        alert("Import failed: " + error.message);
+        return;
+      }
 
-alert(`${data.length} agents imported successfully.`);
+      console.log("Supabase inserted agents:", data);
+
+      await loadCSV();
+
+      const importedCount =
+        Array.isArray(data) ? data.length : rows.length;
+
+      alert(`${importedCount} agents imported successfully.`);
+
+    } catch (error) {
+      console.error("CSV IMPORT CRASH:", error);
+
+      alert(
+        "Import error: " +
+        (error?.message || String(error))
+      );
+
+    } finally {
+      event.target.value = "";
+    }
+  };
+
+  reader.onerror = () => {
+    console.error("CSV FILE READ ERROR:", reader.error);
+    alert("FORGE could not read the CSV file.");
+    event.target.value = "";
+  };
 
   reader.readAsText(file);
-  event.target.value = "";
 });
+
 
 document.addEventListener("click", (event) => {
   const btn = event.target.closest(".import-csv-btn");
   if (!btn) return;
+
   event.preventDefault();
   event.stopPropagation();
-  document.getElementById("importGuideModal")?.classList.remove("hidden");
+
+  document
+    .getElementById("importGuideModal")
+    ?.classList.remove("hidden");
 });
 
+
 document.addEventListener("click", (event) => {
-  if (event.target.id === "closeImportGuide" || event.target.id === "cancelImportGuide") {
-    document.getElementById("importGuideModal")?.classList.add("hidden");
+  if (
+    event.target.id === "closeImportGuide" ||
+    event.target.id === "cancelImportGuide"
+  ) {
+    document
+      .getElementById("importGuideModal")
+      ?.classList.add("hidden");
   }
 });
 
+
 document.addEventListener("click", (event) => {
   if (event.target.id !== "startCSVImport") return;
+
   event.preventDefault();
   event.stopPropagation();
-  document.getElementById("importGuideModal")?.classList.add("hidden");
-  document.getElementById("csvImportInput")?.click();
-});
 
+  document
+    .getElementById("importGuideModal")
+    ?.classList.add("hidden");
+
+  document
+    .getElementById("csvImportInput")
+    ?.click();
+});
 // ─── STORAGE ─────────────────────────────────────────────────────────────────
 
 function saveAgentsToLocalStorage() {
