@@ -348,13 +348,22 @@ document.getElementById("coordinatorSelect")?.addEventListener("change", (event)
 
 // ─── LOAD AGENTS FROM SUPABASE ────────────────────────────────────────────────
 
-const { data, error } = await forgeSupabase
-  .from("agents")
-  .select("*")
-  .eq(
-    "organization_id",
-    currentUserProfile.organization_id
-  );
+async function loadCSV() {
+  try {
+    if (!currentUserProfile?.organization_id) {
+      console.error("Current user has no organization assigned.");
+      allAgents = [];
+      renderAllPages();
+      return;
+    }
+
+    const { data, error } = await forgeSupabase
+      .from("agents")
+      .select("*")
+      .eq(
+        "organization_id",
+        currentUserProfile.organization_id
+      );
 
     if (error) {
       console.error("Supabase agent load error:", error);
@@ -363,8 +372,6 @@ const { data, error } = await forgeSupabase
       return;
     }
 
-    // Convert Supabase column names back to the names
-    // the rest of your FORGE code already expects.
     allAgents = (data || []).map((agent) => ({
       id: agent.id,
       organizationId: agent.organization_id,
