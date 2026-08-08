@@ -21,31 +21,52 @@ function saveChecklistLog() {
   );
 }
 
+// ==========================================================
+// FORGE JOURNEY STAGES
+// Journey tracks only the major licensing milestones.
+// Compliance items such as E&O, AML, and Tevah Fee
+// are shown separately on Agent + Command Center.
+// ==========================================================
+
+// All official Journey stages
 const pipelineStages = [
   "Not Placed",
-  "Not Started",
   "Quiz Sent",
-  "Quiz Passed",
   "XCEL Completed",
-  "Simulation Exams",
-  "Exam Scheduled",
   "Exam Passed",
-  "Fingerprints",
-  "Applied For License",
+  "Licensed",
+  "Contracted"
 ];
-const launchStages = ["Not Placed", "Quiz Sent", "Quiz Passed", "XCEL Completed"];
-const activateStages = ["Exam Passed", "Continuing Education", "Licensed", "Contracted"];
-const licensedStages = ["Licensed", "Compliance", "Contracted"];
 
+// Launch side of Journey
+const launchStages = [
+  "Not Placed",
+  "Quiz Sent",
+  "XCEL Completed"
+];
+
+// Activate side of Journey
+const activateStages = [
+  "Exam Passed",
+  "Licensed",
+  "Contracted"
+];
+
+// Used when FORGE needs to identify licensed/activated agents
+const licensedStages = [
+  "Licensed",
+  "Contracted"
+];
+
+// Home dashboard stage references
 const boardStages = {
-  notStarted: "Not Started",
+  notStarted: "Not Placed",
   quizSent: "Quiz Sent",
   xcel: "XCEL Completed",
-  exam: "Exam Scheduled",
+  exam: "Exam Passed",
   licensed: "Licensed",
-  contracted: "Contracted",
+  contracted: "Contracted"
 };
-
 /* ==========================================================
    CURRENT LOGGED-IN USER
 ========================================================== */
@@ -187,27 +208,56 @@ function normalizeAgent(row) {
   };
 }
 
+// ==========================================================
+// COMPLIANCE CSV NORMALIZER
+// Resident License determines whether the person is licensed.
+// E&O / AML are compliance checks, not licensing stages.
+// ==========================================================
+
 function normalizeComplianceAgent(row) {
+
+  const residentLicense =
+    String(row["RESI. LICENSE"] || "").trim();
+
+  const eoStatus =
+    String(row["E&O"] || "").trim();
+
+  const amlStatus =
+    String(row["AML"] || "").trim();
+
+  const tevahFee =
+    String(row["TEVAH PLATFORM FEE"] || "").trim();
+
   return {
     name: String(row["AGENT NAME"] || "").trim(),
     code: String(row["CODE"] || "").trim(),
 
-    // Automatically comes from the compliance export
-    upline: String(row["UPLINE AGENT"] || "").trim(),
-
-    // Optional: keep the higher leader too
-    uplineLeader: String(row["UPLINE LEADER"] || "").trim(),
-
     email: String(row["EMAIL"] || "").trim(),
+
     level: String(row["LEVEL"] || "").trim(),
 
-    residentState: String(row["RESI. STATE"] || "").trim(),
-    residentLicense: String(row["RESI. LICENSE"] || "").trim(),
-    eoStatus: String(row["E&O"] || "").trim(),
-    tevahPlatformFee: String(row["TEVAH PLATFORM FEE"] || "").trim(),
-    amlStatus: String(row["AML"] || "").trim(),
-    teamStatus: String(row["STATUS"] || "").trim(),
-    npn: String(row["NPN"] || "").trim()
+    upline:
+      String(row["UPLINE AGENT"] || "").trim(),
+
+    uplineLeader:
+      String(row["UPLINE LEADER"] || "").trim(),
+
+    residentState:
+      String(row["RESI. STATE"] || "").trim(),
+
+    residentLicense,
+
+    eoStatus,
+
+    amlStatus,
+
+    tevahPlatformFee: tevahFee,
+
+    teamStatus:
+      String(row["STATUS"] || "").trim(),
+
+    npn:
+      String(row["NPN"] || "").trim()
   };
 }
 // ─── METRICS ─────────────────────────────────────────────────────────────────
@@ -812,17 +862,25 @@ function showAgentProfile(agent) {
   document.getElementById("agentProfileEmpty")?.classList.add("hidden");
   document.getElementById("agentProfile")?.classList.remove("hidden");
 
-  setText("profileAvatar",     getInitials(agent.name));
-  setText("profileName",       agent.name);
-  setText("profileMeta",       agent.coordinator || "No coordinator");
+  setText("profileAvatar", getInitials(agent.name));
+  setText("profileName", agent.name);
+  setText("profileMeta", agent.coordinator || "No coordinator");
   setText("profileCoordinator", agent.upline || agent.coordinator || "—");
-  setText("profileStatus",     agent.teamStatus  || "—");
-  setText("profileStage",      agent.stage       || "—");
-  setText("profileCode",       agent.code        || "—");
-  setText("profilePhone",      agent.phone       || "—");
-  setText("profileEmail",      agent.email       || "—");
+  setText("profileStatus", agent.teamStatus || "—");
+  setText("profileStage", agent.stage || "—");
+  setText("profileCode", agent.code || "—");
+  setText("profilePhone", agent.phone || "—");
+  setText("profileEmail", agent.email || "—");
   setText("profileNextAction", getNextAction(agent.stage));
+
   updateJourneyStatus(agent.stage);
+
+  // ==========================================================
+  // Compliance indicators
+  // ==========================================================
+  setComplianceValue("profileLicense", agent.residentLicense);
+  setComplianceValue("profileEO", agent.eoStatus);
+  setComplianceValue("profileAML", agent.amlStatus);
 }
 
 function updateJourneyStatus(stage) {
@@ -1824,30 +1882,145 @@ document.getElementById("complianceImportInput")?.addEventListener("change", (ev
         "Compliance rows skipped because Code is blank:",
         skippedCount
       );
+      // ==========================================================
+// DETERMINE JOURNEY STAGE FROM COMPLIANCE DATA
+//
+// IMPORTANT:
+// Resident License = Active is what confirms Licensed.
+//
+// Existing Contracted agents remain Contracted.
+// Blank / "--" license status does not move somebody.
+// ==========================================================
 
-      // Convert the normalized data to Supabase column names.
-      const rows = validAgents.map((agent) => ({
-        organization_id: currentUserProfile.organization_id,
+function getComplianceJourneyStage(agent, existingAgent) {
 
-        name: agent.name,
-        agent_code: agent.code,
+  const license =
+    String(agent.residentLicense || "")
+      .trim()
+      .toLowerCase();
 
-        email: agent.email || null,
+  // Never downgrade somebody already contracted.
+  if (existingAgent?.stage === "Contracted") {
+    return "Contracted";
+  }
 
-        // Compliance file already tells us the upline.
-        upline_name: agent.upline || null,
+  // Active resident license means Licensed.
+  if (license === "active") {
+    return "Licensed";
+  }
 
-        agent_level: agent.level || null,
-        resident_state: agent.residentState || null,
-        resident_license: agent.residentLicense || null,
-        eo_status: agent.eoStatus || null,
-        tevah_platform_fee: agent.tevahPlatformFee || null,
-        aml_status: agent.amlStatus || null,
-        team_status: agent.teamStatus || "",
-        npn: agent.npn || null,
+  // Do not guess when Tevah has no license information.
+  // Preserve whatever Journey stage FORGE already had.
+  return existingAgent?.stage || "Not Placed";
+}
 
-        import_source: "Tevah Compliance"
-      }));
+// ==========================================================
+// DECIDE JOURNEY STAGE FROM COMPLIANCE DATA
+// ==========================================================
+
+function getComplianceJourneyStage(agent, existingAgent) {
+
+  const license =
+    String(agent.residentLicense || "")
+      .trim()
+      .toLowerCase();
+
+  // Never downgrade a contracted agent
+  if (existingAgent?.stage === "Contracted") {
+    return "Contracted";
+  }
+
+  // Active resident license confirms Licensed
+  if (license === "active") {
+    return "Licensed";
+  }
+
+  // If compliance CSV does not specify license status,
+  // keep the agent's current Journey stage.
+  return existingAgent?.stage || "Not Placed";
+}
+// ==========================================================
+// BUILD COMPLIANCE ROWS FOR SUPABASE
+//
+// We first check whether the agent already exists in FORGE.
+// This prevents the compliance import from accidentally
+// downgrading Contracted agents or moving people incorrectly.
+// ==========================================================
+
+const rows = validAgents.map((agent) => {
+
+  // Find this same agent already loaded in FORGE
+  // using Agent Code.
+  const existingAgent = allAgents.find(
+    (existing) =>
+      String(existing.code || "")
+        .trim()
+        .toLowerCase() ===
+      String(agent.code || "")
+        .trim()
+        .toLowerCase()
+  );
+
+  // Decide the Journey stage.
+  // Example:
+  // - Existing Contracted stays Contracted
+  // - Active resident license can make them Licensed
+  // - Blank license status keeps current stage
+  const journeyStage =
+    getComplianceJourneyStage(
+      agent,
+      existingAgent
+    );
+
+  return {
+    organization_id:
+      currentUserProfile.organization_id,
+
+    // Core agent identity
+    name: agent.name,
+    agent_code: agent.code,
+
+    email:
+      agent.email || null,
+
+    // Compliance file already tells us the upline
+    upline_name:
+      agent.upline || null,
+
+    // Compliance fields
+    agent_level:
+      agent.level || null,
+
+    resident_state:
+      agent.residentState || null,
+
+    resident_license:
+      agent.residentLicense || null,
+
+    eo_status:
+      agent.eoStatus || null,
+
+    tevah_platform_fee:
+      agent.tevahPlatformFee || null,
+
+    aml_status:
+      agent.amlStatus || null,
+
+    npn:
+      agent.npn || null,
+
+    team_status:
+      agent.teamStatus || "",
+
+    // Journey stage based on license logic
+    stage:
+      journeyStage,
+
+    // Helps us know where this update came from
+    import_source:
+      "Tevah Compliance"
+  };
+});
 
       console.log(
         "Compliance rows being sent to Supabase:",
