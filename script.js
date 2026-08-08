@@ -347,11 +347,13 @@ document.getElementById("coordinatorSelect")?.addEventListener("change", (event)
 
 // ─── LOAD AGENTS FROM SUPABASE ────────────────────────────────────────────────
 
-async function loadCSV() {
-  try {
-    const { data, error } = await forgeSupabase
-      .from("agents")
-      .select("*");
+const { data, error } = await forgeSupabase
+  .from("agents")
+  .select("*")
+  .eq(
+    "organization_id",
+    currentUserProfile.organization_id
+  );
 
     if (error) {
       console.error("Supabase agent load error:", error);
