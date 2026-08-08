@@ -1607,27 +1607,20 @@ document.getElementById("csvImportInput")?.addEventListener("change", (event) =>
         team_status: agent.teamStatus || ""
       }));
 
-      const { data, error } = await forgeSupabase
-        .from("agents")
-        .insert(rows)
-        .select();
+   const { data, error } = await forgeSupabase
+  .from("agents")
+  .insert(rows)
+  .select();
 
-      if (error) {
-        console.error("Import error:", error);
-        alert("Import failed: " + error.message);
-        return;
-      }
+if (error) {
+  console.error("Import error:", error);
+  alert("Import failed: " + error.message);
+  return;
+}
 
-      allAgents = await loadAgentsFromSupabase();
+await loadCSV(); // Reload agents from Supabase and refresh the dashboard
 
-      renderAllPages();
-
-      alert(`${data.length} agents imported successfully.`);
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong while importing.");
-    }
-  };
+alert(`${data.length} agents imported successfully.`);
 
   reader.readAsText(file);
   event.target.value = "";
