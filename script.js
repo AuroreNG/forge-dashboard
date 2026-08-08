@@ -283,7 +283,12 @@ document.getElementById("coordinatorSelect")?.addEventListener("change", (event)
 // ─── LOAD CSV ─────────────────────────────────────────────────────────────────
 
 async function loadCSV() {
-  const saved = JSON.parse(localStorage.getItem("forgeAgents")) || [];
+  const { data } =
+await supabase
+.from("agents")
+.select("*");
+
+allAgents = data || [];
 
   if (saved.length > 0) {
     allAgents = saved;
@@ -296,7 +301,13 @@ async function loadCSV() {
     if (!response.ok) throw new Error("CSV not found");
     const text = await response.text();
     allAgents = parseCSV(text).map(normalizeAgent);
-    saveAgentsToLocalStorage();
+    async function saveAgents() {
+
+    await supabase
+        .from("agents")
+        .upsert(allAgents);
+
+}
   } catch (err) {
     console.warn("Could not load team.csv:", err.message);
     allAgents = [];
