@@ -1,65 +1,96 @@
-document
-.getElementById("loginBtn")
-.addEventListener("click", login);
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+const statusEl = document.getElementById("loginStatus");
 
-async function login(){
+loginBtn?.addEventListener("click", login);
+registerBtn?.addEventListener("click", register);
 
-const email=
-document.getElementById("loginEmail").value;
 
-const password=
-document.getElementById("loginPassword").value;
+/* =========================================================
+   LOGIN
+========================================================= */
 
-const {error}=await forgeSupabase.auth.signInWithPassword({
+async function login() {
+  const email = document
+    .getElementById("loginEmail")
+    .value
+    .trim();
 
-email,
-password
+  const password = document
+    .getElementById("loginPassword")
+    .value;
 
-});
+  if (!email || !password) {
+    statusEl.innerText = "Please enter your email and password.";
+    return;
+  }
 
-if(error){
+  statusEl.innerText = "Signing in...";
 
-document.getElementById("loginStatus").innerText=error.message;
+  const { data, error } =
+    await forgeSupabase.auth.signInWithPassword({
+      email,
+      password
+    });
 
-return;
+  if (error) {
+    console.error("Login error:", error);
+    statusEl.innerText = error.message;
+    return;
+  }
 
+  if (!data.session) {
+    statusEl.innerText =
+      "Please verify your email before signing in.";
+    return;
+  }
+
+  window.location.href = "index.html";
 }
 
-window.location="index.html";
 
-}
+/* =========================================================
+   REGISTER
+========================================================= */
 
-// Register button
-document
-.getElementById("registerBtn")
-.addEventListener("click",register);
+async function register() {
+  const email = document
+    .getElementById("loginEmail")
+    .value
+    .trim();
 
-async function register(){
+  const password = document
+    .getElementById("loginPassword")
+    .value;
 
-const email=
-document.getElementById("loginEmail").value;
+  if (!email || !password) {
+    statusEl.innerText =
+      "Please enter an email and password.";
+    return;
+  }
 
-const password=
-document.getElementById("loginPassword").value;
+  if (password.length < 6) {
+    statusEl.innerText =
+      "Password must be at least 6 characters.";
+    return;
+  }
 
-const {data,error}
-=
-await forgeSupabase.auth.signUp({
+  statusEl.innerText = "Creating account...";
 
-email,
-password
+  const { data, error } =
+    await forgeSupabase.auth.signUp({
+      email,
+      password
+    });
 
-});
+  if (error) {
+    console.error("Registration error:", error);
+    statusEl.innerText = error.message;
+    return;
+  }
 
-if(error){
+  console.log("User created:", data.user);
 
-document.getElementById("loginStatus").innerText=error.message;
-
-return;
-
-}
-
-document.getElementById("loginStatus").innerText=
-"Account created.";
-
+  statusEl.innerText =
+    "Account created. Please check your email and verify your account, then return here to sign in.";
 }
