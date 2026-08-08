@@ -280,35 +280,56 @@ document.getElementById("coordinatorSelect")?.addEventListener("change", (event)
   renderDashboard("all");
 });
 
-// ─── LOAD CSV ─────────────────────────────────────────────────────────────────
+// ─── LOAD AGENTS FROM SUPABASE ────────────────────────────────────────────────
 
 async function loadCSV() {
- const { data, error } = await forgeSupabase
-  .from("agents")
-  .select("*");
-
-allAgents = data || [];
-
   try {
-    const response = await fetch("team.csv");
-    if (!response.ok) throw new Error("CSV not found");
-    const text = await response.text();
-    allAgents = parseCSV(text).map(normalizeAgent);
-    async function saveAgents() {
+    const { data, error } = await forgeSupabase
+      .from("agents")
+      .select("*");
 
-    await supabase
-        .from("agents")
-        .upsert(allAgents);
+    if (error) {
+      console.error("Supabase agent load error:", error);
+      allAgents = [];
+      renderAllPages();
+      return;
+    }
 
-}
+    // Convert Supabase column names back to the names
+    // the rest of your FORGE code already expects.
+    allAgents = (data || []).map((agent) => ({
+      id: agent.id,
+      organizationId: agent.organization_id,
+
+      name: agent.name || "",
+      email: agent.email || "",
+      phone: agent.phone || "",
+      code: agent.agent_code || "",
+
+      upline: agent.upline_name || "",
+      uplineCode: agent.upline_code || "",
+
+      coordinatorId: agent.coordinator_id || null,
+
+      teamStatus: agent.team_status || "",
+      status: agent.team_status || "",
+
+      stage: agent.stage || "Not Placed",
+      pipelineStage: agent.stage || "Not Placed",
+
+      notes: agent.notes || ""
+    }));
+
+    console.log("Agents loaded from Supabase:", allAgents.length);
+
+    renderAllPages();
+
   } catch (err) {
-    console.warn("Could not load team.csv:", err.message);
+    console.error("Could not load agents from Supabase:", err);
     allAgents = [];
+    renderAllPages();
   }
-
-  renderAllPages();
 }
-
 // ─── JOURNEY PAGE ─────────────────────────────────────────────────────────────
 
 function renderJourneyPage() {
