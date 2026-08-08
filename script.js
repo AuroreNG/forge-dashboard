@@ -177,37 +177,96 @@ function parseCSV(text) {
   });
 }
 
+// ==========================================================
+// NORMALIZE TEAM CSV
+// This is for the main FORGE team.csv format.
+//
+// Journey stage comes from Team Status:
+// Contracted  -> Contracted
+// License     -> Licensed
+// Non-Licensed Active -> XCEL
+// Everything else -> Not Placed
+// ==========================================================
+
 function normalizeAgent(row) {
-  const status = String(row["Team Status"] || "").trim();
-  const cleanStatus = status.toLowerCase();
+
+  const name =
+    String(row["Full name"] || "").trim();
+
+  const code =
+    String(row["Agent Code"] || "").trim();
+
+  const email =
+    String(row["Email"] || "").trim();
+
+  const phone =
+    String(row["Phone"] || "").trim();
+
+  const upline =
+    String(row["Upline Name"] || "").trim();
+
+  const uplineCode =
+    String(row["Upline Code"] || "").trim();
+
+  const teamStatus =
+    String(row["Team Status"] || "").trim();
+
+  const recruitDate =
+    String(row["Recruit Date ( CST )"] || "").trim();
+
+  // Convert Team Status to a FORGE Journey stage
+  const status =
+    teamStatus.toLowerCase();
 
   let stage = "Not Placed";
-  if (cleanStatus.includes("contracted")) stage = "Contracted";
-  else if (cleanStatus.includes("continuing education")) stage = "Continuing Education";
-  else if (cleanStatus.includes("exam passed")) stage = "Exam Passed";
-  else if (cleanStatus.includes("xcel")) stage = "XCEL Completed";
-  else if (cleanStatus.includes("quiz passed")) stage = "Quiz Passed";
-  else if (cleanStatus.includes("quiz sent")) stage = "Quiz Sent";
-  else if (cleanStatus.includes("licensed") || cleanStatus.includes("license")) stage = "Licensed";
+
+  // Highest priority:
+  // If Contracted appears anywhere, they are Contracted.
+  if (status.includes("contracted")) {
+    stage = "Contracted";
+  }
+
+  // If licensed but not contracted, they are Licensed.
+  else if (
+    status.includes("license") &&
+    !status.includes("non-licensed")
+  ) {
+    stage = "Licensed";
+  }
+
+  // Active + Non-Licensed means they are working
+  // through the licensing process.
+  else if (
+    status.includes("active") &&
+    status.includes("non-licensed")
+  ) {
+    stage = "XCEL Completed";
+  }
+
+  // Inactive / Non-Licensed / missing status
+  // stays Not Placed.
+  else {
+    stage = "Not Placed";
+  }
 
   return {
-    name: (row["Full name"] || "").trim(),
-    email: (row["Email"] || "").trim(),
-    phone: (row["Phone"] || "").trim(),
-    code: (row["Agent Code"] || "").trim(),
+    name,
+    code,
+    email,
+    phone,
 
-    upline: (row["Upline Name"] || "").trim(),
-    uplineCode: (row["Upline Code"] || "").trim(),
+    upline,
+    uplineCode,
 
-    coordinator: (row["Coordinator"] || "").trim() || "Unassigned",
+    teamStatus,
+    status: teamStatus,
 
-    teamStatus: status,
-    status,
+    recruitDate,
+
     stage,
-    pipelineStage: stage,
+    pipelineStage: stage
   };
 }
-
 // ==========================================================
 // COMPLIANCE CSV NORMALIZER
 // Resident License determines whether the person is licensed.
@@ -1815,21 +1874,61 @@ console.log(
   `Valid agents: ${validAgents.length}. Skipped without Agent Code: ${skippedAgents}`
 );
 
-const rows = validAgents.map((agent) => ({
-  organization_id: currentUserProfile.organization_id,
+// ==========================================================
+// TEAM CSV -> SUPABASE
+// Converts imported agents into database rows.
+// Uses Agent Code to update existing agents instead of
+// creating duplicates.
+// ==========================================================
 
-  name: agent.name,
-  email: agent.email || null,
-  phone: agent.phone || null,
-  agent_code: agent.code,
+const rows = validAgents
+  .filter(agent => agent.code) // Skip rows without Agent Code
+  .map((agent) => ({
 
-  upline_name: agent.upline || null,
-  upline_code: agent.uplineCode || null,
+    // Organization
+    organization_id:
+      currentUserProfile.organization_id,
 
-  stage: agent.stage || "Not Placed",
-  team_status: agent.teamStatus || ""
-}));
-      console.log("Rows being sent to Supabase:", rows);
+    // Identity
+    name:
+      agent.name,
+
+    email:
+      agent.email || null,
+
+    phone:
+      agent.phone || null,
+
+    agent_code:
+      agent.code,
+
+    // Team hierarchy
+    upline_name:
+      agent.upline || null,
+
+    upline_code:
+      agent.uplineCode || null,
+
+    // Journey
+    stage:
+      agent.stage || "Not Placed",
+
+    team_status:
+      agent.teamStatus || "",
+
+    // Optional
+    recruit_date:
+      agent.recruitDate || null,
+
+    import_source:
+      "Team CSV"
+
+  }));
+
+console.log(
+  "Rows being sent to Supabase:",
+  rows
+);
 
      // UPSERT =
 // If agent does not exist → create them.
@@ -1837,6 +1936,12 @@ const rows = validAgents.map((agent) => ({
 //
 // We identify an agent using:
 // organization_id + agent_code
+
+// ==========================================================
+// SAVE TEAM CSV TO SUPABASE
+// Upsert prevents duplicate Agent Codes
+// inside the same organization.
+// ==========================================================
 
 const { data, error } = await forgeSupabase
   .from("agents")
@@ -1846,33 +1951,46 @@ const { data, error } = await forgeSupabase
   })
   .select();
 
-      if (error) {
-        console.error("SUPABASE IMPORT ERROR:", error);
-        alert("Import failed: " + error.message);
-        return;
-      }
+if (error) {
+  console.error("SUPABASE IMPORT ERROR:", error);
+  alert("Import failed: " + error.message);
+  return;
+}
 
-      console.log("Supabase inserted agents:", data);
+// Could be newly created OR updated agents.
+console.log("Supabase saved agents:", data);
 
-      await loadCSV();
+// Reload the organization's team from Supabase.
+await loadCSV();
 
-      const importedCount =
-        Array.isArray(data) ? data.length : rows.length;
+const importedCount =
+  Array.isArray(data)
+    ? data.length
+    : rows.length;
 
-      alert(`${importedCount} agents imported successfully.`);
+alert(
+  `${importedCount} agents imported successfully.`
+);
 
-    } catch (error) {
-      console.error("CSV IMPORT CRASH:", error);
+} catch (error) {
 
-      alert(
-        "Import error: " +
-        (error?.message || String(error))
-      );
+  console.error(
+    "CSV IMPORT CRASH:",
+    error
+  );
 
-    } finally {
-      event.target.value = "";
-    }
-  };
+  alert(
+    "Import error: " +
+    (error?.message || String(error))
+  );
+
+} finally {
+
+  // Allows the same CSV to be selected again later.
+  event.target.value = "";
+}
+    // CLOSE reader.onload
+};
 
   reader.onerror = () => {
     console.error("CSV FILE READ ERROR:", reader.error);
