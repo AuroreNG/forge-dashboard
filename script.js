@@ -1619,7 +1619,14 @@ document.getElementById("csvImportInput")?.addEventListener("change", (event) =>
 
       console.log("Rows being sent to Supabase:", rows);
 
-      const { data, error } = await forgeSupabase
+     // UPSERT =
+// If agent does not exist → create them.
+// If agent already exists → update their existing record.
+//
+// We identify an agent using:
+// organization_id + agent_code
+
+const { data, error } = await forgeSupabase
   .from("agents")
   .upsert(rows, {
     onConflict: "organization_id,agent_code",
