@@ -516,39 +516,55 @@ async function loadCSV() {
       return;
     }
 
-    allAgents = (data || []).map((agent) => ({
-      id: agent.id,
-      organizationId: agent.organization_id,
+  // ==========================================================
+// SUPABASE -> FORGE AGENT OBJECT
+// Converts database column names into the names used
+// throughout the FORGE interface.
+// ==========================================================
 
-      name: agent.name || "",
-      email: agent.email || "",
-      phone: agent.phone || "",
-      code: agent.agent_code || "",
+allAgents = (data || []).map((agent) => ({
 
-      upline: agent.upline_name || "",
-      uplineCode: agent.upline_code || "",
+  // Database identity
+  id: agent.id,
+  organizationId: agent.organization_id,
 
-      coordinatorId: agent.coordinator_id || null,
+  // Core agent information
+  name: agent.name || "",
+  email: agent.email || "",
+  phone: agent.phone || "",
+  code: agent.agent_code || "",
 
-      teamStatus: agent.team_status || "",
-      status: agent.team_status || "",
+  // Team hierarchy
+  upline: agent.upline_name || "",
+  uplineCode: agent.upline_code || "",
 
-      stage: agent.stage || "Not Placed",
-      pipelineStage: agent.stage || "Not Placed",
+  coordinatorId: agent.coordinator_id || null,
 
-      notes: agent.notes || ""
-    }));
+  // Journey
+  stage: agent.stage || "Not Placed",
+  pipelineStage: agent.stage || "Not Placed",
 
-    console.log("Agents loaded from Supabase:", allAgents.length);
+  // Team status
+  teamStatus: agent.team_status || "",
+  status: agent.team_status || "",
 
-    renderAllPages();
+  // Compliance information
+  level: agent.agent_level || "",
+  residentState: agent.resident_state || "",
+  residentLicense: agent.resident_license || "",
+  eoStatus: agent.eo_status || "",
+  amlStatus: agent.aml_status || "",
+  tevahPlatformFee: agent.tevah_platform_fee || "",
+  npn: agent.npn || "",
 
-  } catch (err) {
-    console.error("Could not load agents from Supabase:", err);
-    allAgents = [];
-    renderAllPages();
-  }
-}
+  // Recruit information
+  recruitDate: agent.recruit_date || "",
+
+  // Import information
+  importSource: agent.import_source || "",
+
+  notes: agent.notes || ""
+}));
 // ─── JOURNEY PAGE ─────────────────────────────────────────────────────────────
 
 function renderJourneyPage() {
@@ -602,35 +618,68 @@ function renderJourneyPage() {
       return;
     }
 
-    stageAgents.forEach((agent) => {
-      const key  = agent.code || agent.email || agent.name;
-      const card = document.createElement("div");
-      card.className    = "journey-agent-card";
-      card.draggable    = true;
-      card.dataset.agentName = agent.name;
+  stageAgents.forEach((agent) => {
 
-      card.innerHTML = `
-        <div class="journey-agent-top">
-          <div class="journey-avatar">${getInitials(agent.name)}</div>
-          <div>
-            <div class="journey-agent-name">${agent.name}</div>
-           <div class="journey-agent-coordinator">${agent.upline || agent.coordinator || "—"}</div>
-          </div>
-        </div>
-        <div class="journey-agent-bottom">
-          <div class="journey-agent-badge">${agent.stage}</div>
-          ${currentJourneyMode === "launch"
-            ? `<button class="move-to-activate" data-move-agent="${key}">Activate →</button>`
-            : `<button class="move-to-launch"   data-back-agent="${key}">← Launch</button>`
-          }
-          <button class="delete-pipeline-agent" data-delete-agent="${key}">Delete</button>
-        </div>
-      `;
+  // Keep the real database values for keys and drag/drop
+  const key = agent.code || agent.email || agent.name;
 
-      list.appendChild(card);
-    });
-  });
-}
+  // Use a safe display name so an email does not appear as the person's name
+  const displayName = getAgentDisplayName(agent);
+
+  const card = document.createElement("div");
+
+  card.className = "journey-agent-card";
+  card.draggable = true;
+
+  // Keep the real stored name here for existing drag/drop logic
+  card.dataset.agentName = agent.name;
+
+  // Add the database ID so clicking the card can open the exact agent profile
+  card.dataset.agentId = agent.id;
+
+  card.innerHTML = `
+    <div class="journey-agent-top">
+
+      <div class="journey-avatar">
+        ${getInitials(displayName)}
+      </div>
+
+      <div>
+
+        <div class="journey-agent-name">
+          ${displayName}
+        </div>
+
+        <div class="journey-agent-coordinator">
+          ${agent.upline || "No upline"}
+        </div>
+
+      </div>
+    </div>
+
+    <div class="journey-agent-bottom">
+
+      <div class="journey-agent-badge">
+        ${agent.stage}
+      </div>
+
+      ${currentJourneyMode === "launch"
+        ? `<button class="move-to-activate" data-move-agent="${key}">Activate →</button>`
+        : `<button class="move-to-launch" data-back-agent="${key}">← Launch</button>`
+      }
+
+      <button
+        class="delete-pipeline-agent"
+        data-delete-agent="${key}"
+      >
+        Delete
+      </button>
+
+    </div>
+  `;
+
+  list.appendChild(card);
+});
 
 document.getElementById("journeySearch")?.addEventListener("input", renderJourneyPage);
 //---Clear form after saving-------------
@@ -662,6 +711,64 @@ document.addEventListener("click", (event) => {
   );
 
   renderJourneyPage();
+});
+
+// ==========================================================
+// OPEN AGENT PROFILE FROM JOURNEY CARD
+// Clicking an agent in Journey opens their full Agent page.
+// ==========================================================
+
+document.addEventListener("click", (event) => {
+
+  const card =
+    event.target.closest(
+      ".journey-agent-card[data-agent-id]"
+    );
+
+  if (!card) return;
+
+  // Do not open profile when clicking a control
+  // inside the card such as Delete or movement buttons.
+  if (
+    event.target.closest(
+      "button, select, input, a"
+    )
+  ) {
+    return;
+  }
+
+  const agentId =
+    card.dataset.agentId;
+
+  const agent =
+    allAgents.find(
+      (item) =>
+        String(item.id) === String(agentId)
+    );
+
+  if (!agent) return;
+
+  // Change navigation highlight
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach((btn) =>
+      btn.classList.remove("active")
+    );
+
+  const agentsButton =
+    [...document.querySelectorAll(".nav-btn")]
+      .find(
+        (btn) =>
+          btn.textContent.trim() === "Agents"
+      );
+
+  agentsButton?.classList.add("active");
+
+  // Open Agents screen
+  showPage("Agents");
+
+  // Open this exact person's profile
+  showAgentProfile(agent);
 });
 
 // ─── MOVE TO ACTIVATE ────────────────────────────────────────────────────────
@@ -933,9 +1040,12 @@ function showAgentProfile(agent) {
   document.getElementById("agentProfileEmpty")?.classList.add("hidden");
   document.getElementById("agentProfile")?.classList.remove("hidden");
 
-  setText("profileAvatar", getInitials(agent.name));
-  setText("profileName", agent.name);
-  setText("profileMeta", agent.coordinator || "No coordinator");
+  setText(
+  "profileAvatar",
+  getInitials(getAgentDisplayName(agent))
+);
+  setText("profileName", getAgentDisplayName(agent));
+  ${agent.upline || "No upline"} • ${agent.stage}
   setText("profileCoordinator", agent.upline || agent.coordinator || "—");
   setText("profileStatus", agent.teamStatus || "—");
   setText("profileStage", agent.stage || "—");
@@ -952,7 +1062,40 @@ function showAgentProfile(agent) {
   setComplianceValue("profileAML", agent.amlStatus);
   setComplianceValue("profileTevahFee", agent.tevahPlatformFee);
 }
+// ==========================================================
+// SAFE AGENT DISPLAY NAME
+// Prevents an email address from being shown as the agent name.
+// ==========================================================
 
+function getAgentDisplayName(agent) {
+
+  const name =
+    String(agent?.name || "").trim();
+
+  // Good normal name
+  if (name && !name.includes("@")) {
+    return name;
+  }
+
+  // If the database name accidentally contains an email,
+  // try to create something readable from the email.
+  const email =
+    String(agent?.email || name || "").trim();
+
+  if (email.includes("@")) {
+
+    const beforeAt =
+      email.split("@")[0];
+
+    return beforeAt
+      .replace(/[._-]+/g, " ")
+      .replace(/\b\w/g, (letter) =>
+        letter.toUpperCase()
+      );
+  }
+
+  return "Unnamed Agent";
+}
 
 // ==========================================================
 // COMPLIANCE DISPLAY HELPER
@@ -1222,8 +1365,14 @@ function showCommandProfile(agent) {
   document.getElementById("commandProfile")?.classList.remove("hidden");
   document.getElementById("messageComposer")?.classList.add("hidden");
 
-  setText("commandAvatar", getInitials(agent.name));
-  setText("commandName", agent.name);
+  setText(
+  "commandAvatar",
+  getInitials(getAgentDisplayName(agent))
+);
+  setText(
+  "commandName",
+  getAgentDisplayName(agent)
+);
   setText(
     "commandMeta",
     `${agent.upline || agent.coordinator || "No upline"} • ${agent.stage}`
