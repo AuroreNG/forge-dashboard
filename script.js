@@ -268,7 +268,6 @@ function normalizeAgent(row) {
 // ==========================================================
 
 function normalizeComplianceAgent(row) {
-
   const residentLicense =
     String(row["RESI. LICENSE"] || "").trim();
 
@@ -282,18 +281,17 @@ function normalizeComplianceAgent(row) {
     String(row["TEVAH PLATFORM FEE"] || "").trim();
 
   return {
-    name: String(row["AGENT NAME"] || "").trim(),
+    name: cleanAgentName(row["AGENT NAME"]),
+
     code: String(row["CODE"] || "").trim(),
 
     email: String(row["EMAIL"] || "").trim(),
 
     level: String(row["LEVEL"] || "").trim(),
 
-    upline:
-      String(row["UPLINE AGENT"] || "").trim(),
+    upline: cleanAgentName(row["UPLINE AGENT"]),
 
-    uplineLeader:
-      String(row["UPLINE LEADER"] || "").trim(),
+    uplineLeader: cleanAgentName(row["UPLINE LEADER"]),
 
     residentState:
       String(row["RESI. STATE"] || "").trim(),
@@ -313,6 +311,8 @@ function normalizeComplianceAgent(row) {
       String(row["NPN"] || "").trim()
   };
 }
+
+
 // ─── METRICS ─────────────────────────────────────────────────────────────────
 
 function getMetrics(list) {
@@ -2336,8 +2336,6 @@ function getComplianceJourneyStage(agent, existingAgent) {
 
 const rows = validAgents.map((agent) => {
 
-  // Find this same agent already loaded in FORGE
-  // using Agent Code.
   const existingAgent = allAgents.find(
     (existing) =>
       String(existing.code || "")
@@ -2348,33 +2346,39 @@ const rows = validAgents.map((agent) => {
         .toLowerCase()
   );
 
-  // Decide the Journey stage.
-  // Example:
-  // - Existing Contracted stays Contracted
-  // - Active resident license can make them Licensed
-  // - Blank license status keeps current stage
-  const journeyStage =
-    getComplianceJourneyStage(
-      agent,
-      existingAgent
-    );
+  let journeyStage =
+    existingAgent?.stage || "Not Placed";
+
+  // Compliance can confirm Licensed
+  const licenseStatus =
+    String(agent.residentLicense || "")
+      .trim()
+      .toLowerCase();
+
+  // Never downgrade Contracted
+  if (existingAgent?.stage === "Contracted") {
+    journeyStage = "Contracted";
+  }
+  else if (licenseStatus === "active") {
+    journeyStage = "Licensed";
+  }
 
   return {
     organization_id:
       currentUserProfile.organization_id,
 
-    // Core agent identity
-    name: agent.name,
-    agent_code: agent.code,
+    name:
+      cleanAgentName(agent.name),
+
+    agent_code:
+      agent.code,
 
     email:
       agent.email || null,
 
-    // Compliance file already tells us the upline
     upline_name:
-      agent.upline || null,
+      cleanAgentName(agent.upline) || null,
 
-    // Compliance fields
     agent_level:
       agent.level || null,
 
@@ -2387,23 +2391,23 @@ const rows = validAgents.map((agent) => {
     eo_status:
       agent.eoStatus || null,
 
-    tevah_platform_fee:
-      agent.tevahPlatformFee || null,
-
     aml_status:
       agent.amlStatus || null,
+
+    tevah_platform_fee:
+      agent.tevahPlatformFee || null,
 
     npn:
       agent.npn || null,
 
+    // Keep exact Compliance STATUS
     team_status:
-      agent.teamStatus || "",
+      agent.teamStatus || null,
 
-    // Journey stage based on license logic
+    // Journey remains separate
     stage:
       journeyStage,
 
-    // Helps us know where this update came from
     import_source:
       "Tevah Compliance"
   };
@@ -2421,12 +2425,12 @@ const rows = validAgents.map((agent) => {
       // organization_id is included so different organizations
       // remain completely separate.
       const { data, error } = await forgeSupabase
-        .from("agents")
-        .upsert(rows, {
-          onConflict: "organization_id,agent_code",
-          ignoreDuplicates: false
-        })
-        .select();
+  .from("agents")
+  .upsert(rows, {
+    onConflict: "organization_id,agent_code",
+    ignoreDuplicates: false
+  })
+  .select();
 
       if (error) {
         console.error(
