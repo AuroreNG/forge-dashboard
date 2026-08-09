@@ -1728,7 +1728,7 @@ document.getElementById("makeShorter")?.addEventListener("click", () => {
   if (!box) return;
   box.value = box.value.split(".").filter(Boolean).slice(0, 3).join(".").trim() + ".";
 });
-
+  }
 document.getElementById("makeFriendly")?.addEventListener("click", () => {
   const box = document.getElementById("actionMessage");
   if (!box || !selectedAgent) return;
