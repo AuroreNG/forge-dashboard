@@ -548,22 +548,20 @@ allAgents = (data || []).map((agent) => ({
   notes: agent.notes || ""
 }));
 
-      console.log(
-      "Agents loaded from Supabase:",
-      allAgents.length
-    );
+console.log("Agents loaded from Supabase:", allAgents.length);
 
-    renderAllPages();
+renderAllPages();
 
-  } catch (error) {
-    console.error(
-      "Could not load agents from Supabase:",
-      error
-    );
+} catch (error) {
+  console.error(
+    "Could not load agents from Supabase:",
+    error
+  );
 
-    allAgents = [];
-    renderAllPages();
-  }
+  allAgents = [];
+  renderAllPages();
+}
+
 }
 // ─── JOURNEY PAGE ─────────────────────────────────────────────────────────────
 
@@ -678,10 +676,16 @@ function renderJourneyPage() {
     </div>
   `;
 
-  list.appendChild(card);
-});
+      list.appendChild(card);
+    });
 
-document.getElementById("journeySearch")?.addEventListener("input", renderJourneyPage);
+  }); // closes currentStages.forEach
+
+} // closes renderJourneyPage
+
+document
+  .getElementById("journeySearch")
+  ?.addEventListener("input", renderJourneyPage);
 //---Clear form after saving-------------
 function clearAgentForm() {
   document.getElementById("newAgentName").value = "";
@@ -1728,7 +1732,7 @@ document.getElementById("makeShorter")?.addEventListener("click", () => {
   if (!box) return;
   box.value = box.value.split(".").filter(Boolean).slice(0, 3).join(".").trim() + ".";
 });
-  }
+
 document.getElementById("makeFriendly")?.addEventListener("click", () => {
   const box = document.getElementById("actionMessage");
   if (!box || !selectedAgent) return;
