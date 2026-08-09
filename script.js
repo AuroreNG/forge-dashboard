@@ -202,78 +202,60 @@ function parseCSV(text) {
 // ==========================================================
 
 function normalizeAgent(row) {
-
-  // Basic information
-  const name = String(row["Full name"] || "").trim();
-  const code = String(row["Agent Code"] || "").trim();
-  const email = String(row["Email"] || "").trim();
-  const phone = String(row["Phone"] || "").trim();
-
-  // Team hierarchy
-  const upline = String(row["Upline Name"] || "").trim();
-  const uplineCode = String(row["Upline Code"] || "").trim();
-
-  // Team status from your CSV
-  const teamStatus = String(row["Team Status"] || "").trim();
-
-  // Recruit date
-  const recruitDate =
-    String(row["Recruit Date ( CST )"] || "").trim();
-
-  // Make status easier to compare
-  const status = teamStatus.toLowerCase();
+  const rawStatus = String(row["Team Status"] || "").trim();
+  const status = rawStatus.toLowerCase();
 
   let stage = "Not Placed";
 
-  // ----------------------------------------------------------
-  // 1. CONTRACTED has highest priority
-  // ----------------------------------------------------------
+  // IMPORTANT:
+  // Active / Inactive do NOT determine the licensing stage.
+
   if (status.includes("contracted")) {
     stage = "Contracted";
   }
-
-  // ----------------------------------------------------------
-  // 2. LICENSED
-  // Must contain "license" but NOT "non-licensed"
-  // ----------------------------------------------------------
   else if (
-    status.includes("license") &&
-    !status.includes("non-licensed")
+    status.includes("continuing education") ||
+    status.includes("ce required") ||
+    status.includes("ce ")
+  ) {
+    stage = "Continuing Education";
+  }
+  else if (status.includes("exam passed")) {
+    stage = "Exam Passed";
+  }
+  else if (
+    status.includes("xcel") ||
+    status.includes("prelicensing")
+  ) {
+    stage = "XCEL Completed";
+  }
+  else if (status.includes("quiz passed")) {
+    stage = "Quiz Passed";
+  }
+  else if (status.includes("quiz sent")) {
+    stage = "Quiz Sent";
+  }
+  else if (
+    status.includes("licensed") ||
+    status.includes("license approved")
   ) {
     stage = "Licensed";
   }
 
-  // ----------------------------------------------------------
-  // 3. ACTIVE NON-LICENSED
-  // They are working through licensing, so place in XCEL.
-  // ----------------------------------------------------------
-  else if (
-    status.includes("active") &&
-    status.includes("non-licensed")
-  ) {
-    stage = "XCEL Completed";
-  }
-
-  // ----------------------------------------------------------
-  // 4. Everyone else starts Not Placed
-  // ----------------------------------------------------------
-  else {
-    stage = "Not Placed";
-  }
-
   return {
-    name,
-    code,
-    email,
-    phone,
+    name: String(row["Full name"] || "").trim(),
+    email: String(row["Email"] || "").trim(),
+    phone: String(row["Phone"] || "").trim(),
+    code: String(row["Agent Code"] || "").trim(),
 
-    upline,
-    uplineCode,
+    upline: String(row["Upline Name"] || "").trim(),
+    uplineCode: String(row["Upline Code"] || "").trim(),
 
-    teamStatus,
-    status: teamStatus,
+    coordinator: String(row["Coordinator"] || "").trim(),
 
-    recruitDate,
+    // Keep original status only for reference.
+    // Do not display Active / Inactive as a Journey stage.
+    teamStatus: rawStatus,
 
     stage,
     pipelineStage: stage
@@ -2043,54 +2025,32 @@ console.log(
 // ==========================================================
 
 const rows = validAgents
-  .filter(agent => agent.code) // Skip rows without Agent Code
+  .filter((agent) => agent.code) // Skip rows without Agent Code
   .map((agent) => ({
 
     // Organization
-    organization_id:
-      currentUserProfile.organization_id,
+    organization_id: currentUserProfile.organization_id,
 
     // Identity
-    name:
-      agent.name,
-
-    email:
-      agent.email || null,
-
-    phone:
-      agent.phone || null,
-
-    agent_code:
-      agent.code,
+    name: agent.name,
+    email: agent.email || null,
+    phone: agent.phone || null,
+    agent_code: agent.code,
 
     // Team hierarchy
-    upline_name:
-      agent.upline || null,
+    upline_name: agent.upline || null,
+    upline_code: agent.uplineCode || null,
 
-    upline_code:
-      agent.uplineCode || null,
+    // Licensing Journey
+    stage: agent.stage || "Not Placed",
 
-    // Journey
-    stage:
-      agent.stage || "Not Placed",
-
-    team_status:
-      agent.teamStatus || "",
-
-    // Optional
-    recruit_date:
-      agent.recruitDate || null,
-
-    import_source:
-      "Team CSV"
+    // Keep original Team Status only as reference.
+    // Active / Inactive will NOT become pipeline stages.
+    team_status: agent.teamStatus || null
 
   }));
 
-console.log(
-  "Rows being sent to Supabase:",
-  rows
-);
-
+console.log("Rows being sent to Supabase:", rows);
      // UPSERT =
 // If agent does not exist → create them.
 // If agent already exists → update their existing record.
