@@ -547,6 +547,24 @@ allAgents = (data || []).map((agent) => ({
 
   notes: agent.notes || ""
 }));
+
+      console.log(
+      "Agents loaded from Supabase:",
+      allAgents.length
+    );
+
+    renderAllPages();
+
+  } catch (error) {
+    console.error(
+      "Could not load agents from Supabase:",
+      error
+    );
+
+    allAgents = [];
+    renderAllPages();
+  }
+}
 // ─── JOURNEY PAGE ─────────────────────────────────────────────────────────────
 
 function renderJourneyPage() {
