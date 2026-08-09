@@ -1026,15 +1026,23 @@ function showAgentProfile(agent) {
   "profileAvatar",
   getInitials(getAgentDisplayName(agent))
 );
-  setText("profileName", getAgentDisplayName(agent));
-  ${agent.upline || "No upline"} • ${agent.stage}
-  setText("profileCoordinator", agent.upline || agent.coordinator || "—");
-  setText("profileStatus", agent.teamStatus || "—");
-  setText("profileStage", agent.stage || "—");
-  setText("profileCode", agent.code || "—");
-  setText("profilePhone", agent.phone || "—");
-  setText("profileEmail", agent.email || "—");
-  setText("profileNextAction", getNextAction(agent.stage));
+
+setText(
+  "profileName",
+  getAgentDisplayName(agent)
+);
+
+setText(
+  "profileCoordinator",
+  agent.upline || agent.coordinator || "—"
+);
+
+setText("profileStatus", agent.teamStatus || "—");
+setText("profileStage", agent.stage || "—");
+setText("profileCode", agent.code || "—");
+setText("profilePhone", agent.phone || "—");
+setText("profileEmail", agent.email || "—");
+setText("profileNextAction", getNextAction(agent.stage));
 
   updateJourneyStatus(agent.stage);
 
