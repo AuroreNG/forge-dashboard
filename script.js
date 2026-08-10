@@ -275,8 +275,20 @@ function normalizeTeamStage(teamStatus) {
 function cleanAgentName(name) {
   return String(name || "")
     .trim()
-    .replace(/^(mr|mrs|ms|miss|dr|doctor)\.?\s+/i, "")
-    .replace(/\s+/g, " ");
+
+    // Remove titles
+    .replace(
+      /^(mr|mrs|ms|miss|dr|doctor|prof|professor)\.?\s+/i,
+      ""
+    )
+
+    // Remove & everywhere in names
+    .replace(/\s*&\s*/g, " ")
+
+    // Clean extra spaces
+    .replace(/\s+/g, " ")
+
+    .trim();
 }
 
 function normalizeAgent(row) {
@@ -318,11 +330,197 @@ function normalizeAgent(row) {
     stage: normalizeTeamStage(teamStatus)
   };
 }
+
+function normalizeRecruitAgent(row) {
+  return {
+    name: cleanAgentName(
+      row["RECRUIT NAME"] || ""
+    ),
+
+    code: String(
+      row["RECRUIT CODE"] || ""
+    ).trim(),
+
+    phone: String(
+      row["PHONE"] || ""
+    ).trim(),
+
+    email: String(
+      row["EMAIL"] || ""
+    ).trim().toLowerCase(),
+
+    recruitDate: String(
+      row["RECRUIT DATE"] || ""
+    ).trim()
+  };
+}
 //For every Compliance record, find the matching Team member:
 function normalizeMatchName(name) {
   return cleanAgentName(name)
     .toLowerCase()
     .replace(/[^a-z0-9]/g, "");
+}
+//For the recruit export, we also need to determine 
+//the recruiter/upline from the filename, like: Nkem Nwabufo_byRecruit_details.csv
+function getRecruiterNameFromFilename(filename) {
+  return cleanAgentName(
+    String(filename || "")
+      .replace(/\.[^.]+$/, "")
+      .replace(/_byRecruit.*$/i, "")
+      .replace(/_/g, " ")
+      .trim()
+  );
+}
+//Then find that recruiter already in FORGE:
+function findAgentBySmartMatch({ code, email, name }) {
+
+  const cleanCode =
+    String(code || "").trim().toLowerCase();
+
+  const cleanEmail =
+    String(email || "").trim().toLowerCase();
+
+  const cleanName =
+    normalizeMatchName(name);
+
+  if (cleanCode) {
+    const match = allAgents.find(
+      agent =>
+        String(agent.code || "")
+          .trim()
+          .toLowerCase() === cleanCode
+    );
+
+    if (match) return match;
+  }
+
+  if (cleanEmail) {
+    const match = allAgents.find(
+      agent =>
+        String(agent.email || "")
+          .trim()
+          .toLowerCase() === cleanEmail
+    );
+
+    if (match) return match;
+  }
+
+  if (cleanName) {
+    const match = allAgents.find(
+      agent =>
+        normalizeMatchName(agent.name) === cleanName
+    );
+
+    if (match) return match;
+  }
+
+  return null;
+}
+
+//Now comes the Recruit importer.
+async function importRecruitFile(parsedRows, file) {
+
+  const recruiterName =
+    getRecruiterNameFromFilename(file.name);
+
+  console.log(
+    "Recruit export recruiter:",
+    recruiterName
+  );
+
+  const recruiter =
+    findAgentBySmartMatch({
+      name: recruiterName
+    });
+
+  if (!recruiter) {
+    throw new Error(
+      `FORGE could not find recruiter "${recruiterName}" in the existing team.`
+    );
+  }
+
+  const recruits =
+    parsedRows
+      .map(normalizeRecruitAgent)
+      .filter(agent =>
+        agent.code &&
+        agent.code.trim() !== ""
+      );
+
+  let created = 0;
+  let updated = 0;
+
+  for (const recruit of recruits) {
+
+    const existing =
+      findAgentBySmartMatch(recruit);
+
+    const row = {
+      organization_id:
+        currentUserProfile.organization_id,
+
+      agent_code:
+        recruit.code,
+
+      name:
+        cleanAgentName(recruit.name),
+
+      phone:
+        recruit.phone || null,
+
+      email:
+        recruit.email || null,
+
+      recruit_date:
+        recruit.recruitDate || null,
+
+      upline_name:
+        cleanAgentName(recruiter.name),
+
+      upline_code:
+        recruiter.code || null,
+
+      // Preserve existing Journey stage
+      // otherwise brand-new recruits begin here.
+      stage:
+        existing?.stage || "Not Placed",
+
+      team_status:
+        existing?.teamStatus || null,
+
+      import_source:
+        "Tevah Recruit"
+    };
+
+    const { error } = await forgeSupabase
+      .from("agents")
+      .upsert(row, {
+        onConflict:
+          "organization_id,agent_code",
+        ignoreDuplicates: false
+      });
+
+    if (error) {
+      console.error(
+        "Recruit import error:",
+        recruit.code,
+        error
+      );
+      continue;
+    }
+
+    if (existing) {
+      updated++;
+    } else {
+      created++;
+    }
+  }
+
+  await loadCSV();
+
+  alert(
+    `Recruit import complete. ${created} new recruits added. ${updated} existing agents updated.`
+  );
 }
 
 function findExistingTeamAgent(complianceAgent) {
@@ -424,7 +622,38 @@ function normalizeComplianceAgent(row) {
       String(row["NPN"] || "").trim()
   };
 }
+//Now add a detector. This is the intelligence that looks at 
+//the headers and decides which Tevah export you gave FORGE:
+function detectTevahFileType(rows) {
+  if (!rows?.length) return "unknown";
 
+  const headers = Object.keys(rows[0]);
+
+  if (
+    headers.includes("Agent Code") &&
+    headers.includes("Full name") &&
+    headers.includes("Team Status")
+  ) {
+    return "team";
+  }
+
+  if (
+    headers.includes("AGENT NAME") &&
+    headers.includes("CODE") &&
+    headers.includes("RESI. LICENSE")
+  ) {
+    return "compliance";
+  }
+
+  if (
+    headers.includes("RECRUIT NAME") &&
+    headers.includes("RECRUIT CODE")
+  ) {
+    return "recruit";
+  }
+
+  return "unknown";
+}
 
 // ─── METRICS ─────────────────────────────────────────────────────────────────
 
