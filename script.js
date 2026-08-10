@@ -2489,6 +2489,21 @@ document
   });
 
 
+document
+  .getElementById("startSmartImport")
+  ?.addEventListener("click", () => {
+
+    document
+      .getElementById("importGuideModal")
+      ?.classList.add("hidden");
+
+    document
+      .getElementById("smartImportInput")
+      ?.click();
+
+  });
+
+
 document.addEventListener("click", (event) => {
   if (
     event.target.id === "closeImportGuide" ||
