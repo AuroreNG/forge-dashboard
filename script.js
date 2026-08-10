@@ -2478,17 +2478,15 @@ alert(
 });
 
 
-document.addEventListener("click", (event) => {
-  const btn = event.target.closest(".import-csv-btn");
-  if (!btn) return;
+document
+  .getElementById("smartImportBtn")
+  ?.addEventListener("click", () => {
 
-  event.preventDefault();
-  event.stopPropagation();
+    document
+      .getElementById("importGuideModal")
+      ?.classList.remove("hidden");
 
-  document
-    .getElementById("importGuideModal")
-    ?.classList.remove("hidden");
-});
+  });
 
 
 document.addEventListener("click", (event) => {
