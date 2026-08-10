@@ -562,20 +562,8 @@ Gives the user separate import choices
       Cancel
     </button>
 
-    <!-- Existing FORGE/team CSV -->
-    <button
-      id="startCSVImport"
-      class="import-primary"
-    >
-      Import Team CSV
-    </button>
-
-    <!-- Tevah compliance CSV -->
-    <button
-      id="startComplianceImport"
-      class="import-primary"
-    >
-      Import Compliance CSV
+   <button id="startSmartImport">
+    Choose Tevah CSV
     </button>
 
   </div>
@@ -594,15 +582,7 @@ JavaScript opens these when an import button is clicked.
 <!-- Your original/team CSV importer -->
 <input
   type="file"
-  id="csvImportInput"
-  accept=".csv"
-  hidden
-/>
-
-<!-- Tevah compliance CSV importer -->
-<input
-  type="file"
-  id="complianceImportInput"
+  id="smartImportInput"
   accept=".csv"
   hidden
 />
