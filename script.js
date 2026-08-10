@@ -2558,61 +2558,80 @@ for (const complianceAgent of validAgents) {
       finalStage
   };
 
-document
-  .getElementById("complianceImportInput")
-  ?.addEventListener("change", (event) => {
+  const { error } = await forgeSupabase
+    .from("agents")
+    .update(updates)
+    .eq(
+      "organization_id",
+      currentUserProfile.organization_id
+    )
+    .eq(
+      "id",
+      existingAgent.id
+    );
 
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = async () => {
-      try {
-
-        // your compliance logic here
-
-        const { error } = await forgeSupabase
-          .from("agents")
-          .update(updates)
-          .eq(
-            "organization_id",
-            currentUserProfile.organization_id
-          )
-          .eq(
-            "id",
-            existingAgent.id
-          );
-
-      } catch (error) {
-        console.error(
-          "COMPLIANCE IMPORT ERROR:",
-          error
-        );
-      }
-    };
-
-    reader.readAsText(file);
-  });
-
- // Open the Compliance CSV file picker
-document.addEventListener("click", (event) => {
-  if (event.target.id !== "startComplianceImport") {
-    return;
+  if (error) {
+    console.error(
+      "COMPLIANCE UPDATE ERROR:",
+      existingAgent.code,
+      error
+    );
+    continue;
   }
 
-  event.preventDefault();
-  event.stopPropagation();
+  updatedCount++;
+}
 
-  document
-    .getElementById("importGuideModal")
-    ?.classList.add("hidden");
+// Reload agents after all compliance updates are finished
+await loadCSV();
 
-  document
-    .getElementById("complianceImportInput")
-    ?.click();
-});
+console.log(
+  `Compliance import complete. Updated: ${updatedCount}. Unmatched: ${unmatchedCount}.`
+);
 
+alert(
+  `${updatedCount} compliance records updated successfully.` +
+  (unmatchedCount
+    ? ` ${unmatchedCount} unmatched records were skipped.`
+    : "")
+);
+
+} catch (error) {
+
+  console.error(
+    "COMPLIANCE IMPORT ERROR:",
+    error
+  );
+
+  alert(
+    "Compliance import error: " +
+    (error?.message || String(error))
+  );
+
+} finally {
+
+  event.target.value = "";
+
+}
+
+}; // closes reader.onload
+
+reader.onerror = () => {
+  console.error(
+    "COMPLIANCE CSV FILE READ ERROR:",
+    reader.error
+  );
+
+  alert(
+    "FORGE could not read the Compliance CSV file."
+  );
+
+  event.target.value = "";
+};
+
+reader.readAsText(file);
+
+}); // closes complianceImportInput change listener
 // ─── STORAGE ─────────────────────────────────────────────────────────────────
 
 function saveAgentsToLocalStorage() {
