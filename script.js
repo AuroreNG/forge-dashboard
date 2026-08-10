@@ -164,16 +164,70 @@ function renderAllPages() {
 // ─── CSV ──────────────────────────────────────────────────────────────────────
 
 function parseCSV(text) {
-  const lines = text.trim().split("\n");
-  const headers = lines[0].split(",").map((h) => h.trim());
+  const rows = [];
+  let row = [];
+  let field = "";
+  let insideQuotes = false;
 
-  return lines.slice(1).map((line) => {
-    const values = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-    const row = {};
-    headers.forEach((header, i) => {
-      row[header] = values[i] ? values[i].replace(/^"|"$/g, "").trim() : "";
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const next = text[i + 1];
+
+    if (char === '"') {
+      if (insideQuotes && next === '"') {
+        field += '"';
+        i++;
+      } else {
+        insideQuotes = !insideQuotes;
+      }
+    }
+
+    else if (char === "," && !insideQuotes) {
+      row.push(field.trim());
+      field = "";
+    }
+
+    else if ((char === "\n" || char === "\r") && !insideQuotes) {
+      // Handle CRLF
+      if (char === "\r" && next === "\n") {
+        i++;
+      }
+
+      row.push(field.trim());
+      field = "";
+
+      if (row.some(value => value !== "")) {
+        rows.push(row);
+      }
+
+      row = [];
+    }
+
+    else {
+      field += char;
+    }
+  }
+
+  // Final field/row
+  if (field !== "" || row.length > 0) {
+    row.push(field.trim());
+    rows.push(row);
+  }
+
+  if (!rows.length) return [];
+
+  const headers = rows[0].map(header =>
+    header.replace(/^"|"$/g, "").trim()
+  );
+
+  return rows.slice(1).map(values => {
+    const obj = {};
+
+    headers.forEach((header, index) => {
+      obj[header] = values[index] ?? "";
     });
-    return row;
+
+    return obj;
   });
 }
 
@@ -213,93 +267,66 @@ function cleanAgentName(name) {
 // ==========================================================
 
 function normalizeTeamStage(teamStatus) {
-  const status = String(teamStatus || "")
+  const s = String(teamStatus || "")
     .trim()
     .toLowerCase();
 
-  if (!status || status.includes("not placed")) {
-    return "Not Placed";
-  }
-
-  // Highest stage first
-  if (status.includes("contracted")) {
-    return "Contracted";
-  }
-
-  // Your CSV uses "License", not only "Licensed"
-  if (
-    status.includes("license") ||
-    status.includes("licensed")
-  ) {
-    return "Licensed";
-  }
-
-  if (
-    status.includes("exam passed") ||
-    status.includes("passed exam")
-  ) {
-    return "Exam Passed";
-  }
-
-  if (
-    status.includes("xcel") ||
-    status.includes("prelicensing")
-  ) {
-    return "XCEL Completed";
-  }
-
-  if (status.includes("quiz sent")) {
-    return "Quiz Sent";
-  }
-
-  if (status.includes("quiz passed")) {
-    return "Quiz Passed";
-  }
+  if (s.includes("contracted")) return "Contracted";
+  if (s.includes("license")) return "Licensed";
+  if (s.includes("exam passed")) return "Exam Passed";
+  if (s.includes("xcel")) return "XCEL Completed";
+  if (s.includes("quiz passed")) return "Quiz Passed";
+  if (s.includes("quiz sent")) return "Quiz Sent";
 
   return "Not Placed";
 }
 
-function normalizeAgent(row) {
-  const rawStatus =
-    String(row["Team Status"] || "").trim();
-
-  const stage =
-    normalizeTeamStage(rawStatus);
-
-  return {
-    code: String(row["Agent Code"] || "").trim(),
-
-    phone: String(row["Phone"] || "").trim(),
-
-    name: cleanAgentName(
-      row["Full name"] ||
-      row["Full Name"] ||
-      ""
-    ),
-
-    email: String(row["Email"] || "")
-      .trim()
-      .toLowerCase(),
-
-    recruitDate: String(
-      row["Recruit Date ( CST )"] ||
-      row["Recruit Date (CST)"] ||
-      ""
-    ).trim(),
-
-    uplineCode:
-      String(row["Upline Code"] || "").trim(),
-
-    upline:
-      cleanAgentName(row["Upline Name"]),
-
-    teamStatus: rawStatus,
-
-    stage,
-    pipelineStage: stage
-  };
+function cleanAgentName(name) {
+  return String(name || "")
+    .trim()
+    .replace(/^(mr|mrs|ms|miss|dr|doctor)\.?\s+/i, "")
+    .replace(/\s+/g, " ");
 }
 
+function normalizeAgent(row) {
+  const teamStatus = String(
+    row["Team Status"] || ""
+  ).trim();
+
+  return {
+    code: String(
+      row["Agent Code"] || ""
+    ).trim(),
+
+    phone: String(
+      row["Phone"] || ""
+    ).trim(),
+
+    name: cleanAgentName(
+      row["Full name"] || ""
+    ),
+
+    email: String(
+      row["Email"] || ""
+    ).trim().toLowerCase(),
+
+    recruitDate: String(
+      row["Recruit Date ( CST )"] || ""
+    ).trim(),
+
+    uplineCode: String(
+      row["Upline Code"] || ""
+    ).trim(),
+
+    upline: cleanAgentName(
+      row["Upline Name"] || ""
+    ),
+
+    teamStatus: teamStatus,
+
+    stage: normalizeTeamStage(teamStatus)
+  };
+}
 //For every Compliance record, find the matching Team member:
 function normalizeMatchName(name) {
   return cleanAgentName(name)
