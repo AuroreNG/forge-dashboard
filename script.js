@@ -2216,9 +2216,12 @@ const rows = validAgents
   stage:
     agent.stage,
 
-  import_source:
-    "Team CSV"
+import_source:
+"Team CSV"
 };
+
+}); // closes .map()
+
 console.log("Rows being sent to Supabase:", rows);
      // UPSERT =
 // If agent does not exist → create them.
