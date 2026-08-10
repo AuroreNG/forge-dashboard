@@ -202,63 +202,28 @@ function parseCSV(text) {
 // ==========================================================
 
 function normalizeAgent(row) {
-  const rawStatus = String(row["Team Status"] || "").trim();
-  const status = rawStatus.toLowerCase();
-
-  let stage = "Not Placed";
-
-  // IMPORTANT:
-  // Active / Inactive do NOT determine the licensing stage.
-
-  if (status.includes("contracted")) {
-    stage = "Contracted";
-  }
-  else if (
-    status.includes("continuing education") ||
-    status.includes("ce required") ||
-    status.includes("ce ")
-  ) {
-    stage = "Continuing Education";
-  }
-  else if (status.includes("exam passed")) {
-    stage = "Exam Passed";
-  }
-  else if (
-    status.includes("xcel") ||
-    status.includes("prelicensing")
-  ) {
-    stage = "XCEL Completed";
-  }
-  else if (status.includes("quiz passed")) {
-    stage = "Quiz Passed";
-  }
-  else if (status.includes("quiz sent")) {
-    stage = "Quiz Sent";
-  }
-  else if (
-    status.includes("licensed") ||
-    status.includes("license approved")
-  ) {
-    stage = "Licensed";
-  }
-
   return {
-    name: String(row["Full name"] || "").trim(),
+    name: cleanAgentName(row["Full name"]),
     email: String(row["Email"] || "").trim(),
     phone: String(row["Phone"] || "").trim(),
     code: String(row["Agent Code"] || "").trim(),
 
-    upline: String(row["Upline Name"] || "").trim(),
-    uplineCode: String(row["Upline Code"] || "").trim(),
+    recruitDate:
+      String(row["Recruit Date ( CST )"] || "").trim(),
 
-    coordinator: String(row["Coordinator"] || "").trim(),
+    upline:
+      cleanAgentName(row["Upline Name"]),
 
-    // Keep original status only for reference.
-    // Do not display Active / Inactive as a Journey stage.
-    teamStatus: rawStatus,
+    uplineCode:
+      String(row["Upline Code"] || "").trim(),
 
-    stage,
-    pipelineStage: stage
+    // Team CSV does NOT determine licensing status
+    teamStatus: "",
+
+    // New roster members start here unless FORGE
+    // already has a saved Journey stage for them
+    stage: "Not Placed",
+    pipelineStage: "Not Placed"
   };
 }
 // ==========================================================
