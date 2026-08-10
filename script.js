@@ -2514,7 +2514,90 @@ document.addEventListener("click", (event) => {
       ?.classList.add("hidden");
   }
 });
+function detectTevahFileType(rows) {
+  if (!rows?.length) return "unknown";
 
+  const headers = Object.keys(rows[0]).map((h) => h.trim());
+
+  if (
+    headers.includes("Agent Code") &&
+    headers.includes("Full name") &&
+    headers.includes("Team Status")
+  ) {
+    return "team";
+  }
+
+  if (
+    headers.includes("AGENT NAME") &&
+    headers.includes("CODE") &&
+    headers.includes("RESI. LICENSE")
+  ) {
+    return "compliance";
+  }
+
+  if (
+    headers.includes("RECRUIT NAME") &&
+    headers.includes("RECRUIT CODE")
+  ) {
+    return "recruit";
+  }
+
+  return "unknown";
+}
+
+document
+  .getElementById("smartImportInput")
+  ?.addEventListener("change", async (event) => {
+
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+
+      const parsedRows = parseCSV(text);
+
+      const fileType = detectTevahFileType(parsedRows);
+
+      console.log(
+        "FORGE detected Tevah file type:",
+        fileType
+      );
+
+      if (fileType === "team") {
+        await importTeamFile(parsedRows, file);
+      }
+
+      else if (fileType === "compliance") {
+        await importComplianceFile(parsedRows, file);
+      }
+
+      else if (fileType === "recruit") {
+        await importRecruitFile(parsedRows, file);
+      }
+
+      else {
+        alert(
+          "FORGE could not recognize this Tevah CSV format."
+        );
+      }
+
+    } catch (error) {
+      console.error(
+        "SMART IMPORT ERROR:",
+        error
+      );
+
+      alert(
+        "Import failed: " +
+        (error?.message || String(error))
+      );
+
+    } finally {
+      event.target.value = "";
+    }
+
+  });
 
 // ==========================================================
 // IMPORT TEAM CSV
