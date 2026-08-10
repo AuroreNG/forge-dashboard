@@ -2020,30 +2020,54 @@ console.log(
 // ==========================================================
 
 const rows = validAgents
-  .filter((agent) => agent.code) // Skip rows without Agent Code
-  .map((agent) => ({
+  .filter(agent => agent.code)
+  .map((agent) => {
 
-    // Organization
-    organization_id: currentUserProfile.organization_id,
+    // Check whether this agent already exists in FORGE
+    const existingAgent = allAgents.find(
+      (existing) =>
+        String(existing.code || "")
+          .trim()
+          .toLowerCase() ===
+        String(agent.code || "")
+          .trim()
+          .toLowerCase()
+    );
 
-    // Identity
-    name: agent.name,
-    email: agent.email || null,
-    phone: agent.phone || null,
-    agent_code: agent.code,
+    return {
+      organization_id:
+        currentUserProfile.organization_id,
 
-    // Team hierarchy
-    upline_name: agent.upline || null,
-    upline_code: agent.uplineCode || null,
+      agent_code:
+        agent.code,
 
-    // Licensing Journey
-    stage: agent.stage || "Not Placed",
+      name:
+        cleanAgentName(agent.name),
 
-    // Keep original Team Status only as reference.
-    // Active / Inactive will NOT become pipeline stages.
-    team_status: agent.teamStatus || null
+      phone:
+        agent.phone || null,
 
-  }));
+      email:
+        agent.email || null,
+
+      recruit_date:
+        agent.recruitDate || null,
+
+      upline_code:
+        agent.uplineCode || null,
+
+      upline_name:
+        cleanAgentName(agent.upline) || null,
+
+      // IMPORTANT:
+      // Do not reset an existing person's Journey.
+      stage:
+        existingAgent?.stage || "Not Placed",
+
+      import_source:
+        "Team CSV"
+    };
+  });
 
 console.log("Rows being sent to Supabase:", rows);
      // UPSERT =
