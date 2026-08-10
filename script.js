@@ -177,6 +177,17 @@ function parseCSV(text) {
   });
 }
 
+
+function cleanAgentName(name) {
+  return String(name || "")
+    .trim()
+    .replace(
+      /^(mr|mrs|ms|miss|dr|doctor)\.?\s+/i,
+      ""
+    )
+    .replace(/\s+/g, " ")
+    .trim();
+}
 // ==========================================================
 // NORMALIZE TEAM CSV
 // This is for the main FORGE team.csv format.
@@ -203,25 +214,54 @@ function parseCSV(text) {
 
 function normalizeAgent(row) {
   return {
-    name: cleanAgentName(row["Full name"]),
-    email: String(row["Email"] || "").trim(),
-    phone: String(row["Phone"] || "").trim(),
-    code: String(row["Agent Code"] || "").trim(),
+    code: String(
+      row["Agent Code"] ||
+      row["agent_code"] ||
+      ""
+    ).trim(),
 
-    recruitDate:
-      String(row["Recruit Date ( CST )"] || "").trim(),
+    phone: String(
+      row["Phone"] ||
+      row["phone"] ||
+      ""
+    ).trim(),
 
-    upline:
-      cleanAgentName(row["Upline Name"]),
+    name: cleanAgentName(
+      row["Full name"] ||
+      row["Full Name"] ||
+      row["name"] ||
+      ""
+    ),
 
-    uplineCode:
-      String(row["Upline Code"] || "").trim(),
+    email: String(
+      row["Email"] ||
+      row["email"] ||
+      ""
+    ).trim(),
 
-    // Team CSV does NOT determine licensing status
+    recruitDate: String(
+      row["Recruit Date ( CST )"] ||
+      row["Recruit Date (CST)"] ||
+      row["Recruit Date"] ||
+      ""
+    ).trim(),
+
+    uplineCode: String(
+      row["Upline Code"] ||
+      row["upline_code"] ||
+      ""
+    ).trim(),
+
+    upline: cleanAgentName(
+      row["Upline Name"] ||
+      row["upline_name"] ||
+      ""
+    ),
+
+    // Team CSV does NOT determine licensing/compliance status.
     teamStatus: "",
 
-    // New roster members start here unless FORGE
-    // already has a saved Journey stage for them
+    // Used only for brand-new agents.
     stage: "Not Placed",
     pipelineStage: "Not Placed"
   };
