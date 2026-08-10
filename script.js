@@ -182,7 +182,7 @@ function cleanAgentName(name) {
   return String(name || "")
     .trim()
     .replace(
-      /^(mr|mrs|ms|miss|dr|doctor)\.?\s+/i,
+      /^(mr|mrs|ms|miss|dr|doctor|prof|professor)\.?\s+/i,
       ""
     )
     .replace(/\s+/g, " ")
@@ -212,60 +212,150 @@ function cleanAgentName(name) {
 // Inactive, Non-Licensed       → Not Placed
 // ==========================================================
 
-function normalizeAgent(row) {
-  return {
-    code: String(
-      row["Agent Code"] ||
-      row["agent_code"] ||
-      ""
-    ).trim(),
+function normalizeTeamStage(teamStatus) {
+  const status = String(teamStatus || "")
+    .trim()
+    .toLowerCase();
 
-    phone: String(
-      row["Phone"] ||
-      row["phone"] ||
-      ""
-    ).trim(),
+  if (!status || status.includes("not placed")) {
+    return "Not Placed";
+  }
+
+  // Highest stage first
+  if (status.includes("contracted")) {
+    return "Contracted";
+  }
+
+  // Your CSV uses "License", not only "Licensed"
+  if (
+    status.includes("license") ||
+    status.includes("licensed")
+  ) {
+    return "Licensed";
+  }
+
+  if (
+    status.includes("exam passed") ||
+    status.includes("passed exam")
+  ) {
+    return "Exam Passed";
+  }
+
+  if (
+    status.includes("xcel") ||
+    status.includes("prelicensing")
+  ) {
+    return "XCEL Completed";
+  }
+
+  if (status.includes("quiz sent")) {
+    return "Quiz Sent";
+  }
+
+  if (status.includes("quiz passed")) {
+    return "Quiz Passed";
+  }
+
+  return "Not Placed";
+}
+
+function normalizeAgent(row) {
+  const rawStatus =
+    String(row["Team Status"] || "").trim();
+
+  const stage =
+    normalizeTeamStage(rawStatus);
+
+  return {
+    code: String(row["Agent Code"] || "").trim(),
+
+    phone: String(row["Phone"] || "").trim(),
 
     name: cleanAgentName(
       row["Full name"] ||
       row["Full Name"] ||
-      row["name"] ||
       ""
     ),
 
-    email: String(
-      row["Email"] ||
-      row["email"] ||
-      ""
-    ).trim(),
+    email: String(row["Email"] || "")
+      .trim()
+      .toLowerCase(),
 
     recruitDate: String(
       row["Recruit Date ( CST )"] ||
       row["Recruit Date (CST)"] ||
-      row["Recruit Date"] ||
       ""
     ).trim(),
 
-    uplineCode: String(
-      row["Upline Code"] ||
-      row["upline_code"] ||
-      ""
-    ).trim(),
+    uplineCode:
+      String(row["Upline Code"] || "").trim(),
 
-    upline: cleanAgentName(
-      row["Upline Name"] ||
-      row["upline_name"] ||
-      ""
-    ),
+    upline:
+      cleanAgentName(row["Upline Name"]),
 
-    // Team CSV does NOT determine licensing/compliance status.
-    teamStatus: "",
+    teamStatus: rawStatus,
 
-    // Used only for brand-new agents.
-    stage: "Not Placed",
-    pipelineStage: "Not Placed"
+    stage,
+    pipelineStage: stage
   };
 }
+
+//For every Compliance record, find the matching Team member:
+function normalizeMatchName(name) {
+  return cleanAgentName(name)
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+}
+
+function findExistingTeamAgent(complianceAgent) {
+  const code =
+    String(complianceAgent.code || "")
+      .trim()
+      .toLowerCase();
+
+  const email =
+    String(complianceAgent.email || "")
+      .trim()
+      .toLowerCase();
+
+  const name =
+    normalizeMatchName(complianceAgent.name);
+
+  // 1. Agent Code — strongest match
+  if (code) {
+    const byCode = allAgents.find(
+      a =>
+        String(a.code || "")
+          .trim()
+          .toLowerCase() === code
+    );
+
+    if (byCode) return byCode;
+  }
+
+  // 2. Email
+  if (email) {
+    const byEmail = allAgents.find(
+      a =>
+        String(a.email || "")
+          .trim()
+          .toLowerCase() === email
+    );
+
+    if (byEmail) return byEmail;
+  }
+
+  // 3. Cleaned name
+  if (name) {
+    return allAgents.find(
+      a =>
+        normalizeMatchName(a.name) === name
+    ) || null;
+  }
+
+  return null;
+}
+
 // ==========================================================
 // COMPLIANCE CSV NORMALIZER
 // Resident License determines whether the person is licensed.
@@ -2074,41 +2164,34 @@ const rows = validAgents
           .toLowerCase()
     );
 
-    return {
-      organization_id:
-        currentUserProfile.organization_id,
+   return {
+  organization_id:
+    currentUserProfile.organization_id,
 
-      agent_code:
-        agent.code,
+  agent_code: agent.code,
 
-      name:
-        cleanAgentName(agent.name),
+  name: cleanAgentName(agent.name),
 
-      phone:
-        agent.phone || null,
+  phone: agent.phone || null,
 
-      email:
-        agent.email || null,
+  email: agent.email || null,
 
-      recruit_date:
-        agent.recruitDate || null,
+  recruit_date: agent.recruitDate || null,
 
-      upline_code:
-        agent.uplineCode || null,
+  upline_code: agent.uplineCode || null,
 
-      upline_name:
-        cleanAgentName(agent.upline) || null,
+  upline_name:
+    cleanAgentName(agent.upline) || null,
 
-      // IMPORTANT:
-      // Do not reset an existing person's Journey.
-      stage:
-        existingAgent?.stage || "Not Placed",
+  team_status:
+    agent.teamStatus || null,
 
-      import_source:
-        "Team CSV"
-    };
-  });
+  stage:
+    agent.stage,
 
+  import_source:
+    "Team CSV"
+};
 console.log("Rows being sent to Supabase:", rows);
      // UPSERT =
 // If agent does not exist → create them.
@@ -2308,52 +2391,57 @@ document.getElementById("complianceImportInput")?.addEventListener("change", (ev
 // Blank / "--" license status does not move somebody.
 // ==========================================================
 
-function getComplianceJourneyStage(agent, existingAgent) {
+const STAGE_RANK = {
+  "Not Placed": 0,
+  "Quiz Sent": 1,
+  "Quiz Passed": 2,
+  "XCEL Completed": 3,
+  "Exam Passed": 4,
+  "Licensed": 5,
+  "Contracted": 6
+};
 
-  const license =
-    String(agent.residentLicense || "")
-      .trim()
-      .toLowerCase();
-
-  // Never downgrade somebody already contracted.
-  if (existingAgent?.stage === "Contracted") {
-    return "Contracted";
-  }
-
-  // Active resident license means Licensed.
-  if (license === "active") {
-    return "Licensed";
-  }
-
-  // Do not guess when Tevah has no license information.
-  // Preserve whatever Journey stage FORGE already had.
-  return existingAgent?.stage || "Not Placed";
+function isComplianceActive(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase() === "active";
 }
 
-// ==========================================================
-// DECIDE JOURNEY STAGE FROM COMPLIANCE DATA
-// ==========================================================
-
 function getComplianceJourneyStage(agent, existingAgent) {
 
-  const license =
-    String(agent.residentLicense || "")
-      .trim()
-      .toLowerCase();
+  const currentStage =
+    existingAgent?.stage || "Not Placed";
 
-  // Never downgrade a contracted agent
-  if (existingAgent?.stage === "Contracted") {
-    return "Contracted";
+  const residentActive =
+    isComplianceActive(agent.residentLicense);
+
+  const eoActive =
+    isComplianceActive(agent.eoStatus);
+
+  const amlActive =
+    isComplianceActive(agent.amlStatus);
+
+  let complianceStage = "Not Placed";
+
+  // Resident License active = at least Licensed
+  if (residentActive) {
+    complianceStage = "Licensed";
   }
 
-  // Active resident license confirms Licensed
-  if (license === "active") {
-    return "Licensed";
+  // Your rule:
+  // Resident License + AML = Contracted
+  // Resident License + E&O + AML = also Contracted
+  if (residentActive && amlActive) {
+    complianceStage = "Contracted";
   }
 
-  // If compliance CSV does not specify license status,
-  // keep the agent's current Journey stage.
-  return existingAgent?.stage || "Not Placed";
+  // Never downgrade someone who is already further ahead
+  return (
+    STAGE_RANK[complianceStage] >
+    STAGE_RANK[currentStage]
+      ? complianceStage
+      : currentStage
+  );
 }
 // ==========================================================
 // BUILD COMPLIANCE ROWS FOR SUPABASE
@@ -2363,137 +2451,117 @@ function getComplianceJourneyStage(agent, existingAgent) {
 // downgrading Contracted agents or moving people incorrectly.
 // ==========================================================
 
-const rows = validAgents.map((agent) => {
+let updatedCount = 0;
+let unmatchedCount = 0;
 
-  const existingAgent = allAgents.find(
-    (existing) =>
-      String(existing.code || "")
-        .trim()
-        .toLowerCase() ===
-      String(agent.code || "")
-        .trim()
-        .toLowerCase()
-  );
+for (const complianceAgent of validAgents) {
 
-  let journeyStage =
-    existingAgent?.stage || "Not Placed";
+  const existingAgent =
+    findExistingTeamAgent(complianceAgent);
 
-  // Compliance can confirm Licensed
-  const licenseStatus =
-    String(agent.residentLicense || "")
-      .trim()
-      .toLowerCase();
+  // Compliance is NOT allowed to add a new person.
+  if (!existingAgent) {
+    console.warn(
+      "Skipped unmatched compliance record:",
+      complianceAgent.code,
+      complianceAgent.name
+    );
 
-  // Never downgrade Contracted
-  if (existingAgent?.stage === "Contracted") {
-    journeyStage = "Contracted";
-  }
-  else if (licenseStatus === "active") {
-    journeyStage = "Licensed";
+    unmatchedCount++;
+    continue;
   }
 
-  return {
-    organization_id:
-      currentUserProfile.organization_id,
+  const finalStage =
+    getComplianceJourneyStage(
+      complianceAgent,
+      existingAgent
+    );
 
+  const updates = {
+    // More precise compliance identity data
     name:
-      cleanAgentName(agent.name),
-
-    agent_code:
-      agent.code,
+      cleanAgentName(
+        complianceAgent.name ||
+        existingAgent.name
+      ),
 
     email:
-      agent.email || null,
+      complianceAgent.email ||
+      existingAgent.email ||
+      null,
 
     upline_name:
-      cleanAgentName(agent.upline) || null,
+      cleanAgentName(
+        complianceAgent.upline ||
+        existingAgent.upline
+      ) || null,
 
     agent_level:
-      agent.level || null,
+      complianceAgent.level || null,
 
     resident_state:
-      agent.residentState || null,
+      complianceAgent.residentState || null,
 
     resident_license:
-      agent.residentLicense || null,
+      complianceAgent.residentLicense || null,
 
     eo_status:
-      agent.eoStatus || null,
+      complianceAgent.eoStatus || null,
 
     aml_status:
-      agent.amlStatus || null,
+      complianceAgent.amlStatus || null,
 
     tevah_platform_fee:
-      agent.tevahPlatformFee || null,
+      complianceAgent.tevahPlatformFee || null,
 
     npn:
-      agent.npn || null,
+      complianceAgent.npn || null,
 
-    // Keep exact Compliance STATUS
+    // Keep precise Compliance status
     team_status:
-      agent.teamStatus || null,
+      complianceAgent.teamStatus ||
+      existingAgent.teamStatus ||
+      null,
 
-    // Journey remains separate
+    // Combined Journey result
     stage:
-      journeyStage,
-
-    import_source:
-      "Tevah Compliance"
+      finalStage
   };
-});
 
-      console.log(
-        "Compliance rows being sent to Supabase:",
-        rows
+  const { error } =
+    await forgeSupabase
+      .from("agents")
+      .update(updates)
+      .eq(
+        "organization_id",
+        currentUserProfile.organization_id
+      )
+      .eq(
+        "id",
+        existingAgent.id
       );
 
-      // UPSERT means:
-      // new Agent Code      → create agent
-      // existing Agent Code → update same agent
-      //
-      // organization_id is included so different organizations
-      // remain completely separate.
-      const { data, error } = await forgeSupabase
-  .from("agents")
-  .upsert(rows, {
-    onConflict: "organization_id,agent_code",
-    ignoreDuplicates: false
-  })
-  .select();
+  if (error) {
+    console.error(
+      "Compliance update failed:",
+      complianceAgent.code,
+      error
+    );
 
-      if (error) {
-        console.error(
-          "COMPLIANCE IMPORT ERROR:",
-          error
-        );
+    continue;
+  }
 
-        alert(
-          "Compliance import failed: " +
-          error.message
-        );
+  updatedCount++;
+}
 
-        return;
-      }
+await loadCSV();
 
-      console.log(
-        "Compliance agents saved:",
-        data
-      );
-
-      // Reload the full team from Supabase.
-      await loadCSV();
-
-      const importedCount =
-        Array.isArray(data)
-          ? data.length
-          : rows.length;
-
-      alert(
-        `${importedCount} compliance records imported successfully.` +
-        (skippedCount
-          ? ` ${skippedCount} rows were skipped because they had no Agent Code.`
-          : "")
-      );
+alert(
+  `${updatedCount} existing team members updated.` +
+  (unmatchedCount
+    ? ` ${unmatchedCount} compliance records were ignored because they could not be matched to the Team CSV.`
+    : "")
+);
 
     } catch (error) {
       console.error(
