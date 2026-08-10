@@ -2555,73 +2555,42 @@ for (const complianceAgent of validAgents) {
       finalStage
   };
 
-  const { error } =
-    await forgeSupabase
-      .from("agents")
-      .update(updates)
-      .eq(
-        "organization_id",
-        currentUserProfile.organization_id
-      )
-      .eq(
-        "id",
-        existingAgent.id
-      );
+document
+  .getElementById("complianceImportInput")
+  ?.addEventListener("change", (event) => {
 
-  if (error) {
-    console.error(
-      "Compliance update failed:",
-      complianceAgent.code,
-      error
-    );
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-    continue;
-  }
+    const reader = new FileReader();
 
-  updatedCount++;
-}
+    reader.onload = async () => {
+      try {
 
-await loadCSV();
+        // your compliance logic here
 
-alert(
-  `${updatedCount} existing team members updated.` +
-  (unmatchedCount
-    ? ` ${unmatchedCount} compliance records were ignored because they could not be matched to the Team CSV.`
-    : "")
-);
+        const { error } = await forgeSupabase
+          .from("agents")
+          .update(updates)
+          .eq(
+            "organization_id",
+            currentUserProfile.organization_id
+          )
+          .eq(
+            "id",
+            existingAgent.id
+          );
 
-    } catch (error) {
-      console.error(
-        "COMPLIANCE CSV CRASH:",
-        error
-      );
+      } catch (error) {
+        console.error(
+          "COMPLIANCE IMPORT ERROR:",
+          error
+        );
+      }
+    };
 
-      alert(
-        "Compliance import error: " +
-        (error?.message || String(error))
-      );
-
-    } finally {
-      // Allows you to select the same file again later.
-      event.target.value = "";
-    }
-  };
-
-  reader.onerror = () => {
-    console.error(
-      "COMPLIANCE FILE READ ERROR:",
-      reader.error
-    );
-
-    alert(
-      "FORGE could not read the compliance CSV file."
-    );
-
-    event.target.value = "";
-  };
-
-  reader.readAsText(file);
-});
+    reader.readAsText(file);
+  });
 
  // Open the Compliance CSV file picker
 document.addEventListener("click", (event) => {
