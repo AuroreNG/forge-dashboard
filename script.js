@@ -232,16 +232,7 @@ function parseCSV(text) {
 }
 
 
-function cleanAgentName(name) {
-  return String(name || "")
-    .trim()
-    .replace(
-      /^(mr|mrs|ms|miss|dr|doctor|prof|professor)\.?\s+/i,
-      ""
-    )
-    .replace(/\s+/g, " ")
-    .trim();
-}
+
 // ==========================================================
 // NORMALIZE TEAM CSV
 // This is for the main FORGE team.csv format.
@@ -1231,44 +1222,7 @@ function getAgentDisplayName(agent) {
   return "Unnamed Agent";
 }
 
-// ==========================================================
-// COMPLIANCE DISPLAY HELPER
-// This stays OUTSIDE showAgentProfile()
-// ==========================================================
-function setComplianceValue(elementId, value) {
-  const el = document.getElementById(elementId);
-  if (!el) return;
 
-  const normalized =
-    String(value || "").trim().toLowerCase();
-
-  let displayValue = value || "—";
-
-  el.classList.remove(
-    "compliance-active",
-    "compliance-warning",
-    "compliance-empty"
-  );
-
-  if (normalized === "active") {
-    displayValue = "✓ Active";
-    el.classList.add("compliance-active");
-  } else if (
-    normalized === "expired" ||
-    normalized === "inactive"
-  ) {
-    displayValue = "⚠ " + value;
-    el.classList.add("compliance-warning");
-  } else if (
-    !normalized ||
-    normalized === "--"
-  ) {
-    displayValue = "—";
-    el.classList.add("compliance-empty");
-  }
-
-  el.textContent = displayValue;
-}
 // ==========================================================
 // AGENT PROFILE - COMPLIANCE STATUS
 // ==========================================================
@@ -2366,60 +2320,6 @@ document.addEventListener("click", (event) => {
 });
 
 // ─── COMPLIANCE CSV IMPORT ────────────────────────────────────────────────────
-// This importer reads the Tevah compliance CSV.
-// It uses CODE + organization_id to update the correct agent.
-// It does NOT create duplicates if the same agent already exists.
-
-document.getElementById("complianceImportInput")?.addEventListener("change", (event) => {
-  const file = event.target.files[0];
-
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = async () => {
-    try {
-      console.log("Starting Compliance CSV import...");
-
-      // Parse the CSV and convert each Tevah row
-      // into the format FORGE understands.
-      const complianceAgents =
-        parseCSV(reader.result).map(normalizeComplianceAgent);
-
-      console.log(
-        "Compliance agents parsed:",
-        complianceAgents.length
-      );
-
-      // FORGE must know which organization this user belongs to.
-      if (!currentUserProfile?.organization_id) {
-        throw new Error(
-          "Your FORGE profile does not have an organization assigned."
-        );
-      }
-
-      // Do not import rows that do not have an Agent Code.
-      // Agent Code is what FORGE uses to safely match records.
-      const validAgents = complianceAgents.filter((agent) =>
-        agent.code && agent.code.trim() !== ""
-      );
-
-      const skippedCount =
-        complianceAgents.length - validAgents.length;
-
-      console.log(
-        "Compliance rows skipped because Code is blank:",
-        skippedCount
-      );
-      // ==========================================================
-// DETERMINE JOURNEY STAGE FROM COMPLIANCE DATA
-//
-// IMPORTANT:
-// Resident License = Active is what confirms Licensed.
-//
-// Existing Contracted agents remain Contracted.
-// Blank / "--" license status does not move somebody.
-// ==========================================================
 
 const STAGE_RANK = {
   "Not Placed": 0,
@@ -2437,201 +2337,284 @@ function isComplianceActive(value) {
     .toLowerCase() === "active";
 }
 
-function getComplianceJourneyStage(agent, existingAgent) {
-
+function getComplianceJourneyStage(complianceAgent, existingAgent) {
   const currentStage =
     existingAgent?.stage || "Not Placed";
 
   const residentActive =
-    isComplianceActive(agent.residentLicense);
-
-  const eoActive =
-    isComplianceActive(agent.eoStatus);
+    isComplianceActive(complianceAgent.residentLicense);
 
   const amlActive =
-    isComplianceActive(agent.amlStatus);
+    isComplianceActive(complianceAgent.amlStatus);
 
-  let complianceStage = "Not Placed";
+  let complianceStage = currentStage;
 
-  // Resident License active = at least Licensed
+  // Active Resident License confirms Licensed
   if (residentActive) {
     complianceStage = "Licensed";
   }
 
-  // Your rule:
-  // Resident License + AML = Contracted
-  // Resident License + E&O + AML = also Contracted
+  // Active Resident License + Active AML confirms Contracted
   if (residentActive && amlActive) {
     complianceStage = "Contracted";
   }
 
-  // Never downgrade someone who is already further ahead
-  return (
-    STAGE_RANK[complianceStage] >
-    STAGE_RANK[currentStage]
-      ? complianceStage
-      : currentStage
-  );
-}
-// ==========================================================
-// BUILD COMPLIANCE ROWS FOR SUPABASE
-//
-// We first check whether the agent already exists in FORGE.
-// This prevents the compliance import from accidentally
-// downgrading Contracted agents or moving people incorrectly.
-// ==========================================================
+  // Never move an agent backwards
+  const currentRank =
+    STAGE_RANK[currentStage] ?? 0;
 
-let updatedCount = 0;
-let unmatchedCount = 0;
+  const complianceRank =
+    STAGE_RANK[complianceStage] ?? 0;
 
-for (const complianceAgent of validAgents) {
-
-  const existingAgent =
-    findExistingTeamAgent(complianceAgent);
-
-  // Compliance is NOT allowed to add a new person.
-  if (!existingAgent) {
-    console.warn(
-      "Skipped unmatched compliance record:",
-      complianceAgent.code,
-      complianceAgent.name
-    );
-
-    unmatchedCount++;
-    continue;
-  }
-
-  const finalStage =
-    getComplianceJourneyStage(
-      complianceAgent,
-      existingAgent
-    );
-
-  const updates = {
-    // More precise compliance identity data
-    name:
-      cleanAgentName(
-        complianceAgent.name ||
-        existingAgent.name
-      ),
-
-    email:
-      complianceAgent.email ||
-      existingAgent.email ||
-      null,
-
-    upline_name:
-      cleanAgentName(
-        complianceAgent.upline ||
-        existingAgent.upline
-      ) || null,
-
-    agent_level:
-      complianceAgent.level || null,
-
-    resident_state:
-      complianceAgent.residentState || null,
-
-    resident_license:
-      complianceAgent.residentLicense || null,
-
-    eo_status:
-      complianceAgent.eoStatus || null,
-
-    aml_status:
-      complianceAgent.amlStatus || null,
-
-    tevah_platform_fee:
-      complianceAgent.tevahPlatformFee || null,
-
-    npn:
-      complianceAgent.npn || null,
-
-    // Keep precise Compliance status
-    team_status:
-      complianceAgent.teamStatus ||
-      existingAgent.teamStatus ||
-      null,
-
-    // Combined Journey result
-    stage:
-      finalStage
-  };
-
-  const { error } = await forgeSupabase
-    .from("agents")
-    .update(updates)
-    .eq(
-      "organization_id",
-      currentUserProfile.organization_id
-    )
-    .eq(
-      "id",
-      existingAgent.id
-    );
-
-  if (error) {
-    console.error(
-      "COMPLIANCE UPDATE ERROR:",
-      existingAgent.code,
-      error
-    );
-    continue;
-  }
-
-  updatedCount++;
+  return complianceRank > currentRank
+    ? complianceStage
+    : currentStage;
 }
 
-// Reload agents after all compliance updates are finished
-await loadCSV();
 
-console.log(
-  `Compliance import complete. Updated: ${updatedCount}. Unmatched: ${unmatchedCount}.`
-);
+document
+  .getElementById("complianceImportInput")
+  ?.addEventListener("change", (event) => {
 
-alert(
-  `${updatedCount} compliance records updated successfully.` +
-  (unmatchedCount
-    ? ` ${unmatchedCount} unmatched records were skipped.`
-    : "")
-);
+    const file = event.target.files[0];
+    if (!file) return;
 
-} catch (error) {
+    const reader = new FileReader();
 
-  console.error(
-    "COMPLIANCE IMPORT ERROR:",
-    error
-  );
+    reader.onload = async () => {
+      try {
 
-  alert(
-    "Compliance import error: " +
-    (error?.message || String(error))
-  );
+        console.log(
+          "Starting Compliance CSV import..."
+        );
 
-} finally {
+        const complianceAgents =
+          parseCSV(reader.result)
+            .map(normalizeComplianceAgent);
 
-  event.target.value = "";
+        console.log(
+          "Compliance agents parsed:",
+          complianceAgents.length
+        );
 
-}
+        if (!currentUserProfile?.organization_id) {
+          throw new Error(
+            "Your FORGE profile does not have an organization assigned."
+          );
+        }
 
-}; // closes reader.onload
 
-reader.onerror = () => {
-  console.error(
-    "COMPLIANCE CSV FILE READ ERROR:",
-    reader.error
-  );
+        // =====================================================
+        // ONLY USE COMPLIANCE RECORDS WITH AGENT CODE
+        // =====================================================
 
-  alert(
-    "FORGE could not read the Compliance CSV file."
-  );
+        const validAgents =
+          complianceAgents.filter((agent) => {
+            return (
+              agent.code &&
+              String(agent.code).trim() !== ""
+            );
+          });
 
-  event.target.value = "";
-};
+        const skippedCount =
+          complianceAgents.length -
+          validAgents.length;
 
-reader.readAsText(file);
+        console.log(
+          `Valid compliance records: ${validAgents.length}. ` +
+          `Skipped without Agent Code: ${skippedCount}`
+        );
 
-}); // closes complianceImportInput change listener
+
+        // =====================================================
+        // UPDATE EXISTING TEAM MEMBERS ONLY
+        // Compliance CSV must NEVER create a new agent.
+        // =====================================================
+
+        let updatedCount = 0;
+        let unmatchedCount = 0;
+        let failedCount = 0;
+
+
+        for (const complianceAgent of validAgents) {
+
+          const existingAgent =
+            findExistingTeamAgent(
+              complianceAgent
+            );
+
+
+          // ===================================================
+          // NO MATCH = DO NOT INSERT
+          // ===================================================
+
+          if (!existingAgent) {
+
+            console.warn(
+              "Compliance record has no Team match:",
+              complianceAgent.code,
+              complianceAgent.name
+            );
+
+            unmatchedCount++;
+            continue;
+          }
+
+
+          // ===================================================
+          // DETERMINE FINAL JOURNEY STAGE
+          // ===================================================
+
+          const finalStage =
+            getComplianceJourneyStage(
+              complianceAgent,
+              existingAgent
+            );
+
+
+          // ===================================================
+          // IMPORTANT:
+          // Keep TEAM identity information from Team CSV.
+          //
+          // Compliance should add compliance information,
+          // NOT overwrite phone/name/recruit date/upline with
+          // data from another CSV column accidentally.
+          // ===================================================
+
+          const updates = {
+
+            agent_level:
+              complianceAgent.level || null,
+
+            resident_state:
+              complianceAgent.residentState || null,
+
+            resident_license:
+              complianceAgent.residentLicense || null,
+
+            eo_status:
+              complianceAgent.eoStatus || null,
+
+            aml_status:
+              complianceAgent.amlStatus || null,
+
+            tevah_platform_fee:
+              complianceAgent.tevahPlatformFee || null,
+
+            npn:
+              complianceAgent.npn || null,
+
+            stage:
+              finalStage,
+
+            import_source:
+              "Team CSV + Compliance"
+          };
+
+
+          // ===================================================
+          // UPDATE THE EXACT EXISTING DATABASE RECORD
+          // ===================================================
+
+          const { error } =
+            await forgeSupabase
+              .from("agents")
+              .update(updates)
+              .eq(
+                "organization_id",
+                currentUserProfile.organization_id
+              )
+              .eq(
+                "id",
+                existingAgent.id
+              );
+
+
+          if (error) {
+
+            console.error(
+              "COMPLIANCE UPDATE ERROR:",
+              complianceAgent.code,
+              error
+            );
+
+            failedCount++;
+            continue;
+          }
+
+
+          updatedCount++;
+        }
+
+
+        // =====================================================
+        // RELOAD DATABASE AFTER ALL UPDATES
+        // =====================================================
+
+        await loadCSV();
+
+
+        console.log(
+          "Compliance import complete:",
+          {
+            updated: updatedCount,
+            unmatched: unmatchedCount,
+            failed: failedCount,
+            skipped: skippedCount
+          }
+        );
+
+
+        alert(
+          `${updatedCount} compliance records updated successfully.` +
+          (unmatchedCount
+            ? ` ${unmatchedCount} unmatched records were skipped.`
+            : "") +
+          (failedCount
+            ? ` ${failedCount} records failed to update.`
+            : "")
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "COMPLIANCE IMPORT ERROR:",
+          error
+        );
+
+        alert(
+          "Compliance import error: " +
+          (error?.message || String(error))
+        );
+
+      } finally {
+
+        // Allow same file to be selected again
+        event.target.value = "";
+
+      }
+    };
+
+
+    reader.onerror = () => {
+
+      console.error(
+        "COMPLIANCE CSV FILE READ ERROR:",
+        reader.error
+      );
+
+      alert(
+        "FORGE could not read the Compliance CSV file."
+      );
+
+      event.target.value = "";
+    };
+
+
+    reader.readAsText(file);
+
+  });
 // ─── STORAGE ─────────────────────────────────────────────────────────────────
 
 function saveAgentsToLocalStorage() {
