@@ -787,7 +787,29 @@ visibleAgents.forEach((agent) => {
   list.appendChild(card);
 
 });
+const viewButton = document.querySelector(
+  `[data-view-stage="${stage}"]`
+);
 
+if (viewButton) {
+
+  const expanded =
+    expandedJourneyStages.has(stage);
+
+  if (stageAgents.length <= journeyPreviewLimit) {
+
+    viewButton.style.display = "none";
+
+  } else {
+
+    viewButton.style.display = "";
+
+    viewButton.innerHTML =
+      expanded
+        ? "Show less ↑"
+        : `View all ${stageAgents.length} agents →`;
+  }
+}
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -1086,6 +1108,27 @@ function renderJourneyPage() {
 document
   .getElementById("journeySearch")
   ?.addEventListener("input", renderJourneyPage);
+
+document.addEventListener("click", (event) => {
+
+  const btn =
+    event.target.closest("[data-view-stage]");
+
+  if (!btn) return;
+
+  const stage =
+    btn.dataset.viewStage;
+
+  if (
+    expandedJourneyStages.has(stage)
+  ) {
+    expandedJourneyStages.delete(stage);
+  } else {
+    expandedJourneyStages.add(stage);
+  }
+
+  renderJourneyPage();
+});
 //---Clear form after saving-------------
 function clearAgentForm() {
   document.getElementById("newAgentName").value = "";
