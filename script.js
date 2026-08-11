@@ -1064,83 +1064,90 @@ function renderJourneyPage() {
   // RENDER AGENTS
   // ------------------------------------------------------
 
-  visibleAgents.forEach((agent) => {
+ visibleAgents.forEach((agent) => {
 
-    const displayName =
-      cleanAgentName(
-        agent.name || "Unnamed Agent"
-      );
+  const displayName =
+    cleanAgentName(
+      agent.name || "Unnamed Agent"
+    );
 
-    const card =
-      document.createElement("div");
+  const card =
+    document.createElement("div");
 
-    card.className =
-      "pipeline-agent-card";
+  card.className =
+    "pipeline-agent-card journey-agent-card";
 
+  card.dataset.agentId =
+    agent.id;
 
-    card.innerHTML = `
+  card.dataset.agentName =
+    agent.name;
 
-      <div class="journey-avatar">
-        ${getInitials(displayName)}
+  card.setAttribute(
+    "draggable",
+    "true"
+  );
+
+  card.innerHTML = `
+
+    <div class="journey-avatar">
+      ${getInitials(displayName)}
+    </div>
+
+    <div class="pipeline-agent-info">
+
+      <div class="journey-agent-name">
+        ${displayName}
       </div>
 
-
-      <div class="pipeline-agent-info">
-
-        <div class="journey-agent-name">
-          ${displayName}
-        </div>
-
-        <div class="journey-agent-coordinator">
-          ${agent.upline || "No upline"}
-        </div>
-
-        <div class="journey-agent-badge">
-          ${
-            agent.stage === "XCEL Completed"
-              ? "XCEL"
-              : agent.stage
-          }
-        </div>
-
+      <div class="journey-agent-coordinator">
+        ${agent.upline || "No upline"}
       </div>
 
-
-      <div class="journey-card-actions">
-
+      <div class="journey-agent-badge">
         ${
-          journeyNextStage[agent.stage]
-            ? `
-              <button
-                class="journey-next-action"
-                data-advance-agent="${agent.id}"
-              >
-                ${getJourneyActionLabel(agent.stage)}
-              </button>
-            `
-            : `
-              <span class="journey-complete">
-                ✓ Complete
-              </span>
-            `
+          agent.stage === "XCEL Completed"
+            ? "XCEL"
+            : agent.stage
         }
-
-        <button
-          class="journey-more-btn"
-          data-agent-menu="${agent.id}"
-          aria-label="Agent options"
-        >
-          •••
-        </button>
-
       </div>
 
-    `;
+    </div>
 
+    <div class="journey-card-actions">
 
-    list.appendChild(card);
+      ${
+        journeyNextStage[agent.stage]
+          ? `
+            <button
+              class="journey-next-action"
+              data-advance-agent="${agent.id}"
+            >
+              ${getJourneyActionLabel(agent.stage)}
+              <span>→</span>
+            </button>
+          `
+          : `
+            <span class="journey-complete">
+              ✓ Complete
+            </span>
+          `
+      }
 
-  });
+      <button
+        class="journey-more-btn"
+        data-agent-menu="${agent.id}"
+        aria-label="Agent options"
+      >
+        •••
+      </button>
+
+    </div>
+  `;
+
+  list.appendChild(card);
+
+});
 
 
   // ------------------------------------------------------
@@ -1213,7 +1220,135 @@ document.addEventListener("click", (event) => {
   renderJourneyPage();
 
 });
+document.addEventListener("click", (event) => {
 
+  const btn =
+    event.target.closest(
+      "[data-agent-menu]"
+    );
+
+  if (!btn) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const agent =
+    allAgents.find(
+      (item) =>
+        String(item.id) ===
+        String(btn.dataset.agentMenu)
+    );
+
+  if (!agent) return;
+
+  document
+    .querySelectorAll(".journey-agent-menu")
+    .forEach((menu) =>
+      menu.remove()
+    );
+
+  const menu =
+    document.createElement("div");
+
+  menu.className =
+    "journey-agent-menu";
+
+  menu.innerHTML = `
+    <button data-menu-open>
+      Open profile
+    </button>
+
+    <button data-menu-edit>
+      Edit agent
+    </button>
+
+    ${
+      agent.stage !== "Not Placed"
+        ? `
+          <button data-menu-back>
+            Move back one stage
+          </button>
+        `
+        : ""
+    }
+
+    <button
+      class="danger"
+      data-menu-delete
+    >
+      Delete agent
+    </button>
+  `;
+
+  btn.closest(".journey-card-actions")
+    ?.appendChild(menu);
+
+  menu
+    .querySelector("[data-menu-open]")
+    ?.addEventListener("click", () => {
+
+      showPage("Agents");
+      showAgentProfile(agent);
+
+      document
+        .querySelectorAll(".nav-btn")
+        .forEach((nav) =>
+          nav.classList.toggle(
+            "active",
+            nav.textContent.trim() === "Agents"
+          )
+        );
+
+    });
+
+  menu
+    .querySelector("[data-menu-edit]")
+    ?.addEventListener("click", () => {
+
+      selectedAgent = agent;
+
+      document
+        .querySelector(".edit-agent-btn")
+        ?.click();
+
+    });
+
+  menu
+    .querySelector("[data-menu-back]")
+    ?.addEventListener("click", async () => {
+
+      const stageOrder = [
+        "Not Placed",
+        "Quiz Sent",
+        "XCEL Completed",
+        "Exam Passed",
+        "Licensed",
+        "Contracted"
+      ];
+
+      const currentIndex =
+        stageOrder.indexOf(agent.stage);
+
+      if (currentIndex <= 0) return;
+
+      await updateJourneyStage(
+        agent,
+        stageOrder[currentIndex - 1]
+      );
+
+    });
+
+  menu
+    .querySelector("[data-menu-delete]")
+    ?.addEventListener("click", () => {
+
+      alert(
+        "Use your database delete action here."
+      );
+
+    });
+
+});
 
 //---Clear form after saving-------------
 function clearAgentForm() {
@@ -1564,47 +1699,87 @@ document.querySelector(".view-btn")?.addEventListener("click", () => {
 let draggedAgentName = null;
 
 document.addEventListener("dragstart", (event) => {
-  const card = event.target.closest(".journey-agent-card");
+
+  const card =
+    event.target.closest(".journey-agent-card");
+
   if (!card) return;
-  draggedAgentName = card.dataset.agentName;
+
+  draggedAgentName =
+    card.dataset.agentName;
+
   card.classList.add("dragging");
 });
 
+
 document.addEventListener("dragend", (event) => {
-  const card = event.target.closest(".journey-agent-card");
-  if (card) card.classList.remove("dragging");
+
+  const card =
+    event.target.closest(".journey-agent-card");
+
+  if (card) {
+    card.classList.remove("dragging");
+  }
+
   draggedAgentName = null;
 });
 
+
 document.addEventListener("dragover", (event) => {
-  const zone = event.target.closest(".drop-zone");
+
+  const zone =
+    event.target.closest(".drop-zone");
+
   if (!zone) return;
+
   event.preventDefault();
+
   zone.classList.add("drag-over");
 });
 
+
 document.addEventListener("dragleave", (event) => {
-  const zone = event.target.closest(".drop-zone");
+
+  const zone =
+    event.target.closest(".drop-zone");
+
   if (!zone) return;
+
   zone.classList.remove("drag-over");
 });
 
-document.addEventListener("drop", (event) => {
-  const zone = event.target.closest(".drop-zone");
+
+document.addEventListener("drop", async (event) => {
+
+  const zone =
+    event.target.closest(".drop-zone");
+
   if (!zone) return;
+
   event.preventDefault();
+
   zone.classList.remove("drag-over");
+
   if (!draggedAgentName) return;
 
-  const agent = allAgents.find((a) => a.name === draggedAgentName);
+  const agent =
+    allAgents.find(
+      (item) =>
+        item.name === draggedAgentName
+    );
+
   if (!agent) return;
 
-  agent.stage        = zone.dataset.stage;
-  agent.pipelineStage = zone.dataset.stage;
-  saveAgentsToLocalStorage();
+  const newStage =
+    zone.dataset.stage;
 
-  renderDashboard("all");
-  renderJourneyPage();
+  if (!newStage) return;
+
+  await updateJourneyStage(
+    agent,
+    newStage
+  );
+
 });
 
 // ─── AGENTS PAGE ─────────────────────────────────────────────────────────────
