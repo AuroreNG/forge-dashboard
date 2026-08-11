@@ -2091,6 +2091,38 @@ setText("profileCode", agent.code || "—");
 setText("profilePhone", agent.phone || "—");
 setText("profileEmail", agent.email || "—");
 setText("profileNextAction", getNextAction(agent.stage));
+setText(
+  "profileResidentLicense",
+  agent.residentLicense || "—"
+);
+
+setText(
+  "profileEO",
+  agent.eoStatus || "—"
+);
+
+setText(
+  "profileAML",
+  agent.amlStatus || "—"
+);
+
+setText(
+  "profileTevahFee",
+  agent.tevahPlatformFee || "—"
+);
+  setText(
+  "profileLicensedState",
+  ["Licensed", "Contracted"].includes(agent.stage)
+    ? "Complete"
+    : "Pending"
+);
+
+setText(
+  "profileContractedState",
+  agent.stage === "Contracted"
+    ? "Complete"
+    : "Pending"
+);
 
   updateJourneyStatus(agent.stage);
 
