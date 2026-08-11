@@ -1018,25 +1018,43 @@ function renderJourneyPage() {
       </div>
     </div>
 
-    <div class="journey-agent-bottom">
+ <div class="journey-agent-bottom">
 
-      <div class="journey-agent-badge">
-        ${agent.stage}
-      </div>
+  <span class="journey-agent-badge">
+    ${agent.stage === "XCEL Completed" ? "XCEL" : agent.stage}
+  </span>
 
-      ${currentJourneyMode === "launch"
-        ? `<button class="move-to-activate" data-move-agent="${key}">Activate →</button>`
-        : `<button class="move-to-launch" data-back-agent="${key}">← Launch</button>`
-      }
+  <div class="journey-card-actions">
 
-      <button
-        class="delete-pipeline-agent"
-        data-delete-agent="${key}"
-      >
-        Delete
-      </button>
+    ${
+      journeyNextStage[agent.stage]
+        ? `
+          <button
+            class="journey-next-action"
+            data-advance-agent="${agent.id}"
+          >
+            ${getJourneyActionLabel(agent.stage)}
+            <span>→</span>
+          </button>
+        `
+        : `
+          <span class="journey-complete">
+            ✓ Complete
+          </span>
+        `
+    }
 
-    </div>
+    <button
+      class="journey-more-btn"
+      data-agent-menu="${agent.id}"
+      aria-label="Agent options"
+    >
+      •••
+    </button>
+
+  </div>
+
+</div>
   `;
 
       list.appendChild(card);
@@ -1059,6 +1077,102 @@ function clearAgentForm() {
   document.getElementById("newAgentCoordinator").value = "";
   document.getElementById("newAgentStage").value = "";
 }
+
+// Make the button actually update Supabase
+async function updateJourneyStage(agent, newStage) {
+  if (!agent?.id || !newStage) return;
+
+  const oldStage = agent.stage;
+
+  // Update UI immediately
+  agent.stage = newStage;
+  agent.pipelineStage = newStage;
+
+  try {
+    const { error } = await forgeSupabase
+      .from("agents")
+      .update({
+        stage: newStage
+      })
+      .eq(
+        "organization_id",
+        currentUserProfile.organization_id
+      )
+      .eq(
+        "id",
+        agent.id
+      );
+
+    if (error) {
+      throw error;
+    }
+
+    // XCEL -> Exam Passed crosses into Activate
+    if (
+      oldStage === "XCEL Completed" &&
+      newStage === "Exam Passed"
+    ) {
+      currentJourneyMode = "activate";
+
+      document
+        .querySelectorAll(".journey-mode")
+        .forEach((btn) => {
+          btn.classList.toggle(
+            "active",
+            btn.dataset.mode === "activate"
+          );
+        });
+    }
+
+    await loadCSV();
+
+  } catch (error) {
+    // Put person back if database update failed
+    agent.stage = oldStage;
+    agent.pipelineStage = oldStage;
+
+    console.error(
+      "Journey stage update failed:",
+      error
+    );
+
+    alert(
+      "FORGE could not update this agent. Please try again."
+    );
+
+    renderJourneyPage();
+  }
+}
+//click listener
+document.addEventListener("click", async (event) => {
+
+  const btn =
+    event.target.closest("[data-advance-agent]");
+
+  if (!btn) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const agent =
+    allAgents.find(
+      (item) =>
+        String(item.id) ===
+        String(btn.dataset.advanceAgent)
+    );
+
+  if (!agent) return;
+
+  const nextStage =
+    journeyNextStage[agent.stage];
+
+  if (!nextStage) return;
+
+  await updateJourneyStage(
+    agent,
+    nextStage
+  );
+});
 // ─── JOURNEY MODE TOGGLE ─────────────────────────────────────────────────────
 
 document.addEventListener("click", (event) => {
