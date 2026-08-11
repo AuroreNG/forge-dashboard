@@ -905,6 +905,28 @@ renderAllPages();
 }
 
 }
+//Add the intelligent next-stage rules
+const journeyNextStage = {
+  "Not Placed": "Quiz Sent",
+  "Quiz Sent": "XCEL Completed",
+  "XCEL Completed": "Exam Passed",
+  "Exam Passed": "Licensed",
+  "Licensed": "Contracted",
+  "Contracted": null
+};
+
+function getJourneyActionLabel(stage) {
+  const labels = {
+    "Not Placed": "Mark Quiz Sent",
+    "Quiz Sent": "Move to XCEL",
+    "XCEL Completed": "✓ Passed Exam",
+    "Exam Passed": "✓ Licensed",
+    "Licensed": "✓ Contracted",
+    "Contracted": ""
+  };
+
+  return labels[stage] || "";
+}
 // ─── JOURNEY PAGE ─────────────────────────────────────────────────────────────
 
 function renderJourneyPage() {
@@ -912,19 +934,18 @@ function renderJourneyPage() {
   const filteredAgents = allAgents.filter((a) => a.name.toLowerCase().includes(searchValue));
 
   const stageConfig = {
-    launch: [
-      ["Not Placed",    "journeyNotPlacedList", "journeyNotPlacedCount"],
-      ["Quiz Sent",     "journeyQuizSentList",  "journeyQuizSentCount"],
-      ["Quiz Passed",   "journeyQuizPassedList","journeyQuizPassedCount"],
-      ["XCEL Completed","journeyXCELList",      "journeyXCELCount"],
-    ],
-    activate: [
-      ["Exam Passed",          "journeyExamPassedList","journeyExamPassedCount"],
-      ["Continuing Education", "journeyCEList",        "journeyCECount"],
-      ["Licensed",             "journeyLicensedList",  "journeyLicensedCount"],
-      ["Contracted",           "journeyContractedList","journeyContractedCount"],
-    ],
-  };
+  launch: [
+    ["Not Placed", "journeyNotPlacedList", "journeyNotPlacedCount"],
+    ["Quiz Sent", "journeyQuizSentList", "journeyQuizSentCount"],
+    ["XCEL Completed", "journeyXCELList", "journeyXCELCount"]
+  ],
+
+  activate: [
+    ["Exam Passed", "journeyExamPassedList", "journeyExamPassedCount"],
+    ["Licensed", "journeyLicensedList", "journeyLicensedCount"],
+    ["Contracted", "journeyContractedList", "journeyContractedCount"]
+  ]
+};
 
   const currentStages    = stageConfig[currentJourneyMode];
   const activeStageNames = currentStages.map((s) => s[0]);
