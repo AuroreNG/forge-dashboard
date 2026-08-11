@@ -9050,3 +9050,33 @@ body {
   color:
     #142b4c !important;
 }
+
+/* =========================================================
+   NEXT ACTION — GLASS BACKGROUND
+========================================================= */
+
+.next-action-card {
+  position: relative;
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.96) 0%,
+      rgba(255, 255, 255, 0.88) 42%,
+      rgba(240, 246, 255, 0.62) 68%,
+      rgba(235, 243, 255, 0.35) 100%
+    ),
+    url("next-action.png");
+
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+
+  border: 1px solid rgba(198, 215, 240, 0.65);
+  border-radius: 20px;
+
+  box-shadow:
+    0 12px 32px rgba(32, 78, 150, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
