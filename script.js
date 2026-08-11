@@ -3596,7 +3596,69 @@ function getDirectDownlineCount(leaderName, agents) {
 function isLeader(agent, agents) {
   return getDirectDownlineCount(agent.name, agents) > 0;
 }
+// ==========================================================
+// LOAD CURRENT FORGE USER PROFILE
+// ==========================================================
 
+async function loadCurrentUserProfile() {
+
+  const {
+    data: { user },
+    error: authError
+  } = await forgeSupabase.auth.getUser();
+
+  if (authError) {
+    console.error(
+      "FORGE AUTH USER ERROR:",
+      authError
+    );
+    return null;
+  }
+
+  if (!user?.email) {
+    console.error(
+      "FORGE: No authenticated user email."
+    );
+    return null;
+  }
+
+  const {
+    data: profile,
+    error: profileError
+  } = await forgeSupabase
+    .from("profiles")
+    .select("*")
+    .eq(
+      "email",
+      user.email.toLowerCase()
+    )
+    .maybeSingle();
+
+  if (profileError) {
+    console.error(
+      "FORGE PROFILE ERROR:",
+      profileError
+    );
+    return null;
+  }
+
+  if (!profile) {
+    console.error(
+      "FORGE profile not found for:",
+      user.email
+    );
+    return null;
+  }
+
+  currentUserProfile = profile;
+
+  console.log(
+    "Current FORGE profile:",
+    currentUserProfile
+  );
+
+  return profile;
+}
 // ─── DOM READY ────────────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", async () => {
