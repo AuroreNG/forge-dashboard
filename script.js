@@ -2734,7 +2734,214 @@ function detectTevahFileType(rows) {
 
   return "unknown";
 }
+// ==========================================================
+// TEAM CSV IMPORT
+// Smart Import -> Team CSV -> Supabase
+// ==========================================================
 
+function getTeamJourneyStage(teamStatus) {
+
+  const status = String(teamStatus || "")
+    .trim()
+    .toLowerCase();
+
+  // Furthest stage wins.
+
+  if (status.includes("contracted")) {
+    return "Contracted";
+  }
+
+  if (
+    status.includes("license") ||
+    status.includes("licensed")
+  ) {
+    return "Licensed";
+  }
+
+  if (status.includes("exam passed")) {
+    return "Exam Passed";
+  }
+
+  if (status.includes("xcel")) {
+    return "XCEL Completed";
+  }
+
+  if (status.includes("quiz sent")) {
+    return "Quiz Sent";
+  }
+
+  return "Not Placed";
+}
+
+
+async function importTeamFile(parsedRows) {
+
+  console.log(
+    "FORGE Team import started:",
+    parsedRows.length
+  );
+
+  if (!currentUserProfile?.organization_id) {
+    throw new Error(
+      "FORGE profile does not have an organization."
+    );
+  }
+
+
+  // Convert raw Tevah Team CSV rows
+  // using your existing normalizeAgent().
+  const teamAgents =
+    parsedRows.map(normalizeAgent);
+
+
+  // Only valid people with Agent Code.
+  const validAgents =
+    teamAgents.filter((agent) =>
+      String(agent.code || "").trim()
+    );
+
+
+  console.log(
+    "Valid Team agents:",
+    validAgents.length
+  );
+
+
+  // Remove duplicate Agent Codes from the SAME FILE.
+  const uniqueByCode = new Map();
+
+  validAgents.forEach((agent) => {
+
+    const code =
+      String(agent.code)
+        .trim()
+        .toUpperCase();
+
+    uniqueByCode.set(code, agent);
+
+  });
+
+
+  const uniqueAgents =
+    Array.from(uniqueByCode.values());
+
+
+  console.log(
+    "Unique Team agents:",
+    uniqueAgents.length
+  );
+
+
+  const rows =
+    uniqueAgents.map((agent) => {
+
+      const teamStatus =
+        agent.teamStatus || "";
+
+      return {
+
+        organization_id:
+          currentUserProfile.organization_id,
+
+        agent_code:
+          String(agent.code)
+            .trim()
+            .toUpperCase(),
+
+        name:
+          cleanAgentName(agent.name)
+            .replace(/&/g, " ")
+            .replace(/\s+/g, " ")
+            .trim(),
+
+        phone:
+          agent.phone || null,
+
+        email:
+          agent.email
+            ? String(agent.email)
+                .trim()
+                .toLowerCase()
+            : null,
+
+        recruit_date:
+          agent.recruitDate || null,
+
+        upline_code:
+          agent.uplineCode
+            ? String(agent.uplineCode)
+                .trim()
+                .toUpperCase()
+            : null,
+
+        upline_name:
+          cleanAgentName(agent.upline)
+            .replace(/&/g, " ")
+            .replace(/\s+/g, " ")
+            .trim() || null,
+
+        team_status:
+          teamStatus || null,
+
+        stage:
+          getTeamJourneyStage(teamStatus),
+
+        import_source:
+          "Team CSV"
+      };
+
+    });
+
+
+  console.log(
+    "Team rows going to Supabase:",
+    rows
+  );
+
+
+  const {
+    data,
+    error
+  } = await forgeSupabase
+    .from("agents")
+    .upsert(
+      rows,
+      {
+        onConflict:
+          "organization_id,agent_code",
+
+        ignoreDuplicates:
+          false
+      }
+    )
+    .select();
+
+
+  if (error) {
+
+    console.error(
+      "TEAM IMPORT ERROR:",
+      error
+    );
+
+    throw error;
+  }
+
+
+  console.log(
+    "Team import successful:",
+    data
+  );
+
+
+  await loadCSV();
+
+
+  alert(
+    `${uniqueAgents.length} team members imported successfully.`
+  );
+
+}
 document
   .getElementById("smartImportInput")
   ?.addEventListener("change", async (event) => {
