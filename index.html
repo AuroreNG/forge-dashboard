@@ -314,23 +314,21 @@
     </div>
 
 
-    <div class="journey-search-wrap">
+   <div class="journey-search-wrap">
 
-      <span class="journey-search-icon">⌕</span>
+  <input
+    id="journeySearch"
+    placeholder="Search agents by name, code, email or phone..."
+  />
 
-      <input
-        id="journeySearch"
-        placeholder="Search agents by name, code, email or phone..."
-      />
+  <button
+    class="journey-filter-btn"
+    id="journeyFilterBtn"
+  >
+    ☷
+  </button>
 
-      <button
-        class="journey-filter-btn"
-        id="journeyFilterBtn"
-      >
-        ☷
-      </button>
-
-    </div>
+</div>
 
   </div>
 
@@ -404,133 +402,45 @@
 
 
 <div class="journey-board">
-<!-- =====================================================
-     NOT PLACED
-===================================================== -->
 
-<div class="journey-column launch-column">
+  <!-- =====================================================
+       NOT PLACED
+  ===================================================== -->
+  <div class="journey-column launch-column">
 
-  <div class="journey-column-header">
-
-    <div>
-      <span class="journey-stage-icon">◉</span>
-
+    <div class="journey-column-header">
       <div>
-        <h3>Not Placed</h3>
-        <p>New recruits awaiting first action</p>
+        <span class="journey-stage-icon">◉</span>
+
+        <div>
+          <h3>Not Placed</h3>
+          <p>New recruits awaiting first action</p>
+        </div>
       </div>
+
+      <span
+        class="journey-stage-count"
+        id="journeyNotPlacedCount"
+      >
+        0
+      </span>
     </div>
 
-    <span
-      class="journey-stage-count"
-      id="journeyNotPlacedCount"
+    <div
+      id="journeyNotPlacedList"
+      class="drop-zone"
+      data-stage="Not Placed"
+    ></div>
+
+    <button
+      type="button"
+      class="journey-view-all"
+      data-view-stage="Not Placed"
     >
-      0
-    </span>
+      View all agents →
+    </button>
 
   </div>
-
-  <div
-    id="journeyNotPlacedList"
-    class="drop-zone"
-    data-stage="Not Placed"
-  ></div>
-
-  <button
-    type="button"
-    class="journey-view-all"
-    data-view-stage="Not Placed"
-  >
-    View all agents →
-  </button>
-
-</div>
-
-
-<!-- =====================================================
-     QUIZ SENT
-===================================================== -->
-
-<div class="journey-column launch-column">
-
-  <div class="journey-column-header">
-
-    <div>
-      <span class="journey-stage-icon">➤</span>
-
-      <div>
-        <h3>Quiz Sent</h3>
-        <p>Quiz sent and waiting for completion</p>
-      </div>
-    </div>
-
-    <span
-      class="journey-stage-count"
-      id="journeyQuizSentCount"
-    >
-      0
-    </span>
-
-  </div>
-
-  <div
-    id="journeyQuizSentList"
-    class="drop-zone"
-    data-stage="Quiz Sent"
-  ></div>
-
-  <button
-    type="button"
-    class="journey-view-all"
-    data-view-stage="Quiz Sent"
-  >
-    View all agents →
-  </button>
-
-</div>
-
-
-<!-- =====================================================
-     XCEL
-===================================================== -->
-
-<div class="journey-column launch-column">
-
-  <div class="journey-column-header">
-
-    <div>
-      <span class="journey-stage-icon">◇</span>
-
-      <div>
-        <h3>XCEL</h3>
-        <p>Pre-licensing course in progress</p>
-      </div>
-    </div>
-
-    <span
-      class="journey-stage-count"
-      id="journeyXCELCount"
-    >
-      0
-    </span>
-
-  </div>
-
-  <div
-    id="journeyXCELList"
-    class="drop-zone"
-    data-stage="XCEL Completed"
-  ></div>
-
-  <button
-    type="button"
-    class="journey-view-all"
-    data-view-stage="XCEL Completed"
-  >
-    View all agents →
-  </button>
-
-</div>
 
 
   <div class="journey-flow-arrow launch-column">
@@ -538,10 +448,57 @@
   </div>
 
 
+  <!-- =====================================================
+       QUIZ SENT
+  ===================================================== -->
+  <div class="journey-column launch-column">
+
+    <div class="journey-column-header">
+      <div>
+        <span class="journey-stage-icon">➤</span>
+
+        <div>
+          <h3>Quiz Sent</h3>
+          <p>Quiz sent and waiting for completion</p>
+        </div>
+      </div>
+
+      <span
+        class="journey-stage-count"
+        id="journeyQuizSentCount"
+      >
+        0
+      </span>
+    </div>
+
+    <div
+      id="journeyQuizSentList"
+      class="drop-zone"
+      data-stage="Quiz Sent"
+    ></div>
+
+    <button
+      type="button"
+      class="journey-view-all"
+      data-view-stage="Quiz Sent"
+    >
+      View all agents →
+    </button>
+
+  </div>
+
+
+  <div class="journey-flow-arrow launch-column">
+    →
+  </div>
+
+
+  <!-- =====================================================
+       XCEL
+  ===================================================== -->
   <div class="journey-column launch-column xcel-column">
 
     <div class="journey-column-header">
-
       <div>
         <span class="journey-stage-icon">◇</span>
 
@@ -557,7 +514,6 @@
       >
         0
       </span>
-
     </div>
 
     <div
@@ -565,46 +521,25 @@
       class="drop-zone"
       data-stage="XCEL Completed"
     ></div>
-  <div class="activation-bridge">
 
-  <div class="activation-bridge-icon">
-    ⚡
-  </div>
-
-  <div class="activation-bridge-copy">
-    <strong>Ready for Activation</strong>
-
-    <span>
-      Agents move to Activate after passing the exam.
-    </span>
-  </div>
-
-  <button
-    class="activation-bridge-btn"
-    id="openActivatePipeline"
-  >
-    View Activate
-    <span>→</span>
-  </button>
-
-</div>
-    
-   <button
-  class="journey-view-all"
-  data-view-stage="XCEL Completed"
->
-  View all agents →
-</button>
+    <button
+      type="button"
+      class="journey-view-all"
+      data-view-stage="XCEL Completed"
+    >
+      View all agents →
+    </button>
 
   </div>
 
 
-  <!-- ACTIVATE -->
+  <!-- =====================================================
+       ACTIVATE
+  ===================================================== -->
 
   <div class="journey-column activate-column hidden exam-column">
 
     <div class="journey-column-header">
-
       <div>
         <span class="journey-stage-icon">✓</span>
 
@@ -620,7 +555,6 @@
       >
         0
       </span>
-
     </div>
 
     <div
@@ -630,11 +564,12 @@
     ></div>
 
     <button
-  class="journey-view-all"
-  data-view-stage="Exam Passed"
->
-  View all agents →
-</button>
+      type="button"
+      class="journey-view-all"
+      data-view-stage="Exam Passed"
+    >
+      View all agents →
+    </button>
 
   </div>
 
@@ -647,7 +582,6 @@
   <div class="journey-column activate-column hidden licensed-column">
 
     <div class="journey-column-header">
-
       <div>
         <span class="journey-stage-icon">✓</span>
 
@@ -663,7 +597,6 @@
       >
         0
       </span>
-
     </div>
 
     <div
@@ -673,11 +606,12 @@
     ></div>
 
     <button
-  class="journey-view-all"
-  data-view-stage="Licensed"
->
-  View all agents →
-</button>
+      type="button"
+      class="journey-view-all"
+      data-view-stage="Licensed"
+    >
+      View all agents →
+    </button>
 
   </div>
 
@@ -690,7 +624,6 @@
   <div class="journey-column activate-column hidden contracted-column">
 
     <div class="journey-column-header">
-
       <div>
         <span class="journey-stage-icon">✦</span>
 
@@ -706,7 +639,6 @@
       >
         0
       </span>
-
     </div>
 
     <div
@@ -715,17 +647,17 @@
       data-stage="Contracted"
     ></div>
 
-   <button
-  class="journey-view-all"
-  data-view-stage="Contracted"
->
-  View all agents →
-</button>
+    <button
+      type="button"
+      class="journey-view-all"
+      data-view-stage="Contracted"
+    >
+      View all agents →
+    </button>
 
   </div>
 
 </div>
-
 </section>
 <!-- END JOURNEY PAGE -->
 
