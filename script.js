@@ -1153,29 +1153,39 @@ function renderJourneyPage() {
     );
 
 
-  if (viewButton) {
+if (viewButton) {
 
-    if (
-      stageAgents.length <=
-      journeyPreviewLimit
-    ) {
+  const column =
+    list.closest(".journey-column");
 
-      viewButton.style.display =
-        "none";
+  if (
+    stageAgents.length <=
+    journeyPreviewLimit
+  ) {
 
-    } else {
+    viewButton.style.display = "none";
 
-      viewButton.style.display =
-        "";
+    column?.classList.remove(
+      "stage-expanded"
+    );
 
-      viewButton.textContent =
-        isExpanded
-          ? "Show less ↑"
-          : `View all ${stageAgents.length} agents →`;
+  } else {
 
-    }
+    viewButton.style.display = "";
+
+    viewButton.textContent =
+      isExpanded
+        ? "Show less ↑"
+        : `View all ${stageAgents.length} agents →`;
+
+    column?.classList.toggle(
+      "stage-expanded",
+      isExpanded
+    );
 
   }
+
+}
 
 }); // END currentStages.forEach
   } // closes renderJourneyPage
