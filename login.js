@@ -122,10 +122,10 @@ document
     if (
       !loginEmail ||
       !token ||
-      token.length !== 6
+      token.length !== 8
     ) {
       showLoginMessage(
-        "Enter the 6-digit verification code.",
+        "Enter the 8-digit verification code.",
         "error"
       );
       return;
