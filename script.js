@@ -1180,7 +1180,7 @@ const filteredAgents =
 
 const viewButton =
   document.querySelector(
-    `[data-view-stage="${stageName}"]`
+    `.journey-view-all[data-view-stage="${stageName}"]`
   );
 
 const column =
@@ -1188,11 +1188,9 @@ const column =
 
 if (viewButton) {
 
-  if (
-    stageAgents.length <= journeyPreviewLimit
-  ) {
+  if (stageAgents.length <= journeyPreviewLimit) {
 
-    viewButton.style.display = "none";
+    viewButton.hidden = true;
 
     column?.classList.remove(
       "stage-expanded"
@@ -1200,7 +1198,7 @@ if (viewButton) {
 
   } else {
 
-    viewButton.style.display = "";
+    viewButton.hidden = false;
 
     viewButton.textContent =
       isExpanded
@@ -1583,6 +1581,34 @@ document.addEventListener("click", (event) => {
       );
 
     });
+
+});
+document.addEventListener("click", (event) => {
+
+  const btn =
+    event.target.closest(
+      ".journey-view-all[data-view-stage]"
+    );
+
+  if (!btn) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const stage =
+    btn.dataset.viewStage;
+
+  if (expandedJourneyStages.has(stage)) {
+
+    expandedJourneyStages.delete(stage);
+
+  } else {
+
+    expandedJourneyStages.add(stage);
+
+  }
+
+  renderJourneyPage();
 
 });
 
