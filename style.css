@@ -4409,3 +4409,146 @@ grid-template-columns: 30% 70%;  gap: 24px;
 .hidden {
   display: none !important;
 }
+
+/* ==========================================================
+   JOURNEY PIPELINE — LARGER / CLEANER
+========================================================== */
+
+.journey-board {
+  width: 100%;
+  display: grid;
+
+  grid-template-columns:
+    minmax(340px, 1fr)
+    54px
+    minmax(340px, 1fr)
+    54px
+    minmax(340px, 1fr);
+
+  gap: 16px;
+  align-items: stretch;
+
+  margin-top: 24px;
+}
+
+.journey-column {
+  min-height: 610px;
+
+  padding: 20px;
+
+  border-radius: 24px;
+
+  background: rgba(255,255,255,.96);
+
+  border: 1px solid #e0e8f4;
+
+  box-shadow:
+    0 12px 34px rgba(31, 65, 120, 0.06);
+}
+
+.journey-column-header {
+  min-height: 74px;
+  padding-bottom: 16px;
+  margin-bottom: 12px;
+
+  border-bottom: 1px solid rgba(218,226,239,.7);
+}
+
+.journey-column-header h3 {
+  font-size: 19px;
+  letter-spacing: -.3px;
+}
+
+.journey-column-header p {
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.journey-stage-icon {
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+}
+
+.journey-stage-count {
+  min-width: 38px;
+  height: 38px;
+
+  font-size: 14px;
+}
+
+
+/* Agent list has breathing room */
+
+.drop-zone {
+  min-height: 430px;
+  padding: 3px;
+}
+
+
+/* Cleaner / larger agent cards */
+
+.journey-agent-card {
+  min-height: 78px;
+
+  padding: 14px 15px;
+  margin-bottom: 12px;
+
+  border-radius: 17px;
+
+  background: #fff;
+
+  border: 1px solid #e4eaf4;
+
+  box-shadow:
+    0 5px 15px rgba(28,56,104,.04);
+}
+
+.journey-agent-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #ccd9ed;
+
+  box-shadow:
+    0 12px 24px rgba(28,56,104,.08);
+}
+
+.journey-flow-arrow {
+  position: relative;
+
+  min-height: 610px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 0;
+}
+
+.journey-flow-arrow::before {
+  content: "";
+
+  width: 30px;
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #dce5f3,
+      #aebfda
+    );
+}
+
+.journey-flow-arrow::after {
+  content: "›";
+
+  margin-left: -2px;
+
+  color: #9eb0ca;
+
+  font-size: 30px;
+  font-weight: 300;
+}
