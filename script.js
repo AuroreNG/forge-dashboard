@@ -782,9 +782,10 @@ visibleAgents.forEach((agent) => {
   list.appendChild(card);
 
 });
-const viewButton = document.querySelector(
-  `[data-view-stage="${stage}"]`
-);
+const viewButton =
+  document.querySelector(
+    `[data-view-stage="${stage}"]`
+  );
 
 if (viewButton) {
 
@@ -799,12 +800,11 @@ if (viewButton) {
 
     viewButton.style.display = "";
 
-    viewButton.innerHTML =
+    viewButton.textContent =
       expanded
         ? "Show less ↑"
         : `View all ${stageAgents.length} agents →`;
   }
-}
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -1099,10 +1099,6 @@ visibleAgents.forEach((agent) => {
 
 } // closes renderJourneyPage
 
-document
-  .getElementById("journeySearch")
-  ?.addEventListener("input", renderJourneyPage);
-
 document.addEventListener("click", (event) => {
 
   const btn =
@@ -1113,9 +1109,7 @@ document.addEventListener("click", (event) => {
   const stage =
     btn.dataset.viewStage;
 
-  if (
-    expandedJourneyStages.has(stage)
-  ) {
+  if (expandedJourneyStages.has(stage)) {
     expandedJourneyStages.delete(stage);
   } else {
     expandedJourneyStages.add(stage);
@@ -1123,6 +1117,8 @@ document.addEventListener("click", (event) => {
 
   renderJourneyPage();
 });
+
+
 //---Clear form after saving-------------
 function clearAgentForm() {
   document.getElementById("newAgentName").value = "";
