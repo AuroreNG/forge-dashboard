@@ -5,7 +5,9 @@ let selectedCoordinator = "All";
 let selectedAgent = null;
 let commandCurrentPage = 1;
 const commandPageSize = 11;
+const journeyPreviewLimit = 5;
 
+const expandedJourneyStages = new Set();
 let currentJourneyMode = "launch";
 const journeyPreviewLimit = 4;
 
@@ -1015,22 +1017,21 @@ function renderJourneyPage() {
 
   stageAgents.forEach((agent) => {
 
-  // Keep the real database values for keys and drag/drop
-  const key = agent.code || agent.email || agent.name;
+ const stageKey = stage;
 
-  // Use a safe display name so an email does not appear as the person's name
-  const displayName = getAgentDisplayName(agent);
+const isExpanded =
+  expandedJourneyStages.has(stageKey);
+
+const visibleAgents =
+  isExpanded
+    ? stageAgents
+    : stageAgents.slice(0, journeyPreviewLimit);
+
+visibleAgents.forEach((agent) => {
 
   const card = document.createElement("div");
 
-  card.className = "journey-agent-card";
-  card.draggable = true;
-
-  // Keep the real stored name here for existing drag/drop logic
-  card.dataset.agentName = agent.name;
-
-  // Add the database ID so clicking the card can open the exact agent profile
-  card.dataset.agentId = agent.id;
+  card.className = "pipeline-agent-card";
 
   card.innerHTML = `
     <div class="journey-agent-top">
