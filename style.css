@@ -5138,3 +5138,93 @@ grid-template-columns: 30% 70%;  gap: 24px;
   background: #f4f7fb;
   color: #0c3476;
 }
+
+/* ==========================================================
+   JOURNEY — INDEPENDENT PIPELINE SCROLLING
+========================================================== */
+
+.journey-board {
+  align-items: start;
+}
+
+.journey-column {
+  min-height: 0 !important;
+  height: auto;
+
+  padding-bottom: 12px;
+
+  background: transparent;
+
+  box-shadow: none;
+}
+
+
+/* HEADER STAYS FIXED INSIDE EACH PIPELINE */
+
+.journey-column-header {
+  position: relative !important;
+  top: auto !important;
+
+  margin-bottom: 10px;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 5px 14px rgba(23, 51, 96, 0.04);
+}
+
+
+/* ONLY THE AGENTS SCROLL */
+
+.drop-zone {
+  min-height: 0 !important;
+
+  max-height: 470px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 3px 5px 3px 2px;
+
+  scrollbar-width: thin;
+  scrollbar-color:
+    #cdd8e8
+    transparent;
+}
+
+
+/* CHROME / SAFARI */
+
+.drop-zone::-webkit-scrollbar {
+  width: 5px;
+}
+
+.drop-zone::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.drop-zone::-webkit-scrollbar-thumb {
+  background: #d2dbea;
+  border-radius: 999px;
+}
+
+.drop-zone::-webkit-scrollbar-thumb:hover {
+  background: #b9c6d9;
+}
+
+.journey-column {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.drop-zone {
+  background: transparent !important;
+}
+
+.journey-agent-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f2;
+
+  box-shadow:
+    0 5px 15px rgba(23, 51, 95, .045);
+}
