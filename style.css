@@ -6166,3 +6166,617 @@ body {
 .journey-flow-arrow {
   display: none !important;
 }
+
+/* ==========================================================
+   FORGE FINAL OVERRIDES
+   KEEP THIS AT THE ABSOLUTE BOTTOM OF STYLE.CSS
+========================================================== */
+
+
+/* ==========================================================
+   JOURNEY — EXACTLY 3 COLUMNS
+========================================================== */
+
+#journeyPage .journey-board {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr)) !important;
+
+  gap: 28px !important;
+
+  width: 100% !important;
+
+  overflow: visible !important;
+
+  align-items: start !important;
+}
+
+
+/* old spacer arrows must NOT take grid space */
+
+#journeyPage .journey-flow-arrow,
+#journeyPage .activation-bridge {
+  display: none !important;
+}
+
+
+/* hidden Launch/Activate columns take zero space */
+
+#journeyPage .journey-column.hidden {
+  display: none !important;
+}
+
+
+/* ==========================================================
+   JOURNEY COLUMN
+========================================================== */
+
+#journeyPage .journey-column {
+  position: relative !important;
+
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+
+  padding: 0 !important;
+
+  overflow: hidden !important;
+
+  border: 1px solid #e3e9f2 !important;
+  border-radius: 18px !important;
+
+  background: #ffffff !important;
+
+  box-shadow:
+    0 9px 24px rgba(24, 52, 96, .045) !important;
+}
+
+
+/* ==========================================================
+   STAGE HEADER
+========================================================== */
+
+#journeyPage .journey-column-header {
+  position: relative !important;
+  top: auto !important;
+
+  min-height: 72px !important;
+
+  margin: 0 !important;
+  padding: 14px 16px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  border-bottom: 1px solid #e8edf5 !important;
+
+  background: #ffffff !important;
+
+  z-index: 5 !important;
+}
+
+
+#journeyPage .journey-column-header > div {
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 11px !important;
+
+  min-width: 0 !important;
+}
+
+
+#journeyPage .journey-column-header h3 {
+  margin: 0 !important;
+
+  font-size: 17px !important;
+  line-height: 1.1 !important;
+
+  color: #102546 !important;
+
+  white-space: nowrap !important;
+}
+
+
+#journeyPage .journey-column-header p {
+  margin: 4px 0 0 !important;
+
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+
+  color: #8190a8 !important;
+
+  white-space: nowrap !important;
+}
+
+
+/* ==========================================================
+   PIPELINE COLORS
+========================================================== */
+
+#journeyPage .not-placed-column,
+#journeyPage .launch-column:first-of-type {
+  border-top: 3px solid #3e78ee !important;
+}
+
+#journeyPage .quiz-column {
+  border-top: 3px solid #855fee !important;
+}
+
+#journeyPage .xcel-column {
+  border-top: 3px solid #ee951c !important;
+}
+
+#journeyPage .exam-column {
+  border-top: 3px solid #4978e0 !important;
+}
+
+#journeyPage .licensed-column {
+  border-top: 3px solid #2fa765 !important;
+}
+
+#journeyPage .contracted-column {
+  border-top: 3px solid #7258d8 !important;
+}
+
+
+/* ==========================================================
+   DEFAULT = ONLY 5 RENDERED AGENTS
+========================================================== */
+
+#journeyPage .drop-zone {
+  display: flex !important;
+  flex-direction: column !important;
+
+  gap: 0 !important;
+
+  width: 100% !important;
+
+  min-height: 0 !important;
+
+  height: auto !important;
+  max-height: none !important;
+
+  padding: 0 !important;
+
+  overflow: hidden !important;
+
+  border: 0 !important;
+  border-radius: 0 !important;
+
+  background: #ffffff !important;
+}
+
+
+/* ==========================================================
+   VIEW ALL = ONLY THAT PIPELINE SCROLLS
+========================================================== */
+
+#journeyPage
+.journey-column.stage-expanded
+.drop-zone {
+
+  height: 430px !important;
+  max-height: 430px !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  overscroll-behavior: contain !important;
+
+  scrollbar-width: thin;
+  scrollbar-color: #c9d4e4 transparent;
+}
+
+
+#journeyPage
+.journey-column.stage-expanded
+.drop-zone::-webkit-scrollbar {
+  width: 6px;
+}
+
+
+#journeyPage
+.journey-column.stage-expanded
+.drop-zone::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+#journeyPage
+.journey-column.stage-expanded
+.drop-zone::-webkit-scrollbar-thumb {
+  background: #c9d4e4;
+
+  border-radius: 999px;
+}
+
+
+/* ==========================================================
+   JOURNEY AGENT CARDS
+========================================================== */
+
+#journeyPage .pipeline-agent-card,
+#journeyPage .journey-agent-card {
+
+  width: 100% !important;
+  min-width: 0 !important;
+
+  min-height: 82px !important;
+
+  margin: 0 !important;
+
+  padding: 12px 15px !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    40px
+    minmax(0, 1fr)
+    auto !important;
+
+  grid-template-areas:
+    "avatar identity controls"
+    "avatar status controls" !important;
+
+  column-gap: 11px !important;
+  row-gap: 5px !important;
+
+  align-items: center !important;
+
+  border: 0 !important;
+  border-bottom: 1px solid #e8edf5 !important;
+
+  border-radius: 0 !important;
+
+  background: #ffffff !important;
+
+  box-shadow: none !important;
+
+  overflow: hidden !important;
+
+  cursor: grab;
+}
+
+
+#journeyPage .journey-agent-card:active {
+  cursor: grabbing;
+}
+
+
+/* ==========================================================
+   VIEW ALL FOOTER
+========================================================== */
+
+#journeyPage .journey-view-all {
+  display: block;
+
+  width: 100% !important;
+
+  margin: 0 !important;
+
+  padding: 13px 10px !important;
+
+  border: 0 !important;
+  border-top: 1px solid #edf1f6 !important;
+
+  background: #ffffff !important;
+
+  color: #2c5dd5 !important;
+
+  font-size: 10px !important;
+  font-weight: 800 !important;
+
+  cursor: pointer !important;
+
+  position: relative !important;
+
+  z-index: 10 !important;
+}
+
+
+#journeyPage .journey-view-all:hover {
+  background: #f8faff !important;
+}
+
+
+/* ==========================================================
+   SEARCH — REMOVE WEIRD ICON + FILTER BUTTON
+========================================================== */
+
+#journeyPage .journey-search-icon,
+#journeyPage .journey-filter-btn {
+  display: none !important;
+}
+
+
+#journeyPage .journey-search-wrap {
+  width: min(570px, 100%) !important;
+  max-width: 570px !important;
+
+  display: block !important;
+}
+
+
+#journeyPage #journeySearch {
+  width: 100% !important;
+
+  height: 48px !important;
+
+  padding: 0 16px !important;
+
+  border: 1px solid #dbe5f3 !important;
+  border-radius: 14px !important;
+
+  background: #ffffff !important;
+
+  font-size: 13px !important;
+
+  outline: none !important;
+
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+
+
+/* ==========================================================
+   JOURNEY DRAG STATE
+========================================================== */
+
+#journeyPage .journey-agent-card.dragging {
+  opacity: .55 !important;
+}
+
+
+#journeyPage .drop-zone.drag-over {
+  outline: 2px dashed #4e7ee9 !important;
+  outline-offset: -4px !important;
+
+  background: #f4f8ff !important;
+}
+
+
+/* ==========================================================
+   AGENTS PAGE — ABOUT 20% SMALLER
+========================================================== */
+
+#agentsPage {
+  width: 100% !important;
+  max-width: none !important;
+
+  margin: 0 !important;
+
+  padding: 16px 18px 24px !important;
+}
+
+
+#agentsPage .agents-layout {
+  grid-template-columns:
+    270px
+    minmax(0, 1fr) !important;
+
+  gap: 14px !important;
+}
+
+
+#agentsPage .agents-sidebar {
+  padding: 15px !important;
+}
+
+
+#agentsPage #agentsSearch {
+  height: 39px !important;
+
+  margin-bottom: 12px !important;
+
+  font-size: 11px !important;
+}
+
+
+#agentsPage .agent-list-item {
+  padding: 10px 11px !important;
+
+  margin: 0 !important;
+
+  border-radius: 12px !important;
+}
+
+
+#agentsPage .agent-list-item b {
+  font-size: 12px !important;
+}
+
+
+#agentsPage .agent-list-item span {
+  margin-top: 3px !important;
+
+  font-size: 9px !important;
+}
+
+
+#agentsPage .agent-profile {
+  padding: 18px 20px !important;
+
+  min-height: 0 !important;
+}
+
+
+#agentsPage .profile-header {
+  margin-bottom: 20px !important;
+}
+
+
+#agentsPage .profile-avatar {
+  width: 58px !important;
+  height: 58px !important;
+
+  font-size: 18px !important;
+}
+
+
+#agentsPage .agent-profile h1,
+#agentsPage #profileName {
+  font-size: 28px !important;
+
+  line-height: 1.05 !important;
+}
+
+
+#agentsPage .profile-grid {
+  margin-top: 22px !important;
+
+  gap: 10px !important;
+}
+
+
+#agentsPage .profile-grid > div,
+#agentsPage .profile-card {
+  padding: 12px 14px !important;
+
+  border-radius: 12px !important;
+}
+
+
+#agentsPage .profile-grid span {
+  font-size: 9px !important;
+}
+
+
+#agentsPage .profile-grid strong {
+  margin-top: 5px !important;
+
+  font-size: 11px !important;
+}
+
+
+#agentsPage .agent-action-layout {
+  margin-top: 18px !important;
+
+  gap: 14px !important;
+}
+
+
+#agentsPage .agent-action-card {
+  padding: 17px !important;
+
+  border-radius: 16px !important;
+}
+
+
+#agentsPage .agent-action-card h3 {
+  font-size: 18px !important;
+
+  margin: 8px 0 12px !important;
+}
+
+
+#agentsPage .agent-action-card p {
+  font-size: 12px !important;
+}
+
+
+/* ==========================================================
+   COMMAND CENTER — ABOUT 20% SMALLER
+========================================================== */
+
+#commandPage {
+  width: 100% !important;
+  max-width: none !important;
+
+  margin: 0 !important;
+
+  padding: 16px 18px 24px !important;
+}
+
+
+#commandPage .command-layout {
+  grid-template-columns:
+    265px
+    minmax(0, 1fr) !important;
+
+  gap: 14px !important;
+}
+
+
+#commandPage .command-sidebar {
+  height: calc(100vh - 145px) !important;
+
+  min-height: 0 !important;
+
+  padding: 16px !important;
+}
+
+
+#commandPage .command-main {
+  min-height: 0 !important;
+
+  padding: 20px !important;
+}
+
+
+#commandPage .command-sidebar h2 {
+  font-size: 21px !important;
+}
+
+
+#commandPage #commandSearch {
+  height: 39px !important;
+
+  font-size: 11px !important;
+}
+
+
+#commandPage .command-agent-row {
+  min-height: 54px !important;
+
+  padding: 9px 10px !important;
+
+  grid-template-columns:
+    34px
+    minmax(0, 1fr)
+    18px !important;
+
+  gap: 9px !important;
+}
+
+
+#commandPage .command-avatar {
+  width: 32px !important;
+  height: 32px !important;
+
+  font-size: 9px !important;
+}
+
+
+#commandPage .command-agent-row b {
+  font-size: 11px !important;
+}
+
+
+#commandPage .command-agent-row span {
+  font-size: 9px !important;
+}
+
+
+/* ==========================================================
+   DESKTOP RESPONSIVE
+========================================================== */
+
+@media (max-width: 1050px) {
+
+  #journeyPage .journey-board {
+    grid-template-columns: 1fr !important;
+  }
+
+  #agentsPage .agents-layout,
+  #commandPage .command-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+}
