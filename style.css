@@ -4643,3 +4643,341 @@ grid-template-columns: 30% 70%;  gap: 24px;
 .journey-agent-card:hover {
   transform: translateY(-2px);
 }
+/* ==========================================================
+   JOURNEY PIPELINE — CLEAN CONTINUOUS FLOW
+========================================================== */
+
+.journey-board {
+  display: grid;
+  grid-template-columns:
+    minmax(360px, 1fr)
+    22px
+    minmax(360px, 1fr)
+    22px
+    minmax(360px, 1fr);
+
+  gap: 8px;
+  align-items: stretch;
+
+  width: 100%;
+  margin-top: 18px;
+}
+
+
+/* ==========================================================
+   PIPELINE COLUMNS
+========================================================== */
+
+.journey-column {
+  position: relative;
+
+  min-height: 640px;
+
+  padding: 0 16px 16px;
+
+  border: 1px solid #e3eaf4;
+  border-radius: 22px;
+
+  background: rgba(255,255,255,.97);
+
+  box-shadow:
+    0 12px 32px rgba(26, 57, 105, 0.05);
+
+  overflow: visible;
+}
+
+
+/* ==========================================================
+   STICKY PIPELINE HEADERS
+   stays visible while scrolling
+========================================================== */
+
+.journey-column-header {
+  position: sticky;
+  top: 0;
+  z-index: 12;
+
+  margin: 0 -16px 14px;
+  padding: 16px 18px;
+
+  min-height: 78px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  border-bottom: 1px solid #e5ebf4;
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 6px 16px rgba(25, 55, 102, 0.035);
+}
+
+
+/* stage-specific header fills */
+
+.not-placed-column .journey-column-header {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(242,247,255,.98),
+      rgba(255,255,255,.98)
+    );
+
+  border-top: 3px solid #3d73ee;
+}
+
+.quiz-column .journey-column-header {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(248,245,255,.98),
+      rgba(255,255,255,.98)
+    );
+
+  border-top: 3px solid #8666ef;
+}
+
+.xcel-column .journey-column-header {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,248,236,.98),
+      rgba(255,255,255,.98)
+    );
+
+  border-top: 3px solid #f19a32;
+}
+
+.exam-column .journey-column-header {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(241,247,255,.98),
+      rgba(255,255,255,.98)
+    );
+
+  border-top: 3px solid #4f7eea;
+}
+
+.licensed-column .journey-column-header {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(241,251,246,.98),
+      rgba(255,255,255,.98)
+    );
+
+  border-top: 3px solid #35a96b;
+}
+
+.contracted-column .journey-column-header {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(248,245,255,.98),
+      rgba(255,255,255,.98)
+    );
+
+  border-top: 3px solid #7e68db;
+}
+
+
+/* ==========================================================
+   HEADER CONTENT
+========================================================== */
+
+.journey-column-header > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.journey-column-header h3 {
+  margin: 0;
+
+  color: #0b1f43;
+
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.35px;
+}
+
+.journey-column-header p {
+  margin: 4px 0 0;
+
+  color: #7f8ca5;
+
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.journey-stage-icon {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.journey-stage-count {
+  min-width: 38px;
+  height: 38px;
+
+  padding: 0 9px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+
+/* ==========================================================
+   REDUCE EMPTY SPACE
+========================================================== */
+
+.drop-zone {
+  min-height: 0;
+  padding: 2px 0 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+/* ==========================================================
+   LARGER CLEANER AGENT CARDS
+========================================================== */
+
+.journey-agent-card {
+  position: relative;
+
+  min-height: 88px;
+
+  margin: 0;
+
+  padding: 15px 16px;
+
+  border: 1px solid #e3e9f2;
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 5px 14px rgba(25,55,102,.035);
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    border-color .18s ease;
+}
+
+.journey-agent-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #d0daeb;
+
+  box-shadow:
+    0 10px 22px rgba(25,55,102,.07);
+}
+
+
+/* ==========================================================
+   SMALL SUBTLE FLOW ARROWS
+========================================================== */
+
+.journey-flow-arrow {
+  min-height: 640px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 0;
+}
+
+.journey-flow-arrow::before {
+  content: "";
+
+  width: 12px;
+  height: 1px;
+
+  background: #cbd6e7;
+}
+
+.journey-flow-arrow::after {
+  content: "›";
+
+  margin-left: -1px;
+
+  color: #a9b7cc;
+
+  font-size: 22px;
+  font-weight: 300;
+}
+
+
+/* ==========================================================
+   VIEW ALL — TIGHTER FOOTER
+========================================================== */
+
+.journey-view-all {
+  width: 100%;
+
+  margin-top: 12px;
+  padding: 9px 0 2px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #2d5dd7;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+
+/* ==========================================================
+   REMOVE OLD XCEL ACTIVATION BOX
+========================================================== */
+
+.activation-bridge {
+  display: none !important;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1150px) {
+
+  .journey-board {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-flow-arrow {
+    display: none;
+  }
+
+}
