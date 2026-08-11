@@ -6889,3 +6889,27 @@ body {
 .contracted-column {
   border-top-color: #7558d5 !important;
 }
+
+#journeyPage .not-placed-column {
+  border-top-color: #3b76ec !important;
+}
+
+#journeyPage .quiz-column {
+  border-top-color: #825de8 !important;
+}
+
+#journeyPage .xcel-column {
+  border-top-color: #ee941b !important;
+}
+
+#journeyPage .exam-column {
+  border-top-color: #4f7de2 !important;
+}
+
+#journeyPage .licensed-column {
+  border-top-color: #32a86a !important;
+}
+
+#journeyPage .contracted-column {
+  border-top-color: #7558d5 !important;
+}
