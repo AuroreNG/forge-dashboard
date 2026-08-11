@@ -1,96 +1,287 @@
-const loginBtn = document.getElementById("loginBtn");
-const registerBtn = document.getElementById("registerBtn");
-const statusEl = document.getElementById("loginStatus");
+let loginEmail = "";
 
-loginBtn?.addEventListener("click", login);
-registerBtn?.addEventListener("click", register);
+const emailStep =
+  document.getElementById("emailStep");
+
+const otpStep =
+  document.getElementById("otpStep");
+
+const loginEmailInput =
+  document.getElementById("loginEmail");
+
+const loginOtpInput =
+  document.getElementById("loginOtp");
+
+const loginMessage =
+  document.getElementById("loginMessage");
 
 
-/* =========================================================
-   LOGIN
-========================================================= */
+function showLoginMessage(
+  message,
+  type = ""
+) {
 
-async function login() {
-  const email = document
-    .getElementById("loginEmail")
-    .value
-    .trim();
+  loginMessage.textContent = message;
 
-  const password = document
-    .getElementById("loginPassword")
-    .value;
+  loginMessage.className =
+    `login-message ${type}`;
 
-  if (!email || !password) {
-    statusEl.innerText = "Please enter your email and password.";
-    return;
-  }
-
-  statusEl.innerText = "Signing in...";
-
-  const { data, error } =
-    await forgeSupabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-  if (error) {
-    console.error("Login error:", error);
-    statusEl.innerText = error.message;
-    return;
-  }
-
-  if (!data.session) {
-    statusEl.innerText =
-      "Please verify your email before signing in.";
-    return;
-  }
-
-  window.location.href = "index.html";
 }
 
 
-/* =========================================================
-   REGISTER
-========================================================= */
+/* ==========================================
+   SEND OTP
+========================================== */
 
-async function register() {
-  const email = document
-    .getElementById("loginEmail")
-    .value
-    .trim();
+document
+  .getElementById("sendLoginCode")
+  ?.addEventListener(
+    "click",
+    async () => {
 
-  const password = document
-    .getElementById("loginPassword")
-    .value;
+      const email =
+        loginEmailInput.value
+          .trim()
+          .toLowerCase();
 
-  if (!email || !password) {
-    statusEl.innerText =
-      "Please enter an email and password.";
-    return;
-  }
+      if (!email) {
 
-  if (password.length < 6) {
-    statusEl.innerText =
-      "Password must be at least 6 characters.";
-    return;
-  }
+        showLoginMessage(
+          "Enter your email address.",
+          "error"
+        );
 
-  statusEl.innerText = "Creating account...";
+        return;
+      }
 
-  const { data, error } =
-    await forgeSupabase.auth.signUp({
-      email,
-      password
-    });
 
-  if (error) {
-    console.error("Registration error:", error);
-    statusEl.innerText = error.message;
-    return;
-  }
+      showLoginMessage(
+        "Sending verification code..."
+      );
 
-  console.log("User created:", data.user);
 
-  statusEl.innerText =
-    "Account created. Please check your email and verify your account, then return here to sign in.";
-}
+      const { error } =
+        await forgeSupabase.auth
+          .signInWithOtp({
+
+            email,
+
+            options: {
+              shouldCreateUser: false
+            }
+
+          });
+
+
+      if (error) {
+
+        console.error(
+          "FORGE OTP ERROR:",
+          error
+        );
+
+        showLoginMessage(
+          error.message,
+          "error"
+        );
+
+        return;
+      }
+
+
+      loginEmail = email;
+
+      document
+        .getElementById(
+          "otpEmailDisplay"
+        )
+        .textContent = email;
+
+
+      emailStep.classList.add(
+        "hidden"
+      );
+
+      otpStep.classList.remove(
+        "hidden"
+      );
+
+
+      showLoginMessage(
+        "Verification code sent.",
+        "success"
+      );
+
+
+      loginOtpInput.focus();
+
+    }
+  );
+
+/* ==========================================
+   VERIFY OTP
+========================================== */
+
+document
+  .getElementById("verifyLoginCode")
+  ?.addEventListener(
+    "click",
+    async () => {
+
+      const token =
+        loginOtpInput.value.trim();
+
+      if (
+        !loginEmail ||
+        token.length !== 6
+      ) {
+
+        showLoginMessage(
+          "Enter the 6-digit verification code.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      showLoginMessage(
+        "Verifying..."
+      );
+
+
+      const {
+        data,
+        error
+      } =
+        await forgeSupabase.auth
+          .verifyOtp({
+
+            email:
+              loginEmail,
+
+            token,
+
+            type:
+              "email"
+
+          });
+
+
+      if (error) {
+
+        console.error(
+          "OTP VERIFY ERROR:",
+          error
+        );
+
+        showLoginMessage(
+          "That code is invalid or expired.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if (!data.session) {
+
+        showLoginMessage(
+          "FORGE could not create your session.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      showLoginMessage(
+        "Welcome to FORGE.",
+        "success"
+      );
+
+
+      window.location.href =
+        "./index.html";
+
+    }
+  );
+
+/* ==========================================
+   CHANGE EMAIL
+========================================== */
+
+document
+  .getElementById("changeLoginEmail")
+  ?.addEventListener(
+    "click",
+    () => {
+
+      otpStep.classList.add(
+        "hidden"
+      );
+
+      emailStep.classList.remove(
+        "hidden"
+      );
+
+      loginOtpInput.value = "";
+
+      showLoginMessage("");
+
+      loginEmailInput.focus();
+
+    }
+  );
+
+
+/* ==========================================
+   RESEND CODE
+========================================== */
+
+document
+  .getElementById("resendLoginCode")
+  ?.addEventListener(
+    "click",
+    async () => {
+
+      if (!loginEmail) return;
+
+
+      showLoginMessage(
+        "Sending a new code..."
+      );
+
+
+      const { error } =
+        await forgeSupabase.auth
+          .signInWithOtp({
+
+            email:
+              loginEmail,
+
+            options: {
+              shouldCreateUser: false
+            }
+
+          });
+
+
+      if (error) {
+
+        showLoginMessage(
+          error.message,
+          "error"
+        );
+
+        return;
+      }
+
+
+      showLoginMessage(
+        "A new verification code was sent.",
+        "success"
+      );
+
+    }
+  );
