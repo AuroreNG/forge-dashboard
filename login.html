@@ -13,26 +13,40 @@
 
   <link
     rel="stylesheet"
-    href="login.css"
+    href="./login.css"
   />
 </head>
 
+
 <body>
 
+  <!-- =====================================================
+       FORGE LOGIN PAGE
+  ====================================================== -->
+
   <main class="forge-login-page">
+
+
+    <!-- DECORATIVE BACKGROUND -->
 
     <div class="login-orb orb-one"></div>
     <div class="login-orb orb-two"></div>
     <div class="login-orb orb-three"></div>
 
 
+    <!-- =================================================
+         LOGIN SHELL
+    ================================================== -->
+
     <section class="forge-login-shell">
 
-      <!-- FORGE BRAND -->
+
+      <!-- ===============================================
+           FORGE BRAND
+      ================================================ -->
 
       <div class="forge-login-brand">
 
-        <!-- USE YOUR ACTUAL FORGE LOGO HERE -->
         <img
           src="./forge-logo.png"
           alt="FORGE"
@@ -42,13 +56,21 @@
       </div>
 
 
-      <!-- LOGIN CARD -->
+      <!-- ===============================================
+           LOGIN CARD
+      ================================================ -->
 
       <div class="forge-login-card">
+
+
+        <!-- BADGE -->
 
         <div class="login-badge">
           SECURE ACCESS
         </div>
+
+
+        <!-- TITLE -->
 
         <h1 id="loginTitle">
           Welcome to FORGE
@@ -58,12 +80,15 @@
           class="login-description"
           id="loginDescription"
         >
-          Enter your email to receive a secure
-          one-time verification code.
+          Secure access to your licensing workspace.
+          Enter your email to receive a one-time
+          verification code.
         </p>
 
 
-        <!-- EMAIL STEP -->
+        <!-- ===========================================
+             STEP 1 — EMAIL
+        ============================================ -->
 
         <div id="emailStep">
 
@@ -78,27 +103,42 @@
             placeholder="name@email.com"
           />
 
+
           <button
             id="sendLoginCode"
             class="forge-login-primary"
+            type="button"
           >
-            Send verification code
-            <span>→</span>
+
+            <span>
+              Continue
+            </span>
+
+            <span aria-hidden="true">
+              →
+            </span>
+
           </button>
 
         </div>
 
 
-        <!-- OTP STEP -->
+        <!-- ===========================================
+             STEP 2 — OTP
+        ============================================ -->
 
         <div
           id="otpStep"
           class="hidden"
         >
 
+
+          <!-- EMAIL BEING VERIFIED -->
+
           <div class="otp-email-row">
 
-            <span id="otpEmailDisplay"></span>
+            <span id="otpEmailDisplay">
+            </span>
 
             <button
               id="changeLoginEmail"
@@ -108,6 +148,9 @@
             </button>
 
           </div>
+
+
+          <!-- OTP FIELD -->
 
           <label for="loginOtp">
             Verification code
@@ -122,48 +165,104 @@
             placeholder="Enter 6-digit code"
           />
 
+
+          <!-- VERIFY -->
+
           <button
             id="verifyLoginCode"
             class="forge-login-primary"
+            type="button"
           >
-            Sign in
-            <span>→</span>
+
+            <span>
+              Sign in
+            </span>
+
+            <span aria-hidden="true">
+              →
+            </span>
+
           </button>
+
+
+          <!-- RESEND -->
 
           <button
             id="resendLoginCode"
             class="resend-code-btn"
             type="button"
           >
-            Resend code
+            Resend verification code
           </button>
+
 
         </div>
 
 
+        <!-- ===========================================
+             SUCCESS / ERROR MESSAGE
+        ============================================ -->
+
         <div
           id="loginMessage"
           class="login-message"
-        ></div>
+          aria-live="polite"
+        >
+        </div>
+
+
+      </div>
+      <!-- END LOGIN CARD -->
+
+
+      <!-- ===============================================
+           SECURITY FOOTER
+      ================================================ -->
+
+      <div class="login-footer">
+
+        <div class="login-security">
+
+          <span class="security-dot"></span>
+
+          <span>
+            Secure FORGE access
+          </span>
+
+        </div>
+
+        <p>
+          Authorized users only
+        </p>
 
       </div>
 
 
-      <p class="login-security-note">
-        Secure access to your FORGE organization
-      </p>
-
     </section>
+    <!-- END LOGIN SHELL -->
+
 
   </main>
+  <!-- END LOGIN PAGE -->
 
+
+  <!-- =====================================================
+       SUPABASE
+  ====================================================== -->
 
   <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
   ></script>
 
   <script src="./supabase-config.js?v=2"></script>
-  <script src="./login.js"></script>
+
+
+  <!-- =====================================================
+       FORGE LOGIN LOGIC
+  ====================================================== -->
+
+  <script src="./login.js?v=1"></script>
+
 
 </body>
 
