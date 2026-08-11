@@ -2065,73 +2065,69 @@ document.getElementById("viewAgents")?.addEventListener("click", () => {
 // ─── AGENT PROFILE ───────────────────────────────────────────────────────────
 
 function showAgentProfile(agent) {
+  if (!agent) return;
   selectedAgent = agent;
 
   document.getElementById("agentProfileEmpty")?.classList.add("hidden");
   document.getElementById("agentProfile")?.classList.remove("hidden");
 
-  setText(
-  "profileAvatar",
-  getInitials(getAgentDisplayName(agent))
-);
+  setText("profileAvatar", getInitials(getAgentDisplayName(agent)));
+  setText("profileName", getAgentDisplayName(agent));
+  setText("profileUpline", agent.upline || agent.coordinator || "—");
+  setText("profileStatus", agent.teamStatus || agent.status || "—");
+  setText("profileStage", agent.stage || "—");
+  setText("profileCode", agent.code || "—");
+  setText("profilePhone", agent.phone || "—");
+  setText("profileEmail", agent.email || "—");
+  setText("profileNextAction", getNextAction(agent.stage));
 
-setText(
-  "profileName",
-  getAgentDisplayName(agent)
-);
-
-setText(
-  "profileCoordinator",
-  agent.upline || agent.coordinator || "—"
-);
-
-setText("profileStatus", agent.teamStatus || "—");
-setText("profileStage", agent.stage || "—");
-setText("profileCode", agent.code || "—");
-setText("profilePhone", agent.phone || "—");
-setText("profileEmail", agent.email || "—");
-setText("profileNextAction", getNextAction(agent.stage));
-setText(
-  "profileResidentLicense",
-  agent.residentLicense || "—"
-);
-
-setText(
-  "profileEO",
-  agent.eoStatus || "—"
-);
-
-setText(
-  "profileAML",
-  agent.amlStatus || "—"
-);
-
-setText(
-  "profileTevahFee",
-  agent.tevahPlatformFee || "—"
-);
-  setText(
-  "profileLicensedState",
-  ["Licensed", "Contracted"].includes(agent.stage)
-    ? "Complete"
-    : "Pending"
-);
-
-setText(
-  "profileContractedState",
-  agent.stage === "Contracted"
-    ? "Complete"
-    : "Pending"
-);
-
-  updateJourneyStatus(agent.stage);
-
-  // Compliance
   setComplianceValue("profileResidentLicense", agent.residentLicense);
   setComplianceValue("profileEO", agent.eoStatus);
   setComplianceValue("profileAML", agent.amlStatus);
   setComplianceValue("profileTevahFee", agent.tevahPlatformFee);
+
+  const licensed = ["Licensed", "Contracted", "Active"].includes(agent.stage);
+  const contracted = ["Contracted", "Active"].includes(agent.stage);
+
+  setText("profileLicensedState", licensed ? "Complete" : "Pending");
+  setText("profileContractedState", contracted ? "Complete" : "Pending");
+  setText("profileLaunchDate", formatForgeProfileDate(agent.recruitDate));
+
+  updateJourneyStatus(agent.stage);
+
+  setText(
+    "profileActivityTitle",
+    contracted ? "Contracted" : licensed ? "Licensed" : (agent.teamStatus || agent.stage || "Agent activity")
+  );
+
+  setText("profileActivityText", getProfileActivityText(agent));
 }
+
+function formatForgeProfileDate(value) {
+  if (!value) return "—";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return String(value);
+  return parsed.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
+function getProfileActivityText(agent) {
+  if (agent.stage === "Contracted") return "Agent is ready for production.";
+  if (agent.stage === "Licensed") return "State license approved. Contracting is the next milestone.";
+  if (agent.stage === "Exam Passed") return "Exam passed. Continue with the license application.";
+  if (agent.stage === "XCEL Completed") return "Pre-licensing complete. Confirm exam readiness.";
+  if (agent.stage === "Quiz Sent") return "Quiz sent. Follow up for completion.";
+  return "Agent is in the launch pipeline.";
+}
+
+document.getElementById("openCommandFromAgent")?.addEventListener("click", () => {
+  if (!selectedAgent) return;
+  showPage("Command");
+  document.querySelectorAll(".nav-btn").forEach((btn) =>
+    btn.classList.toggle("active", btn.textContent.trim() === "Command")
+  );
+  renderCommandCenter();
+  if (typeof showCommandProfile === "function") showCommandProfile(selectedAgent);
+});
 // ==========================================================
 // SAFE AGENT DISPLAY NAME
 // Prevents an email address from being shown as the agent name.
