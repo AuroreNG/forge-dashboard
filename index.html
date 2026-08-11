@@ -236,156 +236,406 @@
 
     <div id="focusList" class="focus-list"></div>
   </div>
+<section class="journey-hero">
 
-</section> 
+  <div class="journey-hero-top">
 
-<section id="journeyPage" class="journey-page hidden">
-  <div class="journey-shell card">
-
-    <div class="journey-top-row">
-
-      <!-- LEFT SIDE -->
-      <div class="journey-left">
-
-    <div class="journey-title-row">
-  <div class="journey-icon">
-    <span>➤</span>
-    <b>✦</b>
-  </div>
-
-  <div>
-    <h1>Journey</h1>
-    <p>
-      Imported members are placed from Team Status.
-      Manual movement can be added next.
-    </p>
-  </div>
-</div>
-
-        <div class="journey-mode-tabs">
-          <button class="journey-mode active" data-mode="launch">
-            🚀 Launch
-          </button>
-
-          <button class="journey-mode" data-mode="activate">
-            ⚡ Activate
-          </button>
-        </div>
-
+    <div>
+      <div class="journey-title-row">
+        <h1>Journey</h1>
+        <span class="journey-sparkle">✦</span>
       </div>
 
-      <!-- RIGHT SIDE -->
-     <div class="journey-right">
+      <p class="journey-subtitle">
+        Move your team from pre-licensing to full activation.
+      </p>
+    </div>
 
-  <div class="journey-actions">
+    <div class="journey-actions">
 
-    <button
-      class="import-csv-btn"
-      id="smartImportBtn"
-    >
-      ⬆ Import
-    </button>
+      <button
+        class="journey-action-btn import-csv-btn"
+        id="smartImportBtn"
+      >
+        <span>↥</span>
+        Import
+      </button>
 
-    <button
-      class="export-csv-btn"
-      id="exportForgeBtn"
-    >
-      ⬇ Export
-    </button>
+      <button
+        class="journey-action-btn export-csv-btn"
+        id="exportForgeBtn"
+      >
+        <span>↧</span>
+        Export
+      </button>
 
-    <button class="add-agent-btn">
-      + Add Agent
-    </button>
-
-  </div>
-
-  <div class="journey-toolbar">
-    <input
-      id="journeySearch"
-      placeholder="Search agent..."
-    />
-  </div>
-
-</div>
-
-    <div class="journey-metric-strip">
-
-      <div>
-        <strong id="journeyStageAgents">0</strong>
-        <span>Agents in Stage</span>
-      </div>
-
-      <div>
-        <strong id="journeyStageProgress">0%</strong>
-        <span>Stage Progress</span>
-      </div>
-
-      <div>
-        <strong>—</strong>
-        <span>Avg. Days in Stage</span>
-      </div>
-
-      <div>
-        <strong>—</strong>
-        <span>Moved This Week</span>
-      </div>
+      <button class="journey-add-btn add-agent-btn">
+        <span>＋</span>
+        Add Agent
+      </button>
 
     </div>
 
-    <div class="journey-board">
-
-      <div class="journey-column launch-column">
-        <div class="journey-column-header">
-          <h3>Not Placed</h3>
-          <span id="journeyNotPlacedCount">0</span>
-        </div>
-        <div id="journeyNotPlacedList" class="drop-zone" data-stage="Not Placed"></div>
-      </div>
-
-      <div class="journey-column launch-column">
-        <div class="journey-column-header">
-          <h3>Quiz Sent</h3>
-          <span id="journeyQuizSentCount">0</span>
-        </div>
-        <div id="journeyQuizSentList" class="drop-zone" data-stage="Quiz Sent"></div>
-      </div>
-
-      <div class="journey-column launch-column">
-        <div class="journey-column-header">
-          <h3>XCEL</h3>
-          <span id="journeyXCELCount">0</span>
-        </div>
-        <div id="journeyXCELList" class="drop-zone" data-stage="XCEL Completed"></div>
-      </div>
-
-      <div class="journey-column activate-column hidden">
-        <div class="journey-column-header">
-          <h3>Exam Passed</h3>
-          <span id="journeyExamPassedCount">0</span>
-        </div>
-        <div id="journeyExamPassedList" class="drop-zone" data-stage="Exam Passed"></div>
-      </div>
-
-    <div class="journey-column activate-column hidden">
-  <div class="journey-column-header">
-    <h3>Licensed</h3>
-    <span id="journeyLicensedCount">0</span>
   </div>
-  <div id="journeyLicensedList" class="drop-zone" data-stage="Licensed"></div>
-</div>
 
-      <div class="journey-column activate-column hidden">
-        <div class="journey-column-header">
-          <h3>Contracted</h3>
-          <span id="journeyContractedCount">0</span>
-        </div>
-        <div id="journeyContractedList" class="drop-zone" data-stage="Contracted"></div>
-      </div>
+
+  <div class="journey-control-row">
+
+    <div class="journey-modes">
+
+      <button
+        class="journey-mode active"
+        data-mode="launch"
+      >
+        <span class="journey-mode-icon">🚀</span>
+
+        <span>
+          <strong>Launch</strong>
+          <small>Pre-licensing Pipeline</small>
+        </span>
+      </button>
+
+      <button
+        class="journey-mode"
+        data-mode="activate"
+      >
+        <span class="journey-mode-icon">⚡</span>
+
+        <span>
+          <strong>Activate</strong>
+          <small>Post-exam Activation</small>
+        </span>
+      </button>
 
     </div>
+
+
+    <div class="journey-search-wrap">
+
+      <span class="journey-search-icon">⌕</span>
+
+      <input
+        id="journeySearch"
+        placeholder="Search agents by name, code, email or phone..."
+      />
+
+      <button
+        class="journey-filter-btn"
+        id="journeyFilterBtn"
+      >
+        ☷
+      </button>
+
+    </div>
+
   </div>
-  
+
 </section>
+
+
+<section class="journey-intelligence">
+
+  <div class="journey-intelligence-title">
+
+    <div class="intelligence-icon">
+      ✦
+    </div>
+
+    <div>
+      <strong>FORGE Intelligence</strong>
+      <span>Real-time insights to keep your team moving.</span>
+    </div>
+
+  </div>
+
+
+  <div class="intelligence-metric">
+    <div class="intelligence-metric-icon attention">
+      ◉
+    </div>
+
+    <div>
+      <strong id="journeyNeedAttention">0</strong>
+      <span>Need Attention</span>
+      <small>Require your action</small>
+    </div>
+  </div>
+
+
+  <div class="intelligence-metric">
+    <div class="intelligence-metric-icon ready">
+      →
+    </div>
+
+    <div>
+      <strong id="journeyReadyAdvance">0</strong>
+      <span>Ready to Advance</span>
+      <small>Next step available</small>
+    </div>
+  </div>
+
+
+  <div class="intelligence-metric">
+    <div class="intelligence-metric-icon stalled">
+      ◷
+    </div>
+
+    <div>
+      <strong id="journeyStalled">0</strong>
+      <span>Stalled</span>
+      <small>Needs follow-up</small>
+    </div>
+  </div>
+
+
+  <button
+    class="view-priority-btn"
+    id="viewJourneyPriorities"
+  >
+    View Priorities
+    <span>→</span>
+  </button>
+
+</section>
+
+
+<div class="journey-board">
+
+  <!-- LAUNCH -->
+
+  <div class="journey-column launch-column not-placed-column">
+
+    <div class="journey-column-header">
+
+      <div>
+        <span class="journey-stage-icon">◉</span>
+
+        <div>
+          <h3>Not Placed</h3>
+          <p>New recruits awaiting first action</p>
+        </div>
+      </div>
+
+      <span
+        class="journey-stage-count"
+        id="journeyNotPlacedCount"
+      >
+        0
+      </span>
+
+    </div>
+
+    <div
+      id="journeyNotPlacedList"
+      class="drop-zone"
+      data-stage="Not Placed"
+    ></div>
+
+    <button class="journey-view-all">
+      View all agents →
+    </button>
+
+  </div>
+
+
+  <div class="journey-flow-arrow launch-column">
+    →
+  </div>
+
+
+  <div class="journey-column launch-column quiz-column">
+
+    <div class="journey-column-header">
+
+      <div>
+        <span class="journey-stage-icon">➤</span>
+
+        <div>
+          <h3>Quiz Sent</h3>
+          <p>Quiz sent and waiting for completion</p>
+        </div>
+      </div>
+
+      <span
+        class="journey-stage-count"
+        id="journeyQuizSentCount"
+      >
+        0
+      </span>
+
+    </div>
+
+    <div
+      id="journeyQuizSentList"
+      class="drop-zone"
+      data-stage="Quiz Sent"
+    ></div>
+
+    <button class="journey-view-all">
+      View all agents →
+    </button>
+
+  </div>
+
+
+  <div class="journey-flow-arrow launch-column">
+    →
+  </div>
+
+
+  <div class="journey-column launch-column xcel-column">
+
+    <div class="journey-column-header">
+
+      <div>
+        <span class="journey-stage-icon">◇</span>
+
+        <div>
+          <h3>XCEL</h3>
+          <p>Pre-licensing course in progress</p>
+        </div>
+      </div>
+
+      <span
+        class="journey-stage-count"
+        id="journeyXCELCount"
+      >
+        0
+      </span>
+
+    </div>
+
+    <div
+      id="journeyXCELList"
+      class="drop-zone"
+      data-stage="XCEL Completed"
+    ></div>
+
+    <button class="journey-view-all">
+      View all agents →
+    </button>
+
+  </div>
+
+
+  <!-- ACTIVATE -->
+
+  <div class="journey-column activate-column hidden exam-column">
+
+    <div class="journey-column-header">
+
+      <div>
+        <span class="journey-stage-icon">✓</span>
+
+        <div>
+          <h3>Exam Passed</h3>
+          <p>Ready for license application</p>
+        </div>
+      </div>
+
+      <span
+        class="journey-stage-count"
+        id="journeyExamPassedCount"
+      >
+        0
+      </span>
+
+    </div>
+
+    <div
+      id="journeyExamPassedList"
+      class="drop-zone"
+      data-stage="Exam Passed"
+    ></div>
+
+    <button class="journey-view-all">
+      View all agents →
+    </button>
+
+  </div>
+
+
+  <div class="journey-flow-arrow activate-column hidden">
+    →
+  </div>
+
+
+  <div class="journey-column activate-column hidden licensed-column">
+
+    <div class="journey-column-header">
+
+      <div>
+        <span class="journey-stage-icon">✓</span>
+
+        <div>
+          <h3>Licensed</h3>
+          <p>State license approved</p>
+        </div>
+      </div>
+
+      <span
+        class="journey-stage-count"
+        id="journeyLicensedCount"
+      >
+        0
+      </span>
+
+    </div>
+
+    <div
+      id="journeyLicensedList"
+      class="drop-zone"
+      data-stage="Licensed"
+    ></div>
+
+    <button class="journey-view-all">
+      View all agents →
+    </button>
+
+  </div>
+
+
+  <div class="journey-flow-arrow activate-column hidden">
+    →
+  </div>
+
+
+  <div class="journey-column activate-column hidden contracted-column">
+
+    <div class="journey-column-header">
+
+      <div>
+        <span class="journey-stage-icon">✦</span>
+
+        <div>
+          <h3>Contracted</h3>
+          <p>Ready for production</p>
+        </div>
+      </div>
+
+      <span
+        class="journey-stage-count"
+        id="journeyContractedCount"
+      >
+        0
+      </span>
+
+    </div>
+
+    <div
+      id="journeyContractedList"
+      class="drop-zone"
+      data-stage="Contracted"
+    ></div>
+
+    <button class="journey-view-all">
+      View all agents →
+    </button>
+
+  </div>
+
+</div>
+    </section>
 
 <div id="addAgentModal" class="modal hidden">
   <div class="modal-card">
