@@ -6913,3 +6913,560 @@ body {
 #journeyPage .contracted-column {
   border-top-color: #7558d5 !important;
 }
+
+/* ==========================================================
+   FORGE — AGENTS PAGE FINAL PROFESSIONAL REDESIGN
+   KEEP AT ABSOLUTE BOTTOM OF STYLE.CSS
+========================================================== */
+
+#agentsPage {
+  width: 100% !important;
+  max-width: none !important;
+
+  padding: 18px 22px 30px !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f4f8ff 0%,
+      #f8faff 100%
+    ) !important;
+}
+
+
+/* ==========================================================
+   MAIN LAYOUT
+========================================================== */
+
+#agentsPage .agents-layout {
+  display: grid !important;
+
+  grid-template-columns:
+    260px
+    minmax(0, 1fr) !important;
+
+  gap: 16px !important;
+
+  align-items: stretch !important;
+}
+
+
+/* ==========================================================
+   LEFT AGENT SIDEBAR
+========================================================== */
+
+#agentsPage .agents-sidebar {
+  height: calc(100vh - 155px) !important;
+
+  min-height: 620px !important;
+
+  padding: 16px !important;
+
+  border: 1px solid #e3eaf4 !important;
+  border-radius: 20px !important;
+
+  background: rgba(255,255,255,.94) !important;
+
+  box-shadow:
+    0 10px 30px rgba(30, 55, 95, .05) !important;
+
+  overflow: hidden !important;
+}
+
+
+#agentsPage .agents-sidebar h2 {
+  margin: 0 0 14px !important;
+
+  font-size: 18px !important;
+  font-weight: 800 !important;
+
+  color: #13284a !important;
+}
+
+
+#agentsPage #agentsSearch {
+  width: 100% !important;
+  height: 40px !important;
+
+  margin: 0 0 12px !important;
+
+  padding: 0 13px !important;
+
+  border: 1px solid #dce5f0 !important;
+  border-radius: 11px !important;
+
+  background: #fbfcff !important;
+
+  font-size: 11px !important;
+
+  outline: none !important;
+}
+
+
+#agentsPage #agentsSearch:focus {
+  border-color: #8eace8 !important;
+
+  box-shadow:
+    0 0 0 3px rgba(52, 103, 210, .06) !important;
+}
+
+
+#agentsPage .agents-list {
+  height: calc(100% - 72px) !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  padding-right: 3px !important;
+
+  scrollbar-width: thin;
+  scrollbar-color: #c7d2e3 transparent;
+}
+
+
+#agentsPage .agent-list-item {
+  padding: 11px 12px !important;
+
+  margin-bottom: 7px !important;
+
+  border: 1px solid #e6ebf3 !important;
+  border-radius: 12px !important;
+
+  background: #fff !important;
+
+  box-shadow: none !important;
+
+  cursor: pointer !important;
+
+  transition:
+    border-color .16s ease,
+    background .16s ease,
+    transform .16s ease !important;
+}
+
+
+#agentsPage .agent-list-item:hover {
+  border-color: #c9d7ef !important;
+
+  background: #f9fbff !important;
+
+  transform: translateY(-1px);
+}
+
+
+#agentsPage .agent-list-item.active {
+  border-color: #4e7ee9 !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f7faff,
+      #ffffff
+    ) !important;
+
+  box-shadow:
+    0 0 0 2px rgba(78, 126, 233, .06) !important;
+}
+
+
+#agentsPage .agent-list-item b {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #142846 !important;
+
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+
+  line-height: 1.25 !important;
+}
+
+
+#agentsPage .agent-list-item span {
+  color: #7687a2 !important;
+
+  font-size: 9px !important;
+  font-weight: 600 !important;
+}
+
+
+/* ==========================================================
+   MAIN PROFILE PANEL
+========================================================== */
+
+#agentsPage .agent-profile {
+  min-width: 0 !important;
+  min-height: 620px !important;
+
+  padding: 24px 28px !important;
+
+  border: 1px solid #e3eaf4 !important;
+  border-radius: 22px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.99),
+      rgba(250,252,255,.98)
+    ) !important;
+
+  box-shadow:
+    0 12px 34px rgba(24, 50, 90, .05) !important;
+
+  overflow: hidden !important;
+}
+
+
+/* ==========================================================
+   PROFILE HEADER
+========================================================== */
+
+#agentsPage .profile-header {
+  display: flex !important;
+
+  align-items: center !important;
+
+  gap: 16px !important;
+
+  margin-bottom: 22px !important;
+
+  padding-bottom: 18px !important;
+
+  border-bottom: 1px solid #edf1f6 !important;
+}
+
+
+#agentsPage .profile-avatar,
+#agentsPage #profileAvatar {
+  flex: 0 0 auto !important;
+
+  width: 58px !important;
+  height: 58px !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      #2f6dde,
+      #0d3b92
+    ) !important;
+
+  color: #fff !important;
+
+  font-size: 18px !important;
+  font-weight: 800 !important;
+
+  box-shadow:
+    0 9px 20px rgba(26, 78, 176, .16) !important;
+}
+
+
+#agentsPage #profileName,
+#agentsPage .agent-profile h1 {
+  margin: 0 !important;
+
+  color: #10213f !important;
+
+  font-size: 29px !important;
+  font-weight: 800 !important;
+
+  letter-spacing: -.5px !important;
+
+  line-height: 1.05 !important;
+}
+
+
+#agentsPage .edit-agent-btn {
+  margin-left: auto !important;
+
+  height: 38px !important;
+
+  padding: 0 18px !important;
+
+  border: 0 !important;
+  border-radius: 11px !important;
+
+  background: #0f3b78 !important;
+
+  color: #fff !important;
+
+  font-size: 11px !important;
+  font-weight: 750 !important;
+
+  box-shadow:
+    0 7px 16px rgba(15, 59, 120, .13) !important;
+
+  cursor: pointer !important;
+}
+
+
+#agentsPage .edit-agent-btn:hover {
+  background: #0b3268 !important;
+}
+
+
+/* ==========================================================
+   INFORMATION GRID
+========================================================== */
+
+#agentsPage .profile-grid {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr)) !important;
+
+  gap: 10px !important;
+
+  margin: 0 0 18px !important;
+}
+
+
+#agentsPage .profile-grid > div {
+  min-width: 0 !important;
+
+  min-height: 68px !important;
+
+  padding: 12px 14px !important;
+
+  border: 1px solid #e3eaf3 !important;
+  border-radius: 12px !important;
+
+  background: #ffffff !important;
+
+  box-shadow: none !important;
+}
+
+
+#agentsPage .profile-grid span {
+  display: block !important;
+
+  margin-bottom: 6px !important;
+
+  color: #8a99ae !important;
+
+  font-size: 8.5px !important;
+  font-weight: 750 !important;
+
+  letter-spacing: .15px !important;
+}
+
+
+#agentsPage .profile-grid strong {
+  display: block !important;
+
+  min-width: 0 !important;
+
+  color: #112747 !important;
+
+  font-size: 11px !important;
+  font-weight: 800 !important;
+
+  line-height: 1.25 !important;
+
+  overflow-wrap: anywhere !important;
+}
+
+
+/* ==========================================================
+   COMPLIANCE
+========================================================== */
+
+#agentsPage .compliance-section {
+  margin: 0 0 18px !important;
+
+  padding: 14px 16px !important;
+
+  border: 1px solid #e5ebf3 !important;
+  border-radius: 14px !important;
+
+  background: #fbfcfe !important;
+}
+
+
+#agentsPage .compliance-section h3 {
+  margin: 0 0 10px !important;
+
+  color: #182b49 !important;
+
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+
+#agentsPage .compliance-grid {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr)) !important;
+
+  gap: 8px !important;
+}
+
+
+#agentsPage .compliance-item {
+  padding: 9px 10px !important;
+
+  border: 1px solid #e8edf5 !important;
+  border-radius: 10px !important;
+
+  background: #fff !important;
+}
+
+
+#agentsPage .compliance-item span {
+  display: block;
+
+  color: #8c9aae;
+
+  font-size: 8px;
+  font-weight: 700;
+}
+
+
+#agentsPage .compliance-item strong {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #183154;
+
+  font-size: 10px;
+}
+
+
+/* ==========================================================
+   LOWER INTELLIGENCE AREA
+========================================================== */
+
+#agentsPage .agent-action-layout {
+  display: grid !important;
+
+  grid-template-columns:
+    minmax(280px, .85fr)
+    minmax(0, 1.25fr) !important;
+
+  gap: 16px !important;
+
+  align-items: stretch !important;
+
+  margin-top: 4px !important;
+}
+
+
+#agentsPage .agent-action-card {
+  padding: 18px !important;
+
+  border: 1px solid #e2e9f3 !important;
+  border-radius: 16px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f8faff
+    ) !important;
+
+  box-shadow: none !important;
+}
+
+
+#agentsPage .agent-action-card h3 {
+  margin: 8px 0 8px !important;
+
+  color: #102442 !important;
+
+  font-size: 17px !important;
+  font-weight: 800 !important;
+}
+
+
+#agentsPage .agent-action-card p {
+  margin: 0 0 14px !important;
+
+  color: #71829c !important;
+
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+
+  line-height: 1.45 !important;
+}
+
+
+#agentsPage .agent-action-card button {
+  height: 40px !important;
+
+  border: 0 !important;
+  border-radius: 11px !important;
+
+  background: #103d7c !important;
+
+  color: #fff !important;
+
+  font-size: 10.5px !important;
+  font-weight: 750 !important;
+
+  cursor: pointer !important;
+}
+
+
+/* ==========================================================
+   ACTIVATION PATH
+========================================================== */
+
+#agentsPage .activation-path,
+#agentsPage .agent-progress-path {
+  min-height: 160px !important;
+
+  padding: 18px 20px !important;
+
+  border: 1px solid #e4eaf3 !important;
+  border-radius: 16px !important;
+
+  background: #fff !important;
+
+  box-shadow: none !important;
+}
+
+
+/* Make large stage icons smaller and cleaner */
+
+#agentsPage .activation-path .step-icon,
+#agentsPage .agent-progress-path .step-icon {
+  width: 50px !important;
+  height: 50px !important;
+
+  font-size: 19px !important;
+
+  box-shadow: none !important;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1080px) {
+
+  #agentsPage .agents-layout {
+    grid-template-columns:
+      225px
+      minmax(0, 1fr) !important;
+  }
+
+  #agentsPage .profile-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  #agentsPage .agent-action-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+}
