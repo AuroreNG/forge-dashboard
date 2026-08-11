@@ -747,56 +747,47 @@ function renderPipelineBoard(agents) {
 }
 
 function renderStage(stageName, countId, listId, agents) {
-  const stageAgents = agents.filter((a) => a.stage === stageName);
+  const stageAgents = agents.filter(
+    (agent) => agent.stage === stageName
+  );
+
   setText(countId, stageAgents.length);
 
   const list = document.getElementById(listId);
   if (!list) return;
+
   list.innerHTML = "";
 
-const stageKey = stage;
-
-const isExpanded =
-  expandedJourneyStages.has(stageKey);
-
-visibleAgents.forEach((agent) => {
-
-  const card = document.createElement("div");
-
-  card.className = "pipeline-agent-card";
-
-  card.innerHTML = `
-    <div class="pipeline-agent-name">${agent.name}</div>
-    <div class="pipeline-agent-coordinator">${agent.coordinator}</div>
-    <div class="pipeline-agent-stage">${agent.stage}</div>
-  `;
-
-  list.appendChild(card);
-
-});
-const viewButton =
-  document.querySelector(
-    `[data-view-stage="${stage}"]`
-  );
-
-if (viewButton) {
-
-  const expanded =
-    expandedJourneyStages.has(stage);
-
-  if (stageAgents.length <= journeyPreviewLimit) {
-
-    viewButton.style.display = "none";
-
-  } else {
-
-    viewButton.style.display = "";
-
-    viewButton.textContent =
-      expanded
-        ? "Show less ↑"
-        : `View all ${stageAgents.length} agents →`;
+  if (stageAgents.length === 0) {
+    list.innerHTML = `
+      <div class="empty-stage">
+        No agents yet
+      </div>
+    `;
+    return;
   }
+
+  stageAgents.forEach((agent) => {
+    const card = document.createElement("div");
+
+    card.className = "pipeline-agent-card";
+
+    card.innerHTML = `
+      <div class="pipeline-agent-name">
+        ${getAgentDisplayName(agent)}
+      </div>
+
+      <div class="pipeline-agent-coordinator">
+        ${agent.upline || agent.coordinator || "No upline"}
+      </div>
+
+      <div class="pipeline-agent-stage">
+        ${agent.stage}
+      </div>
+    `;
+
+    list.appendChild(card);
+  });
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
