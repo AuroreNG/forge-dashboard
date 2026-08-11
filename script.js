@@ -7,6 +7,9 @@ let commandCurrentPage = 1;
 const commandPageSize = 11;
 
 let currentJourneyMode = "launch";
+const journeyPreviewLimit = 4;
+
+const expandedJourneyStages = new Set();
 
 let activityLog =
   JSON.parse(localStorage.getItem("forgeActivityLog")) || {};
@@ -759,16 +762,32 @@ function renderStage(stageName, countId, listId, agents) {
   if (!list) return;
   list.innerHTML = "";
 
-  stageAgents.forEach((agent) => {
-    const card = document.createElement("div");
-    card.className = "pipeline-agent-card";
-    card.innerHTML = `
-      <div class="pipeline-agent-name">${agent.name}</div>
-      <div class="pipeline-agent-coordinator">${agent.coordinator}</div>
-      <div class="pipeline-agent-stage">${agent.stage}</div>
-    `;
-    list.appendChild(card);
-  });
+const stageKey = stage;
+
+const isExpanded =
+  expandedJourneyStages.has(stageKey);
+
+const visibleAgents =
+  isExpanded
+    ? stageAgents
+    : stageAgents.slice(0, journeyPreviewLimit);
+
+visibleAgents.forEach((agent) => {
+
+  const card = document.createElement("div");
+
+  card.className = "pipeline-agent-card";
+
+  card.innerHTML = `
+    <div class="pipeline-agent-name">${agent.name}</div>
+    <div class="pipeline-agent-coordinator">${agent.coordinator}</div>
+    <div class="pipeline-agent-stage">${agent.stage}</div>
+  `;
+
+  list.appendChild(card);
+
+});
+
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
