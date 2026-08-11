@@ -968,9 +968,33 @@ function getJourneyActionLabel(stage) {
 // ─── JOURNEY PAGE ─────────────────────────────────────────────────────────────
 
 function renderJourneyPage() {
-  const searchValue = document.getElementById("journeySearch")?.value.toLowerCase() || "";
-  const filteredAgents = allAgents.filter((a) => a.name.toLowerCase().includes(searchValue));
+const searchInput =
+  document.getElementById("journeySearch");
 
+const searchValue =
+  String(searchInput?.value || "")
+    .trim()
+    .toLowerCase();
+
+const filteredAgents =
+  !searchValue
+    ? [...allAgents]
+    : allAgents.filter((agent) => {
+
+        const searchableText = [
+          agent.name,
+          agent.code,
+          agent.email,
+          agent.phone,
+          agent.upline
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        return searchableText.includes(searchValue);
+      });
+  
   const stageConfig = {
   launch: [
     ["Not Placed", "journeyNotPlacedList", "journeyNotPlacedCount"],
@@ -1150,8 +1174,8 @@ function renderJourneyPage() {
 });
 
 
-  // ------------------------------------------------------
-  // UPDATE VIEW ALL BUTTON
+      // ------------------------------------------------------
+  // VIEW ALL / SHOW LESS
   // ------------------------------------------------------
 
   const viewButton =
@@ -1159,67 +1183,93 @@ function renderJourneyPage() {
       `[data-view-stage="${stageName}"]`
     );
 
+  if (viewButton) {
 
-if (viewButton) {
+    const column =
+      list.closest(".journey-column");
 
-  const column =
-    list.closest(".journey-column");
+    if (
+      stageAgents.length <= journeyPreviewLimit
+    ) {
 
-  if (
-    stageAgents.length <=
-    journeyPreviewLimit
-  ) {
+      viewButton.hidden = true;
 
-    viewButton.style.display = "none";
+      column?.classList.remove(
+        "stage-expanded"
+      );
 
-    column?.classList.remove(
-      "stage-expanded"
-    );
+    } else {
 
-  } else {
+      viewButton.hidden = false;
 
-    viewButton.style.display = "";
+      viewButton.textContent =
+        isExpanded
+          ? "Show less ↑"
+          : `View all ${stageAgents.length} agents →`;
 
-    viewButton.textContent =
-      isExpanded
-        ? "Show less ↑"
-        : `View all ${stageAgents.length} agents →`;
+      column?.classList.toggle(
+        "stage-expanded",
+        isExpanded
+      );
 
-    column?.classList.toggle(
-      "stage-expanded",
-      isExpanded
-    );
-
+    }
   }
 
-}
+}); // closes currentStages.forEach
 
-}); // END currentStages.forEach
-  } // closes renderJourneyPage
+} // closes renderJourneyPage
+// ==========================================================
+// JOURNEY SEARCH
+// ==========================================================
 
-document.addEventListener("click", (event) => {
+const journeySearch =
+  document.getElementById("journeySearch");
 
-  const btn =
-    event.target.closest(
-      "[data-view-stage]"
-    );
 
-  if (!btn) return;
+journeySearch?.addEventListener(
+  "input",
+  () => {
 
-  const stage =
-    btn.dataset.viewStage;
+    // When search is completely cleared,
+    // restore the normal five-agent previews.
+    if (!journeySearch.value.trim()) {
+      expandedJourneyStages.clear();
+    }
 
-  if (
-    expandedJourneyStages.has(stage)
-  ) {
-    expandedJourneyStages.delete(stage);
-  } else {
-    expandedJourneyStages.add(stage);
+    renderJourneyPage();
   }
+);
 
-  renderJourneyPage();
 
-});
+journeySearch?.addEventListener(
+  "keydown",
+  (event) => {
+
+    // Enter should only run the search.
+    if (event.key === "Enter") {
+
+      event.preventDefault();
+
+      renderJourneyPage();
+    }
+
+
+    // Escape clears search and restores everything.
+    if (event.key === "Escape") {
+
+      event.preventDefault();
+
+      journeySearch.value = "";
+
+      expandedJourneyStages.clear();
+
+      renderJourneyPage();
+    }
+
+  }
+);
+
+
 document.addEventListener("click", (event) => {
 
   const btn =
