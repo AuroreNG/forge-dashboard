@@ -1218,6 +1218,193 @@ if (viewButton) {
 
 } // closes renderJourneyPage
 // ==========================================================
+// JOURNEY AGENT MENU
+// ==========================================================
+
+document.addEventListener("click", (event) => {
+
+  const menuButton =
+    event.target.closest("[data-agent-menu]");
+
+  // Clicking somewhere else closes menus
+  if (!menuButton) {
+    document
+      .querySelectorAll(".journey-agent-menu")
+      .forEach((menu) => menu.remove());
+
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const agentId =
+    menuButton.dataset.agentMenu;
+
+  const agent =
+    allAgents.find(
+      (item) =>
+        String(item.id) ===
+        String(agentId)
+    );
+
+  if (!agent) return;
+
+  document
+    .querySelectorAll(".journey-agent-menu")
+    .forEach((menu) => menu.remove());
+
+  const menu =
+    document.createElement("div");
+
+  menu.className =
+    "journey-agent-menu";
+
+  menu.innerHTML = `
+    <button data-menu-profile>
+      Open profile
+    </button>
+
+    <button data-menu-edit>
+      Edit agent
+    </button>
+
+    ${
+      agent.stage !== "Not Placed"
+        ? `
+          <button data-menu-back>
+            Move back
+          </button>
+        `
+        : ""
+    }
+
+    <button
+      class="danger"
+      data-menu-delete
+    >
+      Delete
+    </button>
+  `;
+
+  menuButton
+    .closest(".journey-card-actions")
+    ?.appendChild(menu);
+
+
+  // OPEN PROFILE
+  menu
+    .querySelector("[data-menu-profile]")
+    ?.addEventListener("click", () => {
+
+      selectedAgent = agent;
+
+      showPage("Agents");
+
+      document
+        .querySelectorAll(".nav-btn")
+        .forEach((btn) =>
+          btn.classList.toggle(
+            "active",
+            btn.textContent.trim() === "Agents"
+          )
+        );
+
+      renderAgentsPage();
+
+      showAgentProfile(agent);
+    });
+
+
+  // EDIT
+  menu
+    .querySelector("[data-menu-edit]")
+    ?.addEventListener("click", () => {
+
+      selectedAgent = agent;
+
+      document
+        .querySelector(".edit-agent-btn")
+        ?.click();
+    });
+
+
+  // MOVE BACK
+  menu
+    .querySelector("[data-menu-back]")
+    ?.addEventListener(
+      "click",
+      async () => {
+
+        const stages = [
+          "Not Placed",
+          "Quiz Sent",
+          "XCEL Completed",
+          "Exam Passed",
+          "Licensed",
+          "Contracted"
+        ];
+
+        const index =
+          stages.indexOf(agent.stage);
+
+        if (index <= 0) return;
+
+        await updateJourneyStage(
+          agent,
+          stages[index - 1]
+        );
+      }
+    );
+
+
+  // DELETE FROM SUPABASE
+  menu
+    .querySelector("[data-menu-delete]")
+    ?.addEventListener(
+      "click",
+      async () => {
+
+        if (
+          !confirm(
+            `Delete ${agent.name} from FORGE?`
+          )
+        ) {
+          return;
+        }
+
+        const { error } =
+          await forgeSupabase
+            .from("agents")
+            .delete()
+            .eq(
+              "organization_id",
+              currentUserProfile.organization_id
+            )
+            .eq(
+              "id",
+              agent.id
+            );
+
+        if (error) {
+          console.error(
+            "DELETE AGENT ERROR:",
+            error
+          );
+
+          alert(
+            "FORGE could not delete this agent."
+          );
+
+          return;
+        }
+
+        await loadCSV();
+      }
+    );
+
+});
+// ==========================================================
 // JOURNEY SEARCH
 // ==========================================================
 
