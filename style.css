@@ -8048,3 +8048,534 @@ body {
   font-size: 9.5px;
   font-weight: 600;
 }
+/* =========================================================
+   FORGE — AGENT PROFILE FINAL LAYOUT
+   Keep this at the END of style.css
+========================================================= */
+
+#agentProfile {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+#agentProfile.hidden {
+  display: none !important;
+}
+
+/* ---------- PROFILE HERO ---------- */
+
+.agent-profile-hero {
+  width: 100%;
+  min-height: 150px;
+  padding: 32px 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  background:
+    radial-gradient(circle at 15% 30%, rgba(37, 99, 235, .09), transparent 32%),
+    linear-gradient(135deg, #ffffff 0%, #f5f8ff 100%);
+
+  border-bottom: 1px solid #e8eef8;
+  border-radius: 24px 24px 0 0;
+  box-sizing: border-box;
+}
+
+.agent-profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-width: 0;
+}
+
+.agent-profile-avatar {
+  position: relative;
+  width: 82px;
+  height: 82px;
+  min-width: 82px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(145deg, #2563eb, #063b91);
+  color: white;
+  font-size: 25px;
+  font-weight: 700;
+
+  box-shadow: 0 12px 28px rgba(37, 99, 235, .18);
+}
+
+.agent-online-dot {
+  position: absolute;
+  right: 2px;
+  bottom: 5px;
+
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+
+  background: #34c759;
+  border: 3px solid white;
+}
+
+.agent-profile-title {
+  min-width: 0;
+}
+
+.agent-profile-title h1 {
+  margin: 0;
+  color: #071633;
+  font-size: clamp(28px, 2.6vw, 42px);
+  line-height: 1.08;
+  font-weight: 750;
+  letter-spacing: -1px;
+}
+
+.agent-profile-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.agent-edit-btn {
+  min-height: 46px;
+  padding: 0 22px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  border: 0;
+  border-radius: 11px;
+  background: #0865e8;
+  color: white;
+
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.agent-profile-menu {
+  width: 46px;
+  height: 46px;
+
+  border: 1px solid #dbe5f3;
+  border-radius: 11px;
+  background: white;
+  color: #52627a;
+
+  font-size: 22px;
+  cursor: pointer;
+}
+
+
+/* ---------- SUMMARY CARD ---------- */
+
+.agent-profile-summary {
+  margin: 0 28px;
+  padding: 10px 28px;
+
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+
+  background: white;
+  border: 1px solid #e2e9f4;
+  border-radius: 20px;
+
+  box-shadow: 0 8px 28px rgba(21, 52, 98, .04);
+
+  position: relative;
+  z-index: 2;
+}
+
+.agent-summary-item {
+  min-width: 0;
+  min-height: 104px;
+  padding: 20px 16px;
+
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 15px;
+
+  border-bottom: 1px solid #edf1f7;
+  box-sizing: border-box;
+}
+
+/* vertical separators */
+.agent-summary-item:not(:nth-child(3n)) {
+  border-right: 1px solid #edf1f7;
+}
+
+/* remove bottom line from second row */
+.agent-summary-item:nth-child(n + 4) {
+  border-bottom: none;
+}
+
+.agent-summary-icon {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+  background: #eff5ff;
+  color: #1265eb;
+
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.agent-summary-icon.success {
+  background: #ecf9f0;
+  color: #16a34a;
+}
+
+.agent-summary-icon.purple {
+  background: #f5f0ff;
+  color: #7c3aed;
+}
+
+.agent-summary-item > div:last-child {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.agent-summary-item span {
+  margin-bottom: 5px;
+
+  color: #71819b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.agent-summary-item strong {
+  color: #0b1b38;
+  font-size: 15px;
+  line-height: 1.3;
+  font-weight: 700;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* ---------- COMPLIANCE ---------- */
+
+.agent-compliance-block {
+  display: block !important;
+  width: auto;
+  margin: 26px 28px 0;
+}
+
+.agent-compliance-block > h3 {
+  margin: 0 0 15px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: #0a1b39;
+  font-size: 19px;
+  font-weight: 750;
+}
+
+.compliance-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 14px;
+}
+
+.compliance-card {
+  min-width: 0;
+  min-height: 76px;
+  padding: 15px 17px;
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 13px;
+
+  background: white;
+  border: 1px solid #e1e8f3;
+  border-radius: 14px;
+
+  box-sizing: border-box;
+}
+
+.compliance-card-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+  background: #f0f5ff;
+  color: #1265eb;
+
+  font-size: 18px;
+}
+
+.compliance-card > div:last-child {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.compliance-card span {
+  color: #71819b;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.compliance-card strong {
+  margin-top: 4px;
+  color: #10213f;
+  font-size: 14px;
+}
+
+
+/* ---------- INTELLIGENCE AREA ---------- */
+
+.agent-intelligence-grid {
+  margin: 22px 28px 28px;
+
+  display: grid !important;
+  grid-template-columns: minmax(280px, .8fr) minmax(500px, 1.5fr) !important;
+  gap: 18px;
+
+  align-items: stretch;
+}
+
+
+/* ---------- NEXT ACTION ---------- */
+
+.next-action-card {
+  min-width: 0;
+  min-height: 210px;
+  padding: 24px;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+
+  background:
+    linear-gradient(145deg, #ffffff 0%, #f3f7ff 100%);
+
+  border: 1px solid #e1e8f3;
+  border-radius: 18px;
+
+  box-sizing: border-box;
+}
+
+.next-action-icon {
+  width: 45px;
+  height: 45px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+  background: #edf4ff;
+
+  font-size: 21px;
+}
+
+.next-action-card h3 {
+  margin: 15px 0 7px;
+  color: #0a1b39;
+  font-size: 20px;
+}
+
+.next-action-card p {
+  margin: 0 0 20px;
+
+  color: #687996;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.open-command-btn {
+  width: 100%;
+  min-height: 46px;
+  margin-top: auto;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: #0865e8;
+  color: white;
+
+  font-weight: 700;
+  cursor: pointer;
+}
+
+
+/* ---------- PROGRESS ---------- */
+
+.agent-progress-card {
+  position: relative;
+
+  min-width: 0;
+  min-height: 210px;
+  padding: 32px 34px 24px;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  background: white;
+  border: 1px solid #e1e8f3;
+  border-radius: 18px;
+
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.agent-progress-line {
+  position: absolute;
+
+  left: 17%;
+  right: 17%;
+  top: 74px;
+
+  height: 2px;
+
+  background: #dfe7f2;
+  z-index: 0;
+}
+
+.agent-progress-step {
+  position: relative;
+  z-index: 1;
+
+  width: 30%;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+
+  text-align: center;
+}
+
+.progress-circle {
+  position: relative;
+
+  width: 66px;
+  height: 66px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eef3fb;
+  border: 6px solid white;
+
+  box-shadow: 0 0 0 1px #e5ebf5;
+
+  font-size: 24px;
+}
+
+.progress-circle.launched {
+  background: #a7efc5;
+}
+
+.progress-check {
+  position: absolute;
+  right: -3px;
+  bottom: -2px;
+
+  width: 21px;
+  height: 21px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: #1265eb;
+  color: white;
+
+  font-size: 11px;
+}
+
+.agent-progress-step strong {
+  margin-top: 11px;
+
+  color: #0b1b38;
+  font-size: 16px;
+}
+
+.agent-progress-step > span:not(.progress-check) {
+  margin-top: 5px;
+
+  color: #71819b;
+  font-size: 12px;
+}
+
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 1100px) {
+
+  .agent-profile-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .agent-summary-item {
+    border-right: none !important;
+    border-bottom: 1px solid #edf1f7;
+  }
+
+  .compliance-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .agent-intelligence-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 720px) {
+
+  .agent-profile-hero {
+    padding: 24px;
+  }
+
+  .agent-profile-avatar {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+  }
+
+  .agent-profile-summary {
+    margin: 0 16px;
+    grid-template-columns: 1fr !important;
+  }
+
+  .agent-summary-item {
+    border-right: none !important;
+  }
+
+  .agent-compliance-block,
+  .agent-intelligence-grid {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .compliance-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
