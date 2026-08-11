@@ -5790,3 +5790,50 @@ grid-template-columns: 30% 70%;  gap: 24px;
   }
 
 }
+/* ==========================================================
+   FIX JOURNEY PAGE SCROLLING
+========================================================== */
+
+html,
+body {
+  min-height: 100%;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+}
+
+#journeyPage {
+  overflow: visible !important;
+  min-height: 100vh;
+}
+
+.journey-board {
+  overflow: visible !important;
+  align-items: start;
+}
+
+.journey-column {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+.drop-zone {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+/* Keep only the stage heading sticky */
+
+.journey-column-header {
+  position: sticky !important;
+  top: 96px;
+  z-index: 30;
+}
+
+/* Make sure cards do not create their own scroll areas */
+
+.pipeline-agent-card,
+.journey-agent-card {
+  overflow: hidden;
+}
