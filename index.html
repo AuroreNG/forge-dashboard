@@ -855,13 +855,45 @@ JavaScript opens these when an import button is clicked.
   <div class="profile-header">
     <div class="profile-avatar" id="profileAvatar">--</div>
 
-    <div class="profile-info">
-      <h1 id="profileName"></h1>
-      <p id="profileMeta"></p>
+   <div class="agent-profile-hero">
+
+  <div class="agent-profile-identity">
+
+    <div
+      class="agent-profile-avatar"
+      id="profileAvatar"
+    >
+      EN
+      <span class="agent-online-dot"></span>
     </div>
 
-    <button class="edit-agent-btn">Edit Agent</button>
+    <div class="agent-profile-title">
+      <h1 id="profileName"></h1>
+    </div>
+
   </div>
+
+  <div class="agent-profile-actions">
+
+    <button
+      type="button"
+      class="agent-edit-btn edit-agent-btn"
+    >
+      <span>✎</span>
+      Edit Agent
+    </button>
+
+    <button
+      type="button"
+      class="agent-profile-menu"
+      aria-label="More agent options"
+    >
+      ⋮
+    </button>
+
+  </div>
+
+</div>
 <div class="agent-profile-summary">
 
   <div class="agent-summary-row">
