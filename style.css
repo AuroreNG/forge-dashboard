@@ -8048,3 +8048,497 @@ body {
   font-size: 9.5px;
   font-weight: 600;
 }
+/* ==========================================================
+   FORGE AGENTS — VISUAL POLISH ONLY
+   Keeps current layout exactly as-is
+========================================================== */
+
+
+/* MAIN PROFILE SURFACE */
+
+#agentsPage #agentProfile {
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #fbfdff 100%
+    ) !important;
+
+  border: 1px solid #e1e8f2 !important;
+
+  box-shadow:
+    0 14px 38px rgba(22, 48, 88, .055) !important;
+}
+
+
+/* PROFILE NAME */
+
+#profileName {
+  color: #0d2344 !important;
+
+  letter-spacing: -.65px !important;
+
+  font-weight: 800 !important;
+}
+
+
+/* AVATAR */
+
+#profileAvatar {
+  background:
+    linear-gradient(
+      145deg,
+      #2b70e7,
+      #0a3f98
+    ) !important;
+
+  box-shadow:
+    0 9px 22px
+    rgba(22, 78, 177, .18) !important;
+}
+
+
+/* EDIT BUTTON */
+
+#agentsPage .edit-agent-btn {
+  background:
+    linear-gradient(
+      135deg,
+      #0f4589,
+      #082f67
+    ) !important;
+
+  box-shadow:
+    0 8px 18px
+    rgba(10, 50, 105, .14) !important;
+
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease !important;
+}
+
+#agentsPage .edit-agent-btn:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 11px 22px
+    rgba(10, 50, 105, .18) !important;
+}
+
+
+/* ==========================================================
+   TOP INFORMATION CARDS
+========================================================== */
+
+#agentsPage .profile-grid > div,
+#agentsPage .profile-card {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #fbfcff
+    ) !important;
+
+  border:
+    1px solid #dfe7f2 !important;
+
+  box-shadow:
+    0 4px 12px
+    rgba(22, 47, 84, .025) !important;
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease !important;
+}
+
+
+#agentsPage .profile-grid > div:hover,
+#agentsPage .profile-card:hover {
+  border-color:
+    #cbd8eb !important;
+
+  box-shadow:
+    0 7px 16px
+    rgba(22, 47, 84, .04) !important;
+}
+
+
+/* LABELS */
+
+#agentsPage .profile-grid span {
+  color: #8493aa !important;
+
+  font-weight: 700 !important;
+
+  letter-spacing: .1px !important;
+}
+
+
+/* VALUES */
+
+#agentsPage .profile-grid strong {
+  color: #122746 !important;
+
+  font-weight: 800 !important;
+}
+
+
+/* ==========================================================
+   COMPLIANCE
+========================================================== */
+
+.profile-compliance,
+.agent-compliance-block {
+  margin-top: 18px !important;
+}
+
+
+.profile-compliance h3,
+.agent-compliance-block h3 {
+  color: #132847 !important;
+
+  font-size: 17px !important;
+
+  font-weight: 800 !important;
+
+  letter-spacing: -.2px !important;
+}
+
+
+/* COMPLIANCE CARDS */
+
+.compliance-card,
+.compliance-pro-card {
+  position: relative !important;
+
+  min-height: 68px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #fbfcff
+    ) !important;
+
+  border:
+    1px solid #dfe7f1 !important;
+
+  border-radius:
+    13px !important;
+
+  box-shadow:
+    0 4px 12px
+    rgba(22, 48, 88, .025) !important;
+
+  transition:
+    transform .15s ease,
+    border-color .15s ease,
+    box-shadow .15s ease !important;
+}
+
+
+.compliance-card:hover,
+.compliance-pro-card:hover {
+  transform:
+    translateY(-1px);
+
+  border-color:
+    #c9d8ee !important;
+
+  box-shadow:
+    0 7px 17px
+    rgba(22, 48, 88, .04) !important;
+}
+
+
+/* tiny blue accent */
+
+.compliance-card::before,
+.compliance-pro-card::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+
+  width: 2px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #4b8cff,
+      #1e5ed9
+    );
+}
+
+
+/* compliance text */
+
+.compliance-card span,
+.compliance-pro-content span {
+  color: #8291a8 !important;
+
+  font-weight: 700 !important;
+}
+
+
+.compliance-card strong,
+.compliance-pro-content strong {
+  color: #18304f !important;
+
+  font-weight: 800 !important;
+}
+
+
+/* ==========================================================
+   NEXT ACTION
+========================================================== */
+
+.agent-next-action-card,
+.next-action-card {
+  background:
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(71, 126, 242, .08),
+      transparent 35%
+    ),
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f7faff
+    ) !important;
+
+  border:
+    1px solid #dfe7f2 !important;
+
+  box-shadow:
+    0 7px 20px
+    rgba(22, 48, 88, .035) !important;
+}
+
+
+.next-action-icon {
+  background:
+    linear-gradient(
+      145deg,
+      #edf4ff,
+      #e5efff
+    ) !important;
+
+  color:
+    #1768e8 !important;
+
+  box-shadow:
+    inset 0 0 0 1px
+    rgba(55, 111, 225, .05);
+}
+
+
+.agent-next-action-card h3,
+.next-action-card h3 {
+  color:
+    #122746 !important;
+
+  font-weight:
+    800 !important;
+}
+
+
+.agent-next-action-card p,
+.next-action-card p {
+  color:
+    #71829c !important;
+}
+
+
+/* command button */
+
+.open-command-btn {
+  background:
+    linear-gradient(
+      135deg,
+      #1459bb,
+      #0d3e82
+    ) !important;
+
+  box-shadow:
+    0 8px 17px
+    rgba(16, 67, 137, .15) !important;
+
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease !important;
+}
+
+
+.open-command-btn:hover {
+  transform:
+    translateY(-1px);
+
+  box-shadow:
+    0 11px 21px
+    rgba(16, 67, 137, .19) !important;
+}
+
+
+/* ==========================================================
+   PROGRESS CARD
+========================================================== */
+
+.agent-progress-card {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #fbfdff
+    ) !important;
+
+  border:
+    1px solid #dfe7f2 !important;
+
+  box-shadow:
+    0 7px 20px
+    rgba(22, 48, 88, .03) !important;
+}
+
+
+/* connector line */
+
+.agent-progress-line {
+  height: 2px !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      #2f70e4 0%,
+      #2f70e4 33%,
+      #dfe6f0 33%,
+      #dfe6f0 100%
+    ) !important;
+}
+
+
+/* stage circles */
+
+.progress-circle {
+  border:
+    6px solid #fff !important;
+
+  box-shadow:
+    0 0 0 1px #e6ecf4 !important;
+}
+
+
+.progress-circle.launched {
+  background:
+    linear-gradient(
+      145deg,
+      #9befbc,
+      #77e5a0
+    ) !important;
+
+  box-shadow:
+    0 0 0 5px
+    rgba(84, 207, 132, .08) !important;
+}
+
+
+/* stage titles */
+
+.agent-progress-step strong {
+  color:
+    #132847 !important;
+
+  font-weight:
+    800 !important;
+}
+
+
+/* stage secondary labels */
+
+.agent-progress-step > span:not(.progress-check) {
+  color:
+    #8292aa !important;
+}
+
+
+/* ==========================================================
+   LEFT AGENT LIST
+========================================================== */
+
+#agentsPage .agents-sidebar {
+  background:
+    rgba(255,255,255,.97) !important;
+
+  box-shadow:
+    0 10px 28px
+    rgba(22, 48, 88, .045) !important;
+}
+
+
+#agentsPage .agent-list-item {
+  transition:
+    background .15s ease,
+    border-color .15s ease,
+    transform .15s ease !important;
+}
+
+
+#agentsPage .agent-list-item:hover {
+  transform:
+    translateX(2px);
+
+  background:
+    #f9fbff !important;
+
+  border-color:
+    #d2deef !important;
+}
+
+
+#agentsPage .agent-list-item.active {
+  background:
+    linear-gradient(
+      135deg,
+      #f5f9ff,
+      #ffffff
+    ) !important;
+
+  border-color:
+    #4b82ea !important;
+
+  box-shadow:
+    inset 3px 0 0 #1767e8,
+    0 4px 12px rgba(30, 88, 188, .04) !important;
+}
+
+
+/* ==========================================================
+   SEARCH
+========================================================== */
+
+#agentsSearch {
+  background:
+    #fbfcff !important;
+
+  border-color:
+    #dce5f0 !important;
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease !important;
+}
+
+
+#agentsSearch:focus {
+  border-color:
+    #8eafe9 !important;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(48, 103, 214, .06) !important;
+}
