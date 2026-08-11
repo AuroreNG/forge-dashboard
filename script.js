@@ -71,61 +71,54 @@ const boardStages = {
   contracted: "Contracted"
 };
 /* ==========================================================
-   CURRENT LOGGED-IN USER
+   FORGE AUTH GUARD
+   Do not allow dashboard access without login
 ========================================================== */
 
-async function loadCurrentUserProfile() {
-  try {
-    const { data: sessionData } =
-      await forgeSupabase.auth.getSession();
+async function protectForge() {
 
-    const session = sessionData?.session;
+  try {
+
+    const {
+      data: { session },
+      error
+    } = await forgeSupabase.auth.getSession();
+
+    if (error) {
+      console.error(
+        "FORGE AUTH CHECK ERROR:",
+        error
+      );
+    }
 
     if (!session) {
-      console.log("No FORGE session. Redirecting to login.");
-      window.location.href = "login.html";
-      return null;
-    }
 
-    const user = session.user;
-
-    const { data: profile, error: profileError } =
-      await forgeSupabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .maybeSingle();
-
-    if (profileError) {
-      console.error("Profile load error:", profileError);
-      return null;
-    }
-
-    if (!profile) {
-      console.log(
-        "User is authenticated but has no FORGE profile yet."
+      window.location.replace(
+        "./login.html"
       );
 
-      window.location.href = "setup.html";
-      return null;
+      return false;
     }
 
-    currentUserProfile = profile;
-
     console.log(
-      "Current FORGE profile:",
-      currentUserProfile
+      "FORGE authenticated:",
+      session.user.email
     );
 
-    return currentUserProfile;
+    return true;
 
   } catch (error) {
+
     console.error(
-      "Profile loading error:",
+      "FORGE AUTH GUARD ERROR:",
       error
     );
 
-    return null;
+    window.location.replace(
+      "./login.html"
+    );
+
+    return false;
   }
 }
 // ─── MERGE ────────────────────────────────────────────────────────────────────
@@ -3400,6 +3393,10 @@ function isLeader(agent, agents) {
 // ─── DOM READY ────────────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const authenticated = await protectForge();
+
+if (!authenticated) return;
+  
   document.addEventListener("click", (event) => {
     const navBtn = event.target.closest(".nav-btn");
     if (!navBtn) return;
