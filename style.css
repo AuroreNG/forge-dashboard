@@ -6101,3 +6101,68 @@ body {
 .journey-agent-menu .danger {
   color: #c33d3d;
 }
+/* ==========================================================
+   JOURNEY BOARD — CLEAN 3-COLUMN LAYOUT
+========================================================== */
+
+.journey-board {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr)) !important;
+
+  gap: 38px !important;
+
+  width: 100%;
+
+  align-items: start;
+}
+
+
+.journey-column {
+  position: relative;
+
+  min-width: 0;
+
+  overflow: hidden;
+
+  border: 1px solid #e5ebf4;
+  border-radius: 18px;
+
+  background: #fff;
+}
+
+
+/* subtle arrow between stages */
+
+.journey-column.has-next::after {
+  content: "›";
+
+  position: absolute;
+
+  right: -26px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #a8b7cd;
+
+  font-size: 25px;
+  font-weight: 300;
+
+  pointer-events: none;
+}
+
+
+/* hidden mode does not occupy grid */
+
+.journey-column.hidden {
+  display: none !important;
+}
+
+
+/* remove old arrow div behavior completely */
+
+.journey-flow-arrow {
+  display: none !important;
+}
