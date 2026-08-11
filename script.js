@@ -741,36 +741,53 @@ function renderPipelineBoard(agents) {
   renderStage("Not Placed",   "notStartedCount",         "notStartedList",         agents);
   renderStage("Quiz Sent",    "quizSentCount",            "quizSentList",            agents);
   renderStage("XCEL Completed","xcelCount",               "xcelList",                agents);
-  renderStage("Exam Scheduled","examCount",               "examList",                agents);
+renderStage(
+  "Exam Passed",
+  "examCount",
+  "examList",
+  agents
+);
   renderStage("Licensed",     "licensedPipelineCount",    "licensedPipelineList",    agents);
   renderStage("Contracted",   "contractedPipelineCount",  "contractedPipelineList",  agents);
 }
 
 function renderStage(stageName, countId, listId, agents) {
-  const stageAgents = agents.filter(
-    (agent) => agent.stage === stageName
+
+  const stageAgents =
+    agents.filter(
+      (agent) => agent.stage === stageName
+    );
+
+  setText(
+    countId,
+    stageAgents.length
   );
 
-  setText(countId, stageAgents.length);
+  const list =
+    document.getElementById(listId);
 
-  const list = document.getElementById(listId);
   if (!list) return;
 
   list.innerHTML = "";
 
   if (stageAgents.length === 0) {
+
     list.innerHTML = `
       <div class="empty-stage">
         No agents yet
       </div>
     `;
+
     return;
   }
 
   stageAgents.forEach((agent) => {
-    const card = document.createElement("div");
 
-    card.className = "pipeline-agent-card";
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "pipeline-agent-card";
 
     card.innerHTML = `
       <div class="pipeline-agent-name">
@@ -787,7 +804,9 @@ function renderStage(stageName, countId, listId, agents) {
     `;
 
     list.appendChild(card);
+
   });
+
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
