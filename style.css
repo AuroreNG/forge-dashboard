@@ -5895,7 +5895,7 @@ body {
 
 #agentsPage,
 #commandPage {
-  font-size: 0.88rem;
+  font-size: 0.78rem;
 }
 
 #agentsPage .agents-shell,
@@ -5909,7 +5909,7 @@ body {
 }
 
 #commandPage {
-  zoom: 0.88;
+  zoom: 0.78;
 }
 
 /* Safari / Firefox-friendly fallback */
