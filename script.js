@@ -1178,42 +1178,41 @@ const filteredAgents =
   // VIEW ALL / SHOW LESS
   // ------------------------------------------------------
 
-  const viewButton =
-    document.querySelector(
-      `[data-view-stage="${stageName}"]`
+const viewButton =
+  document.querySelector(
+    `[data-view-stage="${stageName}"]`
+  );
+
+const column =
+  list.closest(".journey-column");
+
+if (viewButton) {
+
+  if (
+    stageAgents.length <= journeyPreviewLimit
+  ) {
+
+    viewButton.style.display = "none";
+
+    column?.classList.remove(
+      "stage-expanded"
     );
 
-  if (viewButton) {
+  } else {
 
-    const column =
-      list.closest(".journey-column");
+    viewButton.style.display = "";
 
-    if (
-      stageAgents.length <= journeyPreviewLimit
-    ) {
+    viewButton.textContent =
+      isExpanded
+        ? "Show less ↑"
+        : `View all ${stageAgents.length} agents →`;
 
-      viewButton.hidden = true;
-
-      column?.classList.remove(
-        "stage-expanded"
-      );
-
-    } else {
-
-      viewButton.hidden = false;
-
-      viewButton.textContent =
-        isExpanded
-          ? "Show less ↑"
-          : `View all ${stageAgents.length} agents →`;
-
-      column?.classList.toggle(
-        "stage-expanded",
-        isExpanded
-      );
-
-    }
+    column?.classList.toggle(
+      "stage-expanded",
+      isExpanded
+    );
   }
+}
 
 }); // closes currentStages.forEach
 
@@ -1585,47 +1584,6 @@ document.addEventListener("click", (event) => {
   showAgentProfile(agent);
 });
 
-// ─── MOVE TO ACTIVATE ────────────────────────────────────────────────────────
-
-document.addEventListener("click", (event) => {
-  const moveBtn = event.target.closest("[data-move-agent]");
-  if (!moveBtn) return;
-  event.preventDefault();
-  event.stopPropagation();
-
-  const key   = moveBtn.dataset.moveAgent;
-  const agent = allAgents.find((a) => (a.code || a.email || a.name) === key);
-  if (!agent) return;
-
-  agent.stage        = "Exam Passed";
-  agent.pipelineStage = "Exam Passed";
-  saveAgentsToLocalStorage();
-
-  currentJourneyMode = "activate";
-  document.querySelectorAll(".journey-mode").forEach((btn) =>
-    btn.classList.toggle("active", btn.dataset.mode === "activate")
-  );
-  renderAllPages();
-});
-
-// ─── MOVE BACK TO LAUNCH ─────────────────────────────────────────────────────
-
-document.addEventListener("click", (event) => {
-  const btn = event.target.closest("[data-back-agent]");
-  if (!btn) return;
-
-  const key   = btn.dataset.backAgent;
-  const agent = allAgents.find((a) => (a.code || a.email || a.name) === key);
-  if (!agent) return;
-
-  agent.stage        = "XCEL Completed";
-  agent.pipelineStage = "XCEL Completed";
-  saveAgentsToLocalStorage();
-
-  currentJourneyMode = "launch";
-  renderAllPages();
-});
-
 // ─── DELETE AGENT ────────────────────────────────────────────────────────────
 
 document.addEventListener("click", (event) => {
@@ -1746,63 +1704,66 @@ document.querySelector(".view-btn")?.addEventListener("click", () => {
 
 // ─── DRAG AND DROP ────────────────────────────────────────────────────────────
 
-let draggedAgentName = null;
+let draggedAgentId = null;
 
 document.addEventListener("dragstart", (event) => {
-
-  const card =
-    event.target.closest(".journey-agent-card");
+  const card = event.target.closest(
+    ".journey-agent-card[data-agent-id]"
+  );
 
   if (!card) return;
 
-  draggedAgentName =
-    card.dataset.agentName;
+  draggedAgentId = card.dataset.agentId;
 
   card.classList.add("dragging");
+
+  event.dataTransfer.effectAllowed = "move";
 });
 
 
 document.addEventListener("dragend", (event) => {
+  const card = event.target.closest(
+    ".journey-agent-card"
+  );
 
-  const card =
-    event.target.closest(".journey-agent-card");
+  card?.classList.remove("dragging");
 
-  if (card) {
-    card.classList.remove("dragging");
-  }
+  draggedAgentId = null;
 
-  draggedAgentName = null;
+  document
+    .querySelectorAll(".drop-zone")
+    .forEach((zone) =>
+      zone.classList.remove("drag-over")
+    );
 });
 
 
 document.addEventListener("dragover", (event) => {
-
-  const zone =
-    event.target.closest(".drop-zone");
+  const zone = event.target.closest(".drop-zone");
 
   if (!zone) return;
 
   event.preventDefault();
+
+  event.dataTransfer.dropEffect = "move";
 
   zone.classList.add("drag-over");
 });
 
 
 document.addEventListener("dragleave", (event) => {
-
-  const zone =
-    event.target.closest(".drop-zone");
+  const zone = event.target.closest(".drop-zone");
 
   if (!zone) return;
 
-  zone.classList.remove("drag-over");
+  if (!zone.contains(event.relatedTarget)) {
+    zone.classList.remove("drag-over");
+  }
 });
 
 
 document.addEventListener("drop", async (event) => {
-
-  const zone =
-    event.target.closest(".drop-zone");
+  const zone = event.target.closest(".drop-zone");
 
   if (!zone) return;
 
@@ -1810,26 +1771,28 @@ document.addEventListener("drop", async (event) => {
 
   zone.classList.remove("drag-over");
 
-  if (!draggedAgentName) return;
+  if (!draggedAgentId) return;
 
-  const agent =
-    allAgents.find(
-      (item) =>
-        item.name === draggedAgentName
-    );
+  const agent = allAgents.find(
+    (item) =>
+      String(item.id) ===
+      String(draggedAgentId)
+  );
 
   if (!agent) return;
 
-  const newStage =
-    zone.dataset.stage;
+  const newStage = zone.dataset.stage;
 
   if (!newStage) return;
+
+  if (agent.stage === newStage) return;
 
   await updateJourneyStage(
     agent,
     newStage
   );
 
+  draggedAgentId = null;
 });
 
 // ─── AGENTS PAGE ─────────────────────────────────────────────────────────────
