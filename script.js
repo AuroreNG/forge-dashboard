@@ -994,45 +994,88 @@ function renderJourneyPage() {
     col.classList.toggle("hidden", currentJourneyMode !== "activate")
   );
 
-  currentStages.forEach(([stageName, listId, countId]) => {
-    const list = document.getElementById(listId);
-    if (!list) return;
+ currentStages.forEach(([stageName, listId, countId]) => {
 
-    const stageAgents = filteredAgents.filter((a) => a.stage === stageName);
-    setText(countId, stageAgents.length);
-    list.innerHTML = "";
+  const list = document.getElementById(listId);
 
-    if (stageAgents.length === 0) {
-      list.innerHTML = `<div class="empty-stage">No agents yet</div>`;
-      return;
-    }
+  if (!list) return;
 
-  stageAgents.forEach((agent) => {
 
- const stageKey = stage;
+  const stageAgents =
+    filteredAgents.filter(
+      (agent) => agent.stage === stageName
+    );
 
-const isExpanded =
-  expandedJourneyStages.has(stageKey);
 
-const visibleAgents =
-  isExpanded
-    ? stageAgents
-    : stageAgents.slice(0, journeyPreviewLimit);
+  setText(
+    countId,
+    stageAgents.length
+  );
 
-visibleAgents.forEach((agent) => {
 
-  const card = document.createElement("div");
+  list.innerHTML = "";
 
-  card.className = "pipeline-agent-card";
 
-  card.innerHTML = `
-    <div class="journey-agent-top">
+  // ------------------------------------------------------
+  // EMPTY STAGE
+  // ------------------------------------------------------
+
+  if (stageAgents.length === 0) {
+
+    list.innerHTML = `
+      <div class="empty-stage">
+        No agents yet
+      </div>
+    `;
+
+    return;
+  }
+
+
+  // ------------------------------------------------------
+  // PREVIEW / VIEW ALL
+  // ------------------------------------------------------
+
+  const stageKey = stageName;
+
+  const isExpanded =
+    expandedJourneyStages.has(stageKey);
+
+  const visibleAgents =
+    isExpanded
+      ? stageAgents
+      : stageAgents.slice(
+          0,
+          journeyPreviewLimit
+        );
+
+
+  // ------------------------------------------------------
+  // RENDER AGENTS
+  // ------------------------------------------------------
+
+  visibleAgents.forEach((agent) => {
+
+    const displayName =
+      cleanAgentName(
+        agent.name || "Unnamed Agent"
+      );
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "pipeline-agent-card";
+
+
+    card.innerHTML = `
 
       <div class="journey-avatar">
         ${getInitials(displayName)}
       </div>
 
-      <div>
+
+      <div class="pipeline-agent-info">
 
         <div class="journey-agent-name">
           ${displayName}
@@ -1042,72 +1085,113 @@ visibleAgents.forEach((agent) => {
           ${agent.upline || "No upline"}
         </div>
 
+        <div class="journey-agent-badge">
+          ${
+            agent.stage === "XCEL Completed"
+              ? "XCEL"
+              : agent.stage
+          }
+        </div>
+
       </div>
-    </div>
 
- <div class="journey-agent-bottom">
 
-  <span class="journey-agent-badge">
-    ${agent.stage === "XCEL Completed" ? "XCEL" : agent.stage}
-  </span>
+      <div class="journey-card-actions">
 
-  <div class="journey-card-actions">
+        ${
+          journeyNextStage[agent.stage]
+            ? `
+              <button
+                class="journey-next-action"
+                data-advance-agent="${agent.id}"
+              >
+                ${getJourneyActionLabel(agent.stage)}
+              </button>
+            `
+            : `
+              <span class="journey-complete">
+                ✓ Complete
+              </span>
+            `
+        }
 
-    ${
-      journeyNextStage[agent.stage]
-        ? `
-          <button
-            class="journey-next-action"
-            data-advance-agent="${agent.id}"
-          >
-            ${getJourneyActionLabel(agent.stage)}
-            <span>→</span>
-          </button>
-        `
-        : `
-          <span class="journey-complete">
-            ✓ Complete
-          </span>
-        `
+        <button
+          class="journey-more-btn"
+          data-agent-menu="${agent.id}"
+          aria-label="Agent options"
+        >
+          •••
+        </button>
+
+      </div>
+
+    `;
+
+
+    list.appendChild(card);
+
+  });
+
+
+  // ------------------------------------------------------
+  // UPDATE VIEW ALL BUTTON
+  // ------------------------------------------------------
+
+  const viewButton =
+    document.querySelector(
+      `[data-view-stage="${stageName}"]`
+    );
+
+
+  if (viewButton) {
+
+    if (
+      stageAgents.length <=
+      journeyPreviewLimit
+    ) {
+
+      viewButton.style.display =
+        "none";
+
+    } else {
+
+      viewButton.style.display =
+        "";
+
+      viewButton.textContent =
+        isExpanded
+          ? "Show less ↑"
+          : `View all ${stageAgents.length} agents →`;
+
     }
 
-    <button
-      class="journey-more-btn"
-      data-agent-menu="${agent.id}"
-      aria-label="Agent options"
-    >
-      •••
-    </button>
+  }
 
-  </div>
-
-</div>
-  `;
-
-      list.appendChild(card);
-    });
-
-  }); // closes currentStages.forEach
-
-} // closes renderJourneyPage
+}); // END currentStages.forEach
+  } // closes renderJourneyPage
 
 document.addEventListener("click", (event) => {
 
   const btn =
-    event.target.closest("[data-view-stage]");
+    event.target.closest(
+      "[data-view-stage]"
+    );
 
   if (!btn) return;
 
   const stage =
     btn.dataset.viewStage;
 
-  if (expandedJourneyStages.has(stage)) {
+  if (
+    expandedJourneyStages.has(stage)
+  ) {
     expandedJourneyStages.delete(stage);
   } else {
     expandedJourneyStages.add(stage);
   }
 
   renderJourneyPage();
+
 });
 
 
