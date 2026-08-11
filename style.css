@@ -6914,4 +6914,176 @@ body {
   border-top-color: #7558d5 !important;
 }
 
+/* ==========================================================
+   FORGE — PROFESSIONAL COMPLIANCE
+========================================================== */
 
+.profile-compliance.compliance-pro {
+  display: block !important;
+
+  width: 100% !important;
+
+  margin: 20px 0 18px !important;
+  padding: 0 !important;
+
+  background: transparent !important;
+
+  border: 0 !important;
+
+  box-shadow: none !important;
+}
+
+
+/* HEADER */
+
+.compliance-pro-heading {
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 9px !important;
+
+  margin-bottom: 13px !important;
+}
+
+
+.compliance-pro-heading h3 {
+  margin: 0 !important;
+
+  color: #142644 !important;
+
+  font-size: 17px !important;
+  font-weight: 800 !important;
+
+  line-height: 1 !important;
+}
+
+
+.compliance-heading-icon {
+  width: 25px !important;
+  height: 25px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  color: #1768ef !important;
+}
+
+
+/* GRID */
+
+.compliance-pro-grid {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr)) !important;
+
+  gap: 14px !important;
+
+  width: 100% !important;
+}
+
+
+/* CARD */
+
+.compliance-pro-card {
+  min-width: 0 !important;
+  height: 74px !important;
+
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 13px !important;
+
+  padding: 13px 16px !important;
+
+  border:
+    1px solid #dde6f2 !important;
+
+  border-radius:
+    13px !important;
+
+  background:
+    #ffffff !important;
+
+  box-shadow:
+    0 5px 16px
+    rgba(31, 54, 91, .025) !important;
+}
+
+
+/* ICON */
+
+.compliance-pro-icon {
+  width: 40px !important;
+  height: 40px !important;
+
+  min-width: 40px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 10px !important;
+
+  background:
+    #f2f6ff !important;
+
+  color:
+    #1767ed !important;
+}
+
+
+/* COPY */
+
+.compliance-pro-content {
+  min-width: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  justify-content: center !important;
+}
+
+
+.compliance-pro-content span {
+  margin: 0 0 6px !important;
+
+  color:
+    #7d8da6 !important;
+
+  font-size:
+    9px !important;
+
+  font-weight:
+    700 !important;
+}
+
+
+.compliance-pro-content strong {
+  margin: 0 !important;
+
+  color:
+    #213653 !important;
+
+  font-size:
+    12px !important;
+
+  font-weight:
+    750 !important;
+
+  line-height:
+    1.15 !important;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1050px) {
+
+  .compliance-pro-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr)) !important;
+  }
+
+}
