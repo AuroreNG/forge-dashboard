@@ -1,49 +1,170 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+  <meta charset="UTF-8" />
 
-<meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
-<title>FORGE Login</title>
+  <title>FORGE | Sign In</title>
 
-<link rel="stylesheet" href="style.css">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase-config.js?v=2"></script>
-
+  <link
+    rel="stylesheet"
+    href="login.css"
+  />
 </head>
 
-<body class="login-page">
+<body>
 
-<div class="login-card">
+  <main class="forge-login-page">
 
-<h1>FORGE</h1>
+    <div class="login-orb orb-one"></div>
+    <div class="login-orb orb-two"></div>
+    <div class="login-orb orb-three"></div>
 
-<p>Sign into your organization</p>
 
-<input
-id="loginEmail"
-type="email"
-placeholder="Email">
+    <section class="forge-login-shell">
 
-<input
-id="loginPassword"
-type="password"
-placeholder="Password">
+      <!-- FORGE BRAND -->
 
-<button id="loginBtn">
-Sign In
-</button>
+      <div class="forge-login-brand">
 
-<button id="registerBtn">
-Create Account
-</button>
+        <!-- USE YOUR ACTUAL FORGE LOGO HERE -->
+        <img
+          src="./forge-logo.png"
+          alt="FORGE"
+          class="forge-login-logo"
+        />
 
-<p id="loginStatus"></p>
+      </div>
 
-</div>
 
-<script src="./login.js?v=2"></script>
-  
+      <!-- LOGIN CARD -->
+
+      <div class="forge-login-card">
+
+        <div class="login-badge">
+          SECURE ACCESS
+        </div>
+
+        <h1 id="loginTitle">
+          Welcome to FORGE
+        </h1>
+
+        <p
+          class="login-description"
+          id="loginDescription"
+        >
+          Enter your email to receive a secure
+          one-time verification code.
+        </p>
+
+
+        <!-- EMAIL STEP -->
+
+        <div id="emailStep">
+
+          <label for="loginEmail">
+            Email address
+          </label>
+
+          <input
+            id="loginEmail"
+            type="email"
+            autocomplete="email"
+            placeholder="name@email.com"
+          />
+
+          <button
+            id="sendLoginCode"
+            class="forge-login-primary"
+          >
+            Send verification code
+            <span>→</span>
+          </button>
+
+        </div>
+
+
+        <!-- OTP STEP -->
+
+        <div
+          id="otpStep"
+          class="hidden"
+        >
+
+          <div class="otp-email-row">
+
+            <span id="otpEmailDisplay"></span>
+
+            <button
+              id="changeLoginEmail"
+              type="button"
+            >
+              Change
+            </button>
+
+          </div>
+
+          <label for="loginOtp">
+            Verification code
+          </label>
+
+          <input
+            id="loginOtp"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            autocomplete="one-time-code"
+            placeholder="Enter 6-digit code"
+          />
+
+          <button
+            id="verifyLoginCode"
+            class="forge-login-primary"
+          >
+            Sign in
+            <span>→</span>
+          </button>
+
+          <button
+            id="resendLoginCode"
+            class="resend-code-btn"
+            type="button"
+          >
+            Resend code
+          </button>
+
+        </div>
+
+
+        <div
+          id="loginMessage"
+          class="login-message"
+        ></div>
+
+      </div>
+
+
+      <p class="login-security-note">
+        Secure access to your FORGE organization
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
+  <script src="./supabase-config.js?v=2"></script>
+  <script src="./login.js"></script>
+
 </body>
+
 </html>
