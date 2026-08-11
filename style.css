@@ -5890,36 +5890,214 @@ body {
 }
 
 /* ==========================================================
-   AGENTS + COMMAND — MORE COMPACT
+   AGENTS — CLEAN COMPACT DESKTOP
 ========================================================== */
 
-#agentsPage,
-#commandPage {
-  font-size: 0.78rem;
-}
-
-#agentsPage .agents-shell,
-#commandPage .command-shell {
-  max-width: 1320px;
-  margin: 0 auto;
-}
-
 #agentsPage {
-  zoom: 0.88;
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  padding: 20px 22px 30px;
 }
+
+#agentsPage .agents-layout {
+  grid-template-columns:
+    300px
+    minmax(0, 1fr);
+
+  gap: 16px;
+}
+
+#agentsPage .agents-sidebar {
+  padding: 18px;
+
+  border-radius: 18px;
+}
+
+#agentsSearch {
+  height: 42px;
+
+  padding: 0 13px;
+
+  font-size: 12px;
+
+  border-radius: 12px;
+}
+
+.agent-list-item {
+  padding: 12px 13px !important;
+
+  margin-bottom: 8px;
+
+  border-radius: 13px !important;
+}
+
+.agent-list-item b {
+  font-size: 13px !important;
+}
+
+.agent-list-item span {
+  font-size: 10px !important;
+}
+
+#agentProfile {
+  padding: 22px 24px !important;
+}
+
+#profileAvatar {
+  width: 66px !important;
+  height: 66px !important;
+
+  font-size: 20px !important;
+}
+
+#profileName {
+  font-size: 32px !important;
+  line-height: 1.05 !important;
+}
+
+.agent-profile-grid,
+.profile-grid {
+  gap: 12px !important;
+}
+
+.profile-info-card,
+.agent-info-card {
+  min-height: 70px !important;
+
+  padding: 14px 16px !important;
+
+  border-radius: 13px !important;
+}
+
+.profile-info-card span,
+.agent-info-card span {
+  font-size: 9px !important;
+}
+
+.profile-info-card strong,
+.agent-info-card strong {
+  font-size: 12px !important;
+}
+
+/* ==========================================================
+   COMMAND CENTER — CLEAN COMPACT DESKTOP
+========================================================== */
 
 #commandPage {
-  zoom: 0.78;
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  padding: 20px 22px 30px;
 }
 
-/* Safari / Firefox-friendly fallback */
-@supports not (zoom: 1) {
+#commandPage .command-layout {
+  grid-template-columns:
+    285px
+    minmax(0, 1fr);
 
-  #agentsPage,
-  #commandPage {
-    transform: scale(.88);
-    transform-origin: top left;
-    width: 113.64%;
-  }
+  gap: 16px;
+}
 
+.command-agent-row {
+  padding: 10px 12px !important;
+
+  border-radius: 12px !important;
+}
+
+.command-agent-row b {
+  font-size: 12px !important;
+}
+
+.command-agent-row span {
+  font-size: 9px !important;
+}
+
+.command-avatar {
+  width: 34px !important;
+  height: 34px !important;
+
+  font-size: 10px !important;
+}
+
+#commandProfile {
+  padding: 20px !important;
+}
+
+#commandName {
+  font-size: 27px !important;
+}
+
+.action-row {
+  padding: 12px 14px !important;
+
+  border-radius: 12px !important;
+}
+
+.action-left strong {
+  font-size: 11px !important;
+}
+
+.action-left p {
+  font-size: 9px !important;
+}
+
+
+
+.journey-card-actions {
+  position: relative;
+}
+
+.journey-agent-menu {
+  position: absolute;
+
+  right: 0;
+  top: 34px;
+
+  min-width: 145px;
+
+  padding: 6px;
+
+  border: 1px solid #e2e8f2;
+  border-radius: 12px;
+
+  background: #fff;
+
+  box-shadow:
+    0 14px 36px
+    rgba(20, 45, 85, .14);
+
+  z-index: 100;
+}
+
+.journey-agent-menu button {
+  width: 100%;
+
+  padding: 9px 10px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #173154;
+
+  text-align: left;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.journey-agent-menu button:hover {
+  background: #f4f7fb;
+}
+
+.journey-agent-menu .danger {
+  color: #c33d3d;
 }
