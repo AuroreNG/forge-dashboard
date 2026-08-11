@@ -2406,10 +2406,6 @@ function showCommandProfile(agent) {
   "commandName",
   getAgentDisplayName(agent)
 );
-  setText(
-    "commandMeta",
-    `${agent.upline || agent.coordinator || "No upline"} • ${agent.stage}`
-  );
   setText("commandStageBadge", agent.stage || "Not Placed");
 
   // ==========================================================
