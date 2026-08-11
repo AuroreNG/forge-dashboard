@@ -7470,3 +7470,212 @@ body {
   }
 
 }
+/* ==========================================================
+   AGENT PROFILE HERO
+========================================================== */
+
+.agent-profile-hero {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 138px;
+
+  padding: 26px 34px;
+
+  border: 1px solid #dfe8f5;
+  border-radius: 20px 20px 0 0;
+
+  background:
+    radial-gradient(
+      circle at 18% 20%,
+      rgba(70, 128, 255, .12),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      #f9fbff 0%,
+      #edf4ff 100%
+    );
+
+  overflow: hidden;
+}
+
+
+/* subtle intelligent background detail */
+
+.agent-profile-hero::after {
+  content: "";
+
+  position: absolute;
+
+  width: 520px;
+  height: 220px;
+
+  right: -70px;
+  top: -85px;
+
+  border-radius: 50%;
+
+  border:
+    1px solid rgba(72, 125, 225, .10);
+
+  box-shadow:
+    0 18px 0 rgba(72, 125, 225, .025),
+    0 36px 0 rgba(72, 125, 225, .02),
+    0 54px 0 rgba(72, 125, 225, .015);
+
+  pointer-events: none;
+}
+
+
+.agent-profile-identity {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+
+  gap: 20px;
+}
+
+
+.agent-profile-avatar {
+  position: relative;
+
+  width: 72px;
+  height: 72px;
+
+  flex: 0 0 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      145deg,
+      #2770ed,
+      #0a43ad
+    );
+
+  color: #fff;
+
+  font-size: 23px;
+  font-weight: 700;
+
+  box-shadow:
+    0 10px 24px rgba(28, 91, 206, .18);
+}
+
+
+.agent-online-dot {
+  position: absolute;
+
+  right: 0;
+  bottom: 6px;
+
+  width: 14px;
+  height: 14px;
+
+  border: 3px solid #fff;
+  border-radius: 50%;
+
+  background: #43c875;
+}
+
+
+.agent-profile-title h1 {
+  margin: 0;
+
+  color: #102344;
+
+  font-size: 32px;
+  font-weight: 800;
+
+  letter-spacing: -.6px;
+  line-height: 1.1;
+}
+
+
+/* IMPORTANT:
+   no upline/status subtitle under name
+*/
+
+.agent-profile-title p,
+.agent-profile-subtitle {
+  display: none !important;
+}
+
+
+.agent-profile-actions {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+
+.agent-edit-btn {
+  height: 43px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 20px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1768ed,
+      #0752d0
+    );
+
+  color: white;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 18px rgba(22, 97, 224, .18);
+}
+
+
+.agent-edit-btn:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 10px 22px rgba(22, 97, 224, .23);
+}
+
+
+.agent-profile-menu {
+  width: 43px;
+  height: 43px;
+
+  border: 1px solid #dce5f1;
+  border-radius: 9px;
+
+  background: rgba(255,255,255,.92);
+
+  color: #536783;
+
+  font-size: 20px;
+
+  cursor: pointer;
+}
