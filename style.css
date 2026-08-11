@@ -7679,3 +7679,372 @@ body {
 
   cursor: pointer;
 }
+/* ==========================================================
+   AGENT COMPLIANCE
+========================================================== */
+
+.agent-compliance-block {
+  margin-top: 22px;
+}
+
+.agent-section-title {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 12px;
+}
+
+.agent-section-title h3 {
+  margin: 0;
+
+  color: #142744;
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.agent-section-icon {
+  width: 25px;
+  height: 25px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  background: #eef4ff;
+
+  color: #1765e8;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+
+/* cards */
+
+.agent-compliance-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.compliance-card {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  min-height: 68px;
+
+  padding: 13px 14px;
+
+  border: 1px solid #dfe7f2;
+  border-radius: 13px;
+
+  background: #fff;
+}
+
+.compliance-card-icon {
+  width: 36px;
+  height: 36px;
+
+  flex: 0 0 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #f1f5ff;
+
+  color: #1765e8;
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.compliance-card span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #8090a8;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.compliance-card strong {
+  display: block;
+
+  color: #162b4b;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+
+/* ==========================================================
+   INTELLIGENCE GRID
+========================================================== */
+
+.agent-intelligence-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(280px, .8fr)
+    minmax(0, 1.5fr);
+
+  gap: 16px;
+
+  margin-top: 18px;
+}
+
+
+/* NEXT ACTION */
+
+.agent-next-action-card {
+  position: relative;
+
+  min-height: 210px;
+
+  padding: 20px;
+
+  border: 1px solid #dfe7f2;
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #f4f8ff 100%
+    );
+
+  overflow: hidden;
+}
+
+.agent-next-action-card::after {
+  content: "";
+
+  position: absolute;
+
+  right: -35px;
+  bottom: -35px;
+
+  width: 130px;
+  height: 130px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(58, 115, 232, .10),
+      transparent 65%
+    );
+
+  pointer-events: none;
+}
+
+.next-action-icon {
+  width: 43px;
+  height: 43px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #edf3ff;
+
+  color: #1765e8;
+
+  font-size: 18px;
+}
+
+.agent-next-action-card h3 {
+  margin: 13px 0 7px;
+
+  color: #122745;
+
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.agent-next-action-card p {
+  margin: 0 0 18px;
+
+  color: #71819b;
+
+  font-size: 10.5px;
+  font-weight: 600;
+
+  line-height: 1.5;
+}
+
+.open-command-btn {
+  width: 100%;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1767ed,
+      #0753d3
+    );
+
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 18px
+    rgba(18, 92, 215, .15);
+}
+
+
+/* ==========================================================
+   PROGRESS CARD
+========================================================== */
+
+.agent-progress-card {
+  position: relative;
+
+  min-height: 210px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  align-items: center;
+
+  padding: 30px 30px 22px;
+
+  border: 1px solid #dfe7f2;
+  border-radius: 17px;
+
+  background: #fff;
+}
+
+.agent-progress-line {
+  position: absolute;
+
+  top: 79px;
+  left: 20%;
+  right: 20%;
+
+  height: 2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #2f70e4 0 33%,
+      #dce4ef 33% 100%
+    );
+}
+
+.agent-progress-step {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+.progress-circle {
+  position: relative;
+
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 12px;
+
+  border-radius: 50%;
+
+  background: #eef3fb;
+
+  color: #7f8da2;
+
+  font-size: 22px;
+}
+
+.progress-circle.launched {
+  background: #a5efc4;
+
+  color: #0a9b55;
+
+  box-shadow:
+    0 0 0 5px
+    rgba(95, 210, 142, .10);
+}
+
+.progress-check {
+  position: absolute;
+
+  right: -2px;
+  bottom: -2px;
+
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #fff;
+  border-radius: 50%;
+
+  background: #1767e8;
+
+  color: #fff;
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.agent-progress-step strong {
+  color: #132746;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.agent-progress-step > span {
+  margin-top: 6px;
+
+  color: #8291a8;
+
+  font-size: 9.5px;
+  font-weight: 600;
+}
