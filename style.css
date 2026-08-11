@@ -4401,3 +4401,11 @@ grid-template-columns: 30% 70%;  gap: 24px;
   }
 
 }
+
+/* ==========================================================
+   GLOBAL PAGE VISIBILITY — KEEP AT VERY BOTTOM
+========================================================== */
+
+.hidden {
+  display: none !important;
+}
