@@ -8542,3 +8542,511 @@ body {
     0 0 0 3px
     rgba(48, 103, 214, .06) !important;
 }
+/* ==========================================================
+   FORGE AGENTS — PREMIUM GLASS POLISH
+   VISUAL ONLY — NO LAYOUT CHANGES
+========================================================== */
+
+/* PAGE ATMOSPHERE */
+
+#agentsPage {
+  background:
+    radial-gradient(
+      circle at 78% 8%,
+      rgba(64, 115, 226, .10),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 12% 82%,
+      rgba(111, 148, 227, .07),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #f4f8ff 0%,
+      #edf4ff 100%
+    ) !important;
+}
+
+
+/* ==========================================================
+   MAIN PROFILE GLASS SHELL
+========================================================== */
+
+#agentsPage #agentProfile {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.92),
+      rgba(249,252,255,.82)
+    ) !important;
+
+  border:
+    1px solid rgba(255,255,255,.9) !important;
+
+  box-shadow:
+    0 20px 55px rgba(35, 63, 112, .08),
+    inset 0 1px 0 rgba(255,255,255,.95) !important;
+
+  backdrop-filter:
+    blur(20px)
+    saturate(125%) !important;
+
+  -webkit-backdrop-filter:
+    blur(20px)
+    saturate(125%) !important;
+}
+
+
+/* subtle interior edge */
+
+#agentsPage #agentProfile::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: inherit;
+
+  pointer-events: none;
+
+  box-shadow:
+    inset 0 0 0 1px
+    rgba(109, 144, 205, .08);
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+#agentsPage #agentProfile > .profile-header {
+  padding-bottom: 18px !important;
+
+  border-bottom:
+    1px solid rgba(205, 218, 238, .58) !important;
+}
+
+
+#profileAvatar {
+  background:
+    linear-gradient(
+      145deg,
+      #3b78ea,
+      #0c439f
+    ) !important;
+
+  box-shadow:
+    0 10px 24px rgba(36, 92, 190, .22),
+    inset 0 1px 0 rgba(255,255,255,.22) !important;
+}
+
+
+#profileName {
+  color: #0c2447 !important;
+
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.7) !important;
+}
+
+
+/* EDIT BUTTON */
+
+#agentsPage .edit-agent-btn {
+  background:
+    linear-gradient(
+      135deg,
+      #174f9f,
+      #082f68
+    ) !important;
+
+  border:
+    1px solid rgba(255,255,255,.12) !important;
+
+  box-shadow:
+    0 8px 20px rgba(10, 53, 112, .18),
+    inset 0 1px 0 rgba(255,255,255,.15) !important;
+}
+
+
+/* ==========================================================
+   TOP DATA CARDS
+========================================================== */
+
+#agentsPage .profile-grid > div,
+#agentsPage .profile-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.88),
+      rgba(247,250,255,.72)
+    ) !important;
+
+  border:
+    1px solid rgba(205, 218, 238, .78) !important;
+
+  box-shadow:
+    0 6px 18px rgba(27, 54, 97, .035),
+    inset 0 1px 0 rgba(255,255,255,.95) !important;
+
+  backdrop-filter:
+    blur(14px) !important;
+
+  -webkit-backdrop-filter:
+    blur(14px) !important;
+
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease !important;
+}
+
+
+#agentsPage .profile-grid > div:hover,
+#agentsPage .profile-card:hover {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(115, 157, 224, .55) !important;
+
+  box-shadow:
+    0 10px 24px rgba(31, 71, 137, .065),
+    inset 0 1px 0 rgba(255,255,255,.98) !important;
+}
+
+
+/* ==========================================================
+   COMPLIANCE
+========================================================== */
+
+.profile-compliance h3,
+.agent-compliance-block h3 {
+  color: #11294c !important;
+
+  letter-spacing:
+    -.25px !important;
+}
+
+
+.compliance-card,
+.compliance-pro-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.90),
+      rgba(248,251,255,.73)
+    ) !important;
+
+  border:
+    1px solid rgba(205, 218, 238, .78) !important;
+
+  box-shadow:
+    0 7px 18px rgba(30, 57, 100, .035),
+    inset 0 1px 0 rgba(255,255,255,.96) !important;
+
+  backdrop-filter:
+    blur(14px) !important;
+
+  -webkit-backdrop-filter:
+    blur(14px) !important;
+}
+
+
+.compliance-card::before,
+.compliance-pro-card::before {
+  width:
+    3px !important;
+
+  top:
+    13px !important;
+
+  bottom:
+    13px !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      #74a3ff,
+      #2867dc
+    ) !important;
+
+  box-shadow:
+    0 0 10px
+    rgba(49, 105, 218, .14) !important;
+}
+
+
+.compliance-card:hover,
+.compliance-pro-card:hover {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(116, 157, 224, .58) !important;
+
+  box-shadow:
+    0 11px 24px rgba(31, 70, 135, .06),
+    inset 0 1px 0 rgba(255,255,255,.98) !important;
+}
+
+
+/* ==========================================================
+   NEXT ACTION GLASS CARD
+========================================================== */
+
+.agent-next-action-card,
+.next-action-card {
+  background:
+    radial-gradient(
+      circle at 90% 18%,
+      rgba(71, 128, 244, .12),
+      transparent 36%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.91),
+      rgba(244,248,255,.76)
+    ) !important;
+
+  border:
+    1px solid rgba(199, 215, 238, .82) !important;
+
+  box-shadow:
+    0 12px 28px rgba(27, 57, 105, .055),
+    inset 0 1px 0 rgba(255,255,255,.96) !important;
+
+  backdrop-filter:
+    blur(18px)
+    saturate(120%) !important;
+
+  -webkit-backdrop-filter:
+    blur(18px)
+    saturate(120%) !important;
+}
+
+
+.next-action-icon {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(239,245,255,.98),
+      rgba(223,235,255,.85)
+    ) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95),
+    0 6px 14px rgba(51, 100, 190, .06) !important;
+}
+
+
+.open-command-btn {
+  background:
+    linear-gradient(
+      135deg,
+      #1456b7,
+      #0b3878
+    ) !important;
+
+  border:
+    1px solid rgba(255,255,255,.12) !important;
+
+  box-shadow:
+    0 9px 20px rgba(14, 61, 129, .18),
+    inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+
+
+/* ==========================================================
+   PROGRESS AREA
+========================================================== */
+
+.agent-progress-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.90),
+      rgba(247,250,255,.76)
+    ) !important;
+
+  border:
+    1px solid rgba(202, 216, 237, .80) !important;
+
+  box-shadow:
+    0 12px 28px rgba(29, 59, 106, .045),
+    inset 0 1px 0 rgba(255,255,255,.97) !important;
+
+  backdrop-filter:
+    blur(16px) !important;
+
+  -webkit-backdrop-filter:
+    blur(16px) !important;
+}
+
+
+.progress-circle {
+  background:
+    linear-gradient(
+      145deg,
+      #f3f7fc,
+      #eaf0f8
+    ) !important;
+
+  border:
+    7px solid
+    rgba(255,255,255,.96) !important;
+
+  box-shadow:
+    0 8px 18px rgba(29, 56, 99, .05),
+    0 0 0 1px rgba(214, 224, 239, .95) !important;
+}
+
+
+.progress-circle.launched {
+  background:
+    linear-gradient(
+      145deg,
+      #a8efc4,
+      #7be3a0
+    ) !important;
+
+  box-shadow:
+    0 10px 22px rgba(62, 179, 108, .12),
+    0 0 0 6px rgba(86, 207, 132, .08) !important;
+}
+
+
+/* cleaner progress connectors */
+
+.agent-progress-line {
+  height:
+    2px !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(37, 105, 224, .9) 0%,
+      rgba(37, 105, 224, .9) 33%,
+      rgba(205, 218, 238, .85) 33%,
+      rgba(205, 218, 238, .85) 100%
+    ) !important;
+
+  box-shadow:
+    0 1px 0
+    rgba(255,255,255,.9) !important;
+}
+
+
+/* ==========================================================
+   LEFT SIDEBAR GLASS
+========================================================== */
+
+#agentsPage .agents-sidebar {
+  background:
+    linear-gradient(
+      160deg,
+      rgba(255,255,255,.92),
+      rgba(248,251,255,.78)
+    ) !important;
+
+  border:
+    1px solid rgba(208, 220, 238, .86) !important;
+
+  box-shadow:
+    0 14px 32px rgba(28, 58, 105, .055),
+    inset 0 1px 0 rgba(255,255,255,.98) !important;
+
+  backdrop-filter:
+    blur(18px) !important;
+
+  -webkit-backdrop-filter:
+    blur(18px) !important;
+}
+
+
+#agentsPage .agent-list-item {
+  background:
+    rgba(255,255,255,.72) !important;
+
+  border:
+    1px solid rgba(216, 225, 239, .82) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+
+
+#agentsPage .agent-list-item:hover {
+  background:
+    rgba(251,253,255,.95) !important;
+
+  border-color:
+    rgba(160, 187, 228, .75) !important;
+
+  box-shadow:
+    0 7px 16px rgba(29, 68, 132, .045),
+    inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+
+
+#agentsPage .agent-list-item.active {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(245,249,255,.98),
+      rgba(255,255,255,.92)
+    ) !important;
+
+  border-color:
+    #4a83ee !important;
+
+  box-shadow:
+    inset 3px 0 0 #1767e8,
+    0 8px 18px rgba(37, 94, 194, .07) !important;
+}
+
+
+/* ==========================================================
+   SEARCH
+========================================================== */
+
+#agentsSearch {
+  background:
+    rgba(255,255,255,.68) !important;
+
+  border:
+    1px solid rgba(209, 220, 237, .88) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.96) !important;
+
+  backdrop-filter:
+    blur(10px) !important;
+
+  -webkit-backdrop-filter:
+    blur(10px) !important;
+}
+
+
+/* ==========================================================
+   TINY TYPOGRAPHY REFINEMENT
+========================================================== */
+
+#agentsPage .profile-grid span,
+.compliance-card span,
+.compliance-pro-content span {
+  color:
+    #7b8da8 !important;
+
+  letter-spacing:
+    .08px !important;
+}
+
+
+#agentsPage .profile-grid strong,
+.compliance-card strong,
+.compliance-pro-content strong {
+  color:
+    #142b4c !important;
+}
