@@ -862,38 +862,79 @@ JavaScript opens these when an import button is clicked.
 
     <button class="edit-agent-btn">Edit Agent</button>
   </div>
+<div class="agent-profile-summary">
 
-  <div class="profile-grid">
-    <div class="profile-card">
-      <span>Upline</span>
-      <strong id="profileCoordinator"></strong>
+  <div class="agent-summary-row">
+
+    <div class="agent-summary-item">
+      <div class="agent-summary-icon">♙</div>
+
+      <div>
+        <span>Upline</span>
+        <strong id="profileUpline">—</strong>
+      </div>
     </div>
 
-    <div class="profile-card">
-      <span>Status</span>
-      <strong id="profileStatus"></strong>
+
+    <div class="agent-summary-item">
+      <div class="agent-summary-icon success">✓</div>
+
+      <div>
+        <span>Status</span>
+        <strong id="profileStatus">—</strong>
+      </div>
     </div>
 
-    <div class="profile-card">
-      <span>Pipeline Stage</span>
-      <strong id="profileStage"></strong>
+
+    <div class="agent-summary-item">
+      <div class="agent-summary-icon purple">⚑</div>
+
+      <div>
+        <span>Pipeline Stage</span>
+        <strong id="profileStage">—</strong>
+      </div>
     </div>
 
-    <div class="profile-card">
-      <span>Agent Code</span>
-      <strong id="profileCode"></strong>
-    </div>
-
-    <div class="profile-card">
-      <span>Phone</span>
-      <strong id="profilePhone"></strong>
-    </div>
-
-    <div class="profile-card">
-      <span>Email</span>
-      <strong id="profileEmail"></strong>
-    </div>
   </div>
+
+
+  <div class="agent-summary-divider"></div>
+
+
+  <div class="agent-summary-row">
+
+    <div class="agent-summary-item">
+      <div class="agent-summary-icon">#</div>
+
+      <div>
+        <span>Agent Code</span>
+        <strong id="profileCode">—</strong>
+      </div>
+    </div>
+
+
+    <div class="agent-summary-item">
+      <div class="agent-summary-icon">☎</div>
+
+      <div>
+        <span>Phone</span>
+        <strong id="profilePhone">—</strong>
+      </div>
+    </div>
+
+
+    <div class="agent-summary-item">
+      <div class="agent-summary-icon">✉</div>
+
+      <div>
+        <span>Email</span>
+        <strong id="profileEmail">—</strong>
+      </div>
+    </div>
+
+  </div>
+
+</div>
       
 <!-- =========================================================
 AGENT COMPLIANCE STATUS
