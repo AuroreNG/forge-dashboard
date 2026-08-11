@@ -855,258 +855,133 @@ JavaScript opens these when an import button is clicked.
   <div class="profile-header">
     <div class="profile-avatar" id="profileAvatar">--</div>
 
-   <div class="agent-profile-hero">
-
-  <div class="agent-profile-identity">
-
-    <div
-      class="agent-profile-avatar"
-      id="profileAvatar"
-    >
-      EN
-      <span class="agent-online-dot"></span>
-    </div>
-
-    <div class="agent-profile-title">
+    <div class="profile-info">
       <h1 id="profileName"></h1>
+      <p id="profileMeta"></p>
     </div>
 
+    <button class="edit-agent-btn">Edit Agent</button>
   </div>
 
-  <div class="agent-profile-actions">
+  <div class="profile-grid">
+    <div class="profile-card">
+      <span>Upline</span>
+      <strong id="profileCoordinator"></strong>
+    </div>
 
-    <button
-      type="button"
-      class="agent-edit-btn edit-agent-btn"
-    >
-      <span>✎</span>
-      Edit Agent
-    </button>
+    <div class="profile-card">
+      <span>Status</span>
+      <strong id="profileStatus"></strong>
+    </div>
 
-    <button
-      type="button"
-      class="agent-profile-menu"
-      aria-label="More agent options"
-    >
-      ⋮
-    </button>
+    <div class="profile-card">
+      <span>Pipeline Stage</span>
+      <strong id="profileStage"></strong>
+    </div>
 
+    <div class="profile-card">
+      <span>Agent Code</span>
+      <strong id="profileCode"></strong>
+    </div>
+
+    <div class="profile-card">
+      <span>Phone</span>
+      <strong id="profilePhone"></strong>
+    </div>
+
+    <div class="profile-card">
+      <span>Email</span>
+      <strong id="profileEmail"></strong>
+    </div>
   </div>
-
-</div>
-<div class="agent-profile-summary">
-
-  <div class="agent-summary-row">
-
-    <div class="agent-summary-item">
-      <div class="agent-summary-icon">♙</div>
-
-      <div>
-        <span>Upline</span>
-        <strong id="profileUpline">—</strong>
-      </div>
-    </div>
-
-
-    <div class="agent-summary-item">
-      <div class="agent-summary-icon success">✓</div>
-
-      <div>
-        <span>Status</span>
-        <strong id="profileStatus">—</strong>
-      </div>
-    </div>
-
-
-    <div class="agent-summary-item">
-      <div class="agent-summary-icon purple">⚑</div>
-
-      <div>
-        <span>Pipeline Stage</span>
-        <strong id="profileStage">—</strong>
-      </div>
-    </div>
-
-  </div>
-
-
-  <div class="agent-summary-divider"></div>
-
-
-  <div class="agent-summary-row">
-
-    <div class="agent-summary-item">
-      <div class="agent-summary-icon">#</div>
-
-      <div>
-        <span>Agent Code</span>
-        <strong id="profileCode">—</strong>
-      </div>
-    </div>
-
-
-    <div class="agent-summary-item">
-      <div class="agent-summary-icon">☎</div>
-
-      <div>
-        <span>Phone</span>
-        <strong id="profilePhone">—</strong>
-      </div>
-    </div>
-
-
-    <div class="agent-summary-item">
-      <div class="agent-summary-icon">✉</div>
-
-      <div>
-        <span>Email</span>
-        <strong id="profileEmail">—</strong>
-      </div>
-    </div>
-
-  </div>
-
-</div>
       
 <!-- =========================================================
 AGENT COMPLIANCE STATUS
 Shows licensing/compliance checks separately from Journey stage
 ========================================================= -->
 
-<!-- =====================================================
-     COMPLIANCE
-===================================================== -->
+<div class="compliance-section">
 
-<section class="agent-compliance-block">
+  <h3>Compliance</h3>
 
-  <div class="agent-section-title">
-    <span class="agent-section-icon">✓</span>
-    <h3>Compliance</h3>
-  </div>
+  <div class="compliance-grid">
 
-  <div class="agent-compliance-grid">
-
-    <div class="compliance-card">
-      <div class="compliance-card-icon">▣</div>
-      <div>
-        <span>Resident License</span>
-        <strong id="profileResidentLicense">—</strong>
-      </div>
+    <div class="compliance-item">
+      <span>Resident License</span>
+      <strong id="profileResidentLicense">—</strong>
     </div>
 
-    <div class="compliance-card">
-      <div class="compliance-card-icon">✓</div>
-      <div>
-        <span>E&amp;O</span>
-        <strong id="profileEO">—</strong>
-      </div>
+    <div class="compliance-item">
+      <span>E&O</span>
+      <strong id="profileEO">—</strong>
     </div>
 
-    <div class="compliance-card">
-      <div class="compliance-card-icon">▢</div>
-      <div>
-        <span>AML</span>
-        <strong id="profileAML">—</strong>
-      </div>
+    <div class="compliance-item">
+      <span>AML</span>
+      <strong id="profileAML">—</strong>
     </div>
 
-    <div class="compliance-card">
-      <div class="compliance-card-icon">▤</div>
-      <div>
-        <span>Tevah Fee</span>
-        <strong id="profileTevahFee">—</strong>
-      </div>
+    <div class="compliance-item">
+      <span>Tevah Fee</span>
+      <strong id="profileTevahFee">—</strong>
     </div>
 
   </div>
-
-</section>
-
-
-<!-- =====================================================
-     INTELLIGENCE / PROGRESS
-===================================================== -->
-
-<div class="agent-intelligence-grid">
-
-  <!-- NEXT ACTION -->
-  <section class="agent-next-action-card">
-
-    <div class="next-action-icon">
-      ⚡
-    </div>
-
-    <h3>Next Action</h3>
-
-    <p id="profileNextAction">
-      Assign the agent to the correct pipeline stage.
-    </p>
-
-    <button
-      type="button"
-      id="openCommandFromAgent"
-      class="open-command-btn"
-    >
-      Open Command Center
-      <span>↗</span>
-    </button>
-
-  </section>
-
-
-  <!-- PROGRESS -->
-  <section class="agent-progress-card">
-
-    <div class="agent-progress-line"></div>
-
-    <div class="agent-progress-step active">
-
-      <div class="progress-circle launched">
-        🚀
-        <span class="progress-check">✓</span>
-      </div>
-
-      <strong>Launched</strong>
-
-      <span id="profileLaunchDate">
-        —
-      </span>
-
-    </div>
-
-
-    <div class="agent-progress-step">
-
-      <div class="progress-circle">
-        ▣
-      </div>
-
-      <strong>Licensed</strong>
-
-      <span id="profileLicensedState">
-        Pending
-      </span>
-
-    </div>
-
-
-    <div class="agent-progress-step">
-
-      <div class="progress-circle">
-        🤝
-      </div>
-
-      <strong>Contracted</strong>
-
-      <span id="profileContractedState">
-        Pending
-      </span>
-
-    </div>
-
-  </section>
 
 </div>
+
+  <div class="agent-action-layout">
+    <div class="agent-action-card">
+      <div class="action-icon">⚡</div>
+
+      <h3>Next Action</h3>
+
+      <p id="profileNextAction">
+        Select an agent to see the next action.
+      </p>
+
+      <button class="command-btn">
+        Open Command Center
+      </button>
+    </div>
+
+   <div class="journey-progress">
+
+    <div class="journey-step" id="statusOne">
+        <div class="step-circle">
+            🚀
+            <span class="step-check">✓</span>
+        </div>
+        <p>Launched</p>
+    </div>
+
+    <div class="journey-line"></div>
+
+    <div class="journey-step" id="statusTwo">
+        <div class="step-circle">
+            🪪
+            <span class="step-check">✓</span>
+        </div>
+        <p>Licensed</p>
+    </div>
+
+    <div class="journey-line"></div>
+
+    <div class="journey-step" id="statusThree">
+        <div class="step-circle">
+            🤝
+            <span class="step-check">✓</span>
+        </div>
+        <p>Contracted</p>
+    </div>
+
+</div>
+</div>
+  </div>
+</div>
+
+
+</section>
 <section id="commandPage" class="command-page hidden">
   <div class="command-layout">
 
