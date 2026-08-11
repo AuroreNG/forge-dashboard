@@ -9,9 +9,6 @@ const journeyPreviewLimit = 5;
 
 const expandedJourneyStages = new Set();
 let currentJourneyMode = "launch";
-const journeyPreviewLimit = 4;
-
-const expandedJourneyStages = new Set();
 
 let activityLog =
   JSON.parse(localStorage.getItem("forgeActivityLog")) || {};
@@ -761,11 +758,6 @@ const stageKey = stage;
 
 const isExpanded =
   expandedJourneyStages.has(stageKey);
-
-const visibleAgents =
-  isExpanded
-    ? stageAgents
-    : stageAgents.slice(0, journeyPreviewLimit);
 
 visibleAgents.forEach((agent) => {
 
