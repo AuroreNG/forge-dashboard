@@ -4,6 +4,7 @@ let pendingImportAgents = [];
 let selectedCoordinator = "All";
 let selectedAgent = null;
 let commandCurrentPage = 1;
+let selectedGrowthTeam = null;
 const commandPageSize = 11;
 const journeyPreviewLimit = 5;
 
@@ -4957,38 +4958,56 @@ function renderGrowthPage() {
 }
 
 function renderGrowthRows(growthTeams) {
-  const list = document.getElementById("teamPerformanceList");
+  const list =
+    document.getElementById("teamPerformanceList");
+
   if (!list) return;
 
   list.innerHTML = `
-  <div class="growth-table-head">
-    <span>Rank</span>
-    <span>Leader</span>
-    <span>Progress</span>
-    <span>Direct</span>
-    <span>Organization</span>
-    <span>Licensed</span>
-    <span>Contracted</span>
-    <span>Status</span>
-  </div>
-`;
+    <div class="growth-table-head">
+      <span>Rank</span>
+      <span>Leader</span>
+      <span>Progress</span>
+      <span>Direct</span>
+      <span>Organization</span>
+      <span>Licensed</span>
+      <span>Contracted</span>
+      <span>Status</span>
+      <span></span>
+    </div>
+  `;
+
 
   growthTeams.forEach((team, index) => {
-  const status =
-    getGrowthStatus(team);
 
-  list.innerHTML += `
-    <div class="growth-table-row">
+    const status =
+      getGrowthStatus(team);
 
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "growth-table-row";
+
+    row.innerHTML = `
       <div class="rank">
         ${index + 1}
       </div>
 
       <div class="team-name">
-        ${team.leader}
+        <strong>
+          ${team.leader}
+        </strong>
+
+        <small>
+          ${team.direct} direct recruit${
+            team.direct === 1 ? "" : "s"
+          }
+        </small>
       </div>
 
       <div class="momentum-cell">
+
         <strong>
           ${team.progress}%
         </strong>
@@ -4999,21 +5018,22 @@ function renderGrowthRows(growthTeams) {
             style="width:${team.progress}%"
           ></span>
         </span>
+
       </div>
 
-      <div>
+      <div class="growth-number">
         ${team.direct}
       </div>
 
-      <div>
+      <div class="growth-number organization-number">
         ${team.total}
       </div>
 
-      <div>
+      <div class="growth-number">
         ${team.licensed}
       </div>
 
-      <div>
+      <div class="growth-number">
         ${team.contracted}
       </div>
 
@@ -5029,11 +5049,39 @@ function renderGrowthRows(growthTeams) {
         </span>
       </div>
 
-    </div>
-  `;
-});
-}
+      <div>
+        <button
+          type="button"
+          class="growth-view-team-btn"
+          data-leader-id="${team.leaderId}"
+        >
+          View
+        </button>
+      </div>
+    `;
 
+
+    row
+      .querySelector(".growth-view-team-btn")
+      ?.addEventListener(
+        "click",
+        () => {
+
+          console.log(
+            "Selected Growth Team:",
+            team
+          );
+
+          // We will connect this to the
+          // Team Intelligence panel next.
+          selectedGrowthTeam = team;
+        }
+      );
+
+
+    list.appendChild(row);
+  });
+}
 function renderGrowthCards(growthTeams) {
 
   const leadersWithDownline =
