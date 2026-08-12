@@ -9504,3 +9504,36 @@ body {
   box-shadow:
     0 11px 22px rgba(13, 89, 225, 0.24) !important;
 }
+
+/* =========================================================
+   MILESTONE PENDING
+========================================================= */
+
+#agentsPage .milestone-status.pending {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-top: 5px;
+
+  color: #7183a0;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+#agentsPage .pending-clock {
+  width: 16px;
+  height: 16px;
+
+  flex: 0 0 16px;
+
+  color: #7183a0;
+}
+
+#agentsPage .milestone-status-text {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
