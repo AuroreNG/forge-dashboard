@@ -2586,23 +2586,24 @@ function setComplianceValue(elementId, value) {
   if (!el) return;
 
 const cleanValue =
-  String(value || "")
-    .trim();
+  String(value || "").trim();
 
 const normalizedValue =
   cleanValue.toLowerCase();
 
+const isOnlyDashes =
+  /^[-–—]+$/.test(cleanValue);
+
 const hasValue =
   cleanValue !== "" &&
-  cleanValue !== "—" &&
-  cleanValue !== "-" &&
+  !isOnlyDashes &&
   normalizedValue !== "pending" &&
   normalizedValue !== "none" &&
   normalizedValue !== "no" &&
   normalizedValue !== "n/a";
 
 el.textContent =
-  cleanValue || "—";
+  hasValue ? cleanValue : "—";
 
 const card =
   el.closest(".compliance-item");
