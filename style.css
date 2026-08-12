@@ -9345,3 +9345,162 @@ body {
   box-shadow:
     0 10px 22px rgba(20,92,217,.18) !important;
 }
+
+ /* =========================================================
+   NEXT ACTION — ICON + TEXT + BUTTON REFINEMENT
+========================================================= */
+
+/* LIGHTNING ICON — smaller premium glass circle */
+#agentsPage .agent-action-card .action-icon {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  margin: 0 0 10px 0 !important;
+
+  border-radius: 50% !important;
+
+  background: rgba(255, 255, 255, 0.88) !important;
+
+  border: 1px solid rgba(190, 211, 244, 0.85) !important;
+
+  color: #075de6 !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+
+  box-shadow:
+    0 7px 18px rgba(26, 91, 201, 0.13),
+    0 2px 5px rgba(22, 88, 200, 0.08),
+    inset 0 1px 0 rgba(255,255,255,1) !important;
+}
+
+
+/* NEXT ACTION TITLE */
+#agentsPage .agent-action-card h3 {
+  margin: 0 0 7px 0 !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  font-size: 18px !important;
+  line-height: 1.2 !important;
+
+  font-weight: 750 !important;
+
+  letter-spacing: -0.35px !important;
+
+  color: #102747 !important;
+}
+
+
+/* DESCRIPTION */
+#agentsPage .agent-action-card #profileNextAction {
+  width: 245px !important;
+  max-width: 47% !important;
+
+  margin: 0 !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+
+  font-weight: 550 !important;
+
+  letter-spacing: -0.05px !important;
+
+  color: #70819d !important;
+}
+
+
+/* OPEN COMMAND CENTER BUTTON */
+#agentsPage .agent-action-card .open-command-btn {
+  width: 255px !important;
+  max-width: 48% !important;
+  height: 46px !important;
+
+  margin-top: auto !important;
+
+  padding: 0 17px 0 20px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  border: none !important;
+  border-radius: 10px !important;
+
+  background:
+    linear-gradient(
+      100deg,
+      #1768f2 0%,
+      #0758e5 55%,
+      #0861ed 100%
+    ) !important;
+
+  color: #ffffff !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  font-size: 12px !important;
+  font-weight: 650 !important;
+
+  letter-spacing: -0.1px !important;
+
+  box-shadow:
+    0 8px 18px rgba(13, 89, 225, 0.20),
+    inset 0 1px 0 rgba(255,255,255,0.15) !important;
+
+  cursor: pointer !important;
+}
+
+
+/* ARROW ON RIGHT */
+#agentsPage .agent-action-card .open-command-btn span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  margin-left: 18px !important;
+
+  color: #ffffff !important;
+
+  font-size: 16px !important;
+  font-weight: 400 !important;
+
+  line-height: 1 !important;
+}
+
+
+/* SMALL PREMIUM HOVER */
+#agentsPage .agent-action-card .open-command-btn:hover {
+  transform: translateY(-1px) !important;
+
+  background:
+    linear-gradient(
+      100deg,
+      #1b70ff 0%,
+      #075be9 100%
+    ) !important;
+
+  box-shadow:
+    0 11px 22px rgba(13, 89, 225, 0.24) !important;
+}
