@@ -14645,3 +14645,286 @@ body {
 
   font-size: 11px !important;
 }
+
+/* =========================================================
+   COMMAND SIDEBAR — WIDER + SEAMLESS LIKE REFERENCE
+========================================================= */
+
+#commandPage .command-layout {
+  display: grid !important;
+
+  grid-template-columns:
+    290px minmax(0, 1fr) !important;
+
+  gap: 18px !important;
+
+  align-items: start !important;
+
+  width: 100% !important;
+}
+
+
+/* SIDEBAR SHELL */
+#commandPage .command-sidebar {
+  width: 290px !important;
+  min-width: 290px !important;
+  max-width: 290px !important;
+
+  padding: 20px 18px !important;
+
+  background:
+    rgba(255,255,255,.88) !important;
+
+  border:
+    1px solid rgba(207,220,239,.92) !important;
+
+  border-radius:
+    22px !important;
+
+  box-shadow:
+    0 18px 44px rgba(31,62,108,.055) !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* HEADER */
+#commandPage .command-sidebar h2 {
+  margin: 0 0 7px !important;
+
+  color: #10233f !important;
+
+  font-size: 22px !important;
+  line-height: 1.1 !important;
+
+  font-weight: 800 !important;
+}
+
+
+#commandPage .command-sidebar > p {
+  margin: 0 0 18px !important;
+
+  max-width: 230px !important;
+
+  color: #6c7f9b !important;
+
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+
+  font-weight: 600 !important;
+}
+
+
+/* SEARCH */
+#commandPage #commandSearch {
+  width: 100% !important;
+  height: 48px !important;
+
+  margin: 0 0 18px !important;
+
+  padding: 0 16px !important;
+
+  border:
+    1px solid #d8e3f1 !important;
+
+  border-radius:
+    14px !important;
+
+  background:
+    rgba(255,255,255,.96) !important;
+
+  color: #10233f !important;
+
+  font-size: 13px !important;
+
+  box-sizing: border-box !important;
+
+  outline: none !important;
+}
+
+
+/* AGENT LIST */
+#commandPage #commandAgentList {
+  display: flex !important;
+  flex-direction: column !important;
+
+  gap: 12px !important;
+}
+
+
+/* INDIVIDUAL AGENT ROW */
+#commandPage .command-agent-item {
+  width: 100% !important;
+  min-height: 78px !important;
+
+  padding: 12px 14px !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    46px minmax(0,1fr) 22px !important;
+
+  align-items: center !important;
+
+  gap: 12px !important;
+
+  border:
+    1px solid #dfe7f1 !important;
+
+  border-radius:
+    15px !important;
+
+  background:
+    rgba(255,255,255,.92) !important;
+
+  box-sizing: border-box !important;
+
+  transition:
+    border-color .15s ease,
+    background .15s ease,
+    box-shadow .15s ease !important;
+}
+
+
+/* SELECTED ROW */
+#commandPage .command-agent-item.active {
+  border:
+    1.5px solid #1767ed !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f8fbff,
+      #eef5ff
+    ) !important;
+
+  box-shadow:
+    0 8px 18px rgba(25,91,204,.07) !important;
+}
+
+
+/* AVATAR */
+#commandPage .command-agent-item-avatar {
+  width: 44px !important;
+  height: 44px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius:
+    50% !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      #236be2,
+      #0a429c
+    ) !important;
+
+  color: white !important;
+
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+
+/* AGENT NAME */
+#commandPage .command-agent-item b {
+  display: block !important;
+
+  margin: 0 0 4px !important;
+
+  color: #10233f !important;
+
+  font-size: 14px !important;
+  line-height: 1.22 !important;
+
+  font-weight: 760 !important;
+}
+
+
+/* SUBTEXT */
+#commandPage .command-agent-item span {
+  display: block !important;
+
+  margin: 0 !important;
+
+  color: #6e809c !important;
+
+  font-size: 11px !important;
+  line-height: 1.3 !important;
+
+  font-weight: 600 !important;
+}
+
+
+/* RIGHT CHEVRON */
+#commandPage .command-agent-item::after {
+  content: "›";
+
+  color: #1767ed !important;
+
+  font-size: 30px !important;
+  line-height: 1 !important;
+
+  font-weight: 500 !important;
+
+  justify-self: end !important;
+}
+
+
+/* PAGINATION AREA */
+#commandPage #commandPagination {
+  margin-top: 20px !important;
+
+  padding-top: 16px !important;
+
+  border-top:
+    1px solid rgba(220,229,241,.8) !important;
+
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 9px !important;
+}
+
+
+#commandPage #commandPagination button {
+  width: 38px !important;
+  height: 38px !important;
+
+  border:
+    1px solid #d8e3f1 !important;
+
+  border-radius:
+    11px !important;
+
+  background:
+    rgba(255,255,255,.96) !important;
+
+  color:
+    #10233f !important;
+
+  font-size:
+    13px !important;
+
+  font-weight:
+    700 !important;
+}
+#commandPage .command-main {
+  min-width: 0 !important;
+
+  padding: 18px !important;
+
+  border-radius: 22px !important;
+
+  background:
+    rgba(255,255,255,.84) !important;
+
+  border:
+    1px solid rgba(211,223,240,.9) !important;
+
+  box-shadow:
+    0 18px 44px rgba(31,62,108,.045) !important;
+}
