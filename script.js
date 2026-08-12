@@ -2007,7 +2007,105 @@ document.addEventListener("drop", async (event) => {
 
   draggedAgentId = null;
 });
+// ==========================================================
+// AGENT PROFILE
+// KEEP THIS AT TOP LEVEL — NOT INSIDE ANOTHER FUNCTION
+// ==========================================================
 
+function showAgentProfile(agent) {
+  if (!agent) return;
+
+  selectedAgent = agent;
+
+  document
+    .getElementById("agentProfileEmpty")
+    ?.classList.add("hidden");
+
+  document
+    .getElementById("agentProfile")
+    ?.classList.remove("hidden");
+
+
+  // BASIC PROFILE
+  setText(
+    "profileAvatar",
+    getInitials(getAgentDisplayName(agent))
+  );
+
+  setText(
+    "profileName",
+    getAgentDisplayName(agent)
+  );
+
+  setText(
+    "profileCoordinator",
+    agent.upline ||
+    agent.coordinator ||
+    "—"
+  );
+
+  setText(
+    "profileStatus",
+    agent.teamStatus ||
+    agent.status ||
+    "—"
+  );
+
+  setText(
+    "profileStage",
+    agent.stage || "—"
+  );
+
+  setText(
+    "profileCode",
+    agent.code || "—"
+  );
+
+  setText(
+    "profilePhone",
+    agent.phone || "—"
+  );
+
+  setText(
+    "profileEmail",
+    agent.email || "—"
+  );
+
+  setText(
+    "profileNextAction",
+    getNextAction(agent.stage)
+  );
+
+
+  // COMPLIANCE
+  setComplianceValue(
+    "profileResidentLicense",
+    agent.residentLicense
+  );
+
+  setComplianceValue(
+    "profileEO",
+    agent.eoStatus
+  );
+
+  setComplianceValue(
+    "profileAML",
+    agent.amlStatus
+  );
+
+  setComplianceValue(
+    "profileTevahFee",
+    agent.tevahPlatformFee
+  );
+
+
+  // MILESTONES
+  if (
+    typeof renderAgentMilestones === "function"
+  ) {
+    renderAgentMilestones(agent);
+  }
+}
 // ─── AGENTS PAGE ─────────────────────────────────────────────────────────────
 
 function renderAgentsPage() {
