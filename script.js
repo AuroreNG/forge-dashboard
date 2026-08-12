@@ -3028,6 +3028,60 @@ function getCoordinatorActionIcon(action) {
     </svg>
   `;
 }
+function getRecommendedActionIcon(title) {
+  const text = String(title || "").toLowerCase();
+
+  if (text.includes("welcome")) {
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="9" cy="8" r="3"/>
+        <path d="M3.5 19c.4-3.2 2.4-5 5.5-5s5.1 1.8 5.5 5"/>
+        <path d="M17 8v6"/>
+        <path d="M14 11h6"/>
+      </svg>
+    `;
+  }
+
+  if (text.includes("quiz") || text.includes("exam")) {
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 3h9l4 4v14H6z"/>
+        <path d="M15 3v5h4"/>
+        <path d="M9 12h6"/>
+        <path d="M9 16h4"/>
+      </svg>
+    `;
+  }
+
+  if (text.includes("follow") || text.includes("schedule")) {
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="16" rx="2"/>
+        <path d="M8 3v4"/>
+        <path d="M16 3v4"/>
+        <path d="M3 10h18"/>
+        <path d="m9 15 2 2 4-4"/>
+      </svg>
+    `;
+  }
+
+  if (text.includes("contract")) {
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 3h9l4 4v14H6z"/>
+        <path d="M15 3v5h4"/>
+        <path d="M9 13h6"/>
+        <path d="M9 17h4"/>
+      </svg>
+    `;
+  }
+
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M13 2 4 14h7l-1 8 9-12h-7z"/>
+    </svg>
+  `;
+}
 
 function renderCoordinatorActions(agent) {
   const container = document.getElementById("coordinatorActions");
@@ -3490,39 +3544,130 @@ function renderTodayQueue() {
   if (!queue) return;
 
   queue.innerHTML = "";
+
   const priorities = [];
 
   allAgents.forEach((agent) => {
+
     switch (agent.stage) {
+
       case "Not Placed":
-        priorities.push({ icon: "👋", priority: "High",   title: "Welcome " + agent.name, agent }); break;
+        priorities.push({
+          priority: "High",
+          title: "Welcome " + getAgentDisplayName(agent),
+          agent
+        });
+        break;
+
+
       case "Quiz Sent":
-        priorities.push({ icon: "📘", priority: "Medium", title: "Quiz Reminder",          agent }); break;
+        priorities.push({
+          priority: "Medium",
+          title: "Quiz Reminder",
+          agent
+        });
+        break;
+
+
       case "Licensed":
-        priorities.push({ icon: "🤝", priority: "High",   title: "Contract " + agent.name, agent }); break;
+        priorities.push({
+          priority: "High",
+          title: "Contract " + getAgentDisplayName(agent),
+          agent
+        });
+        break;
+
+
       case "Continuing Education":
-        priorities.push({ icon: "📚", priority: "High",   title: "CE Follow-Up",           agent }); break;
+        priorities.push({
+          priority: "High",
+          title: "CE Follow-Up",
+          agent
+        });
+        break;
     }
   });
 
-  priorities.forEach((task) => {
-    const card = document.createElement("div");
-    card.className = "queue-card";
-    card.innerHTML = `
-      <div>
-        <div class="queue-icon">${task.icon}</div>
-        <div><strong>${task.title}</strong><span>${task.priority} Priority</span></div>
-      </div>
-      <button>Open</button>
-    `;
-    card.querySelector("button").onclick = () => {
-      selectedAgent = task.agent;
-      showCommandProfile(task.agent);
-    };
-    queue.appendChild(card);
-  });
 
-  setText("todayCount", priorities.length + " Tasks");
+  // ========================================================
+  // EMPTY STATE
+  // ========================================================
+
+  if (priorities.length === 0) {
+
+    queue.innerHTML = `
+      <div class="queue-empty">
+        No recommended actions right now.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  // ========================================================
+  // RENDER ACTIONS
+  // ========================================================
+
+  priorities.forEach((task) => {
+
+    const row = document.createElement("div");
+
+    row.className = "queue-item";
+
+    row.innerHTML = `
+
+      <div class="queue-icon">
+        ${getRecommendedActionIcon(task.title)}
+      </div>
+
+      <div class="queue-copy">
+
+        <strong>
+          ${task.title}
+        </strong>
+
+        <span>
+          ${task.priority} priority
+        </span>
+
+      </div>
+
+      <button
+        type="button"
+        class="queue-open-btn"
+      >
+        Open
+      </button>
+    `;
+
+
+    // ======================================================
+    // OPEN AGENT
+    // ======================================================
+
+    row
+      .querySelector(".queue-open-btn")
+      ?.addEventListener(
+        "click",
+        () => {
+
+          selectedAgent = task.agent;
+
+          showCommandProfile(task.agent);
+
+          renderCommandAgentList();
+        }
+      );
+
+
+    queue.appendChild(row);
+  });
+ setText(
+    "todayCount",
+    priorities.length +
+      (priorities.length === 1 ? " Task" : " Tasks")
+  );
 }
 
 // ─── GUIDE MODAL ─────────────────────────────────────────────────────────────
