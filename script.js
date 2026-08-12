@@ -5180,12 +5180,12 @@ function renderGrowthCards(growthTeams) {
     };
 
 
-  const needsAttention =
-    growthTeams.filter(
-      (team) =>
-        team.progress < 25 ||
-        team.inactive > team.active
-    ).length;
+ const needsAttention =
+  growthTeams.filter(
+    (team) =>
+      getGrowthStatus(team) ===
+      "Needs Attention"
+  ).length;
 
 
   // ========================================================
