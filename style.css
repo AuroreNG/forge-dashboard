@@ -12526,5 +12526,379 @@ body {
   content: none !important;
   display: none !important;
 }
+/* =========================================================
+   AGENT PROFILE — MATCH REFERENCE LAYOUT
+   LEFT: COMPLIANCE
+   RIGHT: NEXT ACTION
+   BOTTOM: MILESTONES
+========================================================= */
 
+
+/* TWO-COLUMN MIDDLE ROW */
+#agentsPage .agent-middle-grid,
+#agentsPage .agent-intelligence-grid,
+#agentsPage .agent-action-layout {
+  display: grid !important;
+
+  grid-template-columns:
+    minmax(330px, 0.9fr)
+    minmax(520px, 1.5fr) !important;
+
+  gap: 16px !important;
+
+  width: 100% !important;
+
+  align-items: stretch !important;
+
+  margin: 0 0 14px !important;
+}
+
+
+/* =========================================================
+   COMPLIANCE — LEFT SIDE
+========================================================= */
+
+#agentsPage .profile-compliance-card {
+  width: 100% !important;
+  height: 100% !important;
+
+  margin: 0 !important;
+
+  padding: 18px !important;
+
+  background:
+    rgba(255,255,255,.86) !important;
+
+  border:
+    1px solid rgba(215,225,239,.92) !important;
+
+  border-radius:
+    16px !important;
+
+  box-shadow:
+    0 8px 24px rgba(31,62,108,.035) !important;
+
+  box-sizing: border-box !important;
+}
+
+
+#agentsPage .profile-compliance-card > h3 {
+  margin: 0 0 14px !important;
+
+  font-size: 18px !important;
+  font-weight: 760 !important;
+
+  color: #102747 !important;
+
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 8px !important;
+}
+
+
+/* 2 x 2 compliance grid */
+#agentsPage .compliance-grid {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr)) !important;
+
+  gap: 10px !important;
+
+  width: 100% !important;
+}
+
+
+#agentsPage .compliance-item {
+  min-height: 72px !important;
+
+  padding: 12px !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    40px minmax(0,1fr) 18px !important;
+
+  align-items: center !important;
+
+  gap: 9px !important;
+
+  background:
+    rgba(255,255,255,.92) !important;
+
+  border:
+    1px solid #dce5f1 !important;
+
+  border-radius:
+    12px !important;
+
+  box-sizing: border-box !important;
+}
+
+
+#agentsPage .compliance-icon {
+  width: 40px !important;
+  height: 40px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 10px !important;
+
+  background: #f1f6ff !important;
+  color: #1767ed !important;
+
+  font-size: 18px !important;
+}
+
+
+/* =========================================================
+   NEXT ACTION — RIGHT SIDE
+========================================================= */
+
+#agentsPage .agent-action-card {
+  position: relative !important;
+
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 220px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+
+  background-image:
+    url("./next-action.png") !important;
+
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-size: cover !important;
+
+  border:
+    1px solid rgba(205,217,235,.9) !important;
+
+  border-radius:
+    16px !important;
+
+  box-shadow:
+    0 8px 24px rgba(31,62,108,.035) !important;
+}
+
+
+/* actual left-side content */
+#agentsPage .agent-action-content {
+  position: relative !important;
+  z-index: 2 !important;
+
+  width: 48% !important;
+  min-height: 220px !important;
+
+  padding: 26px 28px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+
+  box-sizing: border-box !important;
+}
+
+
+#agentsPage .action-icon {
+  width: 54px !important;
+  height: 54px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+
+  background:
+    rgba(255,255,255,.92) !important;
+
+  border:
+    1px solid rgba(196,213,239,.9) !important;
+
+  color: #1767ed !important;
+
+  font-size: 23px !important;
+
+  box-shadow:
+    0 8px 20px rgba(31,85,173,.12) !important;
+}
+
+
+#agentsPage .action-copy h3 {
+  margin: 14px 0 7px !important;
+
+  color: #102747 !important;
+
+  font-size: 21px !important;
+  font-weight: 780 !important;
+}
+
+
+#agentsPage .action-copy p {
+  margin: 0 0 20px !important;
+
+  max-width: 300px !important;
+
+  color: #70819c !important;
+
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+
+  font-weight: 600 !important;
+}
+
+
+#agentsPage .open-command-btn {
+  width: 270px !important;
+  max-width: 100% !important;
+
+  height: 48px !important;
+
+  margin-top: auto !important;
+
+  padding: 0 18px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  border: 0 !important;
+  border-radius: 10px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1768ef,
+      #0754d6
+    ) !important;
+
+  color: #fff !important;
+
+  font-size: 14px !important;
+  font-weight: 700 !important;
+
+  white-space: nowrap !important;
+
+  box-shadow:
+    0 9px 20px rgba(18,88,204,.18) !important;
+}
+
+
+/* =========================================================
+   MILESTONES — FULL WIDTH UNDER BOTH
+========================================================= */
+
+#agentsPage .agent-progress-card {
+  width: 100% !important;
+
+  margin: 0 !important;
+
+  min-height: 145px !important;
+
+  padding: 22px 48px !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    90px
+    minmax(0,1fr)
+    90px
+    minmax(0,1fr) !important;
+
+  align-items: center !important;
+
+  background:
+    rgba(255,255,255,.86) !important;
+
+  border:
+    1px solid #dce5f1 !important;
+
+  border-radius:
+    16px !important;
+
+  box-sizing: border-box !important;
+}
+
+
+#agentsPage .agent-progress-step {
+  display: flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 12px !important;
+
+  text-align: left !important;
+}
+
+
+#agentsPage .progress-circle {
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+
+  background: #f0f4fb !important;
+
+  border: 1px solid #dfe7f2 !important;
+
+  font-size: 23px !important;
+}
+
+
+#agentsPage
+.agent-progress-step.completed
+.progress-circle {
+  background:
+    linear-gradient(
+      145deg,
+      #b9f2ce,
+      #92e8b0
+    ) !important;
+}
+
+
+#agentsPage .agent-progress-dot {
+  width: 100% !important;
+  height: 2px !important;
+
+  background: #dce4ef !important;
+}
+
+
+#agentsPage .agent-progress-dot.active-dot {
+  background: #1767ed !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1050px) {
+
+  #agentsPage .agent-middle-grid,
+  #agentsPage .agent-intelligence-grid,
+  #agentsPage .agent-action-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  #agentsPage .compliance-grid {
+    grid-template-columns:
+      repeat(2, minmax(0,1fr)) !important;
+  }
+}
 
