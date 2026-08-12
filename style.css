@@ -15258,3 +15258,7 @@ body {
       repeat(2, minmax(0, 1fr)) !important;
   }
 }
+#commandPage .quick-actions .whatsapp-action svg {
+  stroke: #25a55f !important;
+  stroke-width: 1.65 !important;
+}
