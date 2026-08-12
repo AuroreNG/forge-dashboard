@@ -9217,3 +9217,40 @@ body {
   position: relative !important;
   z-index: 2 !important;
 }
+
+/* =========================================================
+   NEXT ACTION — TARGET ACTUAL CARD AUTOMATICALLY
+========================================================= */
+
+#agentProfile section:has(#openCommandFromAgent),
+#agentProfile div:has(> #openCommandFromAgent) {
+  position: relative !important;
+  overflow: hidden !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.98) 0%,
+      rgba(255,255,255,.96) 45%,
+      rgba(255,255,255,.68) 62%,
+      rgba(244,249,255,.18) 100%
+    ),
+    url("./next-action.png") !important;
+
+  background-repeat: no-repeat !important;
+
+  background-position:
+    left center,
+    right center !important;
+
+  background-size:
+    100% 100%,
+    50% 100% !important;
+
+  border: 1px solid rgba(198,214,238,.75) !important;
+
+  border-radius: 20px !important;
+
+  box-shadow:
+    0 12px 30px rgba(35,75,140,.07) !important;
+}
