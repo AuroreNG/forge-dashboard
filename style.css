@@ -9406,3 +9406,60 @@ body {
   box-shadow:
     0 10px 22px rgba(20, 92, 217, .18) !important;
 }
+/* =========================================================
+   NEXT ACTION — SEAMLESS ARTWORK BLEND
+========================================================= */
+
+#agentsPage .agent-action-card::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  right: -1px;
+  bottom: 0;
+
+  /* let artwork extend farther left */
+  width: 62%;
+
+  background-image: url("./next-action.png");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: cover;
+
+  opacity: .96;
+
+  /* THIS removes the visible vertical edge */
+  -webkit-mask-image:
+    linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0,0,0,.08) 8%,
+      rgba(0,0,0,.30) 18%,
+      rgba(0,0,0,.65) 30%,
+      #000 46%,
+      #000 100%
+    );
+
+  mask-image:
+    linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0,0,0,.08) 8%,
+      rgba(0,0,0,.30) 18%,
+      rgba(0,0,0,.65) 30%,
+      #000 46%,
+      #000 100%
+    );
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+/* keep actual content above artwork */
+
+#agentsPage .agent-action-card > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
