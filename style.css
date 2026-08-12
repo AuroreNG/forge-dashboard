@@ -11902,3 +11902,99 @@ body {
       center !important;
   }
 }
+
+/* =========================================================
+   NEXT ACTION — FINAL PROPORTIONS
+========================================================= */
+
+#agentsPage .agent-action-card {
+  min-height: 245px !important;
+}
+
+#agentsPage .agent-action-content {
+  width: 50% !important;
+  min-height: 245px !important;
+
+  padding: 28px 30px !important;
+
+  justify-content: flex-start !important;
+}
+
+#agentsPage .action-copy {
+  width: 100% !important;
+}
+
+#agentsPage .action-copy h3 {
+  font-size: 22px !important;
+  margin: 16px 0 8px !important;
+}
+
+#agentsPage .action-copy p {
+  max-width: 330px !important;
+
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+
+  margin: 0 0 24px !important;
+}
+
+#agentsPage .open-command-btn {
+  width: 285px !important;
+  min-width: 285px !important;
+  max-width: 285px !important;
+
+  height: 52px !important;
+
+  margin-top: auto !important;
+
+  white-space: nowrap !important;
+
+  font-size: 14px !important;
+  line-height: 1 !important;
+}
+
+#agentsPage .open-command-btn span {
+  flex: 0 0 auto !important;
+}
+
+/* =========================================================
+   MILESTONE TRACKER — FINAL ALIGNMENT
+========================================================= */
+
+#agentsPage .agent-progress-card {
+  min-height: 175px !important;
+
+  padding: 28px 60px !important;
+
+  grid-template-columns:
+    1fr 90px 1fr 90px 1fr !important;
+}
+
+#agentsPage .agent-progress-step {
+  justify-content: center !important;
+}
+
+#agentsPage .agent-progress-dot {
+  width: 100% !important;
+  max-width: 90px !important;
+
+  justify-self: center !important;
+
+  height: 2px !important;
+
+  background: #d9e2ef !important;
+}
+
+#agentsPage .progress-circle {
+  width: 66px !important;
+  height: 66px !important;
+  min-width: 66px !important;
+}
+
+#agentsPage .progress-copy strong {
+  font-size: 16px !important;
+}
+
+#agentsPage .milestone-status {
+  margin-top: 3px !important;
+}
