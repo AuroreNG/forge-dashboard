@@ -5145,6 +5145,9 @@ function renderGrowthRows(growthTeams) {
 
   list.appendChild(row);
 });
+
+} // closes renderGrowthRows
+
 function renderGrowthCards(growthTeams) {
 
   const leadersWithDownline =
