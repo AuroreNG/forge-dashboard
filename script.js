@@ -2948,6 +2948,86 @@ setText(
   updateCommandInsights(agent);
   renderTodayQueue();
 }
+function getCoordinatorActionIcon(action) {
+
+  const title = String(
+    action.title ||
+    action.name ||
+    ""
+  ).toLowerCase();
+
+
+  // WELCOME / INTRODUCTION
+  if (
+    title.includes("welcome") ||
+    title.includes("introduce")
+  ) {
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="9" cy="8" r="3"/>
+        <path d="M3.5 19c.4-3.2 2.4-5 5.5-5s5.1 1.8 5.5 5"/>
+        <path d="M17 8v6"/>
+        <path d="M14 11h6"/>
+      </svg>
+    `;
+  }
+
+
+  // QUIZ / DOCUMENT
+  if (
+    title.includes("quiz") ||
+    title.includes("exam")
+  ) {
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 3h9l4 4v14H6z"/>
+        <path d="M15 3v5h4"/>
+        <path d="M9 12h6"/>
+        <path d="M9 16h4"/>
+      </svg>
+    `;
+  }
+
+
+  // FOLLOW-UP / CALENDAR
+  if (
+    title.includes("follow") ||
+    title.includes("schedule")
+  ) {
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="16" rx="2"/>
+        <path d="M8 3v4"/>
+        <path d="M16 3v4"/>
+        <path d="M3 10h18"/>
+        <path d="m9 15 2 2 4-4"/>
+      </svg>
+    `;
+  }
+
+
+  // CONTRACTING
+  if (title.includes("contract")) {
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 3h9l4 4v14H6z"/>
+        <path d="M15 3v5h4"/>
+        <path d="M9 13h6"/>
+        <path d="M9 17h4"/>
+      </svg>
+    `;
+  }
+
+
+  // DEFAULT ACTION
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 8v4"/>
+      <path d="M12 16h.01"/>
+    </svg>
+  `;
+}
 
 function renderCoordinatorActions(agent) {
   const container = document.getElementById("coordinatorActions");
@@ -2963,7 +3043,9 @@ function renderCoordinatorActions(agent) {
     row.innerHTML = `
       <div class="action-header">
         <div class="action-left">
-          <div class="action-icon">${action.icon}</div>
+          <div class="coordinator-action-icon">
+  ${getCoordinatorActionIcon(action)}
+        </div>
           <div>
             <strong>${action.title}</strong>
             <p>${action.desc || ""}</p>
