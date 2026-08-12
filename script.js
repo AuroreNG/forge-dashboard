@@ -719,7 +719,132 @@ function getMetrics(list) {
     activationRate
   };
 }
+// ─── METRICS ─────────────────────────────────────────────────────────────────
 
+function getMetrics(list) {
+  const totalTeam = list.length;
+
+  const pipeline =
+    list.filter((a) =>
+      pipelineStages.includes(a.stage)
+    ).length;
+
+  const licensed =
+    list.filter(
+      (a) =>
+        a.stage === "Licensed" ||
+        a.stage === "Contracted"
+    ).length;
+
+  const contracted =
+    list.filter(
+      (a) =>
+        a.stage === "Contracted"
+    ).length;
+
+  const licensingRate =
+    totalTeam > 0
+      ? Math.round((licensed / totalTeam) * 100)
+      : 0;
+
+  const contractingRate =
+    licensed > 0
+      ? Math.round((contracted / licensed) * 100)
+      : 0;
+
+  const activationRate =
+    totalTeam > 0
+      ? Math.round((contracted / totalTeam) * 100)
+      : 0;
+
+  return {
+    totalTeam,
+    pipeline,
+    licensed,
+    contracted,
+    licensingRate,
+    contractingRate,
+    activationRate
+  };
+}
+
+
+// IMPORTANT — THIS WAS MISSING
+function getVisibleAgents() {
+  return allAgents;
+}
+
+
+// ─── DASHBOARD ────────────────────────────────────────────────────────────────
+
+function renderDashboard(filter) {
+  const visibleAgents = getVisibleAgents();
+
+  let filtered = visibleAgents;
+
+  if (filter === "pipeline") {
+    filtered = visibleAgents.filter(
+      (a) => pipelineStages.includes(a.stage)
+    );
+  }
+
+  if (filter === "licensed") {
+    filtered = visibleAgents.filter(
+      (a) =>
+        a.stage === "Licensed" ||
+        a.stage === "Contracted"
+    );
+  }
+
+  if (filter === "contracted") {
+    filtered = visibleAgents.filter(
+      (a) => a.stage === "Contracted"
+    );
+  }
+
+  const filteredMetrics = getMetrics(filtered);
+  const allMetrics = getMetrics(visibleAgents);
+
+  setText("totalCount", filteredMetrics.totalTeam);
+  setText("pipelineCount", filteredMetrics.pipeline);
+  setText("licensedCount", filteredMetrics.licensed);
+  setText("contractedCount", filteredMetrics.contracted);
+
+  setText(
+    "licensingRate",
+    allMetrics.licensingRate + "%"
+  );
+
+  setText(
+    "contractingRate",
+    allMetrics.contractingRate + "%"
+  );
+
+  setText(
+    "licensingFraction",
+    `${allMetrics.licensed} / ${allMetrics.totalTeam}`
+  );
+
+  setText(
+    "contractingFraction",
+    `${allMetrics.contracted} / ${allMetrics.licensed}`
+  );
+
+  setRing(
+    "licensingRing",
+    allMetrics.licensingRate,
+    "#2563eb"
+  );
+
+  setRing(
+    "contractingRing",
+    allMetrics.contractingRate,
+    "#16a34a"
+  );
+
+  renderFocusList(visibleAgents);
+  renderPipelineBoard(visibleAgents);
+}
 // ─── DASHBOARD ────────────────────────────────────────────────────────────────
 
 function renderDashboard(filter) {
