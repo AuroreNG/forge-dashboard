@@ -13031,3 +13031,213 @@ body {
   box-shadow:
     0 9px 20px rgba(18,88,204,.18) !important;
 }
+
+/* =========================================================
+   NEXT ACTION — SLIMMER + SOFTER BACKGROUND
+========================================================= */
+
+#agentsPage .agent-action-card {
+  position: relative !important;
+
+  width: 100% !important;
+  height: 185px !important;
+  min-height: 185px !important;
+  max-height: 185px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+
+  border-radius: 16px !important;
+  border: 1px solid rgba(205, 218, 237, .85) !important;
+
+  /* FAINT THE IMAGE */
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.28),
+      rgba(255,255,255,.28)
+    ),
+    url("./next-action.png") !important;
+
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+
+  box-shadow:
+    0 8px 22px rgba(33, 63, 108, .035) !important;
+}
+
+
+/* LEFT CONTENT AREA */
+#agentsPage .agent-action-content {
+  position: relative !important;
+  z-index: 2 !important;
+
+  width: 48% !important;
+  height: 185px !important;
+  min-height: 185px !important;
+
+  padding: 18px 24px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* ICON — SMALLER */
+#agentsPage .action-icon {
+  width: 46px !important;
+  height: 46px !important;
+
+  flex: 0 0 46px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+
+  background: rgba(255,255,255,.90) !important;
+
+  border: 1px solid rgba(194, 211, 238, .85) !important;
+
+  color: #1767ed !important;
+
+  font-size: 20px !important;
+
+  box-shadow:
+    0 6px 15px rgba(27, 81, 168, .08) !important;
+}
+
+
+/* TITLE */
+#agentsPage .action-copy h3 {
+  margin: 10px 0 4px !important;
+
+  font-size: 19px !important;
+  line-height: 1.1 !important;
+
+  font-weight: 780 !important;
+
+  color: #102747 !important;
+}
+
+
+/* DESCRIPTION */
+#agentsPage .action-copy p {
+  margin: 0 !important;
+
+  max-width: 280px !important;
+
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+
+  font-weight: 600 !important;
+
+  color: #7486a1 !important;
+}
+
+
+/* BUTTON — SMALLER + BOTTOM */
+#agentsPage .open-command-btn {
+  width: 245px !important;
+  min-width: 245px !important;
+  max-width: 245px !important;
+
+  height: 42px !important;
+
+  margin-top: auto !important;
+
+  padding: 0 16px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  border: 0 !important;
+  border-radius: 9px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1768ef,
+      #0756da
+    ) !important;
+
+  color: white !important;
+
+  font-size: 13px !important;
+  font-weight: 700 !important;
+
+  white-space: nowrap !important;
+
+  box-shadow:
+    0 7px 16px rgba(19, 88, 203, .16) !important;
+}
+/* =========================================================
+   AGENT PROFILE — TALLER LIKE REFERENCE
+========================================================= */
+
+/* Main agent header/profile area */
+#agentsPage .agent-hero {
+  min-height: 125px !important;
+  padding: 22px 28px !important;
+}
+
+/* Bigger avatar */
+#agentsPage .agent-avatar {
+  width: 72px !important;
+  height: 72px !important;
+  min-width: 72px !important;
+
+  font-size: 24px !important;
+}
+
+/* Bigger agent name */
+#agentsPage .agent-hero h2,
+#agentsPage .agent-name {
+  font-size: 29px !important;
+  line-height: 1.15 !important;
+  font-weight: 780 !important;
+}
+
+/* Give the information section more breathing room */
+#agentsPage .agent-info-grid {
+  min-height: 180px !important;
+}
+
+/* =========================================================
+   COMPLIANCE + NEXT ACTION ROW
+   SHORTER LIKE THE REFERENCE
+========================================================= */
+
+#agentsPage .agent-lower-grid {
+  align-items: stretch !important;
+}
+
+/* Compliance and Next Action same height */
+#agentsPage .compliance-card,
+#agentsPage .agent-action-card {
+  height: 175px !important;
+  min-height: 175px !important;
+  max-height: 175px !important;
+}
+
+/* Next Action internal content */
+#agentsPage .agent-action-content {
+  height: 175px !important;
+  min-height: 175px !important;
+
+  padding: 17px 24px !important;
+}
+
+/* Smaller button */
+#agentsPage .open-command-btn {
+  width: 235px !important;
+  min-width: 235px !important;
+  height: 40px !important;
+}
