@@ -2123,20 +2123,68 @@ function renderAgentsPage() {
     allAgents.filter((agent) => {
 
       const name =
-        String(agent.name || "").toLowerCase();
+        String(
+          agent.name ||
+          getAgentDisplayName(agent) ||
+          ""
+        ).toLowerCase();
 
-      return name.includes(searchValue);
+      const upline =
+        String(
+          agent.upline ||
+          agent.coordinator ||
+          ""
+        ).toLowerCase();
+
+      const code =
+        String(
+          agent.code ||
+          ""
+        ).toLowerCase();
+
+      const email =
+        String(
+          agent.email ||
+          ""
+        ).toLowerCase();
+
+      const phone =
+        String(
+          agent.phone ||
+          ""
+        ).toLowerCase();
+
+      const stage =
+        String(
+          agent.stage ||
+          ""
+        ).toLowerCase();
+
+      const status =
+        String(
+          agent.teamStatus ||
+          agent.status ||
+          ""
+        ).toLowerCase();
+
+      return (
+        name.includes(searchValue) ||
+        upline.includes(searchValue) ||
+        code.includes(searchValue) ||
+        email.includes(searchValue) ||
+        phone.includes(searchValue) ||
+        stage.includes(searchValue) ||
+        status.includes(searchValue)
+      );
     });
 
   list.innerHTML = "";
-
 
   // ========================================================
   // NOTHING FOUND
   // ========================================================
 
   if (filteredAgents.length === 0) {
-
     list.innerHTML = `
       <div class="agents-empty">
         No agents found
@@ -2154,36 +2202,28 @@ function renderAgentsPage() {
     return;
   }
 
-
   // ========================================================
   // DETERMINE WHICH AGENT SHOULD BE OPEN
   // ========================================================
 
   let agentToShow = null;
 
-
-  // Keep the currently selected agent if it is still
-  // inside the filtered results.
   if (selectedAgent) {
-
     agentToShow =
       filteredAgents.find(
         (agent) =>
           String(agent.id) ===
           String(selectedAgent.id)
       ) || null;
-
   }
 
-
-  // Otherwise open the first visible agent.
   if (!agentToShow) {
     agentToShow = filteredAgents[0];
   }
 
-
   selectedAgent = agentToShow;
 
+  showAgentProfile(selectedAgent);
 
   // ========================================================
   // BUILD LEFT AGENT LIST
@@ -2197,16 +2237,13 @@ function renderAgentsPage() {
     item.className =
       "agent-list-item";
 
-
     const isSelected =
       String(agent.id) ===
       String(selectedAgent?.id);
 
-
     if (isSelected) {
       item.classList.add("active");
     }
-
 
     item.innerHTML = `
       <b>
@@ -2228,7 +2265,6 @@ function renderAgentsPage() {
       </span>
     `;
 
-
     item.addEventListener(
       "click",
       () => {
@@ -2236,7 +2272,9 @@ function renderAgentsPage() {
         selectedAgent = agent;
 
         document
-          .querySelectorAll(".agent-list-item")
+          .querySelectorAll(
+            "#agentsPage .agent-list-item"
+          )
           .forEach((row) =>
             row.classList.remove("active")
           );
@@ -2247,18 +2285,39 @@ function renderAgentsPage() {
       }
     );
 
-
     list.appendChild(item);
-
   });
+}
 
 
-  // ========================================================
-  // IMPORTANT:
-  // ALWAYS RENDER THE PROFILE AFTER BUILDING THE LIST
-  // ========================================================
+// ==========================================================
+// AGENTS SEARCH INPUT
+// ==========================================================
 
-  showAgentProfile(agentToShow);
+const agentsSearchInput =
+  document.getElementById("agentsSearch");
+
+if (agentsSearchInput) {
+
+  agentsSearchInput.addEventListener(
+    "input",
+    renderAgentsPage
+  );
+
+  agentsSearchInput.addEventListener(
+    "keydown",
+    (event) => {
+
+      if (event.key === "Escape") {
+
+        agentsSearchInput.value = "";
+
+        renderAgentsPage();
+
+        agentsSearchInput.blur();
+      }
+    }
+  );
 }
 
 /* =========================================================
