@@ -2154,7 +2154,7 @@ function showAgentProfile(agent) {
   );
 
   // TEMPORARILY DISABLED
-  // renderAgentMilestones(agent);
+   renderAgentMilestones(agent);
   // updateJourneyStatus(agent.stage);
 }
 
