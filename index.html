@@ -1827,6 +1827,120 @@ GROWTH PAGE
 <div class="growth-note">
   ⓘ Momentum reflects overall team growth activity and engagement.
 </div>
+  <!-- =========================================================
+TEAM INTELLIGENCE DRAWER
+========================================================= -->
+
+<div id="growthTeamDrawer" class="growth-team-drawer hidden">
+
+  <div class="growth-drawer-backdrop" id="closeGrowthDrawerBackdrop"></div>
+
+  <aside class="growth-drawer-panel">
+
+    <div class="growth-drawer-header">
+
+      <div>
+        <span class="growth-drawer-eyebrow">
+          Team Intelligence
+        </span>
+
+        <h2 id="growthDrawerLeader">
+          Leader
+        </h2>
+
+        <p id="growthDrawerSummary">
+          Organization overview
+        </p>
+      </div>
+
+      <button
+        type="button"
+        id="closeGrowthDrawer"
+        class="growth-drawer-close"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <!-- KPI SUMMARY -->
+    <div class="growth-drawer-kpis">
+
+      <div>
+        <span>Direct</span>
+        <strong id="growthDrawerDirect">0</strong>
+      </div>
+
+      <div>
+        <span>Organization</span>
+        <strong id="growthDrawerTotal">0</strong>
+      </div>
+
+      <div>
+        <span>Licensed</span>
+        <strong id="growthDrawerLicensed">0</strong>
+      </div>
+
+      <div>
+        <span>Contracted</span>
+        <strong id="growthDrawerContracted">0</strong>
+      </div>
+
+    </div>
+
+
+    <!-- PIPELINE BREAKDOWN -->
+    <section class="growth-drawer-section">
+
+      <div class="growth-drawer-section-head">
+        <h3>Pipeline Distribution</h3>
+        <span id="growthDrawerProgress">0%</span>
+      </div>
+
+      <div
+        id="growthDrawerPipeline"
+        class="growth-drawer-pipeline"
+      ></div>
+
+    </section>
+
+
+    <!-- DIRECT RECRUITS -->
+    <section class="growth-drawer-section">
+
+      <div class="growth-drawer-section-head">
+        <h3>Direct Recruits</h3>
+        <span id="growthDrawerDirectCount">0</span>
+      </div>
+
+      <div
+        id="growthDrawerDirectList"
+        class="growth-drawer-list"
+      ></div>
+
+    </section>
+
+
+    <!-- FULL ORGANIZATION -->
+    <section class="growth-drawer-section">
+
+      <div class="growth-drawer-section-head">
+        <h3>Organization</h3>
+        <span id="growthDrawerOrgCount">0</span>
+      </div>
+
+      <div
+        id="growthDrawerOrgList"
+        class="growth-drawer-list"
+      ></div>
+
+    </section>
+
+  </aside>
+
+</div>
 
 </section>
 
