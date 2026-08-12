@@ -9218,57 +9218,9 @@ body {
   z-index: 2 !important;
 }
 
-
 /* =========================================================
-   NEXT ACTION — SEAMLESS ARTWORK BLEND
+   NEXT ACTION — USE FULL IMAGE AS CARD BACKGROUND
 ========================================================= */
-
-#agentsPage .agent-action-card::after {
-  content: "";
-
-  position: absolute;
-
-  top: 0;
-  right: -1px;
-  bottom: 0;
-
-  /* let artwork extend farther left */
-  width: 62%;
-
-  background-image: url("./next-action.png");
-  background-repeat: no-repeat;
-  background-position: right center;
-  background-size: cover;
-
-  opacity: .96;
-
-  /* THIS removes the visible vertical edge */
-  -webkit-mask-image:
-    linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(0,0,0,.08) 8%,
-      rgba(0,0,0,.30) 18%,
-      rgba(0,0,0,.65) 30%,
-      #000 46%,
-      #000 100%
-    );
-
-  mask-image:
-    linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(0,0,0,.08) 8%,
-      rgba(0,0,0,.30) 18%,
-      rgba(0,0,0,.65) 30%,
-      #000 46%,
-      #000 100%
-    );
-
-  pointer-events: none;
-  z-index: 0;
-}
-
 
 #agentsPage .agent-action-card {
   position: relative !important;
@@ -9277,14 +9229,119 @@ body {
   min-height: 230px !important;
   padding: 28px 30px !important;
 
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+
+  /* ENTIRE IMAGE COVERS THE WHOLE CARD */
   background-image: url("./next-action.png") !important;
   background-repeat: no-repeat !important;
   background-position: center center !important;
   background-size: cover !important;
 
-  border: 1px solid #d7e3f4 !important;
+  border: 1px solid rgba(201, 215, 236, .78) !important;
   border-radius: 22px !important;
 
   box-shadow:
-    0 10px 28px rgba(39, 77, 140, 0.06) !important;
+    0 10px 30px rgba(27, 59, 110, .05) !important;
+}
+
+
+/* REMOVE OLD SEPARATE IMAGE LAYERS */
+
+#agentsPage .agent-action-card::before,
+#agentsPage .agent-action-card::after {
+  display: none !important;
+  content: none !important;
+}
+
+
+/* KEEP CONTENT ABOVE BACKGROUND */
+
+#agentsPage .agent-action-card > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+
+/* ICON */
+
+#agentsPage .agent-action-card .action-icon {
+  width: 58px !important;
+  height: 58px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+
+  background: rgba(255,255,255,.82) !important;
+
+  color: #1765e8 !important;
+
+  border: 1px solid rgba(193,211,239,.85) !important;
+
+  box-shadow:
+    0 8px 20px rgba(33,91,188,.10) !important;
+
+  font-size: 25px !important;
+}
+
+
+/* TITLE */
+
+#agentsPage .agent-action-card h3 {
+  margin: 16px 0 8px !important;
+
+  color: #102747 !important;
+
+  font-size: 22px !important;
+  font-weight: 800 !important;
+}
+
+
+/* DESCRIPTION */
+
+#agentsPage .agent-action-card p {
+  max-width: 330px !important;
+
+  margin: 0 0 26px !important;
+
+  color: #6f819d !important;
+
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+
+  font-weight: 600 !important;
+}
+
+
+/* BUTTON */
+
+#agentsPage .agent-action-card .open-command-btn {
+  width: 285px !important;
+  height: 52px !important;
+
+  margin-top: auto !important;
+
+  padding: 0 22px !important;
+
+  border: 0 !important;
+  border-radius: 11px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1769ef,
+      #0755d7
+    ) !important;
+
+  color: white !important;
+
+  font-size: 14px !important;
+  font-weight: 700 !important;
+
+  box-shadow:
+    0 10px 22px rgba(20,92,217,.18) !important;
 }
