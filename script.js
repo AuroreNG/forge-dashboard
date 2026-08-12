@@ -5035,36 +5035,127 @@ function renderGrowthRows(growthTeams) {
 }
 
 function renderGrowthCards(growthTeams) {
-  const totalTeams  = growthTeams.length;
-  const avgProgress = totalTeams
-    ? Math.round(growthTeams.reduce((sum, t) => sum + t.progress, 0) / totalTeams)
-    : 0;
 
-  const topTeam = growthTeams[0] || { name: "No Team", progress: 0, active: 0, licensed: 0, contracted: 0, inactive: 0 };
+  const leadersWithDownline =
+    growthTeams.length;
+
+  const organizationSize =
+    allAgents.length;
+
+  const avgProgress =
+    leadersWithDownline
+      ? Math.round(
+          growthTeams.reduce(
+            (sum, team) =>
+              sum + team.progress,
+            0
+          ) /
+          leadersWithDownline
+        )
+      : 0;
+
+
+  const topTeam =
+    growthTeams[0] || {
+      leader: "No Leader",
+      name: "No Organization",
+      progress: 0,
+      direct: 0,
+      total: 0,
+      active: 0,
+      licensed: 0,
+      contracted: 0,
+      inactive: 0
+    };
+
 
   const needsAttention =
-  growthTeams.filter(
-    (team) =>
-      team.progress < 25 ||
-      team.inactive > team.active
-  ).length;
+    growthTeams.filter(
+      (team) =>
+        team.progress < 25 ||
+        team.inactive > team.active
+    ).length;
 
-  setText("growthTotalTeams",   totalTeams);
-  setText("growthAvgMomentum",  avgProgress);
-  setText("growthTopTeam",      topTeam.name);
-  setText("growthTopMomentum",  `Progress ${topTeam.progress}%`);
-  setText("growthNeedsAttention", needsAttention);
 
-  setText("spotlightTeamName",  topTeam.name);
-  setText("spotlightMomentum",  `${topTeam.progress}%`);
-  setText("spotlightTrend",     "#1 Ranked Team");
-  setText("spotlightMessage",   `${topTeam.contracted} contracted • ${topTeam.licensed} licensed • ${topTeam.active} active`);
-  setText("spotlightReason1",   `${topTeam.active} Active Agents`);
-  setText("spotlightReason2",   `${topTeam.licensed} Licensed Agents`);
-  setText("spotlightReason3",   `${topTeam.contracted} Contracted Agents`);
-  setText("growthTrend",        `${avgProgress}% average across all teams`);
+  // ========================================================
+  // TOP KPI CARDS
+  // ========================================================
+
+  setText(
+    "growthTotalTeams",
+    organizationSize
+  );
+
+  setText(
+    "growthAvgMomentum",
+    avgProgress
+  );
+
+  setText(
+    "growthTopTeam",
+    topTeam.leader
+  );
+
+  setText(
+    "growthTopMomentum",
+    `Progress ${topTeam.progress}%`
+  );
+
+  setText(
+    "growthNeedsAttention",
+    needsAttention
+  );
+
+
+  // ========================================================
+  // SPOTLIGHT
+  // ========================================================
+
+  setText(
+    "spotlightTeamName",
+    topTeam.leader
+  );
+
+  setText(
+    "spotlightMomentum",
+    `${topTeam.progress}%`
+  );
+
+  setText(
+    "spotlightTrend",
+    "#1 Ranked Organization"
+  );
+
+  setText(
+    "spotlightMessage",
+    `${topTeam.total} total • ${topTeam.direct} direct • ${topTeam.licensed} licensed • ${topTeam.contracted} contracted`
+  );
+
+  setText(
+    "spotlightReason1",
+    `${topTeam.total} Organization Members`
+  );
+
+  setText(
+    "spotlightReason2",
+    `${topTeam.licensed} Licensed`
+  );
+
+  setText(
+    "spotlightReason3",
+    `${topTeam.contracted} Contracted`
+  );
+
+
+  // ========================================================
+  // AVERAGE TREND
+  // ========================================================
+
+  setText(
+    "growthTrend",
+    `${avgProgress}% average across ${leadersWithDownline} leaders`
+  );
 }
-
 // ─── STAGE MESSAGE TEMPLATES ─────────────────────────────────────────────────
 
 function getStageMessageTemplate(stage, method, agent) {
