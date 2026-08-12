@@ -4979,109 +4979,91 @@ function renderGrowthRows(growthTeams) {
 
 
   growthTeams.forEach((team, index) => {
+  const status = getGrowthStatus(team);
 
-    const status =
-      getGrowthStatus(team);
+  const row = document.createElement("div");
+  row.className = "growth-table-row";
 
-    const row =
-      document.createElement("div");
+  row.innerHTML = `
+    <div class="rank">
+      ${index + 1}
+    </div>
 
-    row.className =
-      "growth-table-row";
+    <div class="team-name">
+      <strong>${team.leader}</strong>
 
-    row.innerHTML = `
-      <div class="rank">
-        ${index + 1}
-      </div>
+      <small>
+        ${team.direct} direct • ${team.total} organization
+      </small>
+    </div>
 
-      <div class="team-name">
-        <strong>
-          ${team.leader}
-        </strong>
+    <div class="momentum-cell">
+      <strong>${team.progress}%</strong>
 
-        <small>
-          ${team.direct} direct recruit${
-            team.direct === 1 ? "" : "s"
-          }
-        </small>
-      </div>
-
-      <div class="momentum-cell">
-
-        <strong>
-          ${team.progress}%
-        </strong>
-
-        <span class="momentum-bar">
-          <span
-            class="momentum-fill"
-            style="width:${team.progress}%"
-          ></span>
-        </span>
-
-      </div>
-
-      <div class="growth-number">
-        ${team.direct}
-      </div>
-
-      <div class="growth-number organization-number">
-        ${team.total}
-      </div>
-
-      <div class="growth-number">
-        ${team.licensed}
-      </div>
-
-      <div class="growth-number">
-        ${team.contracted}
-      </div>
-
-      <div>
+      <span class="momentum-bar">
         <span
-          class="status-pill ${
-            status
-              .toLowerCase()
-              .replaceAll(" ", "-")
-          }"
-        >
-          ${status}
-        </span>
-      </div>
+          class="momentum-fill"
+          style="width:${team.progress}%"
+        ></span>
+      </span>
+    </div>
 
-      <div>
-        <button
-          type="button"
-          class="growth-view-team-btn"
-          data-leader-id="${team.leaderId}"
-        >
-          View
-        </button>
-      </div>
-    `;
+    <div class="growth-number">
+      ${team.direct}
+    </div>
 
+    <button
+      type="button"
+      class="growth-number growth-org-button"
+      data-leader-id="${team.leaderId}"
+    >
+      ${team.total}
+    </button>
 
-    row
-      .querySelector(".growth-view-team-btn")
-      ?.addEventListener(
-        "click",
-        () => {
+    <div class="growth-number">
+      ${team.licensed}
+    </div>
 
-          console.log(
-            "Selected Growth Team:",
-            team
-          );
+    <div class="growth-number">
+      ${team.contracted}
+    </div>
 
-          // We will connect this to the
-          // Team Intelligence panel next.
-          openGrowthTeamDrawer(team);
-        }
-      );
+    <div>
+      <span
+        class="status-pill ${
+          status
+            .toLowerCase()
+            .replaceAll(" ", "-")
+        }"
+      >
+        ${status}
+      </span>
+    </div>
 
+    <div>
+      <button
+        type="button"
+        class="growth-view-team-btn"
+      >
+        View
+      </button>
+    </div>
+  `;
 
-    list.appendChild(row);
-  });
-}
+  row
+    .querySelector(".growth-view-team-btn")
+    ?.addEventListener("click", () => {
+      openGrowthTeamDrawer(team);
+    });
+
+  row
+    .querySelector(".growth-org-button")
+    ?.addEventListener("click", () => {
+      openGrowthTeamDrawer(team);
+    });
+
+  list.appendChild(row);
+});
 function renderGrowthCards(growthTeams) {
 
   const leadersWithDownline =
