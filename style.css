@@ -12323,3 +12323,206 @@ body {
     width: 100% !important;
   }
 }
+
+/* =========================================================
+   NEXT ACTION — ACTUAL HTML STRUCTURE
+========================================================= */
+
+#agentsPage .agent-action-card {
+  position: relative !important;
+
+  width: 100% !important;
+  min-height: 220px !important;
+
+  margin: 14px 0 18px !important;
+  padding: 28px 30px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+
+  box-sizing: border-box !important;
+
+  overflow: hidden !important;
+
+  border: 1px solid rgba(200, 215, 236, .85) !important;
+  border-radius: 20px !important;
+
+  background-image: url("./next-action.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-size: cover !important;
+
+  box-shadow:
+    0 10px 30px rgba(31, 62, 106, .05) !important;
+}
+
+
+/* ICON */
+
+#agentsPage .agent-action-card .action-icon {
+  width: 52px !important;
+  height: 52px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 52px !important;
+
+  border-radius: 50% !important;
+
+  background: rgba(255,255,255,.92) !important;
+
+  border: 1px solid rgba(192, 211, 238, .9) !important;
+
+  color: #1767ed !important;
+
+  font-size: 23px !important;
+
+  box-shadow:
+    0 8px 20px rgba(28, 84, 172, .12) !important;
+}
+
+
+/* TITLE */
+
+#agentsPage .agent-action-card > h3 {
+  position: relative !important;
+  z-index: 2 !important;
+
+  width: 42% !important;
+
+  margin: 16px 0 7px !important;
+
+  color: #102747 !important;
+
+  font-size: 22px !important;
+  line-height: 1.1 !important;
+
+  font-weight: 780 !important;
+}
+
+
+/* DESCRIPTION */
+
+#agentsPage .agent-action-card > p {
+  position: relative !important;
+  z-index: 2 !important;
+
+  width: 42% !important;
+  max-width: 350px !important;
+
+  margin: 0 0 22px !important;
+
+  color: #6f819d !important;
+
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+
+  font-weight: 600 !important;
+}
+
+
+/* BUTTON */
+
+#agentsPage .agent-action-card .open-command-btn {
+  position: relative !important;
+  z-index: 2 !important;
+
+  width: 285px !important;
+  min-width: 285px !important;
+  max-width: 285px !important;
+
+  height: 50px !important;
+
+  margin-top: auto !important;
+
+  padding: 0 20px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  border: none !important;
+  border-radius: 10px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1768ef,
+      #0754d6
+    ) !important;
+
+  color: white !important;
+
+  font-size: 14px !important;
+  line-height: 1 !important;
+  font-weight: 700 !important;
+
+  white-space: nowrap !important;
+
+  box-shadow:
+    0 9px 21px rgba(19, 88, 203, .20) !important;
+}
+
+
+#agentsPage .agent-action-card .open-command-btn span {
+  flex: 0 0 auto !important;
+
+  margin-left: 20px !important;
+
+  font-size: 17px !important;
+}
+
+/* =========================================================
+   COMPLIANCE — ACTUAL HTML
+========================================================= */
+
+#agentsPage .profile-compliance-card {
+  width: 100% !important;
+
+  margin: 18px 0 0 !important;
+  padding: 0 !important;
+
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+
+#agentsPage .profile-compliance-card > h3 {
+  margin: 0 0 14px !important;
+
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 8px !important;
+
+  color: #102747 !important;
+
+  font-size: 19px !important;
+  line-height: 1.2 !important;
+
+  font-weight: 770 !important;
+}
+
+
+/* Add clean blue shield */
+#agentsPage .profile-compliance-card > h3::before {
+  content: "♢";
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  color: #1767ed !important;
+
+  font-size: 20px !important;
+  line-height: 1 !important;
+}
+#agentsPage .profile-compliance-card::before,
+#agentsPage .profile-compliance-card::after {
+  content: none !important;
+  display: none !important;
+}
