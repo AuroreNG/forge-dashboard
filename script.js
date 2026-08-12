@@ -2801,7 +2801,45 @@ function renderCommandPagination(total) {
     </div>
   `;
 }
+// ==========================================================
+// OPEN COMMAND CENTER FROM AGENT PROFILE
+// ==========================================================
 
+document
+  .getElementById("openCommandFromAgent")
+  ?.addEventListener("click", () => {
+
+    if (!selectedAgent) return;
+
+    // Keep the same agent selected
+    const agentToOpen = selectedAgent;
+
+    // Open Command page
+    showPage("Command");
+
+    // Update top navigation
+    document
+      .querySelectorAll(".nav-btn")
+      .forEach((btn) => {
+        btn.classList.toggle(
+          "active",
+          btn.textContent.trim() === "Command"
+        );
+      });
+
+    // Keep selected agent available to Command Center
+    selectedAgent = agentToOpen;
+
+    // Render Command page if function exists
+    if (typeof renderCommandPage === "function") {
+      renderCommandPage();
+    }
+
+    // Open this specific agent in Command Center
+    if (typeof showCommandProfile === "function") {
+      showCommandProfile(agentToOpen);
+    }
+  });
 // ─── COMMAND PROFILE ─────────────────────────────────────────────────────────
 
 const coordinatorActionMap = {
