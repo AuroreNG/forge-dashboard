@@ -2014,150 +2014,154 @@ function renderAgentsPage() {
   const list = document.getElementById("agentsList");
   if (!list) return;
 
-  const searchValue   = document.getElementById("agentsSearch")?.value.toLowerCase() || "";
-  const filteredAgents = allAgents.filter((a) => a.name.toLowerCase().includes(searchValue));
+  const searchValue =
+    String(
+      document.getElementById("agentsSearch")?.value || ""
+    )
+      .trim()
+      .toLowerCase();
+
+  const filteredAgents =
+    allAgents.filter((agent) => {
+
+      const name =
+        String(agent.name || "").toLowerCase();
+
+      return name.includes(searchValue);
+    });
 
   list.innerHTML = "";
 
-  filteredAgents.forEach((agent, index) => {
-    const item = document.createElement("div");
-    item.className = "agent-list-item";
 
-    // FIX 2: only auto-select the first agent when no agent is currently selected
-    const isSelected = selectedAgent
-      ? selectedAgent.name === agent.name
-      : index === 0;
+  // ========================================================
+  // NOTHING FOUND
+  // ========================================================
+
+  if (filteredAgents.length === 0) {
+
+    list.innerHTML = `
+      <div class="agents-empty">
+        No agents found
+      </div>
+    `;
+
+    document
+      .getElementById("agentProfile")
+      ?.classList.add("hidden");
+
+    document
+      .getElementById("agentProfileEmpty")
+      ?.classList.remove("hidden");
+
+    return;
+  }
+
+
+  // ========================================================
+  // DETERMINE WHICH AGENT SHOULD BE OPEN
+  // ========================================================
+
+  let agentToShow = null;
+
+
+  // Keep the currently selected agent if it is still
+  // inside the filtered results.
+  if (selectedAgent) {
+
+    agentToShow =
+      filteredAgents.find(
+        (agent) =>
+          String(agent.id) ===
+          String(selectedAgent.id)
+      ) || null;
+
+  }
+
+
+  // Otherwise open the first visible agent.
+  if (!agentToShow) {
+    agentToShow = filteredAgents[0];
+  }
+
+
+  selectedAgent = agentToShow;
+
+
+  // ========================================================
+  // BUILD LEFT AGENT LIST
+  // ========================================================
+
+  filteredAgents.forEach((agent) => {
+
+    const item =
+      document.createElement("div");
+
+    item.className =
+      "agent-list-item";
+
+
+    const isSelected =
+      String(agent.id) ===
+      String(selectedAgent?.id);
+
 
     if (isSelected) {
       item.classList.add("active");
-      if (!selectedAgent || index === 0) showAgentProfile(agent);
     }
 
+
     item.innerHTML = `
-      <b>${agent.name}</b>
+      <b>
+        ${getAgentDisplayName(agent)}
+      </b>
+
       <span>
-       ${agent.upline || agent.coordinator || "No upline"}
-        <small class="stage-dot ${getStageColor(agent.stage)}"></small>
-        ${agent.stage}
+        ${
+          agent.upline ||
+          agent.coordinator ||
+          "No upline"
+        }
+
+        <small
+          class="stage-dot ${getStageColor(agent.stage)}"
+        ></small>
+
+        ${agent.stage || "Not Placed"}
       </span>
     `;
 
-    item.onclick = () => {
-      document.querySelectorAll(".agent-list-item").forEach((row) => row.classList.remove("active"));
-      item.classList.add("active");
-      showAgentProfile(agent);
-    };
+
+    item.addEventListener(
+      "click",
+      () => {
+
+        selectedAgent = agent;
+
+        document
+          .querySelectorAll(".agent-list-item")
+          .forEach((row) =>
+            row.classList.remove("active")
+          );
+
+        item.classList.add("active");
+
+        showAgentProfile(agent);
+      }
+    );
+
 
     list.appendChild(item);
+
   });
+
+
+  // ========================================================
+  // IMPORTANT:
+  // ALWAYS RENDER THE PROFILE AFTER BUILDING THE LIST
+  // ========================================================
+
+  showAgentProfile(agentToShow);
 }
-
-document.getElementById("agentsSearch")?.addEventListener("input", renderAgentsPage);
-
-document.getElementById("viewAgents")?.addEventListener("click", () => {
-  showPage("Agents");
-  document.querySelectorAll(".nav-btn").forEach((btn) =>
-    btn.classList.toggle("active", btn.textContent.trim() === "Agents")
-  );
-  renderAgentsPage();
-});
-
-// ─── AGENT PROFILE ───────────────────────────────────────────────────────────
-
-function showAgentProfile(agent) {
-  selectedAgent = agent;
-
-  document
-    .getElementById("agentProfileEmpty")
-    ?.classList.add("hidden");
-
-  document
-    .getElementById("agentProfile")
-    ?.classList.remove("hidden");
-
-
-  // ========================================================
-  // BASIC PROFILE
-  // ========================================================
-
-  setText(
-    "profileAvatar",
-    getInitials(
-      getAgentDisplayName(agent)
-    )
-  );
-
-  setText(
-    "profileName",
-    getAgentDisplayName(agent)
-  );
-
-  setText(
-    "profileCoordinator",
-    agent.upline ||
-    agent.coordinator ||
-    "—"
-  );
-
-  setText(
-    "profileStatus",
-    agent.teamStatus || "—"
-  );
-
-  setText(
-    "profileStage",
-    agent.stage || "—"
-  );
-
-  setText(
-    "profileCode",
-    agent.code || "—"
-  );
-
-  setText(
-    "profilePhone",
-    agent.phone || "—"
-  );
-
-  setText(
-    "profileEmail",
-    agent.email || "—"
-  );
-
-  setText(
-    "profileNextAction",
-    getNextAction(agent.stage)
-  );
-
-
-  // ========================================================
-  // COMPLIANCE
-  // ========================================================
-  setComplianceValue(
-    "profileResidentLicense",
-    agent.residentLicense
-  );
-
-  setComplianceValue(
-    "profileEO",
-    agent.eoStatus
-  );
-
-  setComplianceValue(
-    "profileAML",
-    agent.amlStatus
-  );
-
-  setComplianceValue(
-    "profileTevahFee",
-    agent.tevahPlatformFee
-  );
-
-  // TEMPORARILY DISABLED
-   renderAgentMilestones(agent);
-  // updateJourneyStatus(agent.stage);
-}
-
 
 /* =========================================================
    AGENT PROFILE — MILESTONE PROGRESS
