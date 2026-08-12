@@ -2408,21 +2408,36 @@ function renderAgentMilestones(agent) {
   if (!agent) return;
 
 
-  // -------------------------------------------------------
+  const normalizedStage =
+    String(
+      agent.stage ||
+      agent.pipelineStage ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
+
+
+  // ========================================================
   // LAUNCHED
-  // Uses the real recruit date from your agent data
-  // -------------------------------------------------------
+  // Recruit date is the actual launch date.
+  // ========================================================
 
   const launchDate =
-    getLaunchDate(agent);
+    agent.recruitDate ||
+    agent.recruit_date ||
+    agent.recruitDateCST ||
+    "";
 
-  if (launchDate) {
+  const launched =
+    Boolean(launchDate);
+
+
+  if (launched) {
 
     renderCompletedMilestone(
       "profileLaunchState",
-      formatMilestoneDate(
-        launchDate
-      )
+      formatMilestoneDate(launchDate)
     );
 
   } else {
@@ -2433,13 +2448,14 @@ function renderAgentMilestones(agent) {
   }
 
 
-  // -------------------------------------------------------
+  // ========================================================
   // LICENSED
-  // Contracted also means Licensed has been completed
-  // -------------------------------------------------------
+  // ========================================================
 
   const licensed =
-    isLicensedAgent(agent);
+    normalizedStage === "licensed" ||
+    normalizedStage === "contracted";
+
 
   if (licensed) {
 
@@ -2456,12 +2472,13 @@ function renderAgentMilestones(agent) {
   }
 
 
-  // -------------------------------------------------------
+  // ========================================================
   // CONTRACTED
-  // -------------------------------------------------------
+  // ========================================================
 
   const contracted =
-    isContractedAgent(agent);
+    normalizedStage === "contracted";
+
 
   if (contracted) {
 
@@ -2478,15 +2495,15 @@ function renderAgentMilestones(agent) {
   }
 
 
-  // -------------------------------------------------------
-  // VISUAL COMPLETION STATES
-  // -------------------------------------------------------
+  // ========================================================
+  // VISUAL STATES
+  // ========================================================
 
   document
     .getElementById("statusOne")
     ?.classList.toggle(
       "completed",
-      Boolean(launchDate)
+      launched
     );
 
   document
@@ -2502,8 +2519,31 @@ function renderAgentMilestones(agent) {
       "completed",
       contracted
     );
-}
 
+
+  // ========================================================
+  // CONNECTOR LINES
+  // ========================================================
+
+  const dots =
+    document.querySelectorAll(
+      "#agentsPage .agent-progress-dot"
+    );
+
+  if (dots[0]) {
+    dots[0].classList.toggle(
+      "active-dot",
+      licensed
+    );
+  }
+
+  if (dots[1]) {
+    dots[1].classList.toggle(
+      "active-dot",
+      contracted
+    );
+  }
+}
 // ==========================================================
 // SAFE AGENT DISPLAY NAME
 // Prevents an email address from being shown as the agent name.
@@ -2540,52 +2580,32 @@ function getAgentDisplayName(agent) {
 }
 
 
-// ==========================================================
-// AGENT PROFILE - COMPLIANCE STATUS
-// ==========================================================
-
 function setComplianceValue(elementId, value) {
   const el = document.getElementById(elementId);
+
   if (!el) return;
 
-  const normalized =
-    String(value || "").trim().toLowerCase();
+  const cleanValue =
+    String(value || "")
+      .trim();
 
-  // Default text
-  let displayValue = value || "—";
+  const hasValue =
+    cleanValue !== "" &&
+    cleanValue !== "—" &&
+    cleanValue.toLowerCase() !== "pending" &&
+    cleanValue.toLowerCase() !== "none" &&
+    cleanValue.toLowerCase() !== "no";
 
-  // Remove old status classes
-  el.classList.remove(
-    "compliance-active",
-    "compliance-warning",
-    "compliance-empty"
+  el.textContent =
+    cleanValue || "—";
+
+  const card =
+    el.closest(".compliance-item");
+
+  card?.classList.toggle(
+    "completed",
+    hasValue
   );
-
-  // Active = green
-  if (normalized === "active") {
-    displayValue = "✓ Active";
-    el.classList.add("compliance-active");
-  }
-
-  // Expired / inactive = warning
-  else if (
-    normalized === "expired" ||
-    normalized === "inactive"
-  ) {
-    displayValue = "⚠ " + value;
-    el.classList.add("compliance-warning");
-  }
-
-  // Blank / -- = neutral
-  else if (
-    !normalized ||
-    normalized === "--"
-  ) {
-    displayValue = "—";
-    el.classList.add("compliance-empty");
-  }
-
-  el.textContent = displayValue;
 }
 
 
