@@ -9865,3 +9865,350 @@ body {
 
   transform: none !important;
 }
+/* =========================================================
+   AGENT PROFILE — STEP 1
+   HERO + AGENT INFORMATION ONLY
+========================================================= */
+
+
+/* RIGHT PROFILE CONTAINER */
+#agentsPage .agent-profile {
+  min-width: 0 !important;
+  padding: 16px !important;
+
+  background: rgba(255,255,255,.82) !important;
+
+  border: 1px solid rgba(214,224,239,.85) !important;
+  border-radius: 22px !important;
+
+  box-shadow:
+    0 16px 45px rgba(31,61,109,.055) !important;
+
+  overflow: hidden !important;
+}
+
+
+#agentsPage #agentProfile {
+  width: 100% !important;
+  min-width: 0 !important;
+
+  display: block !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  background: transparent !important;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+#agentsPage .agent-hero {
+  position: relative !important;
+
+  width: 100% !important;
+  min-height: 116px !important;
+
+  padding: 22px 30px !important;
+  margin: 0 0 16px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  border-radius: 18px !important;
+
+  background:
+    linear-gradient(
+      110deg,
+      rgba(248,251,255,.98) 0%,
+      rgba(244,248,255,.96) 46%,
+      rgba(234,243,255,.92) 100%
+    ) !important;
+
+  border: 1px solid rgba(216,226,242,.75) !important;
+
+  box-sizing: border-box !important;
+}
+
+
+#agentsPage .agent-hero-left {
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 20px !important;
+
+  min-width: 0 !important;
+}
+
+
+/* AVATAR */
+#agentsPage .agent-hero-avatar {
+  width: 72px !important;
+  height: 72px !important;
+
+  min-width: 72px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      #216be8,
+      #0a3c99
+    ) !important;
+
+  color: #fff !important;
+
+  font-size: 20px !important;
+  font-weight: 750 !important;
+
+  box-shadow:
+    0 10px 22px rgba(25,91,202,.17) !important;
+}
+
+
+/* AGENT NAME */
+#agentsPage .agent-hero-copy {
+  min-width: 0 !important;
+}
+
+
+#agentsPage .agent-hero-copy h1 {
+  margin: 0 !important;
+
+  color: #102342 !important;
+
+  font-size: 30px !important;
+  line-height: 1.1 !important;
+
+  font-weight: 780 !important;
+
+  letter-spacing: -.7px !important;
+
+  white-space: normal !important;
+}
+
+
+/* WE DO NOT NEED META UNDER NAME */
+#agentsPage #profileMeta {
+  display: none !important;
+}
+
+
+/* HERO BUTTONS */
+#agentsPage .agent-hero-actions {
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 9px !important;
+
+  flex-shrink: 0 !important;
+}
+
+
+#agentsPage .edit-agent-btn {
+  width: auto !important;
+  min-width: 112px !important;
+  height: 44px !important;
+
+  padding: 0 18px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 7px !important;
+
+  border: 0 !important;
+  border-radius: 10px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1766e9,
+      #084497
+    ) !important;
+
+  color: white !important;
+
+  font-size: 12px !important;
+  font-weight: 700 !important;
+
+  box-shadow:
+    0 8px 18px rgba(19,79,173,.16) !important;
+}
+
+
+#agentsPage .profile-more-btn {
+  width: 44px !important;
+  height: 44px !important;
+
+  padding: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 1px solid #dbe4f0 !important;
+  border-radius: 10px !important;
+
+  background: rgba(255,255,255,.9) !important;
+
+  color: #526984 !important;
+
+  font-size: 20px !important;
+}
+
+
+/* =========================================================
+   AGENT INFORMATION — 3 × 2 GRID
+========================================================= */
+
+#agentsPage .agent-information-card {
+  width: 100% !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr)) !important;
+
+  gap: 12px !important;
+
+  padding: 0 !important;
+  margin: 0 0 20px !important;
+
+  background: transparent !important;
+
+  border: 0 !important;
+
+  box-shadow: none !important;
+}
+
+
+/* REMOVE ALL OLD STRIP STYLES */
+#agentsPage .info-cell {
+  position: relative !important;
+
+  width: auto !important;
+  min-width: 0 !important;
+  min-height: 82px !important;
+
+  padding: 14px 16px !important;
+
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 13px !important;
+
+  background:
+    rgba(255,255,255,.88) !important;
+
+  border:
+    1px solid #dce5f1 !important;
+
+  border-radius:
+    14px !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.94),
+    0 5px 16px rgba(28,59,105,.025) !important;
+
+  box-sizing: border-box !important;
+
+  overflow: hidden !important;
+}
+
+
+/* ICON BOX */
+#agentsPage .info-icon {
+  width: 42px !important;
+  height: 42px !important;
+
+  min-width: 42px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 10px !important;
+
+  font-size: 18px !important;
+
+  background: #f1f6ff !important;
+
+  color: #1767ec !important;
+}
+
+
+#agentsPage .info-icon.green {
+  background: #edf9f1 !important;
+  color: #159b48 !important;
+}
+
+
+#agentsPage .info-icon.purple {
+  background: #f6f0ff !important;
+  color: #7028de !important;
+}
+
+
+/* TEXT */
+#agentsPage .info-content {
+  min-width: 0 !important;
+
+  display: block !important;
+}
+
+
+#agentsPage .info-content > span {
+  display: block !important;
+
+  margin: 0 0 5px !important;
+
+  color: #7a8ba5 !important;
+
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+
+  font-weight: 600 !important;
+}
+
+
+#agentsPage .info-content > strong {
+  display: block !important;
+
+  margin: 0 !important;
+
+  color: #122846 !important;
+
+  font-size: 13px !important;
+  line-height: 1.25 !important;
+
+  font-weight: 700 !important;
+
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+
+/* STATUS TEXT */
+#agentsPage #profileStatus {
+  color: #168e45 !important;
+}
+
+
+/* =========================================================
+   KEEP COMPLIANCE BELOW INFO
+========================================================= */
+
+#agentsPage .agent-middle-grid {
+  clear: both !important;
+  width: 100% !important;
+}
