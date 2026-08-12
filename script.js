@@ -653,21 +653,71 @@ function detectTevahFileType(rows) {
 
 // ─── METRICS ─────────────────────────────────────────────────────────────────
 
+// ─── METRICS ─────────────────────────────────────────────────────────────────
+
 function getMetrics(list) {
   const totalTeam = list.length;
-  const pipeline    = list.filter((a) => pipelineStages.includes(a.stage)).length;
-  const licensed    = list.filter((a) => a.stage === "Licensed" || a.stage === "Contracted").length;
-  const contracted  = list.filter((a) => a.stage === "Contracted").length;
 
-  const licensingRate    = totalTeam > 0 ? Math.round((licensed   / totalTeam) * 100) : 0;
-  const contractingRate  = totalTeam > 0 ? Math.round((contracted  / totalTeam) * 100) : 0;
-  const activationRate   = totalTeam > 0 ? Math.round(((licensed + contracted) / totalTeam) * 100) : 0;
+  const pipeline =
+    list.filter((a) =>
+      pipelineStages.includes(a.stage)
+    ).length;
 
-  return { totalTeam, pipeline, licensed, contracted, licensingRate, contractingRate, activationRate };
-}
+  // Licensed includes Contracted
+  const licensed =
+    list.filter(
+      (a) =>
+        a.stage === "Licensed" ||
+        a.stage === "Contracted"
+    ).length;
 
-function getVisibleAgents() {
-  return allAgents;
+  const contracted =
+    list.filter(
+      (a) =>
+        a.stage === "Contracted"
+    ).length;
+
+
+  // ========================================================
+  // RATES
+  // ========================================================
+
+  const licensingRate =
+    totalTeam > 0
+      ? Math.round(
+          (licensed / totalTeam) * 100
+        )
+      : 0;
+
+
+  // Of licensed agents, how many are already contracted?
+  const contractingRate =
+    licensed > 0
+      ? Math.round(
+          (contracted / licensed) * 100
+        )
+      : 0;
+
+
+  // Do NOT add licensed + contracted because contracted
+  // agents are already included inside licensed.
+  const activationRate =
+    totalTeam > 0
+      ? Math.round(
+          (contracted / totalTeam) * 100
+        )
+      : 0;
+
+
+  return {
+    totalTeam,
+    pipeline,
+    licensed,
+    contracted,
+    licensingRate,
+    contractingRate,
+    activationRate
+  };
 }
 
 // ─── DASHBOARD ────────────────────────────────────────────────────────────────
@@ -703,9 +753,14 @@ function renderDashboard(filter) {
   setText("activationRate",   allMetrics.activationRate  + "%");
 
   setText("licensingFraction",   `${allMetrics.licensed} / ${allMetrics.totalTeam}`);
-  setText("contractingFraction", `${allMetrics.contracted} / ${allMetrics.totalTeam}`);
-  setText("activationFraction",  `${allMetrics.licensed + allMetrics.contracted} / ${allMetrics.totalTeam}`);
-
+  setText(
+  "contractingFraction",
+  `${allMetrics.contracted} / ${allMetrics.licensed}`
+);
+  setText(
+  "activationFraction",
+  `${allMetrics.contracted} / ${allMetrics.totalTeam}`
+);
   setRing("licensingRing",   allMetrics.licensingRate,   "#2563eb");
   setRing("contractingRing", allMetrics.contractingRate, "#16a34a");
   setRing("activationRing",  allMetrics.activationRate,  "#7c3aed");
