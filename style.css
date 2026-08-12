@@ -9051,31 +9051,128 @@ body {
     #142b4c !important;
 }
 
-/* =========================================
-   NEXT ACTION — GLASS IMAGE BACKGROUND
-========================================= */
+/* =========================================================
+   NEXT ACTION — MATCH REFERENCE
+========================================================= */
 
 .next-action-card {
-  position: relative;
-  overflow: hidden;
+  position: relative !important;
+  overflow: hidden !important;
+
+  min-height: 220px !important;
+
+  padding: 28px 32px !important;
+
+  border: 1px solid rgba(195, 211, 236, 0.72) !important;
+  border-radius: 22px !important;
 
   background:
     linear-gradient(
       90deg,
-      rgba(255,255,255,0.97) 0%,
-      rgba(255,255,255,0.90) 45%,
-      rgba(255,255,255,0.35) 100%
+      rgba(255,255,255,0.98) 0%,
+      rgba(255,255,255,0.96) 48%,
+      rgba(248,251,255,0.74) 68%,
+      rgba(239,246,255,0.40) 100%
     ),
-    url("next-action.png");
+    url("next-action.png") !important;
 
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat !important;
 
-  border: 1px solid rgba(190, 210, 240, 0.65);
-  border-radius: 22px;
+  /* KEY: image sits on the RIGHT like your reference */
+  background-position: right center !important;
+
+  /* Don't fill the entire card */
+  background-size: 46% 100% !important;
 
   box-shadow:
-    0 12px 35px rgba(30, 80, 160, 0.08),
-    inset 0 1px 0 rgba(255,255,255,0.9);
+    0 10px 30px rgba(26, 61, 118, 0.045),
+    inset 0 1px 0 rgba(255,255,255,0.95) !important;
+}
+
+
+/* Keep content over the background */
+
+.next-action-card > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+
+/* Lightning icon */
+
+.next-action-icon {
+  width: 54px !important;
+  height: 54px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+
+  background:
+    rgba(246, 250, 255, 0.88) !important;
+
+  color: #1266ea !important;
+
+  border:
+    1px solid rgba(190, 211, 244, 0.8) !important;
+
+  box-shadow:
+    0 7px 18px rgba(32, 91, 188, 0.10),
+    inset 0 1px 0 rgba(255,255,255,0.95) !important;
+}
+
+
+/* Title */
+
+.next-action-card h3 {
+  margin: 16px 0 8px !important;
+
+  color: #102746 !important;
+
+  font-size: 22px !important;
+  font-weight: 800 !important;
+
+  letter-spacing: -0.3px !important;
+}
+
+
+/* Description */
+
+.next-action-card p {
+  max-width: 300px !important;
+
+  margin: 0 0 26px !important;
+
+  color: #687b99 !important;
+
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+
+/* Button */
+
+.open-command-btn {
+  width: 270px !important;
+  height: 52px !important;
+
+  border: 0 !important;
+  border-radius: 10px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #176af0,
+      #0854d7
+    ) !important;
+
+  color: white !important;
+
+  font-size: 14px !important;
+  font-weight: 700 !important;
+
+  box-shadow:
+    0 10px 22px rgba(18, 93, 218, 0.20) !important;
 }
