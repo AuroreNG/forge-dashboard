@@ -4602,155 +4602,436 @@ function getGrowthStatus(team) {
   if (team.progress >= 20) return "At Risk";
   return "Needs Help";
 }
+// ==========================================================
+// GROWTH HIERARCHY HELPERS
+// ==========================================================
 
-function renderGrowthPage() {
-  const teams = {};
+function normalizeHierarchyValue(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase();
+}
+
+
+function buildAgentIndexes() {
+  const byCode = new Map();
+  const byName = new Map();
 
   allAgents.forEach((agent) => {
-    const leader = String(agent.upline || "").trim();
+    const code = normalizeHierarchyValue(agent.code);
+    const name = normalizeHierarchyValue(agent.name);
 
-    if (!leader) return;
-
-    if (!teams[leader]) {
-      teams[leader] = {
-        name: `${leader}'s Team`,
-        leader,
-        total: 0,
-        active: 0,
-        licensed: 0,
-        contracted: 0,
-        inactive: 0,
-        progressPoints: 0,
-        progress: 0
-      };
+    if (code) {
+      byCode.set(code, agent);
     }
 
-    const team = teams[leader];
-
-    const stage = String(
-      agent.stage ||
-      agent.pipelineStage ||
-      ""
-    )
-      .trim()
-      .toLowerCase();
-
-    const statusText = String(
-      agent.teamStatus ||
-      agent.status ||
-      ""
-    )
-      .trim()
-      .toLowerCase();
-
-    team.total++;
-
-    // ACTIVE / INACTIVE
-    if (statusText.includes("inactive")) {
-      team.inactive++;
-    } else {
-      team.active++;
+    if (name) {
+      byName.set(name, agent);
     }
-
-    // LICENSED
-    if (
-      stage === "licensed" ||
-      stage === "contracted"
-    ) {
-      team.licensed++;
-    }
-
-    // CONTRACTED
-    if (stage === "contracted") {
-      team.contracted++;
-    }
-
-    // REAL PIPELINE PROGRESS
-    const stageProgress = {
-      "not placed": 0,
-      "not started": 0,
-
-      "quiz sent": 10,
-      "quiz passed": 20,
-
-      "xcel": 30,
-      "xcel completed": 40,
-
-      "simulation exams": 50,
-      "exam scheduled": 60,
-      "exam passed": 70,
-
-      "fingerprints": 80,
-      "applied for license": 90,
-
-      "licensed": 95,
-      "contracted": 100
-    };
-
-    team.progressPoints +=
-      stageProgress[stage] ?? 0;
   });
+
+  return { byCode, byName };
+}
+
+
+function findImmediateUpline(agent, indexes) {
+  if (!agent) return null;
+
+  const uplineCode =
+    normalizeHierarchyValue(agent.uplineCode);
+
+  const uplineName =
+    normalizeHierarchyValue(agent.upline);
+
+  // Prefer code because it is safer than matching names
+  if (
+    uplineCode &&
+    indexes.byCode.has(uplineCode)
+  ) {
+    return indexes.byCode.get(uplineCode);
+  }
+
+  if (
+    uplineName &&
+    indexes.byName.has(uplineName)
+  ) {
+    return indexes.byName.get(uplineName);
+  }
+
+  return null;
+}
+
+
+// Returns every upline above this agent.
+// Example:
+// Sarah -> John -> Mary -> Dorothy -> Georgette
+function getRollupChain(agent, indexes) {
+  const chain = [];
+
+  const visited = new Set();
+
+  let current = agent;
+
+  while (current) {
+
+    const currentKey =
+      normalizeHierarchyValue(
+        current.id ||
+        current.code ||
+        current.name
+      );
+
+    if (
+      currentKey &&
+      visited.has(currentKey)
+    ) {
+      console.warn(
+        "Hierarchy cycle detected:",
+        current.name
+      );
+
+      break;
+    }
+
+    if (currentKey) {
+      visited.add(currentKey);
+    }
+
+    const upline =
+      findImmediateUpline(
+        current,
+        indexes
+      );
+
+    if (!upline) break;
+
+    chain.push(upline);
+
+    current = upline;
+  }
+
+  return chain;
+}
+
+
+// Finds every descendant beneath a leader,
+// regardless of how many generations deep.
+function getOrganizationMembers(
+  leader,
+  indexes
+) {
+  return allAgents.filter((agent) => {
+
+    if (
+      String(agent.id) ===
+      String(leader.id)
+    ) {
+      return false;
+    }
+
+    const chain =
+      getRollupChain(
+        agent,
+        indexes
+      );
+
+    return chain.some((upline) =>
+      String(upline.id) ===
+      String(leader.id)
+    );
+  });
+}
+
+
+// Direct recruits only
+function getDirectRecruits(leader) {
+  return allAgents.filter((agent) => {
+
+    const leaderCode =
+      normalizeHierarchyValue(
+        leader.code
+      );
+
+    const leaderName =
+      normalizeHierarchyValue(
+        leader.name
+      );
+
+    const agentUplineCode =
+      normalizeHierarchyValue(
+        agent.uplineCode
+      );
+
+    const agentUplineName =
+      normalizeHierarchyValue(
+        agent.upline
+      );
+
+    if (
+      leaderCode &&
+      agentUplineCode
+    ) {
+      return (
+        leaderCode ===
+        agentUplineCode
+      );
+    }
+
+    return (
+      leaderName &&
+      leaderName ===
+      agentUplineName
+    );
+  });
+}
+// ==========================================================
+// GROWTH PAGE — FULL ORGANIZATION HIERARCHY
+// ==========================================================
+
+function renderGrowthPage() {
+  const indexes =
+    buildAgentIndexes();
+
+  const leaders =
+    allAgents.filter((agent) =>
+      getDirectRecruits(agent).length > 0
+    );
+
+
+  const stageProgress = {
+    "not placed": 0,
+    "not started": 0,
+
+    "quiz sent": 10,
+    "quiz passed": 20,
+
+    "xcel": 30,
+    "xcel completed": 40,
+
+    "simulation exams": 50,
+
+    "exam scheduled": 60,
+    "exam passed": 70,
+
+    "fingerprints": 80,
+
+    "applied for license": 90,
+
+    "licensed": 95,
+
+    "contracted": 100
+  };
 
 
   const growthTeams =
-    Object.values(teams)
-      .map((team) => {
-        team.progress =
-          team.total > 0
-            ? Math.round(
-                team.progressPoints /
-                team.total
-              )
-            : 0;
+    leaders.map((leader) => {
 
-        return team;
-      })
-      .sort((a, b) =>
-        b.contracted - a.contracted ||
-        b.licensed - a.licensed ||
-        b.progress - a.progress ||
-        b.active - a.active
+      const directMembers =
+        getDirectRecruits(leader);
+
+      const organizationMembers =
+        getOrganizationMembers(
+          leader,
+          indexes
+        );
+
+
+      let active = 0;
+      let inactive = 0;
+      let licensed = 0;
+      let contracted = 0;
+      let progressPoints = 0;
+
+
+      organizationMembers.forEach(
+        (agent) => {
+
+          const stage =
+            normalizeHierarchyValue(
+              agent.stage ||
+              agent.pipelineStage
+            );
+
+          const status =
+            normalizeHierarchyValue(
+              agent.teamStatus ||
+              agent.status
+            );
+
+
+          if (
+            status.includes("inactive")
+          ) {
+            inactive++;
+          } else {
+            active++;
+          }
+
+
+          if (
+            stage === "licensed" ||
+            stage === "contracted"
+          ) {
+            licensed++;
+          }
+
+
+          if (
+            stage === "contracted"
+          ) {
+            contracted++;
+          }
+
+
+          progressPoints +=
+            stageProgress[stage] ?? 0;
+        }
       );
 
+
+      const total =
+        organizationMembers.length;
+
+
+      const progress =
+        total > 0
+          ? Math.round(
+              progressPoints /
+              total
+            )
+          : 0;
+
+
+      return {
+        name:
+          `${leader.name}'s Organization`,
+
+        leader:
+          leader.name,
+
+        leaderId:
+          leader.id,
+
+        leaderCode:
+          leader.code,
+
+        direct:
+          directMembers.length,
+
+        total,
+
+        active,
+        inactive,
+        licensed,
+        contracted,
+        progress,
+
+        members:
+          organizationMembers
+      };
+    });
+
+
+  growthTeams.sort(
+    (a, b) =>
+      b.contracted - a.contracted ||
+      b.licensed - a.licensed ||
+      b.total - a.total ||
+      b.progress - a.progress
+  );
+
+
   console.log(
-    "Growth teams:",
-    growthTeams.length,
+    "Hierarchical Growth Teams:",
     growthTeams
   );
 
-  renderGrowthRows(growthTeams);
-  renderGrowthCards(growthTeams);
+
+  renderGrowthRows(
+    growthTeams
+  );
+
+  renderGrowthCards(
+    growthTeams
+  );
 }
+
 function renderGrowthRows(growthTeams) {
   const list = document.getElementById("teamPerformanceList");
   if (!list) return;
 
   list.innerHTML = `
-    <div class="growth-table-head">
-      <span>Rank</span><span>Team</span><span>Progress</span>
-      <span>Active</span><span>Licensed</span><span>Contracted</span>
-      <span>Inactive</span><span>Status</span>
-    </div>
-  `;
+  <div class="growth-table-head">
+    <span>Rank</span>
+    <span>Leader</span>
+    <span>Progress</span>
+    <span>Direct</span>
+    <span>Organization</span>
+    <span>Licensed</span>
+    <span>Contracted</span>
+    <span>Status</span>
+  </div>
+`;
 
   growthTeams.forEach((team, index) => {
-    const status = getGrowthStatus(team);
-    list.innerHTML += `
-      <div class="growth-table-row">
-        <div class="rank">${index + 1}</div>
-        <div class="team-name">${team.name}</div>
-        <div class="momentum-cell">
-          <strong>${team.progress}%</strong>
-          <span class="momentum-bar"><span class="momentum-fill" style="width:${team.progress}%"></span></span>
-        </div>
-        <div>${team.active}</div>
-        <div>${team.licensed}</div>
-        <div>${team.contracted}</div>
-        <div>${team.inactive}</div>
-        <div><span class="status-pill ${status.toLowerCase().replaceAll(" ", "-")}">${status}</span></div>
+  const status =
+    getGrowthStatus(team);
+
+  list.innerHTML += `
+    <div class="growth-table-row">
+
+      <div class="rank">
+        ${index + 1}
       </div>
-    `;
-  });
+
+      <div class="team-name">
+        ${team.leader}
+      </div>
+
+      <div class="momentum-cell">
+        <strong>
+          ${team.progress}%
+        </strong>
+
+        <span class="momentum-bar">
+          <span
+            class="momentum-fill"
+            style="width:${team.progress}%"
+          ></span>
+        </span>
+      </div>
+
+      <div>
+        ${team.direct}
+      </div>
+
+      <div>
+        ${team.total}
+      </div>
+
+      <div>
+        ${team.licensed}
+      </div>
+
+      <div>
+        ${team.contracted}
+      </div>
+
+      <div>
+        <span
+          class="status-pill ${
+            status
+              .toLowerCase()
+              .replaceAll(" ", "-")
+          }"
+        >
+          ${status}
+        </span>
+      </div>
+
+    </div>
+  `;
+});
 }
 
 function renderGrowthCards(growthTeams) {
