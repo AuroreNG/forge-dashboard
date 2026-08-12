@@ -12902,3 +12902,132 @@ body {
   }
 }
 
+/* =========================================================
+   NEXT ACTION — TOP / MIDDLE / BOTTOM LAYOUT
+========================================================= */
+
+#agentsPage .agent-action-card {
+  position: relative !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  width: 100% !important;
+  min-height: 220px !important;
+
+  padding: 26px 28px !important;
+
+  overflow: hidden !important;
+
+  border: 1px solid rgba(205,217,235,.9) !important;
+  border-radius: 16px !important;
+
+  background-image: url("./next-action.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-size: cover !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* HEADER AREA */
+#agentsPage .agent-action-content {
+  position: relative !important;
+  z-index: 2 !important;
+
+  width: 48% !important;
+  min-height: 100% !important;
+
+  padding: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
+
+
+/* ICON */
+#agentsPage .action-icon {
+  width: 54px !important;
+  height: 54px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+
+  background: rgba(255,255,255,.92) !important;
+  border: 1px solid rgba(196,213,239,.9) !important;
+
+  color: #1767ed !important;
+  font-size: 23px !important;
+
+  box-shadow:
+    0 8px 20px rgba(31,85,173,.12) !important;
+}
+
+
+/* TITLE */
+#agentsPage .action-copy h3 {
+  margin: 16px 0 8px !important;
+
+  color: #102747 !important;
+
+  font-size: 21px !important;
+  font-weight: 780 !important;
+  line-height: 1.1 !important;
+}
+
+
+/* MIDDLE TEXT */
+#agentsPage .action-copy p {
+  margin: 0 !important;
+
+  max-width: 300px !important;
+
+  color: #70819c !important;
+
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+
+  font-weight: 600 !important;
+}
+
+
+/* BUTTON AT BOTTOM */
+#agentsPage .open-command-btn {
+  margin-top: auto !important;
+
+  width: 270px !important;
+  max-width: 100% !important;
+
+  height: 48px !important;
+
+  padding: 0 18px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  border: 0 !important;
+  border-radius: 10px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1768ef,
+      #0754d6
+    ) !important;
+
+  color: white !important;
+
+  font-size: 14px !important;
+  font-weight: 700 !important;
+
+  white-space: nowrap !important;
+
+  box-shadow:
+    0 9px 20px rgba(18,88,204,.18) !important;
+}
