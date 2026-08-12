@@ -13947,3 +13947,478 @@ body {
   font-size: 12px !important;
   font-weight: 650 !important;
 }
+
+/* =========================================================
+   COMMAND CENTER — LOWER 4 PANEL GRID
+========================================================= */
+
+#commandPage .command-grid {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr)) !important;
+
+  gap: 16px !important;
+
+  width: 100% !important;
+}
+
+
+/* =========================================================
+   PANEL SHELL
+========================================================= */
+
+#commandPage .command-panel {
+  min-height: 250px !important;
+
+  padding: 20px !important;
+
+  background:
+    rgba(255,255,255,.90) !important;
+
+  border:
+    1px solid #dce5f1 !important;
+
+  border-radius:
+    17px !important;
+
+  box-shadow:
+    0 8px 24px rgba(31,62,108,.035) !important;
+
+  box-sizing:
+    border-box !important;
+}
+
+
+/* =========================================================
+   PANEL HEADER
+========================================================= */
+
+#commandPage .panel-header {
+  display: flex !important;
+
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  gap: 16px !important;
+
+  margin-bottom: 16px !important;
+}
+
+
+#commandPage .panel-header h3 {
+  margin: 0 !important;
+
+  color: #10233f !important;
+
+  font-size: 18px !important;
+  line-height: 1.2 !important;
+
+  font-weight: 760 !important;
+}
+
+
+#commandPage .panel-header button {
+  padding: 0 !important;
+
+  border: 0 !important;
+
+  background: transparent !important;
+
+  color: #1767ed !important;
+
+  font-size: 12px !important;
+  font-weight: 700 !important;
+
+  cursor: pointer !important;
+}
+
+
+#commandPage .panel-header span {
+  color: #536983 !important;
+
+  font-size: 12px !important;
+  font-weight: 650 !important;
+}
+
+
+/* =========================================================
+   COORDINATOR ACTIONS
+========================================================= */
+
+#commandPage #coordinatorActions {
+  width: 100% !important;
+}
+
+
+#commandPage .coordinator-action-item {
+  min-height: 120px !important;
+
+  padding: 16px !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    58px minmax(0,1fr) auto !important;
+
+  align-items: center !important;
+
+  gap: 16px !important;
+
+  background:
+    rgba(250,252,255,.92) !important;
+
+  border:
+    1px solid #e0e7f1 !important;
+
+  border-radius:
+    14px !important;
+}
+
+
+#commandPage .coordinator-action-icon {
+  width: 54px !important;
+  height: 54px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+
+  background: #f1f5fb !important;
+
+  font-size: 23px !important;
+}
+
+
+#commandPage .coordinator-action-copy h4 {
+  margin: 0 0 5px !important;
+
+  color: #10233f !important;
+
+  font-size: 15px !important;
+  font-weight: 740 !important;
+}
+
+
+#commandPage .coordinator-action-copy p {
+  margin: 0 !important;
+
+  color: #6e8099 !important;
+
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+}
+
+
+#commandPage .coordinator-action-buttons {
+  display: flex !important;
+
+  gap: 10px !important;
+}
+
+
+#commandPage .coordinator-action-buttons button {
+  height: 40px !important;
+
+  min-width: 90px !important;
+
+  padding: 0 16px !important;
+
+  border:
+    1px solid #6d96f4 !important;
+
+  border-radius:
+    9px !important;
+
+  background:
+    rgba(255,255,255,.96) !important;
+
+  color:
+    #1767ed !important;
+
+  font-size:
+    12px !important;
+
+  font-weight:
+    700 !important;
+}
+
+
+/* =========================================================
+   LICENSING CHECKLIST
+========================================================= */
+
+#commandPage .progress-bar {
+  width: 100% !important;
+  height: 5px !important;
+
+  margin: 0 0 14px !important;
+
+  border-radius: 999px !important;
+
+  background: #e8eef7 !important;
+
+  overflow: hidden !important;
+}
+
+
+#commandPage #checklistProgressBar {
+  height: 100% !important;
+
+  border-radius: inherit !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      #1767ed,
+      #5790f6
+    ) !important;
+}
+
+
+#commandPage #licensingChecklist {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(2, minmax(0,1fr)) !important;
+
+  gap: 10px !important;
+}
+
+
+#commandPage .checklist-item {
+  min-height: 45px !important;
+
+  padding: 0 14px !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  gap: 10px !important;
+
+  border:
+    1px solid #dce5f1 !important;
+
+  border-radius:
+    11px !important;
+
+  background:
+    rgba(255,255,255,.88) !important;
+
+  color:
+    #10233f !important;
+
+  font-size:
+    12px !important;
+
+  font-weight:
+    650 !important;
+}
+
+
+#commandPage .checklist-item input {
+  width: 15px !important;
+  height: 15px !important;
+
+  accent-color: #1767ed !important;
+}
+
+
+/* =========================================================
+   COMMENTS & ACTIVITY
+========================================================= */
+
+#commandPage #activityTimeline {
+  min-height: 150px !important;
+}
+
+
+#commandPage .activity-empty {
+  min-height: 150px !important;
+
+  padding: 20px !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  gap: 18px !important;
+
+  border:
+    1px solid #e0e7f1 !important;
+
+  border-radius:
+    14px !important;
+
+  background:
+    rgba(250,252,255,.92) !important;
+}
+
+
+#commandPage .activity-empty-icon {
+  width: 58px !important;
+  height: 58px !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 58px !important;
+
+  border-radius: 14px !important;
+
+  background: #eef3ff !important;
+
+  color: #1767ed !important;
+
+  font-size: 25px !important;
+}
+
+
+#commandPage .activity-empty h4 {
+  margin: 0 0 5px !important;
+
+  color: #10233f !important;
+
+  font-size: 15px !important;
+
+  font-weight: 740 !important;
+}
+
+
+#commandPage .activity-empty p {
+  margin: 0 !important;
+
+  color: #70819b !important;
+
+  font-size: 12px !important;
+}
+
+
+/* =========================================================
+   NEXT RECOMMENDED ACTIONS
+========================================================= */
+
+#commandPage #todayQueue {
+  display: flex !important;
+
+  flex-direction: column !important;
+
+  gap: 10px !important;
+}
+
+
+#commandPage .queue-item {
+  min-height: 62px !important;
+
+  padding: 10px 12px !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    42px minmax(0,1fr) auto !important;
+
+  align-items: center !important;
+
+  gap: 12px !important;
+
+  border:
+    1px solid #e0e7f1 !important;
+
+  border-radius:
+    12px !important;
+
+  background:
+    rgba(255,255,255,.90) !important;
+}
+
+
+#commandPage .queue-icon {
+  width: 38px !important;
+  height: 38px !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 10px !important;
+
+  background:
+    #f2f6ff !important;
+
+  font-size: 17px !important;
+}
+
+
+#commandPage .queue-copy strong {
+  display: block !important;
+
+  margin-bottom: 2px !important;
+
+  color:
+    #10233f !important;
+
+  font-size:
+    12px !important;
+
+  font-weight:
+    730 !important;
+}
+
+
+#commandPage .queue-copy span {
+  color:
+    #71839c !important;
+
+  font-size:
+    11px !important;
+}
+
+
+#commandPage .queue-item button {
+  height: 34px !important;
+
+  padding:
+    0 14px !important;
+
+  border:
+    1px solid #dce5f1 !important;
+
+  border-radius:
+    8px !important;
+
+  background:
+    rgba(255,255,255,.96) !important;
+
+  color:
+    #1767ed !important;
+
+  font-size:
+    11px !important;
+
+  font-weight:
+    700 !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  #commandPage .command-grid {
+    grid-template-columns:
+      1fr !important;
+  }
+
+  #commandPage #licensingChecklist {
+    grid-template-columns:
+      1fr !important;
+  }
+}
