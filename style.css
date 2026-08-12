@@ -14422,3 +14422,44 @@ body {
       1fr !important;
   }
 }
+
+/* COMMAND — COORDINATOR PILL ONLY */
+
+#commandPage #commandMeta {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+
+  width: fit-content !important;
+  min-height: 32px !important;
+
+  margin: 8px 0 0 !important;
+  padding: 0 13px !important;
+
+  border: 1px solid #dce5f1 !important;
+  border-radius: 999px !important;
+
+  background: rgba(255,255,255,.94) !important;
+
+  color: #344963 !important;
+
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 650 !important;
+
+  white-space: nowrap !important;
+}
+
+
+/* person icon */
+#commandPage #commandMeta::before {
+  content: "♙";
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  color: #5d7190 !important;
+
+  font-size: 17px !important;
+}
