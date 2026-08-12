@@ -10425,3 +10425,67 @@ body {
 
   margin: 0 !important;
 }
+/* =========================================================
+   FORGE — ALLOW FULL PAGE SCROLL AT 100% ZOOM
+========================================================= */
+
+html,
+body {
+  min-height: 100% !important;
+  height: auto !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+#app {
+  min-height: 100vh !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+
+/* AGENTS PAGE MUST GROW WITH ITS CONTENT */
+
+#agentsPage {
+  height: auto !important;
+  min-height: calc(100vh - 170px) !important;
+
+  overflow: visible !important;
+}
+
+#agentsPage .agents-layout {
+  height: auto !important;
+  min-height: 0 !important;
+
+  overflow: visible !important;
+}
+
+
+/* RIGHT PROFILE SIDE */
+
+#agentsPage .agent-profile,
+#agentsPage #agentProfile,
+#agentsPage .forge-agent-profile {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+
+  overflow: visible !important;
+}
+
+
+/* PROFILE CARD */
+
+#agentsPage .agent-profile.card {
+  height: auto !important;
+  max-height: none !important;
+
+  overflow: visible !important;
+}
+
+
+/* GIVE THE PAGE SPACE AT THE BOTTOM */
+
+#agentsPage {
+  padding-bottom: 50px !important;
+}
