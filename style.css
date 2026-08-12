@@ -15093,3 +15093,46 @@ body {
   box-shadow:
     0 8px 18px rgba(17,88,207,.17) !important;
 }
+#commandPage .quick-actions button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 9px !important;
+
+  height: 46px !important;
+
+  background: rgba(255,255,255,.94) !important;
+  border: 1px solid #dce5f1 !important;
+  border-radius: 11px !important;
+
+  color: #17304f !important;
+
+  font-size: 12px !important;
+  font-weight: 650 !important;
+}
+
+#commandPage .quick-actions button svg {
+  width: 18px !important;
+  height: 18px !important;
+
+  fill: none !important;
+  stroke: #617895 !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+#commandPage .coordinator-action-icon,
+#commandPage .queue-icon,
+#commandPage .activity-empty-icon {
+  width: 42px !important;
+  height: 42px !important;
+
+  border-radius: 10px !important;
+
+  background: #f3f7fd !important;
+  border: 1px solid #e3eaf4 !important;
+
+  color: #547093 !important;
+
+  font-size: 0 !important;
+}
