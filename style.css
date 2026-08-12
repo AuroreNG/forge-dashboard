@@ -15262,3 +15262,133 @@ body {
   stroke: #25a55f !important;
   stroke-width: 1.65 !important;
 }
+/* =========================================================
+   COORDINATOR ACTIONS — PREMIUM CLEANUP
+========================================================= */
+
+#commandPage .coordinator-action-icon {
+  width: 42px !important;
+  height: 42px !important;
+
+  flex: 0 0 42px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 11px !important;
+
+  background: #f4f7fc !important;
+  border: 1px solid #e4eaf3 !important;
+
+  color: #58708f !important;
+}
+
+
+/* SVG */
+#commandPage .coordinator-action-icon svg {
+  width: 19px !important;
+  height: 19px !important;
+
+  fill: none !important;
+
+  stroke: currentColor !important;
+  stroke-width: 1.7 !important;
+
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+
+/* ACTION ROW */
+#commandPage .coordinator-action {
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 14px !important;
+
+  min-height: 78px !important;
+  padding: 14px 10px !important;
+
+  border-bottom: 1px solid #edf1f6 !important;
+}
+
+
+#commandPage .coordinator-action:last-child {
+  border-bottom: none !important;
+}
+
+
+/* TEXT AREA */
+#commandPage .coordinator-action-content {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+
+/* ACTION TITLE */
+#commandPage .coordinator-action-content strong {
+  display: block !important;
+
+  margin-bottom: 3px !important;
+
+  color: #12243e !important;
+
+  font-size: 13px !important;
+  line-height: 1.25 !important;
+
+  font-weight: 750 !important;
+}
+
+
+/* DESCRIPTION */
+#commandPage .coordinator-action-content p {
+  margin: 0 !important;
+
+  color: #73839b !important;
+
+  font-size: 11px !important;
+  line-height: 1.35 !important;
+
+  font-weight: 500 !important;
+}
+
+
+/* BUTTON AREA */
+#commandPage .coordinator-action-buttons {
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 9px !important;
+
+  flex-shrink: 0 !important;
+}
+
+
+/* SEND + CUSTOMIZE */
+#commandPage .coordinator-action-buttons button {
+  min-width: 92px !important;
+  height: 38px !important;
+
+  padding: 0 15px !important;
+
+  border: 1px solid #d6e1f1 !important;
+  border-radius: 9px !important;
+
+  background: #fff !important;
+
+  color: #1767ed !important;
+
+  font-size: 11px !important;
+  font-weight: 700 !important;
+
+  cursor: pointer !important;
+
+  transition: .15s ease !important;
+}
+
+
+#commandPage .coordinator-action-buttons button:hover {
+  background: #f6f9ff !important;
+  border-color: #aac5f3 !important;
+}
