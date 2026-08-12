@@ -13364,3 +13364,164 @@ body {
   margin: 8px 0 2px !important;
   line-height: 1.2 !important;
 }
+/* =========================================================
+   NEXT ACTION — SQUARE, CENTERED, SAME VISUAL WEIGHT
+   AS COMPLIANCE
+========================================================= */
+
+#agentsPage .agent-action-card {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 240px !important;
+  max-height: 240px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  position: relative !important;
+  overflow: hidden !important;
+
+  border: 1px solid #dce5f1 !important;
+  border-radius: 16px !important;
+
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.58),
+      rgba(255,255,255,.58)
+    ),
+    url("./next-action.png") !important;
+
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+
+  box-shadow:
+    0 8px 24px rgba(31,62,108,.035) !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* CENTER EVERYTHING */
+#agentsPage .agent-action-content {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 240px !important;
+
+  padding: 18px 24px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  text-align: center !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* ICON */
+#agentsPage .action-icon {
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  margin: 0 0 9px !important;
+
+  border-radius: 50% !important;
+
+  background: rgba(255,255,255,.92) !important;
+  border: 1px solid rgba(195,212,238,.9) !important;
+
+  color: #1767ed !important;
+  font-size: 22px !important;
+
+  box-shadow:
+    0 7px 18px rgba(31,85,173,.10) !important;
+}
+
+
+/* TITLE */
+#agentsPage .action-copy {
+  width: 100% !important;
+  text-align: center !important;
+}
+
+#agentsPage .action-copy h3 {
+  margin: 0 0 8px !important;
+
+  color: #102747 !important;
+
+  font-size: 20px !important;
+  line-height: 1.15 !important;
+  font-weight: 780 !important;
+}
+
+
+/* DESCRIPTION — TRY TO KEEP ON ONE LINE */
+#agentsPage .action-copy p {
+  width: 100% !important;
+  max-width: none !important;
+
+  margin: 0 0 18px !important;
+
+  color: #70819c !important;
+
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  font-weight: 600 !important;
+
+  white-space: nowrap !important;
+}
+
+
+/* COMMAND BUTTON — FULLY VISIBLE */
+#agentsPage .open-command-btn {
+  width: 82% !important;
+  max-width: 300px !important;
+  min-width: 220px !important;
+
+  height: 44px !important;
+  min-height: 44px !important;
+
+  margin: 0 auto !important;
+  padding: 0 17px !important;
+
+  flex: 0 0 44px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  border: 0 !important;
+  border-radius: 10px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1768ef,
+      #0755d8
+    ) !important;
+
+  color: #fff !important;
+
+  font-size: 14px !important;
+  line-height: 1 !important;
+  font-weight: 700 !important;
+
+  white-space: nowrap !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+
+  position: relative !important;
+  z-index: 5 !important;
+
+  box-shadow:
+    0 8px 18px rgba(19,88,203,.17) !important;
+}
