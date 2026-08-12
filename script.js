@@ -719,43 +719,7 @@ function getMetrics(list) {
     activationRate
   };
 }
-function getPipelineSnapshot(list) {
-  const countStage = (names) =>
-    list.filter((agent) =>
-      names.includes(
-        String(
-          agent.stage ||
-          agent.pipelineStage ||
-          ""
-        ).trim()
-      )
-    ).length;
 
-  return {
-    notStarted: countStage([
-      "Not Placed",
-      "Not Started"
-    ]),
-
-    quiz: countStage([
-      "Quiz Sent",
-      "Quiz Passed"
-    ]),
-
-    xcel: countStage([
-      "XCEL",
-      "XCEL Completed",
-      "Simulation Exams"
-    ]),
-
-    exam: countStage([
-      "Exam Scheduled",
-      "Exam Passed",
-      "Fingerprints",
-      "Applied For License"
-    ])
-  };
-}
 // ─── DASHBOARD ────────────────────────────────────────────────────────────────
 
 function renderDashboard(filter) {
@@ -768,33 +732,16 @@ function renderDashboard(filter) {
 
   const filteredMetrics = getMetrics(filtered);
   const allMetrics      = getMetrics(visibleAgents);
-  const pipelineSnapshot =
-  getPipelineSnapshot(visibleAgents);
 
   setText("totalCount",     filteredMetrics.totalTeam);
   setText("pipelineCount",  filteredMetrics.pipeline);
   setText("licensedCount",  filteredMetrics.licensed);
   setText("contractedCount",filteredMetrics.contracted);
 
-  setText(
-  "todayActive",
-  pipelineSnapshot.notStarted
-);
-
-setText(
-  "todayInactive",
-  pipelineSnapshot.quiz
-);
-
-setText(
-  "todayLicensed",
-  pipelineSnapshot.xcel
-);
-
-setText(
-  "todayContracted",
-  pipelineSnapshot.exam
-);
+  setText("todayActive",    allMetrics.totalTeam);
+  setText("todayInactive",  allMetrics.pipeline);
+  setText("todayLicensed",  allMetrics.licensed);
+  setText("todayContracted",allMetrics.contracted);
 
   setText("journeyActive",      allMetrics.totalTeam);
   setText("journeyNonLicensed", allMetrics.pipeline);
@@ -5997,4 +5944,3 @@ function rewriteActionMessage(style) {
       .trim() + ".";
   }
 }
-
