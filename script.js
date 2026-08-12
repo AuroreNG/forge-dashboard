@@ -4598,10 +4598,91 @@ function saveAgentsToLocalStorage() {
 // ─── GROWTH PAGE ─────────────────────────────────────────────────────────────
 
 function getGrowthStatus(team) {
-  if (team.progress >= 60) return "Strong";
-  if (team.progress >= 35) return "Healthy";
-  if (team.progress >= 20) return "At Risk";
-  return "Needs Help";
+  const total = Number(team.total || 0);
+
+  if (total === 0) {
+    return "No Activity";
+  }
+
+  const progress =
+    Number(team.progress || 0);
+
+  const licensed =
+    Number(team.licensed || 0);
+
+  const contracted =
+    Number(team.contracted || 0);
+
+  const inactive =
+    Number(team.inactive || 0);
+
+
+  // ========================================================
+  // CONVERSION RATES
+  // ========================================================
+
+  const licensingRate =
+    licensed / total;
+
+  const contractingRate =
+    licensed > 0
+      ? contracted / licensed
+      : 0;
+
+  const inactiveRate =
+    inactive / total;
+
+
+  // ========================================================
+  // NEEDS ATTENTION
+  // ========================================================
+
+  if (
+    inactiveRate >= 0.5 ||
+    (
+      total >= 3 &&
+      licensed === 0 &&
+      progress < 20
+    )
+  ) {
+    return "Needs Attention";
+  }
+
+
+  // ========================================================
+  // STRONG
+  //
+  // Strong licensing progress AND
+  // strong movement from licensed → contracted.
+  // ========================================================
+
+  if (
+    progress >= 55 &&
+    licensingRate >= 0.5 &&
+    contractingRate >= 0.6
+  ) {
+    return "Strong";
+  }
+
+
+  // ========================================================
+  // HEALTHY
+  // ========================================================
+
+  if (
+    progress >= 30 ||
+    licensingRate >= 0.3 ||
+    contracted > 0
+  ) {
+    return "Healthy";
+  }
+
+
+  // ========================================================
+  // BUILDING
+  // ========================================================
+
+  return "Building";
 }
 // ==========================================================
 // GROWTH HIERARCHY HELPERS
