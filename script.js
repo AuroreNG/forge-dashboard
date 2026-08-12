@@ -769,13 +769,13 @@ function getMetrics(list) {
 }
 
 
-// IMPORTANT — THIS WAS MISSING
+// ADD THIS
 function getVisibleAgents() {
   return allAgents;
 }
 
 
-// ─── DASHBOARD ────────────────────────────────────────────────────────────────
+// ─── DASHBOARD ───────────────────────────────────────────
 
 function renderDashboard(filter) {
   const visibleAgents = getVisibleAgents();
