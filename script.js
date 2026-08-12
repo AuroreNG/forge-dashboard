@@ -5153,47 +5153,7 @@ function renderGrowthCards(growthTeams) {
     "growthNeedsAttention",
     needsAttention
   );
-
-
-  // ========================================================
-  // SPOTLIGHT
-  // ========================================================
-
-  setText(
-    "spotlightTeamName",
-    topTeam.leader
-  );
-
-  setText(
-    "spotlightMomentum",
-    `${topTeam.progress}%`
-  );
-
-  setText(
-    "spotlightTrend",
-    "#1 Ranked Organization"
-  );
-
-  setText(
-    "spotlightMessage",
-    `${topTeam.total} total • ${topTeam.direct} direct • ${topTeam.licensed} licensed • ${topTeam.contracted} contracted`
-  );
-
-  setText(
-    "spotlightReason1",
-    `${topTeam.total} Organization Members`
-  );
-
-  setText(
-    "spotlightReason2",
-    `${topTeam.licensed} Licensed`
-  );
-
-  setText(
-    "spotlightReason3",
-    `${topTeam.contracted} Contracted`
-  );
-
+   
 
   // ========================================================
   // AVERAGE TREND
