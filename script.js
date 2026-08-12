@@ -2067,71 +2067,352 @@ document.getElementById("viewAgents")?.addEventListener("click", () => {
 function showAgentProfile(agent) {
   selectedAgent = agent;
 
-  document.getElementById("agentProfileEmpty")?.classList.add("hidden");
-  document.getElementById("agentProfile")?.classList.remove("hidden");
+  document
+    .getElementById("agentProfileEmpty")
+    ?.classList.add("hidden");
+
+  document
+    .getElementById("agentProfile")
+    ?.classList.remove("hidden");
+
+
+  // ========================================================
+  // BASIC PROFILE
+  // ========================================================
 
   setText(
-  "profileAvatar",
-  getInitials(getAgentDisplayName(agent))
-);
+    "profileAvatar",
+    getInitials(
+      getAgentDisplayName(agent)
+    )
+  );
 
-setText(
-  "profileName",
-  getAgentDisplayName(agent)
-);
-
-setText(
-  "profileCoordinator",
-  agent.upline || agent.coordinator || "—"
-);
-
-setText("profileStatus", agent.teamStatus || "—");
-setText("profileStage", agent.stage || "—");
-setText("profileCode", agent.code || "—");
-setText("profilePhone", agent.phone || "—");
-setText("profileEmail", agent.email || "—");
-setText("profileNextAction", getNextAction(agent.stage));
-setText(
-  "profileResidentLicense",
-  agent.residentLicense || "—"
-);
-
-setText(
-  "profileEO",
-  agent.eoStatus || "—"
-);
-
-setText(
-  "profileAML",
-  agent.amlStatus || "—"
-);
-
-setText(
-  "profileTevahFee",
-  agent.tevahPlatformFee || "—"
-);
   setText(
-  "profileLicensedState",
-  ["Licensed", "Contracted"].includes(agent.stage)
-    ? "Complete"
-    : "Pending"
-);
+    "profileName",
+    getAgentDisplayName(agent)
+  );
 
-setText(
-  "profileContractedState",
-  agent.stage === "Contracted"
-    ? "Complete"
-    : "Pending"
-);
+  setText(
+    "profileCoordinator",
+    agent.upline ||
+    agent.coordinator ||
+    "—"
+  );
+
+  setText(
+    "profileStatus",
+    agent.teamStatus || "—"
+  );
+
+  setText(
+    "profileStage",
+    agent.stage || "—"
+  );
+
+  setText(
+    "profileCode",
+    agent.code || "—"
+  );
+
+  setText(
+    "profilePhone",
+    agent.phone || "—"
+  );
+
+  setText(
+    "profileEmail",
+    agent.email || "—"
+  );
+
+  setText(
+    "profileNextAction",
+    getNextAction(agent.stage)
+  );
+
+
+  // ========================================================
+  // COMPLIANCE
+  // ========================================================
+
+  setComplianceValue(
+    "profileResidentLicense",
+    agent.residentLicense
+  );
+
+  setComplianceValue(
+    "profileEO",
+    agent.eoStatus
+  );
+
+  setComplianceValue(
+    "profileAML",
+    agent.amlStatus
+  );
+
+  setComplianceValue(
+    "profileTevahFee",
+    agent.tevahPlatformFee
+  );
+
+
+  // ========================================================
+  // MILESTONES
+  // ========================================================
+
+  renderAgentMilestones(agent);
+
+
+  // ========================================================
+  // JOURNEY STATUS
+  // ========================================================
 
   updateJourneyStatus(agent.stage);
-
-  // Compliance
-  setComplianceValue("profileResidentLicense", agent.residentLicense);
-  setComplianceValue("profileEO", agent.eoStatus);
-  setComplianceValue("profileAML", agent.amlStatus);
-  setComplianceValue("profileTevahFee", agent.tevahPlatformFee);
 }
+
+
+/* =========================================================
+   AGENT PROFILE — MILESTONE PROGRESS
+========================================================= */
+
+function getLaunchDate(agent) {
+  return (
+    agent.recruitDate ||
+    agent.recruit_date ||
+    agent.recruitDateCST ||
+    ""
+  );
+}
+
+
+function formatMilestoneDate(value) {
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return String(value);
+  }
+
+  return date.toLocaleDateString(
+    "en-US",
+    {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    }
+  );
+}
+
+
+function renderPendingMilestone(elementId) {
+  const el =
+    document.getElementById(elementId);
+
+  if (!el) return;
+
+  el.className =
+    "milestone-status pending";
+
+  el.innerHTML = `
+    <svg
+      class="pending-clock"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+      ></circle>
+
+      <path
+        d="M12 7v5l3 2"
+      ></path>
+    </svg>
+
+    <span class="milestone-status-text">
+      Pending
+    </span>
+  `;
+}
+
+
+function renderCompletedMilestone(
+  elementId,
+  value = "Completed"
+) {
+  const el =
+    document.getElementById(elementId);
+
+  if (!el) return;
+
+  el.className =
+    "milestone-status completed";
+
+  el.textContent = value;
+}
+
+
+function normalizeStage(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase();
+}
+
+
+function isLicensedAgent(agent) {
+  const stage =
+    normalizeStage(
+      agent.pipelineStage ||
+      agent.pipeline_stage ||
+      agent.stage
+    );
+
+  const status =
+    normalizeStage(
+      agent.teamStatus ||
+      agent.status
+    );
+
+  return (
+    stage === "licensed" ||
+    stage === "contracted" ||
+    status.includes("licensed") ||
+    status.includes("contracted")
+  );
+}
+
+
+function isContractedAgent(agent) {
+  const stage =
+    normalizeStage(
+      agent.pipelineStage ||
+      agent.pipeline_stage ||
+      agent.stage
+    );
+
+  const status =
+    normalizeStage(
+      agent.teamStatus ||
+      agent.status
+    );
+
+  return (
+    stage === "contracted" ||
+    status.includes("contracted")
+  );
+}
+
+
+/* =========================================================
+   RENDER AGENT MILESTONES
+========================================================= */
+
+function renderAgentMilestones(agent) {
+  if (!agent) return;
+
+
+  // -------------------------------------------------------
+  // LAUNCHED
+  // Uses the real recruit date from your agent data
+  // -------------------------------------------------------
+
+  const launchDate =
+    getLaunchDate(agent);
+
+  if (launchDate) {
+
+    renderCompletedMilestone(
+      "profileLaunchState",
+      formatMilestoneDate(
+        launchDate
+      )
+    );
+
+  } else {
+
+    renderPendingMilestone(
+      "profileLaunchState"
+    );
+  }
+
+
+  // -------------------------------------------------------
+  // LICENSED
+  // Contracted also means Licensed has been completed
+  // -------------------------------------------------------
+
+  const licensed =
+    isLicensedAgent(agent);
+
+  if (licensed) {
+
+    renderCompletedMilestone(
+      "profileLicensedState",
+      "Completed"
+    );
+
+  } else {
+
+    renderPendingMilestone(
+      "profileLicensedState"
+    );
+  }
+
+
+  // -------------------------------------------------------
+  // CONTRACTED
+  // -------------------------------------------------------
+
+  const contracted =
+    isContractedAgent(agent);
+
+  if (contracted) {
+
+    renderCompletedMilestone(
+      "profileContractedState",
+      "Completed"
+    );
+
+  } else {
+
+    renderPendingMilestone(
+      "profileContractedState"
+    );
+  }
+
+
+  // -------------------------------------------------------
+  // VISUAL COMPLETION STATES
+  // -------------------------------------------------------
+
+  document
+    .getElementById("statusOne")
+    ?.classList.toggle(
+      "completed",
+      Boolean(launchDate)
+    );
+
+  document
+    .getElementById("statusTwo")
+    ?.classList.toggle(
+      "completed",
+      licensed
+    );
+
+  document
+    .getElementById("statusThree")
+    ?.classList.toggle(
+      "completed",
+      contracted
+    );
+}
+
 // ==========================================================
 // SAFE AGENT DISPLAY NAME
 // Prevents an email address from being shown as the agent name.
