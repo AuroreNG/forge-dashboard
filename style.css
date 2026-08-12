@@ -9463,3 +9463,6 @@ body {
   position: relative !important;
   z-index: 2 !important;
 }
+#agentsPage .agent-action-card {
+  background: #f9fbff !important;
+}
