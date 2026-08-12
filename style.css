@@ -9256,4 +9256,53 @@ body {
     0 10px 28px rgba(30,70,135,.06),
     inset 0 1px 0 rgba(255,255,255,.95) !important;
 }
+/* =========================================================
+   NEXT ACTION — IMAGE POSITION ONLY
+========================================================= */
+
+#agentsPage .agent-action-card {
+  background-image: none !important;
+  position: relative !important;
+  overflow: hidden !important;
+
+  background:
+    linear-gradient(
+      110deg,
+      rgba(255,255,255,.98) 0%,
+      rgba(255,255,255,.96) 52%,
+      rgba(244,249,255,.86) 100%
+    ) !important;
+}
+
+
+/* Glass artwork on the right */
+#agentsPage .agent-action-card::after {
+  content: "";
+
+  position: absolute;
+
+  top: -25px;
+  right: -35px;
+  bottom: -25px;
+
+  width: 52%;
+
+  background-image: url("./next-action.png");
+  background-repeat: no-repeat;
+  background-position: center right;
+  background-size: cover;
+
+  opacity: .95;
+
+  pointer-events: none;
+
+  z-index: 0;
+}
+
+
+/* Keep text/button above artwork */
+#agentsPage .agent-action-card > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
 
