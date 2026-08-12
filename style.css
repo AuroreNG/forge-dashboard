@@ -16100,3 +16100,14 @@ body {
 body.growth-drawer-open {
   overflow: hidden;
 }
+#growthPage .growth-main-grid,
+#growthPage .growth-content {
+  display: block !important;
+}
+
+#growthPage .growth-panel,
+#growthPage .team-performance,
+#growthPage .performance-card {
+  width: 100% !important;
+  max-width: none !important;
+}
