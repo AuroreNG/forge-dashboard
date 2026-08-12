@@ -16111,3 +16111,42 @@ body.growth-drawer-open {
   width: 100% !important;
   max-width: none !important;
 }
+
+#growthPage .growth-table-row {
+  transition:
+    background .15s ease,
+    box-shadow .15s ease;
+}
+
+#growthPage .growth-table-row:hover {
+  background: #fbfdff !important;
+}
+
+#growthPage .team-name strong {
+  display: block;
+  color: #10233f;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+#growthPage .team-name small {
+  display: block;
+  margin-top: 3px;
+  color: #8090a6;
+  font-size: 9px;
+}
+
+#growthPage .growth-org-button {
+  border: 0;
+  background: transparent;
+  color: #1767ed;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+
+#growthPage .growth-org-button:hover {
+  background: #eef5ff;
+}
