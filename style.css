@@ -9221,5 +9221,39 @@ body {
 /* =========================================================
    NEXT ACTION — TARGET ACTUAL CARD AUTOMATICALLY
 ========================================================= */
+/* =========================================================
+   AGENT PAGE — NEXT ACTION BACKGROUND
+========================================================= */
 
+#agentsPage .agent-action-card {
+  position: relative !important;
+  overflow: hidden !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.98) 0%,
+      rgba(255,255,255,.96) 46%,
+      rgba(255,255,255,.72) 63%,
+      rgba(245,249,255,.18) 100%
+    ),
+    url("./next-action.png") !important;
+
+  background-repeat: no-repeat !important;
+
+  background-position:
+    left center,
+    right center !important;
+
+  background-size:
+    100% 100%,
+    52% 100% !important;
+
+  border: 1px solid rgba(198,214,238,.75) !important;
+  border-radius: 18px !important;
+
+  box-shadow:
+    0 10px 28px rgba(30,70,135,.06),
+    inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
 
