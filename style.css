@@ -12095,3 +12095,25 @@ body {
 #agentsPage .milestone-status {
   font-size: 11px !important;
 }
+
+/* =========================================================
+   COMPLIANCE — FINAL SPACING
+========================================================= */
+
+#agentsPage .profile-compliance-card {
+  margin-top: 4px !important;
+  margin-bottom: 18px !important;
+}
+
+#agentsPage .compliance-grid {
+  gap: 12px !important;
+}
+
+#agentsPage .compliance-item {
+  min-height: 78px !important;
+  padding: 14px 16px !important;
+}
+
+#agentsPage .section-heading {
+  margin-bottom: 12px !important;
+}
