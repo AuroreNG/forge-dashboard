@@ -4607,25 +4607,9 @@ function renderGrowthPage() {
   const teams = {};
 
   allAgents.forEach((agent) => {
-
-    // ======================================================
-    // TEAM LEADER
-    // Use Upline first because that is what your agent data
-    // is currently showing throughout FORGE.
-    // ======================================================
-
-    const leader = String(
-      agent.upline ||
-      agent.coordinator ||
-      ""
-    ).trim();
+    const leader = String(agent.upline || "").trim();
 
     if (!leader) return;
-
-
-    // ======================================================
-    // CREATE TEAM
-    // ======================================================
 
     if (!teams[leader]) {
       teams[leader] = {
@@ -4636,56 +4620,39 @@ function renderGrowthPage() {
         licensed: 0,
         contracted: 0,
         inactive: 0,
-
-        // Used to calculate actual licensing progress
         progressPoints: 0,
-
         progress: 0
       };
     }
 
-
     const team = teams[leader];
 
+    const stage = String(
+      agent.stage ||
+      agent.pipelineStage ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
 
-    // ======================================================
-    // NORMALIZE DATA
-    // ======================================================
-
-    const stage =
-      String(agent.stage || "")
-        .trim()
-        .toLowerCase();
-
-    const teamStatus =
-      String(
-        agent.teamStatus ||
-        agent.status ||
-        ""
-      )
-        .trim()
-        .toLowerCase();
-
+    const statusText = String(
+      agent.teamStatus ||
+      agent.status ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
 
     team.total++;
 
-
-    // ======================================================
     // ACTIVE / INACTIVE
-    // ======================================================
-
-    if (teamStatus.includes("inactive")) {
+    if (statusText.includes("inactive")) {
       team.inactive++;
     } else {
       team.active++;
     }
 
-
-    // ======================================================
     // LICENSED
-    // Contracted agents are also licensed.
-    // ======================================================
-
     if (
       stage === "licensed" ||
       stage === "contracted"
@@ -4693,23 +4660,12 @@ function renderGrowthPage() {
       team.licensed++;
     }
 
-
-    // ======================================================
     // CONTRACTED
-    // ======================================================
-
     if (stage === "contracted") {
       team.contracted++;
     }
 
-
-    // ======================================================
-    // LICENSING JOURNEY PROGRESS
-    //
-    // Each person's progress is based on where they actually
-    // are in the FORGE licensing journey.
-    // ======================================================
-
+    // REAL PIPELINE PROGRESS
     const stageProgress = {
       "not placed": 0,
       "not started": 0,
@@ -4721,55 +4677,34 @@ function renderGrowthPage() {
       "xcel completed": 40,
 
       "simulation exams": 50,
-
       "exam scheduled": 60,
       "exam passed": 70,
 
       "fingerprints": 80,
-
       "applied for license": 90,
 
       "licensed": 95,
-
       "contracted": 100
     };
-
 
     team.progressPoints +=
       stageProgress[stage] ?? 0;
   });
 
 
-  // ========================================================
-  // FINALIZE TEAM METRICS
-  // ========================================================
-
   const growthTeams =
     Object.values(teams)
       .map((team) => {
-
-        if (team.total > 0) {
-          team.progress =
-            Math.round(
-              team.progressPoints /
-              team.total
-            );
-        } else {
-          team.progress = 0;
-        }
+        team.progress =
+          team.total > 0
+            ? Math.round(
+                team.progressPoints /
+                team.total
+              )
+            : 0;
 
         return team;
       })
-
-
-      // ====================================================
-      // RANK TEAMS
-      // 1. Contracted
-      // 2. Licensed
-      // 3. Journey progress
-      // 4. Active
-      // ====================================================
-
       .sort((a, b) =>
         b.contracted - a.contracted ||
         b.licensed - a.licensed ||
@@ -4777,11 +4712,15 @@ function renderGrowthPage() {
         b.active - a.active
       );
 
+  console.log(
+    "Growth teams:",
+    growthTeams.length,
+    growthTeams
+  );
 
   renderGrowthRows(growthTeams);
   renderGrowthCards(growthTeams);
 }
-
 function renderGrowthRows(growthTeams) {
   const list = document.getElementById("teamPerformanceList");
   if (!list) return;
