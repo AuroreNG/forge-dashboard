@@ -13241,3 +13241,126 @@ body {
   min-width: 235px !important;
   height: 40px !important;
 }
+
+/* =========================================
+   NEXT ACTION — SQUARE CARD
+========================================= */
+
+#agentsPage .agent-action-card {
+  width: 360px !important;
+  height: 240px !important;
+
+  min-width: 360px !important;
+  max-width: 360px !important;
+
+  min-height: 240px !important;
+  max-height: 240px !important;
+
+  justify-self: start !important;
+
+  border-radius: 16px !important;
+
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.42),
+      rgba(255,255,255,.42)
+    ),
+    url("./next-action.png") !important;
+
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+
+/* Content fills the square */
+#agentsPage .agent-action-content {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+
+  padding: 20px 24px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* Keep title/text clean */
+#agentsPage .action-copy {
+  width: 100% !important;
+}
+
+#agentsPage .action-copy h3 {
+  margin: 12px 0 6px !important;
+}
+
+#agentsPage .action-copy p {
+  margin: 0 !important;
+  max-width: 220px !important;
+}
+
+
+/* OPEN COMMAND CENTER — ALWAYS FULLY VISIBLE */
+#agentsPage .open-command-btn {
+  margin-top: auto !important;
+
+  width: 100% !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
+
+  flex: 0 0 46px !important;
+
+  padding: 0 18px !important;
+  box-sizing: border-box !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  background: #0967ed !important;
+  color: #ffffff !important;
+
+  border: none !important;
+  border-radius: 10px !important;
+
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* Keep everything comfortably inside the square */
+#agentsPage .agent-action-content {
+  height: 100% !important;
+  padding: 18px 22px !important;
+  box-sizing: border-box !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+
+  overflow: hidden !important;
+}
+
+/* Next Action description */
+#agentsPage .action-copy p {
+  margin: 4px 0 10px !important;
+  max-width: 220px !important;
+  line-height: 1.4 !important;
+}
+
+/* Prevent title from taking unnecessary space */
+#agentsPage .action-copy h3 {
+  margin: 8px 0 2px !important;
+  line-height: 1.2 !important;
+}
