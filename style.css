@@ -16150,3 +16150,36 @@ body.growth-drawer-open {
 #growthPage .growth-org-button:hover {
   background: #eef5ff;
 }
+/* =========================================================
+   GROWTH — INTELLIGENT STATUS
+========================================================= */
+
+#growthPage .status-pill.building {
+  background: #f3f6fa !important;
+  color: #687a93 !important;
+  border: 1px solid #e0e7f0 !important;
+}
+
+#growthPage .status-pill.needs-attention {
+  background: #fff5f3 !important;
+  color: #c55345 !important;
+  border: 1px solid #f4d8d3 !important;
+}
+
+#growthPage .status-pill.healthy {
+  background: #eef8f4 !important;
+  color: #26805f !important;
+  border: 1px solid #d3ebdf !important;
+}
+
+#growthPage .status-pill.strong {
+  background: #eef4ff !important;
+  color: #2864c7 !important;
+  border: 1px solid #d6e3fb !important;
+}
+
+#growthPage .status-pill.no-activity {
+  background: #f5f6f8 !important;
+  color: #8a96a7 !important;
+  border: 1px solid #e5e8ed !important;
+}
