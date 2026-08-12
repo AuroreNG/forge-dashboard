@@ -5074,7 +5074,7 @@ function renderGrowthRows(growthTeams) {
 
           // We will connect this to the
           // Team Intelligence panel next.
-          selectedGrowthTeam = team;
+          openGrowthTeamDrawer(team);
         }
       );
 
@@ -5204,6 +5204,366 @@ function renderGrowthCards(growthTeams) {
     `${avgProgress}% average across ${leadersWithDownline} leaders`
   );
 }
+// ==========================================================
+// GROWTH TEAM INTELLIGENCE DRAWER
+// ==========================================================
+
+function openGrowthTeamDrawer(team) {
+  if (!team) return;
+
+  selectedGrowthTeam = team;
+
+  const drawer =
+    document.getElementById("growthTeamDrawer");
+
+  if (!drawer) return;
+
+
+  // ========================================================
+  // BASIC SUMMARY
+  // ========================================================
+
+  setText(
+    "growthDrawerLeader",
+    team.leader || "Leader"
+  );
+
+  setText(
+    "growthDrawerSummary",
+    `${team.total} organization members • ${team.direct} direct recruits`
+  );
+
+  setText(
+    "growthDrawerDirect",
+    team.direct
+  );
+
+  setText(
+    "growthDrawerTotal",
+    team.total
+  );
+
+  setText(
+    "growthDrawerLicensed",
+    team.licensed
+  );
+
+  setText(
+    "growthDrawerContracted",
+    team.contracted
+  );
+
+  setText(
+    "growthDrawerProgress",
+    `${team.progress}%`
+  );
+
+
+  // ========================================================
+  // FIND LEADER
+  // ========================================================
+
+  const leader =
+    allAgents.find(
+      (agent) =>
+        String(agent.id) ===
+        String(team.leaderId)
+    );
+
+  if (!leader) {
+    console.warn(
+      "Growth leader not found:",
+      team
+    );
+    return;
+  }
+
+
+  const indexes =
+    buildAgentIndexes();
+
+  const directMembers =
+    getDirectRecruits(leader);
+
+  const organizationMembers =
+    getOrganizationMembers(
+      leader,
+      indexes
+    );
+
+
+  setText(
+    "growthDrawerDirectCount",
+    directMembers.length
+  );
+
+  setText(
+    "growthDrawerOrgCount",
+    organizationMembers.length
+  );
+
+
+  // ========================================================
+  // PIPELINE DISTRIBUTION
+  // ========================================================
+
+  renderGrowthPipelineDistribution(
+    organizationMembers
+  );
+
+
+  // ========================================================
+  // LISTS
+  // ========================================================
+
+  renderGrowthDrawerAgents(
+    "growthDrawerDirectList",
+    directMembers
+  );
+
+  renderGrowthDrawerAgents(
+    "growthDrawerOrgList",
+    organizationMembers
+  );
+
+
+  drawer.classList.remove("hidden");
+
+  document.body.classList.add(
+    "growth-drawer-open"
+  );
+}
+
+
+function closeGrowthTeamDrawer() {
+  document
+    .getElementById("growthTeamDrawer")
+    ?.classList.add("hidden");
+
+  document.body.classList.remove(
+    "growth-drawer-open"
+  );
+}
+
+
+// ==========================================================
+// DRAWER AGENT LIST
+// ==========================================================
+
+function renderGrowthDrawerAgents(
+  containerId,
+  agents
+) {
+  const container =
+    document.getElementById(containerId);
+
+  if (!container) return;
+
+  container.innerHTML = "";
+
+
+  if (!agents.length) {
+    container.innerHTML = `
+      <div class="growth-drawer-empty">
+        No agents
+      </div>
+    `;
+
+    return;
+  }
+
+
+  agents
+    .slice()
+    .sort((a, b) =>
+      getAgentDisplayName(a)
+        .localeCompare(
+          getAgentDisplayName(b)
+        )
+    )
+    .forEach((agent) => {
+
+      const row =
+        document.createElement("button");
+
+      row.type = "button";
+
+      row.className =
+        "growth-drawer-agent";
+
+      row.innerHTML = `
+        <span class="growth-drawer-avatar">
+          ${getInitials(
+            getAgentDisplayName(agent)
+          )}
+        </span>
+
+        <span class="growth-drawer-agent-copy">
+
+          <strong>
+            ${getAgentDisplayName(agent)}
+          </strong>
+
+          <small>
+            ${agent.stage || "Not Placed"}
+          </small>
+
+        </span>
+
+        <span class="growth-drawer-chevron">
+          ›
+        </span>
+      `;
+
+
+      row.addEventListener(
+        "click",
+        () => {
+
+          closeGrowthTeamDrawer();
+
+          selectedAgent = agent;
+
+          showPage("Agents");
+
+          showAgentProfile(agent);
+
+          document
+            .querySelectorAll(".nav-btn")
+            .forEach((btn) =>
+              btn.classList.toggle(
+                "active",
+                btn.textContent.trim() === "Agents"
+              )
+            );
+        }
+      );
+
+
+      container.appendChild(row);
+    });
+}
+
+
+// ==========================================================
+// PIPELINE DISTRIBUTION
+// ==========================================================
+
+function renderGrowthPipelineDistribution(
+  agents
+) {
+  const container =
+    document.getElementById(
+      "growthDrawerPipeline"
+    );
+
+  if (!container) return;
+
+
+  const stageOrder = [
+    "Not Placed",
+    "Quiz Sent",
+    "Quiz Passed",
+    "XCEL Completed",
+    "Exam Scheduled",
+    "Exam Passed",
+    "Fingerprints",
+    "Applied For License",
+    "Licensed",
+    "Contracted"
+  ];
+
+
+  const counts = {};
+
+  stageOrder.forEach((stage) => {
+    counts[stage] = 0;
+  });
+
+
+  agents.forEach((agent) => {
+    const stage =
+      agent.stage || "Not Placed";
+
+    if (!(stage in counts)) {
+      counts[stage] = 0;
+    }
+
+    counts[stage]++;
+  });
+
+
+  const total =
+    Math.max(agents.length, 1);
+
+
+  container.innerHTML =
+    Object.entries(counts)
+      .filter(
+        ([, count]) =>
+          count > 0
+      )
+      .map(
+        ([stage, count]) => {
+
+          const percent =
+            Math.round(
+              (count / total) * 100
+            );
+
+          return `
+            <div class="growth-pipeline-row">
+
+              <div class="growth-pipeline-label">
+                <span>${stage}</span>
+                <strong>${count}</strong>
+              </div>
+
+              <div class="growth-pipeline-track">
+                <span
+                  style="width:${percent}%"
+                ></span>
+              </div>
+
+            </div>
+          `;
+        }
+      )
+      .join("");
+}
+
+
+// ==========================================================
+// DRAWER EVENTS
+// ==========================================================
+
+document
+  .getElementById("closeGrowthDrawer")
+  ?.addEventListener(
+    "click",
+    closeGrowthTeamDrawer
+  );
+
+
+document
+  .getElementById(
+    "closeGrowthDrawerBackdrop"
+  )
+  ?.addEventListener(
+    "click",
+    closeGrowthTeamDrawer
+  );
+
+
+document.addEventListener(
+  "keydown",
+  (event) => {
+
+    if (event.key === "Escape") {
+      closeGrowthTeamDrawer();
+    }
+  }
+);
 // ─── STAGE MESSAGE TEMPLATES ─────────────────────────────────────────────────
 
 function getStageMessageTemplate(stage, method, agent) {
