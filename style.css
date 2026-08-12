@@ -12117,3 +12117,209 @@ body {
 #agentsPage .section-heading {
   margin-bottom: 12px !important;
 }
+/* =========================================================
+   AGENT PROFILE — COMPLIANCE + NEXT ACTION SIDE BY SIDE
+========================================================= */
+
+#agentsPage .agent-middle-grid {
+  width: 100% !important;
+
+  display: grid !important;
+  grid-template-columns: 36% minmax(0, 64%) !important;
+
+  gap: 16px !important;
+
+  align-items: stretch !important;
+
+  margin-top: 16px !important;
+}
+
+
+/* =========================================================
+   COMPLIANCE — LEFT PANEL
+========================================================= */
+
+#agentsPage .profile-compliance-card {
+  width: 100% !important;
+  height: 100% !important;
+
+  margin: 0 !important;
+  padding: 18px !important;
+
+  background:
+    rgba(255,255,255,.84) !important;
+
+  border:
+    1px solid rgba(213,224,239,.92) !important;
+
+  border-radius: 18px !important;
+
+  box-shadow:
+    0 10px 28px rgba(31,62,106,.035) !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* 2 x 2 like your reference */
+#agentsPage .compliance-grid {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(2, minmax(0,1fr)) !important;
+
+  gap: 10px !important;
+
+  width: 100% !important;
+}
+
+
+/* compliance cards */
+#agentsPage .compliance-item {
+  min-height: 78px !important;
+
+  padding: 12px !important;
+
+  grid-template-columns:
+    38px minmax(0,1fr) 18px !important;
+
+  gap: 9px !important;
+
+  border-radius: 12px !important;
+}
+
+
+#agentsPage .compliance-icon {
+  width: 38px !important;
+  height: 38px !important;
+}
+
+
+
+/* =========================================================
+   NEXT ACTION — RIGHT PANEL
+========================================================= */
+
+#agentsPage .agent-action-card {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 220px !important;
+
+  margin: 0 !important;
+
+  position: relative !important;
+  overflow: hidden !important;
+
+  background-image:
+    url("./next-action.png") !important;
+
+  background-size: cover !important;
+  background-position: center right !important;
+  background-repeat: no-repeat !important;
+
+  border:
+    1px solid rgba(200,215,236,.82) !important;
+
+  border-radius: 18px !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* actual content placement */
+#agentsPage .agent-action-content {
+  position: relative !important;
+
+  width: 52% !important;
+  height: 100% !important;
+  min-height: 220px !important;
+
+  padding: 24px 26px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  align-items: flex-start !important;
+
+  box-sizing: border-box !important;
+}
+
+
+/* icon */
+#agentsPage .action-icon {
+  width: 50px !important;
+  height: 50px !important;
+
+  flex: 0 0 50px !important;
+}
+
+
+/* title */
+#agentsPage .action-copy h3 {
+  margin: 13px 0 6px !important;
+
+  font-size: 21px !important;
+}
+
+
+/* description */
+#agentsPage .action-copy p {
+  max-width: 300px !important;
+
+  margin: 0 !important;
+
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+
+/* button */
+#agentsPage .open-command-btn {
+  width: 265px !important;
+  min-width: 265px !important;
+  max-width: 265px !important;
+
+  height: 48px !important;
+
+  margin-top: auto !important;
+
+  padding: 0 18px !important;
+
+  white-space: nowrap !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+
+
+/* =========================================================
+   MILESTONE BAR — FULL WIDTH UNDER BOTH
+========================================================= */
+
+#agentsPage .agent-progress-card {
+  grid-column: 1 / -1 !important;
+
+  width: 100% !important;
+
+  margin-top: 16px !important;
+}
+
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1050px) {
+
+  #agentsPage .agent-middle-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  #agentsPage .profile-compliance-card,
+  #agentsPage .agent-action-card {
+    width: 100% !important;
+  }
+}
