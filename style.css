@@ -11998,3 +11998,100 @@ body {
 #agentsPage .milestone-status {
   margin-top: 3px !important;
 }
+
+/* =========================================================
+   AGENT PROFILE — FINAL POLISH
+========================================================= */
+
+
+/* NEXT ACTION — tighter, cleaner */
+#agentsPage .agent-action-card {
+  min-height: 195px !important;
+}
+
+#agentsPage .agent-action-content {
+  min-height: 195px !important;
+  width: 46% !important;
+  padding: 22px 24px !important;
+}
+
+#agentsPage .action-icon {
+  width: 46px !important;
+  height: 46px !important;
+  font-size: 21px !important;
+}
+
+#agentsPage .action-copy h3 {
+  margin: 12px 0 6px !important;
+  font-size: 20px !important;
+}
+
+#agentsPage .action-copy p {
+  margin-bottom: 18px !important;
+  font-size: 13px !important;
+}
+
+#agentsPage .open-command-btn {
+  width: 230px !important;
+  min-width: 230px !important;
+  max-width: 230px !important;
+  height: 46px !important;
+}
+
+
+/* MILESTONE CARD */
+#agentsPage .agent-progress-card {
+  min-height: 150px !important;
+
+  padding:
+    22px 52px !important;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    120px
+    minmax(0,1fr)
+    120px
+    minmax(0,1fr) !important;
+}
+
+
+/* LONGER CONNECTORS */
+#agentsPage .agent-progress-dot {
+  width: 100% !important;
+  max-width: 120px !important;
+
+  height: 2px !important;
+
+  background: #d7e0ed !important;
+}
+
+#agentsPage .agent-progress-dot.active-dot {
+  background:
+    linear-gradient(
+      90deg,
+      #1767ed,
+      #4b86ef
+    ) !important;
+}
+
+
+/* MILESTONE ITEMS */
+#agentsPage .agent-progress-step {
+  gap: 10px !important;
+}
+
+#agentsPage .progress-circle {
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+
+  font-size: 23px !important;
+}
+
+#agentsPage .progress-copy strong {
+  font-size: 15px !important;
+}
+
+#agentsPage .milestone-status {
+  font-size: 11px !important;
+}
