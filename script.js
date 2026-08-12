@@ -2585,27 +2585,32 @@ function setComplianceValue(elementId, value) {
 
   if (!el) return;
 
-  const cleanValue =
-    String(value || "")
-      .trim();
+const cleanValue =
+  String(value || "")
+    .trim();
 
-  const hasValue =
-    cleanValue !== "" &&
-    cleanValue !== "—" &&
-    cleanValue.toLowerCase() !== "pending" &&
-    cleanValue.toLowerCase() !== "none" &&
-    cleanValue.toLowerCase() !== "no";
+const normalizedValue =
+  cleanValue.toLowerCase();
 
-  el.textContent =
-    cleanValue || "—";
+const hasValue =
+  cleanValue !== "" &&
+  cleanValue !== "—" &&
+  cleanValue !== "-" &&
+  normalizedValue !== "pending" &&
+  normalizedValue !== "none" &&
+  normalizedValue !== "no" &&
+  normalizedValue !== "n/a";
 
-  const card =
-    el.closest(".compliance-item");
+el.textContent =
+  cleanValue || "—";
 
-  card?.classList.toggle(
-    "completed",
-    hasValue
-  );
+const card =
+  el.closest(".compliance-item");
+
+card?.classList.toggle(
+  "completed",
+  hasValue
+);
 }
 
 
