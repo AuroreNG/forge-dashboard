@@ -15567,3 +15567,146 @@ body {
 
   font-size: 11px !important;
 }
+
+/* =========================================================
+   GROWTH TABLE — DIRECT VS ORGANIZATION
+========================================================= */
+
+#growthPage .growth-table-head,
+#growthPage .growth-table-row {
+  display: grid !important;
+
+  grid-template-columns:
+    55px
+    minmax(190px, 1.6fr)
+    minmax(150px, 1fr)
+    80px
+    110px
+    85px
+    95px
+    110px
+    70px !important;
+
+  align-items: center !important;
+
+  gap: 10px !important;
+}
+
+
+#growthPage .growth-table-head {
+  min-height: 46px !important;
+
+  padding: 0 16px !important;
+
+  background: #f8fafd !important;
+
+  border-bottom:
+    1px solid #dfe7f1 !important;
+
+  color: #71819a !important;
+
+  font-size: 10px !important;
+  font-weight: 750 !important;
+
+  text-transform: uppercase !important;
+  letter-spacing: .25px !important;
+}
+
+
+#growthPage .growth-table-row {
+  min-height: 72px !important;
+
+  padding: 11px 16px !important;
+
+  border-bottom:
+    1px solid #edf1f6 !important;
+
+  background:
+    rgba(255,255,255,.94) !important;
+}
+
+
+#growthPage .growth-table-row:hover {
+  background:
+    #fbfdff !important;
+}
+
+
+/* LEADER */
+
+#growthPage .team-name strong {
+  display: block !important;
+
+  color: #10233f !important;
+
+  font-size: 12px !important;
+  font-weight: 750 !important;
+}
+
+
+#growthPage .team-name small {
+  display: block !important;
+
+  margin-top: 3px !important;
+
+  color: #8391a6 !important;
+
+  font-size: 9px !important;
+}
+
+
+/* NUMBERS */
+
+#growthPage .growth-number {
+  color: #19304e !important;
+
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+
+#growthPage .organization-number {
+  color: #1767ed !important;
+
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+
+/* VIEW BUTTON */
+
+#growthPage .growth-view-team-btn {
+  height: 34px !important;
+
+  padding: 0 13px !important;
+
+  border:
+    1px solid #d7e2f0 !important;
+
+  border-radius:
+    9px !important;
+
+  background:
+    #fff !important;
+
+  color:
+    #1767ed !important;
+
+  font-size:
+    10px !important;
+
+  font-weight:
+    750 !important;
+
+  cursor:
+    pointer !important;
+}
+
+
+#growthPage .growth-view-team-btn:hover {
+  background:
+    #f4f8ff !important;
+
+  border-color:
+    #b5caf0 !important;
+}
