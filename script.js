@@ -2133,7 +2133,6 @@ function showAgentProfile(agent) {
   // ========================================================
   // COMPLIANCE
   // ========================================================
-
   setComplianceValue(
     "profileResidentLicense",
     agent.residentLicense
@@ -2154,19 +2153,9 @@ function showAgentProfile(agent) {
     agent.tevahPlatformFee
   );
 
-
-  // ========================================================
-  // MILESTONES
-  // ========================================================
-
-  renderAgentMilestones(agent);
-
-
-  // ========================================================
-  // JOURNEY STATUS
-  // ========================================================
-
-  updateJourneyStatus(agent.stage);
+  // TEMPORARILY DISABLED
+  // renderAgentMilestones(agent);
+  // updateJourneyStatus(agent.stage);
 }
 
 
