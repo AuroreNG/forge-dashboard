@@ -14463,3 +14463,185 @@ body {
 
   font-size: 17px !important;
 }
+
+/* =========================================================
+   COMMAND SIDEBAR — CLEANER / MORE PREMIUM
+========================================================= */
+
+#commandPage .command-sidebar {
+  width: 230px !important;
+  min-width: 230px !important;
+
+  padding: 18px 14px !important;
+
+  background: rgba(255,255,255,.86) !important;
+
+  border: 1px solid #dce5f1 !important;
+  border-radius: 18px !important;
+
+  box-shadow:
+    0 12px 30px rgba(31,62,108,.04) !important;
+
+  box-sizing: border-box !important;
+}
+
+#commandPage .command-sidebar h2 {
+  margin: 0 0 6px !important;
+
+  color: #10233f !important;
+
+  font-size: 18px !important;
+  font-weight: 780 !important;
+}
+
+#commandPage .command-sidebar > p {
+  margin: 0 0 14px !important;
+
+  color: #6f819a !important;
+
+  font-size: 11px !important;
+  line-height: 1.45 !important;
+
+  font-weight: 600 !important;
+}
+
+
+/* SEARCH */
+#commandPage #commandSearch {
+  width: 100% !important;
+  height: 42px !important;
+
+  padding: 0 13px !important;
+
+  margin: 0 0 12px !important;
+
+  border: 1px solid #dce5f1 !important;
+  border-radius: 11px !important;
+
+  background: #fff !important;
+
+  box-sizing: border-box !important;
+
+  outline: none !important;
+}
+
+
+/* AGENT LIST */
+#commandPage #commandAgentList {
+  display: flex !important;
+  flex-direction: column !important;
+
+  gap: 8px !important;
+}
+
+
+/* agent row */
+#commandPage .command-agent-item {
+  min-height: 58px !important;
+
+  padding: 9px 10px !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    34px minmax(0,1fr) 18px !important;
+
+  align-items: center !important;
+
+  gap: 9px !important;
+
+  border: 1px solid #e0e7f1 !important;
+  border-radius: 11px !important;
+
+  background: rgba(255,255,255,.9) !important;
+
+  transition: .15s ease !important;
+}
+
+
+#commandPage .command-agent-item.active {
+  border-color: #2d76f2 !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f8fbff,
+      #eef5ff
+    ) !important;
+
+  box-shadow:
+    inset 3px 0 0 #1767ed !important;
+}
+
+
+#commandPage .command-agent-item-avatar {
+  width: 32px !important;
+  height: 32px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      #236be1,
+      #0b429b
+    ) !important;
+
+  color: #fff !important;
+
+  font-size: 10px !important;
+  font-weight: 750 !important;
+}
+
+
+#commandPage .command-agent-item b {
+  display: block !important;
+
+  color: #10233f !important;
+
+  font-size: 11px !important;
+  line-height: 1.15 !important;
+
+  font-weight: 700 !important;
+}
+
+
+#commandPage .command-agent-item span {
+  display: block !important;
+
+  margin-top: 2px !important;
+
+  color: #72839c !important;
+
+  font-size: 9px !important;
+  line-height: 1.25 !important;
+}
+
+
+/* pagination */
+#commandPage #commandPagination {
+  margin-top: 12px !important;
+
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 7px !important;
+}
+
+#commandPage #commandPagination button {
+  width: 30px !important;
+  height: 30px !important;
+
+  border: 1px solid #dce5f1 !important;
+  border-radius: 8px !important;
+
+  background: #fff !important;
+
+  color: #516883 !important;
+
+  font-size: 11px !important;
+}
