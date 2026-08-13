@@ -16258,3 +16258,26 @@ body.growth-drawer-open {
   color: #71809b;
   font-size: 12px;
 }
+
+.hidden {
+  display: none !important;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+
+  width: 240px;
+
+  padding: 10px;
+
+  background: #fff;
+  border: 1px solid #dce5f2;
+  border-radius: 16px;
+
+  box-shadow:
+    0 18px 45px rgba(15, 42, 85, 0.14);
+
+  z-index: 9999;
+}
