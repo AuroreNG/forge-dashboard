@@ -16183,3 +16183,78 @@ body.growth-drawer-open {
   color: #8a96a7 !important;
   border: 1px solid #e5e8ed !important;
 }
+.user-menu-wrap {
+  position: relative;
+  margin-left: auto;
+}
+
+.user-menu-btn {
+  min-width: 210px;
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  padding: 8px 14px;
+
+  background: #ffffff;
+  border: 1px solid #dce5f2;
+  border-radius: 16px;
+
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.header-user-avatar {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #0b3470;
+  color: white;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.header-user-copy {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.header-user-copy span {
+  max-width: 120px;
+
+  font-size: 13px;
+  font-weight: 800;
+  color: #0b1c3b;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-user-copy small {
+  margin-top: 2px;
+
+  font-size: 10px;
+  font-weight: 600;
+  color: #71809b;
+}
+
+.user-menu-chevron {
+  color: #71809b;
+  font-size: 12px;
+}
