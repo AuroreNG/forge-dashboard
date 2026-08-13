@@ -944,19 +944,117 @@ function formatUserRole(role) {
     );
 }
 function updateTime() {
-  const now  = new Date();
+  const now = new Date();
   const hour = now.getHours();
-  let greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
-  const coordinatorName = selectedCoordinator === "All" ? "Team" : selectedCoordinator;
-  setText("greeting", greeting + ", " + coordinatorName + ".");
 
-  const date = document.getElementById("todayDate");
-  if (date) date.textContent = now.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+  const greeting =
+    hour < 12
+      ? "Good morning"
+      : hour < 17
+      ? "Good afternoon"
+      : "Good evening";
 
-  const time = document.getElementById("todayTime");
-  if (time) time.textContent = now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  // Use the authenticated user's first name
+  const fullName =
+    currentUserProfile?.full_name ||
+    currentUserProfile?.name ||
+    "";
+
+  const firstName =
+    fullName.trim().split(/\s+/)[0];
+
+  setText(
+    "greeting",
+    firstName
+      ? `${greeting}, ${firstName}.`
+      : `${greeting}.`
+  );
+
+  const date =
+    document.getElementById("todayDate");
+
+  if (date) {
+    date.textContent =
+      now.toLocaleDateString(undefined, {
+        weekday: "long",
+        month: "long",
+        day: "numeric"
+      });
+  }
+
+  const time =
+    document.getElementById("todayTime");
+
+  if (time) {
+    time.textContent =
+      now.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit"
+      });
+  }
 }
+// ==========================================================
+// USER MENU INTERACTIONS
+// ==========================================================
 
+const userMenuBtn =
+  document.getElementById("userMenuBtn");
+
+const userDropdown =
+  document.getElementById("userDropdown");
+
+const logoutBtn =
+  document.getElementById("logoutBtn");
+
+
+userMenuBtn?.addEventListener("click", (event) => {
+  event.stopPropagation();
+
+  userDropdown?.classList.toggle("hidden");
+});
+
+
+document.addEventListener("click", (event) => {
+  const menu =
+    event.target.closest(".user-menu-wrap");
+
+  if (!menu) {
+    userDropdown?.classList.add("hidden");
+  }
+});
+
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    userDropdown?.classList.add("hidden");
+  }
+});
+
+
+logoutBtn?.addEventListener("click", async () => {
+  try {
+
+    const { error } =
+      await forgeSupabase.auth.signOut();
+
+    if (error) {
+      console.error(
+        "FORGE logout failed:",
+        error
+      );
+
+      return;
+    }
+
+    window.location.reload();
+
+  } catch (error) {
+    console.error(
+      "FORGE logout error:",
+      error
+    );
+  }
+});
 // ─── FILTER BUTTONS ───────────────────────────────────────────────────────────
 
 document.querySelectorAll(".filter").forEach((button) => {
@@ -965,12 +1063,6 @@ document.querySelectorAll(".filter").forEach((button) => {
     button.classList.add("active");
     renderDashboard(button.dataset.filter);
   });
-});
-
-document.getElementById("coordinatorSelect")?.addEventListener("change", (event) => {
-  selectedCoordinator = event.target.value;
-  updateTime();
-  renderDashboard("all");
 });
 
 // ─── LOAD AGENTS FROM SUPABASE ────────────────────────────────────────────────
