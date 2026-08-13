@@ -508,68 +508,233 @@
 
 </main>
 
-    <section class="lower brief-layout">
-  <div class="card brief-card">
-    <div class="section-head">
-      <h3>Today's Brief</h3>
-    </div>
+    <section class="lower home-workspace">
 
-    <div class="brief-summary">
-      <div class="brief-title-row">
-        <div>
-          <h2>Pipeline Progress</h2>
-          <p>Quick view of where the team stands today.</p>
+  <!-- =====================================================
+       TODAY'S WORK QUEUE
+  ====================================================== -->
+
+  <div class="card work-queue-card">
+
+    <div class="work-queue-header">
+
+      <div>
+        <div class="work-queue-title-row">
+          <h3>Today's Work Queue</h3>
+
+          <span
+            id="workQueueAttentionCount"
+            class="attention-pill"
+          >
+            0 need your attention
+          </span>
         </div>
 
-        <button class="view-btn">Open Journey →</button>
+        <p>
+          FORGE identifies people who need your input today.
+        </p>
       </div>
 
-      <div class="brief-list">
-        <div class="brief-item">
-          <span>Not Placed</span>
-          <strong id="notStartedCount">0</strong>
-        </div>
+      <button
+        id="startFollowUpsBtn"
+        type="button"
+        class="start-followups-btn"
+      >
+        Start My Follow-Ups →
+      </button>
 
-        <div class="brief-item">
-          <span>Quiz Sent</span>
-          <strong id="quizSentCount">0</strong>
-        </div>
-
-        <div class="brief-item">
-          <span>XCEL</span>
-          <strong id="xcelCount">0</strong>
-        </div>
-
-        <div class="brief-item">
-          <span>Exam</span>
-          <strong id="examCount">0</strong>
-        </div>
-
-        <div class="brief-item">
-          <span>Licensed</span>
-          <strong id="licensedPipelineCount">0</strong>
-        </div>
-
-        <div class="brief-item">
-          <span>Contracted</span>
-          <strong id="contractedPipelineCount">0</strong>
-        </div>
-      </div>
     </div>
+
+
+    <div class="work-queue-table">
+
+      <div class="work-queue-head">
+        <span>Person</span>
+        <span>Why surfaced</span>
+        <span>Next action</span>
+        <span>Priority</span>
+        <span>Last activity</span>
+      </div>
+
+      <div id="workQueueList"></div>
+
+    </div>
+
+
+    <button
+      id="viewAllWorkQueueBtn"
+      type="button"
+      class="view-all-workqueue"
+    >
+      View all work queue →
+    </button>
+
   </div>
 
-  <div class="card focus-card focus-section">
-    <div class="focus-header">
+
+  <!-- =====================================================
+       PIPELINE OVERVIEW
+  ====================================================== -->
+
+  <aside class="card pipeline-overview-card">
+
+    <div class="pipeline-overview-header">
+
       <div>
-        <h3>Focus</h3>
-        <p>People who need action now</p>
+        <h3>Pipeline Overview</h3>
+        <p>
+          Where your team stands in the licensing journey
+        </p>
       </div>
 
-      <button id="viewAgents">Open Agents →</button>
+      <button
+        id="openJourneyBtn"
+        type="button"
+      >
+        Open Journey →
+      </button>
+
     </div>
 
-    <div id="focusList" class="focus-list"></div>
-     </div>
+
+    <div class="pipeline-overview-list">
+
+      <div class="pipeline-overview-row">
+        <div class="pipeline-overview-label">
+          <span class="pipeline-mini-icon">
+            ◉
+          </span>
+          <strong>Not Placed</strong>
+        </div>
+
+        <div class="pipeline-overview-track">
+          <span id="notPlacedBar"></span>
+        </div>
+
+        <strong id="notStartedCount">0</strong>
+
+        <span id="notPlacedPercent">
+          0%
+        </span>
+      </div>
+
+
+      <div class="pipeline-overview-row">
+        <div class="pipeline-overview-label">
+          <span class="pipeline-mini-icon">
+            ↗
+          </span>
+          <strong>Quiz Sent</strong>
+        </div>
+
+        <div class="pipeline-overview-track">
+          <span id="quizSentBar"></span>
+        </div>
+
+        <strong id="quizSentCount">0</strong>
+
+        <span id="quizSentPercent">
+          0%
+        </span>
+      </div>
+
+
+      <div class="pipeline-overview-row">
+        <div class="pipeline-overview-label">
+          <span class="pipeline-mini-icon">
+            ▣
+          </span>
+          <strong>XCEL</strong>
+        </div>
+
+        <div class="pipeline-overview-track">
+          <span id="xcelBar"></span>
+        </div>
+
+        <strong id="xcelCount">0</strong>
+
+        <span id="xcelPercent">
+          0%
+        </span>
+      </div>
+
+
+      <div class="pipeline-overview-row">
+        <div class="pipeline-overview-label">
+          <span class="pipeline-mini-icon">
+            ◫
+          </span>
+          <strong>Exam</strong>
+        </div>
+
+        <div class="pipeline-overview-track">
+          <span id="examBar"></span>
+        </div>
+
+        <strong id="examCount">0</strong>
+
+        <span id="examPercent">
+          0%
+        </span>
+      </div>
+
+
+      <div class="pipeline-overview-row">
+        <div class="pipeline-overview-label">
+          <span class="pipeline-mini-icon">
+            ◇
+          </span>
+          <strong>Licensed</strong>
+        </div>
+
+        <div class="pipeline-overview-track">
+          <span id="licensedBar"></span>
+        </div>
+
+        <strong id="licensedPipelineCount">
+          0
+        </strong>
+
+        <span id="licensedPercent">
+          0%
+        </span>
+      </div>
+
+
+      <div class="pipeline-overview-row">
+        <div class="pipeline-overview-label">
+          <span class="pipeline-mini-icon">
+            ✓
+          </span>
+          <strong>Contracted</strong>
+        </div>
+
+        <div class="pipeline-overview-track">
+          <span id="contractedBar"></span>
+        </div>
+
+        <strong id="contractedPipelineCount">
+          0
+        </strong>
+
+        <span id="contractedPercent">
+          0%
+        </span>
+      </div>
+
+    </div>
+
+
+    <button
+      id="viewFullJourneyBtn"
+      type="button"
+      class="view-full-journey-btn"
+    >
+      View full journey →
+    </button>
+
+  </aside>
+
 </section>
 
 <section id="journeyPage" class="journey-page hidden">
