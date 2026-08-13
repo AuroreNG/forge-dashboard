@@ -906,6 +906,43 @@ function setText(id, value) {
   if (el) el.textContent = value;
 }
 
+// ==========================================================
+// LOGGED-IN USER MENU
+// ==========================================================
+
+function renderLoggedInUser() {
+  if (!currentUserProfile) return;
+
+  const fullName =
+    currentUserProfile.full_name ||
+    currentUserProfile.name ||
+    currentUserProfile.email ||
+    "User";
+
+  const email =
+    currentUserProfile.email || "";
+
+  const role =
+    currentUserProfile.role || "user";
+
+  setText("headerUserName", fullName);
+  setText("dropdownUserName", fullName);
+  setText("dropdownUserEmail", email);
+  setText("headerUserAvatar", getInitials(fullName));
+
+  setText(
+    "headerUserRole",
+    formatUserRole(role)
+  );
+}
+
+function formatUserRole(role) {
+  return String(role || "user")
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (letter) =>
+      letter.toUpperCase()
+    );
+}
 function updateTime() {
   const now  = new Date();
   const hour = now.getHours();
