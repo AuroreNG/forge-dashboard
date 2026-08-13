@@ -40,7 +40,12 @@ const pipelineStages = [
   "Licensed",
   "Contracted"
 ];
-
+const homePipelineStages = [
+  "Not Placed",
+  "Quiz Sent",
+  "XCEL Completed",
+  "Exam Passed"
+];
 // Launch side of Journey
 const launchStages = [
   "Not Placed",
@@ -659,9 +664,9 @@ function getMetrics(list) {
   const totalTeam = list.length;
 
   const pipeline =
-    list.filter((a) =>
-      pipelineStages.includes(a.stage)
-    ).length;
+  list.filter((a) =>
+    homePipelineStages.includes(a.stage)
+  ).length;
 
   // Licensed includes Contracted
   const licensed =
