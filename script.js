@@ -911,15 +911,11 @@ function setText(id, value) {
 // ==========================================================
 
 function renderLoggedInUser() {
-  if (!currentUserProfile) {
-    console.warn("Cannot render user: currentUserProfile is empty");
-    return;
-  }
+  if (!currentUserProfile) return;
 
   const fullName =
     currentUserProfile.full_name ||
     currentUserProfile.name ||
-    currentUserProfile.email ||
     "User";
 
   const email =
@@ -928,18 +924,35 @@ function renderLoggedInUser() {
   const role =
     currentUserProfile.role || "user";
 
-  setText("headerUserName", fullName);
-  setText("headerUserAvatar", getInitials(fullName));
-  setText("headerUserRole", formatUserRole(role));
+  setText(
+    "headerUserAvatar",
+    getInitials(fullName)
+  );
 
-  setText("dropdownUserName", fullName);
-  setText("dropdownUserEmail", email);
+  setText(
+    "headerUserName",
+    fullName
+  );
 
-  console.log("Header user rendered:", {
-    fullName,
-    email,
-    role
-  });
+  setText(
+    "headerUserRole",
+    formatUserRole(role)
+  );
+
+  setText(
+    "dropdownUserName",
+    fullName
+  );
+
+  setText(
+    "dropdownUserEmail",
+    email
+  );
+
+  // always start closed
+  document
+    .getElementById("userDropdown")
+    ?.classList.add("hidden");
 }
 
 function formatUserRole(role) {
