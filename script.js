@@ -656,82 +656,12 @@ function detectTevahFileType(rows) {
   return "unknown";
 }
 
-// ─── METRICS ─────────────────────────────────────────────────────────────────
-
-// ─── METRICS ─────────────────────────────────────────────────────────────────
-
-function getMetrics(list) {
-  const totalTeam = list.length;
-
-  const pipeline =
-  list.filter((a) =>
-    homePipelineStages.includes(a.stage)
-  ).length;
-
-  // Licensed includes Contracted
-  const licensed =
-    list.filter(
-      (a) =>
-        a.stage === "Licensed" ||
-        a.stage === "Contracted"
-    ).length;
-
-  const contracted =
-    list.filter(
-      (a) =>
-        a.stage === "Contracted"
-    ).length;
-
-
-  // ========================================================
-  // RATES
-  // ========================================================
-
-  const licensingRate =
-    totalTeam > 0
-      ? Math.round(
-          (licensed / totalTeam) * 100
-        )
-      : 0;
-
-
-  // Of licensed agents, how many are already contracted?
-  const contractingRate =
-    licensed > 0
-      ? Math.round(
-          (contracted / licensed) * 100
-        )
-      : 0;
-
-
-  // Do NOT add licensed + contracted because contracted
-  // agents are already included inside licensed.
-  const activationRate =
-    totalTeam > 0
-      ? Math.round(
-          (contracted / totalTeam) * 100
-        )
-      : 0;
-
-
-  return {
-    totalTeam,
-    pipeline,
-    licensed,
-    contracted,
-    licensingRate,
-    contractingRate,
-    activationRate
-  };
-}
-// ─── METRICS ─────────────────────────────────────────────────────────────────
-
 function getMetrics(list) {
   const totalTeam = list.length;
 
   const pipeline =
     list.filter((a) =>
-      pipelineStages.includes(a.stage)
+      homePipelineStages.includes(a.stage)
     ).length;
 
   const licensed =
@@ -743,8 +673,7 @@ function getMetrics(list) {
 
   const contracted =
     list.filter(
-      (a) =>
-        a.stage === "Contracted"
+      (a) => a.stage === "Contracted"
     ).length;
 
   const licensingRate =
@@ -772,14 +701,6 @@ function getMetrics(list) {
     activationRate
   };
 }
-
-
-// ADD THIS
-function getVisibleAgents() {
-  return allAgents;
-}
-
-
 // ─── DASHBOARD ───────────────────────────────────────────
 
 function renderDashboard(filter) {
