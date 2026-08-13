@@ -83,6 +83,10 @@ button {
   padding: 0 30px;
   margin-bottom: 24px;
   box-shadow: var(--shadow);
+
+  position: relative;
+  z-index: 1000;
+  overflow: visible;
 }
 
 .brand {
@@ -190,6 +194,9 @@ nav {
    3. DASHBOARD HOME
 ========================= */
 .dashboard {
+  position: relative;
+  z-index: 1;
+
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 24px;
@@ -16349,4 +16356,41 @@ body.growth-drawer-open {
 
 .logout-btn:hover {
   background: #fef2f2;
+}
+
+/* Keep the entire header above dashboard content */
+header {
+  position: relative;
+  z-index: 1000;
+}
+
+/* User menu needs its own stacking context */
+.user-menu-wrap {
+  position: relative;
+  margin-left: auto;
+  z-index: 1100;
+}
+
+/* Dropdown must float above Today and all dashboard cards */
+.user-dropdown {
+  position: absolute;
+
+  top: calc(100% + 12px);
+  right: 0;
+
+  width: 260px;
+  padding: 12px;
+
+  background: #ffffff;
+  border: 1px solid #dce5f2;
+  border-radius: 16px;
+
+  box-shadow:
+    0 20px 50px rgba(15, 42, 85, 0.18);
+
+  z-index: 9999;
+}
+
+.hidden {
+  display: none !important;
 }
