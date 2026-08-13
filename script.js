@@ -524,6 +524,7 @@ async function importRecruitFile(parsedRows, file) {
   );
 }
 
+
 function findExistingTeamAgent(complianceAgent) {
   const code =
     String(complianceAgent.code || "")
@@ -1485,6 +1486,58 @@ document.addEventListener("click", (event) => {
     );
 
 });
+
+function renderLoggedInUser() {
+  if (!currentUserProfile) return;
+
+  const fullName =
+    currentUserProfile.full_name ||
+    currentUserProfile.name ||
+    currentUserProfile.email ||
+    "User";
+
+  const role =
+    currentUserProfile.role ||
+    "Coordinator";
+
+  const email =
+    currentUserProfile.email ||
+    "";
+
+  setText(
+    "headerUserName",
+    fullName
+  );
+
+  setText(
+    "headerUserRole",
+    formatUserRole(role)
+  );
+
+  setText(
+    "dropdownUserName",
+    fullName
+  );
+
+  setText(
+    "dropdownUserEmail",
+    email
+  );
+
+  setText(
+    "headerUserAvatar",
+    getInitials(fullName)
+  );
+}
+
+
+function formatUserRole(role) {
+  return String(role || "")
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (letter) =>
+      letter.toUpperCase()
+    );
+}
 // ==========================================================
 // JOURNEY SEARCH
 // ==========================================================
