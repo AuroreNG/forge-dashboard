@@ -727,71 +727,22 @@ function renderDashboard(filter = "all") {
 
   if (filter === "contracted") {
     filtered = visibleAgents.filter(
-      (agent) =>
-        agent.stage === "Contracted"
+      (agent) => agent.stage === "Contracted"
     );
   }
 
-  const filteredMetrics =
-    getMetrics(filtered);
+  const filteredMetrics = getMetrics(filtered);
+  const allMetrics = getMetrics(visibleAgents);
 
-  const allMetrics =
-    getMetrics(visibleAgents);
+  setText("totalCount", filteredMetrics.totalTeam);
+  setText("pipelineCount", filteredMetrics.pipeline);
+  setText("licensedCount", filteredMetrics.licensed);
+  setText("contractedCount", filteredMetrics.contracted);
 
-
-  // ========================================================
-  // MAIN KPI CARDS
-  // ========================================================
-
-  setText(
-    "totalCount",
-    filteredMetrics.totalTeam
-  );
-
-  setText(
-    "pipelineCount",
-    filteredMetrics.pipeline
-  );
-
-  setText(
-    "licensedCount",
-    filteredMetrics.licensed
-  );
-
-  setText(
-    "contractedCount",
-    filteredMetrics.contracted
-  );
-
-
-  // ========================================================
-  // JOURNEY SUMMARY
-  // ========================================================
-
-  setText(
-    "journeyActive",
-    allMetrics.totalTeam
-  );
-
-  setText(
-    "journeyNonLicensed",
-    allMetrics.pipeline
-  );
-
-  setText(
-    "journeyLicensed",
-    allMetrics.licensed
-  );
-
-  setText(
-    "journeyContracted",
-    allMetrics.contracted
-  );
-
-
-  // ========================================================
-  // TODAY RATES
-  // ========================================================
+  setText("journeyActive", allMetrics.totalTeam);
+  setText("journeyNonLicensed", allMetrics.pipeline);
+  setText("journeyLicensed", allMetrics.licensed);
+  setText("journeyContracted", allMetrics.contracted);
 
   setText(
     "licensingRate",
@@ -813,11 +764,6 @@ function renderDashboard(filter = "all") {
     `${allMetrics.contracted} / ${allMetrics.licensed}`
   );
 
-
-  // ========================================================
-  // RINGS
-  // ========================================================
-
   setRing(
     "licensingRing",
     allMetrics.licensingRate,
@@ -830,11 +776,6 @@ function renderDashboard(filter = "all") {
     "#16a34a"
   );
 
-
-  // ========================================================
-  // HOME CONTENT
-  // ========================================================
-
   renderFocusList(visibleAgents);
   renderPipelineBoard(visibleAgents);
 }
@@ -846,19 +787,35 @@ function setRing(id, percent, color) {
 }
 
 function renderFocusList(agents) {
-  const focusList = document.getElementById("focusList");
+  const focusList =
+    document.getElementById("focusList");
+
   if (!focusList) return;
 
-  const focusAgents = agents.filter((a) => pipelineStages.includes(a.stage)).slice(0, 5);
+  const focusAgents = agents
+    .filter((a) =>
+      homePipelineStages.includes(a.stage)
+    )
+    .slice(0, 5);
+
   focusList.innerHTML = "";
 
   focusAgents.forEach((agent) => {
     const row = document.createElement("div");
+
     row.className = "focus-row";
+
     row.innerHTML = `
-      <div class="focus-avatar">${getInitials(agent.name)}</div>
-      <div><b>${agent.name}</b><span>${agent.stage}</span></div>
+      <div class="focus-avatar">
+        ${getInitials(agent.name)}
+      </div>
+
+      <div>
+        <b>${agent.name}</b>
+        <span>${agent.stage}</span>
+      </div>
     `;
+
     focusList.appendChild(row);
   });
 }
