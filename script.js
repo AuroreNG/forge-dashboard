@@ -810,11 +810,6 @@ function renderDashboard(filter) {
   const filteredMetrics = getMetrics(filtered);
   const allMetrics = getMetrics(visibleAgents);
 
-  setText("totalCount", filteredMetrics.totalTeam);
-  setText("pipelineCount", filteredMetrics.pipeline);
-  setText("licensedCount", filteredMetrics.licensed);
-  setText("contractedCount", filteredMetrics.contracted);
-
   setText(
     "licensingRate",
     allMetrics.licensingRate + "%"
