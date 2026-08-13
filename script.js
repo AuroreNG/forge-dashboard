@@ -787,11 +787,11 @@ function renderDashboard(filter) {
 
   let filtered = visibleAgents;
 
-  if (filter === "pipeline") {
-    filtered = visibleAgents.filter(
-      (a) => pipelineStages.includes(a.stage)
-    );
-  }
+ if (filter === "pipeline") {
+  filtered = visibleAgents.filter((a) =>
+    homePipelineStages.includes(a.stage)
+  );
+}
 
   if (filter === "licensed") {
     filtered = visibleAgents.filter(
