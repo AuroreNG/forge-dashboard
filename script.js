@@ -779,6 +779,7 @@ function renderDashboard(filter = "all") {
 
   renderFocusList(visibleAgents);
   renderPipelineBoard(visibleAgents);
+  updateHomeIntelligence(visibleAgents);
 }
 
 function setRing(id, percent, color) {
@@ -835,6 +836,38 @@ renderStage(
   renderStage("Contracted",   "contractedPipelineCount",  "contractedPipelineList",  agents);
 }
 
+document
+  .getElementById("forgeInsightBtn")
+  ?.addEventListener("click", () => {
+
+    showPage("Command");
+
+    document
+      .querySelectorAll(".nav-btn")
+      .forEach((btn) =>
+        btn.classList.toggle(
+          "active",
+          btn.textContent.trim() === "Command"
+        )
+      );
+
+  });
+document
+  .getElementById("pulseActionBtn")
+  ?.addEventListener("click", () => {
+
+    showPage("Agents");
+
+    document
+      .querySelectorAll(".nav-btn")
+      .forEach((btn) =>
+        btn.classList.toggle(
+          "active",
+          btn.textContent.trim() === "Agents"
+        )
+      );
+
+  });
 function renderStage(stageName, countId, listId, agents) {
 
   const stageAgents =
@@ -1074,6 +1107,150 @@ logoutBtn?.addEventListener("click", async () => {
     );
   }
 });
+
+function updateHomeIntelligence(agents) {
+  if (!Array.isArray(agents)) return;
+
+  const total = agents.length;
+
+  const notPlaced = agents.filter(
+    (a) => a.stage === "Not Placed"
+  ).length;
+
+  const quizSent = agents.filter(
+    (a) => a.stage === "Quiz Sent"
+  ).length;
+
+  const xcel = agents.filter(
+    (a) => a.stage === "XCEL Completed"
+  ).length;
+
+  const exam = agents.filter(
+    (a) => a.stage === "Exam Passed"
+  ).length;
+
+  const licensedOnly = agents.filter(
+    (a) => a.stage === "Licensed"
+  ).length;
+
+  const contracted = agents.filter(
+    (a) => a.stage === "Contracted"
+  ).length;
+
+  const licensedIncludingContracted =
+    licensedOnly + contracted;
+
+
+  // ========================================================
+  // FORGE INSIGHT
+  // ========================================================
+
+  let primaryInsight = "";
+  let secondaryInsight = "";
+
+  if (licensedOnly > 0) {
+    primaryInsight =
+      `${licensedOnly} licensed ${
+        licensedOnly === 1 ? "agent is" : "agents are"
+      } not yet contracted.`;
+  } else {
+    primaryInsight =
+      "All licensed agents are currently contracted.";
+  }
+
+
+  if (notPlaced > 0) {
+    secondaryInsight =
+      `${notPlaced} ${
+        notPlaced === 1 ? "agent has" : "agents have"
+      } not started the licensing journey.`;
+  } else if (quizSent > 0) {
+    secondaryInsight =
+      `${quizSent} ${
+        quizSent === 1 ? "quiz is" : "quizzes are"
+      } currently awaiting completion.`;
+  } else if (xcel > 0) {
+    secondaryInsight =
+      `${xcel} ${
+        xcel === 1 ? "agent is" : "agents are"
+      } currently progressing through XCEL.`;
+  } else {
+    secondaryInsight =
+      "Your licensing pipeline is moving forward.";
+  }
+
+
+  setText(
+    "forgeInsightPrimary",
+    primaryInsight
+  );
+
+  setText(
+    "forgeInsightSecondary",
+    secondaryInsight
+  );
+
+
+  // ========================================================
+  // ORGANIZATION PULSE ACTION
+  // ========================================================
+
+  if (licensedOnly > 0) {
+
+    setText(
+      "pulseActionTitle",
+      `${licensedOnly} licensed ${
+        licensedOnly === 1 ? "agent needs" : "agents need"
+      } contracting`
+    );
+
+    setText(
+      "pulseActionText",
+      "They are approved and ready for the next step."
+    );
+
+  } else if (notPlaced > 0) {
+
+    setText(
+      "pulseActionTitle",
+      `${notPlaced} ${
+        notPlaced === 1 ? "agent has" : "agents have"
+      } not started`
+    );
+
+    setText(
+      "pulseActionText",
+      "Follow up to move them into the licensing journey."
+    );
+
+  } else if (quizSent > 0) {
+
+    setText(
+      "pulseActionTitle",
+      `${quizSent} ${
+        quizSent === 1 ? "quiz is" : "quizzes are"
+      } outstanding`
+    );
+
+    setText(
+      "pulseActionText",
+      "Follow up with agents who have not completed their quiz."
+    );
+
+  } else {
+
+    setText(
+      "pulseActionTitle",
+      "Organization is progressing"
+    );
+
+    setText(
+      "pulseActionText",
+      `${contracted} of ${total} agents are contracted.`
+    );
+
+  }
+}
 // ─── FILTER BUTTONS ───────────────────────────────────────────────────────────
 
 document.querySelectorAll(".filter").forEach((button) => {
