@@ -16281,3 +16281,72 @@ body.growth-drawer-open {
 
   z-index: 9999;
 }
+
+.hidden {
+  display: none !important;
+}
+
+.user-menu-wrap {
+  position: relative;
+  margin-left: auto;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+
+  width: 250px;
+  padding: 12px;
+
+  background: #ffffff;
+  border: 1px solid #dce5f2;
+  border-radius: 16px;
+
+  box-shadow: 0 18px 45px rgba(15, 42, 85, 0.16);
+
+  z-index: 9999;
+}
+
+.user-dropdown-profile {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+}
+
+.user-dropdown-profile strong {
+  font-size: 14px;
+  color: #0b1c3b;
+}
+
+.user-dropdown-profile span {
+  margin-top: 3px;
+  font-size: 12px;
+  color: #71809b;
+}
+
+.user-dropdown-divider {
+  height: 1px;
+  margin: 7px 0;
+  background: #e8edf5;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 10px 12px;
+
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+
+  text-align: left;
+  font-family: inherit;
+  font-weight: 700;
+  color: #dc2626;
+
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: #fef2f2;
+}
