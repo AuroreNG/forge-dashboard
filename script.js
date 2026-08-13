@@ -911,7 +911,10 @@ function setText(id, value) {
 // ==========================================================
 
 function renderLoggedInUser() {
-  if (!currentUserProfile) return;
+  if (!currentUserProfile) {
+    console.warn("Cannot render user: currentUserProfile is empty");
+    return;
+  }
 
   const fullName =
     currentUserProfile.full_name ||
@@ -926,14 +929,17 @@ function renderLoggedInUser() {
     currentUserProfile.role || "user";
 
   setText("headerUserName", fullName);
+  setText("headerUserAvatar", getInitials(fullName));
+  setText("headerUserRole", formatUserRole(role));
+
   setText("dropdownUserName", fullName);
   setText("dropdownUserEmail", email);
-  setText("headerUserAvatar", getInitials(fullName));
 
-  setText(
-    "headerUserRole",
-    formatUserRole(role)
-  );
+  console.log("Header user rendered:", {
+    fullName,
+    email,
+    role
+  });
 }
 
 function formatUserRole(role) {
@@ -6058,10 +6064,12 @@ async function loadCurrentUserProfile() {
 
   currentUserProfile = profile;
 
-  console.log(
-    "Current FORGE profile:",
-    currentUserProfile
-  );
+console.log(
+  "Current FORGE profile:",
+  currentUserProfile
+);
+
+renderLoggedInUser();
 
   return profile;
 }
