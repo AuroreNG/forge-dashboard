@@ -22,16 +22,61 @@
         <button class="nav-btn">Growth</button>
       </nav>
 
-      <div class="coordinator">
-        <small>Coordinator</small>
-        <select id="coordinatorSelect">
-          <option value="All">All</option>
-          <option value="Miranda">Miranda</option>
-          <option value="Prince">Prince</option>
-          <option value="Freddy">Freddy</option>
-          <option value="Georgette">Georgette</option>
-        </select>
-      </div>
+      <div class="user-menu-wrap">
+
+  <button
+    id="userMenuBtn"
+    class="user-menu-btn"
+    type="button"
+  >
+    <div
+      id="headerUserAvatar"
+      class="header-user-avatar"
+    >
+      GN
+    </div>
+
+    <div class="header-user-copy">
+      <span id="headerUserName">
+        User
+      </span>
+
+      <small id="headerUserRole">
+        Coordinator
+      </small>
+    </div>
+
+    <span class="user-menu-chevron">
+      ▾
+    </span>
+  </button>
+
+  <div
+    id="userDropdown"
+    class="user-dropdown hidden"
+  >
+    <div class="user-dropdown-profile">
+      <strong id="dropdownUserName">
+        User
+      </strong>
+
+      <span id="dropdownUserEmail">
+        —
+      </span>
+    </div>
+
+    <div class="user-dropdown-divider"></div>
+
+    <button
+      id="logoutBtn"
+      class="logout-btn"
+      type="button"
+    >
+      Log out
+    </button>
+  </div>
+
+</div>
     </header>
 
     <main class="dashboard">
