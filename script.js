@@ -2202,6 +2202,138 @@ document
     });
 
   });
+// ==========================================================
+// HOME KPI SMART NAVIGATION
+// ==========================================================
+
+document.addEventListener("click", (event) => {
+  const button =
+    event.target.closest(".home-kpi-link");
+
+  if (!button) return;
+
+  const action =
+    button.dataset.kpiAction;
+
+  switch (action) {
+
+    // ------------------------------------------------------
+    // ENTIRE ORGANIZATION
+    // ------------------------------------------------------
+
+    case "all":
+      showPage("Agents");
+      setActiveForgeNavSafe("Agents");
+      break;
+
+
+    // ------------------------------------------------------
+    // LICENSING PIPELINE
+    // ------------------------------------------------------
+
+    case "pipeline":
+      window.journeyFocusStage = null;
+
+      showPage("Journey");
+      setActiveForgeNavSafe("Journey");
+
+      break;
+
+
+    // ------------------------------------------------------
+    // LICENSED
+    // ------------------------------------------------------
+
+    case "licensed":
+      window.journeyFocusStage =
+        "Licensed";
+
+      showPage("Journey");
+      setActiveForgeNavSafe("Journey");
+
+      setTimeout(() => {
+        focusJourneyStageSafe(
+          "Licensed"
+        );
+      }, 100);
+
+      break;
+
+
+    // ------------------------------------------------------
+    // CONTRACTED
+    // ------------------------------------------------------
+
+    case "contracted":
+      window.journeyFocusStage =
+        "Contracted";
+
+      showPage("Journey");
+      setActiveForgeNavSafe("Journey");
+
+      setTimeout(() => {
+        focusJourneyStageSafe(
+          "Contracted"
+        );
+      }, 100);
+
+      break;
+  }
+});
+function setActiveForgeNavSafe(page) {
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach((btn) => {
+
+      btn.classList.toggle(
+        "active",
+        btn.textContent
+          .trim()
+          .toLowerCase() ===
+          page.toLowerCase()
+      );
+
+    });
+}
+
+
+function focusJourneyStageSafe(stage) {
+
+  const possibleTargets = [
+    `[data-stage="${stage}"]`,
+    `[data-pipeline-stage="${stage}"]`,
+    `[data-journey-stage="${stage}"]`
+  ];
+
+  let target = null;
+
+  for (const selector of possibleTargets) {
+
+    target =
+      document.querySelector(selector);
+
+    if (target) break;
+  }
+
+
+  if (target) {
+
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+    target.classList.add(
+      "forge-stage-highlight"
+    );
+
+    setTimeout(() => {
+      target.classList.remove(
+        "forge-stage-highlight"
+      );
+    }, 1800);
+  }
+}
 
 // ─── LOAD AGENTS FROM SUPABASE ────────────────────────────────────────────────
 
