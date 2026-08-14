@@ -1150,10 +1150,12 @@ function renderHomePipelineOverview(agents) {
 
   // Uses the SAME stage configuration already used by FORGE.
   const stages = [
+  ...new Set([
     ...pipelineStages,
     "Licensed",
     "Contracted"
-  ];
+  ])
+];
 
   stages.forEach((stage) => {
     const stageAgents = agents.filter(
