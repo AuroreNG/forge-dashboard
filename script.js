@@ -175,82 +175,204 @@ function renderHomeWorkQueue(agents) {
   const queue = [];
 
   agents.forEach((agent) => {
-    const stage = agent.stage || "Not Placed";
+    const stage =
+      agent.stage || "Not Placed";
 
-    // Highest priority:
-    // licensed but not yet contracted
+    const recruitDate =
+      agent.recruitDate
+        ? new Date(agent.recruitDate)
+        : null;
+
+    let daysSinceRecruit = null;
+
+    if (
+      recruitDate &&
+      !Number.isNaN(recruitDate.getTime())
+    ) {
+      daysSinceRecruit =
+        Math.floor(
+          (Date.now() - recruitDate.getTime()) /
+          (1000 * 60 * 60 * 24)
+        );
+    }
+
+
+    // =====================================================
+    // LICENSED — READY FOR CONTRACTING
+    // =====================================================
+
     if (stage === "Licensed") {
       queue.push({
         agent,
         priority: "High",
         score: 100,
-        reason: "Ready for contracting",
-        detail: "Licensed",
-        action: "Start contracting"
+
+        reason:
+          "Ready for contracting",
+
+        detail:
+          "Licensed",
+
+        action:
+          "Start contracting"
       });
 
       return;
     }
 
-    // Has not entered licensing yet
+
+    // =====================================================
+    // NOT PLACED — STALLED / NOT STARTED
+    // =====================================================
+
     if (stage === "Not Placed") {
+
+      let score = 70;
+
+      let reason =
+        "Licensing not started";
+
+      let detail =
+        "Needs follow-up";
+
+
+      if (
+        daysSinceRecruit !== null &&
+        daysSinceRecruit >= 14
+      ) {
+        score = 95;
+
+        reason =
+          "No licensing movement";
+
+        detail =
+          `${daysSinceRecruit} days`;
+      }
+
+      else if (
+        daysSinceRecruit !== null &&
+        daysSinceRecruit >= 7
+      ) {
+        score = 85;
+
+        reason =
+          "Still not started";
+
+        detail =
+          `${daysSinceRecruit} days`;
+      }
+
+
       queue.push({
         agent,
-        priority: "High",
-        score: 90,
-        reason: "Licensing not started",
-        detail: "Needs follow-up",
-        action: "Follow up"
+        priority:
+          score >= 90
+            ? "High"
+            : "Medium",
+
+        score,
+
+        reason,
+        detail,
+
+        action:
+          "Follow up"
       });
 
       return;
     }
 
-    // Quiz sent but not advanced
+
+    // =====================================================
+    // QUIZ SENT
+    // =====================================================
+
     if (stage === "Quiz Sent") {
+
       queue.push({
         agent,
+
         priority: "Medium",
-        score: 75,
-        reason: "Quiz awaiting completion",
-        detail: "Quiz Sent",
-        action: "Check in"
+        score: 80,
+
+        reason:
+          "Quiz awaiting completion",
+
+        detail:
+          "Quiz Sent",
+
+        action:
+          "Check in"
       });
 
       return;
     }
 
-    // Studying / XCEL
+
+    // =====================================================
+    // XCEL
+    // =====================================================
+
     if (stage === "XCEL Completed") {
+
       queue.push({
         agent,
+
         priority: "Medium",
-        score: 60,
-        reason: "Ready for next milestone",
-        detail: "XCEL Completed",
-        action: "Follow up"
+        score: 65,
+
+        reason:
+          "Ready for next step",
+
+        detail:
+          "XCEL completed",
+
+        action:
+          "Prepare exam"
+      });
+
+      return;
+    }
+
+
+    // =====================================================
+    // EXAM PASSED
+    // =====================================================
+
+    if (stage === "Exam Passed") {
+
+      queue.push({
+        agent,
+
+        priority: "High",
+        score: 92,
+
+        reason:
+          "Exam completed",
+
+        detail:
+          "Ready to advance",
+
+        action:
+          "Move forward"
       });
     }
   });
 
 
   // ========================================================
-  // SORT BY PRIORITY
+  // SORT
   // ========================================================
 
   queue.sort(
-    (a, b) => b.score - a.score
+    (a, b) =>
+      b.score - a.score
   );
 
 
-  // Only show first 5 on Home
   const visibleQueue =
     queue.slice(0, 5);
 
-
-  // ========================================================
-  // COUNT
-  // ========================================================
 
   setText(
     "workQueueAttentionCount",
@@ -265,14 +387,17 @@ function renderHomeWorkQueue(agents) {
   container.innerHTML = "";
 
 
-  // ========================================================
-  // EMPTY STATE
-  // ========================================================
-
   if (!visibleQueue.length) {
+
     container.innerHTML = `
       <div class="work-queue-empty">
-        No priority follow-ups right now.
+        <strong>
+          You're all caught up.
+        </strong>
+
+        <span>
+          No priority follow-ups right now.
+        </span>
       </div>
     `;
 
@@ -280,19 +405,10 @@ function renderHomeWorkQueue(agents) {
   }
 
 
-  // ========================================================
-  // RENDER QUEUE
-  // ========================================================
-
   visibleQueue.forEach((item) => {
-    const agent = item.agent;
 
-    const row =
-      document.createElement("div");
-
-    row.className =
-      "work-queue-row";
-
+    const agent =
+      item.agent;
 
     const priorityClass =
       item.priority === "High"
@@ -300,6 +416,13 @@ function renderHomeWorkQueue(agents) {
         : item.priority === "Medium"
         ? "priority-medium"
         : "priority-low";
+
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "work-queue-row";
 
 
     row.innerHTML = `
@@ -313,6 +436,7 @@ function renderHomeWorkQueue(agents) {
         </div>
 
         <div class="work-person-copy">
+
           <strong>
             ${getAgentDisplayName(agent)}
           </strong>
@@ -320,6 +444,7 @@ function renderHomeWorkQueue(agents) {
           <span>
             ${agent.stage || "Not Placed"}
           </span>
+
         </div>
 
       </div>
@@ -328,10 +453,13 @@ function renderHomeWorkQueue(agents) {
       <div class="work-reason">
 
         <div class="work-reason-icon">
-          ◷
+          ${getWorkReasonIcon(
+            item.reason
+          )}
         </div>
 
         <div class="work-reason-copy">
+
           <strong>
             ${item.reason}
           </strong>
@@ -339,18 +467,21 @@ function renderHomeWorkQueue(agents) {
           <span>
             ${item.detail}
           </span>
+
         </div>
 
       </div>
 
 
       <div>
+
         <button
           type="button"
           class="work-action-btn"
         >
           ${item.action}
         </button>
+
       </div>
 
 
@@ -366,40 +497,91 @@ function renderHomeWorkQueue(agents) {
       <div class="work-last-activity">
         ${
           agent.recruitDate
-            ? formatHomeDate(agent.recruitDate)
+            ? formatHomeDate(
+                agent.recruitDate
+              )
             : "—"
         }
       </div>
+
     `;
 
 
-    // Open agent
     row
-      .querySelector(".work-action-btn")
+      .querySelector(
+        ".work-action-btn"
+      )
       ?.addEventListener(
         "click",
         () => {
 
-          selectedAgent = agent;
+          selectedAgent =
+            agent;
 
-          showPage("Agents");
-          showAgentProfile(agent);
+          showPage(
+            "Agents"
+          );
+
+          showAgentProfile(
+            agent
+          );
 
           document
-            .querySelectorAll(".nav-btn")
-            .forEach((btn) =>
-              btn.classList.toggle(
-                "active",
-                btn.textContent.trim() ===
-                  "Agents"
-              )
+            .querySelectorAll(
+              ".nav-btn"
+            )
+            .forEach(
+              (btn) =>
+                btn.classList.toggle(
+                  "active",
+                  btn.textContent
+                    .trim() ===
+                    "Agents"
+                )
             );
+
         }
       );
 
 
-    container.appendChild(row);
+    container.appendChild(
+      row
+    );
+
   });
+}
+
+function getWorkReasonIcon(reason) {
+  const text =
+    String(reason || "")
+      .toLowerCase();
+
+  if (
+    text.includes("contract")
+  ) {
+    return "✓";
+  }
+
+  if (
+    text.includes("exam")
+  ) {
+    return "□";
+  }
+
+  if (
+    text.includes("quiz")
+  ) {
+    return "→";
+  }
+
+  if (
+    text.includes("movement") ||
+    text.includes("started")
+  ) {
+    return "◷";
+  }
+
+  return "•";
 }
 
 
