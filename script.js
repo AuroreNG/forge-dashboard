@@ -5,6 +5,7 @@ let selectedCoordinator = "All";
 let selectedAgent = null;
 let commandCurrentPage = 1;
 let selectedGrowthTeam = null;
+let currentForgeMission = [];
 const commandPageSize = 11;
 const journeyPreviewLimit = 5;
 
@@ -382,6 +383,41 @@ function renderHomeWorkQueue(agents) {
         : "need"
     } your attention`
   );
+  document
+  .getElementById(
+    "startFollowUpsBtn"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      const agents =
+        currentForgeMission
+          .map(
+            (item) =>
+              item.agent
+          );
+
+
+      if (!agents.length) {
+        return;
+      }
+
+
+      launchForgeContext({
+        type: "mission",
+
+        title:
+          "Today's Mission",
+
+        reason:
+          "Highest-impact coordinator actions",
+
+        agents
+      });
+
+    }
+  );
 
 
   container.innerHTML = "";
@@ -507,41 +543,45 @@ function renderHomeWorkQueue(agents) {
     `;
 
 
-    row
-      .querySelector(
-        ".work-action-btn"
-      )
-      ?.addEventListener(
-        "click",
-        () => {
+   row
+  .querySelector(
+    ".work-action-btn"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
 
-          selectedAgent =
-            agent;
-
-          showPage(
-            "Agents"
+      const relatedAgents =
+        currentForgeMission
+          .map(
+            (item) =>
+              item.agent
           );
 
-          showAgentProfile(
-            agent
-          );
 
-          document
-            .querySelectorAll(
-              ".nav-btn"
-            )
-            .forEach(
-              (btn) =>
-                btn.classList.toggle(
-                  "active",
-                  btn.textContent
-                    .trim() ===
-                    "Agents"
-                )
-            );
+      launchForgeContext({
+        type:
+          agent.stage === "Licensed"
+            ? "contracting"
+            : "follow-up",
 
-        }
-      );
+        title:
+          item.action,
+
+        reason:
+          item.reason,
+
+        agents: [
+          agent,
+          ...relatedAgents.filter(
+            (a) =>
+              a.id !== agent.id
+          )
+        ]
+      });
+
+    }
+  );
 
 
     container.appendChild(
@@ -549,6 +589,137 @@ function renderHomeWorkQueue(agents) {
     );
 
   });
+}
+
+// ==========================================================
+// FORGE CONTEXT ENGINE
+// ==========================================================
+
+let forgeContext = null;
+
+function launchForgeContext(config = {}) {
+  forgeContext = {
+    type: config.type || "view",
+    stage: config.stage || null,
+    agents: config.agents || [],
+    title: config.title || "",
+    reason: config.reason || "",
+    index: 0
+  };
+
+  // ========================================================
+  // EXPLORATION
+  // ========================================================
+
+  if (config.type === "journey") {
+    window.journeyFocusStage =
+      config.stage || null;
+
+    showPage("Journey");
+
+    renderJourneyPage?.();
+
+    setActiveForgeNav("Journey");
+
+    return;
+  }
+
+
+  if (config.type === "agents") {
+    window.agentViewFilter =
+      config.stage || "all";
+
+    showPage("Agents");
+
+    renderAgentsPage?.();
+
+    setActiveForgeNav("Agents");
+
+    return;
+  }
+
+
+  if (config.type === "growth") {
+    showPage("Growth");
+
+    renderGrowthPage?.();
+
+    setActiveForgeNav("Growth");
+
+    return;
+  }
+
+
+  // ========================================================
+  // ACTION WORKFLOW
+  // ========================================================
+
+  if (
+    config.type === "mission" ||
+    config.type === "contracting" ||
+    config.type === "follow-up"
+  ) {
+    startForgeWorkSession(
+      forgeContext
+    );
+
+    return;
+  }
+}
+
+
+function setActiveForgeNav(page) {
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach((btn) => {
+      btn.classList.toggle(
+        "active",
+        btn.textContent.trim() === page
+      );
+    });
+}
+
+function startForgeWorkSession(context) {
+  if (!context?.agents?.length) {
+    console.warn(
+      "FORGE session has no agents:",
+      context
+    );
+
+    return;
+  }
+
+  forgeContext = {
+    ...context,
+    index: 0
+  };
+
+  const firstAgent =
+    context.agents[0];
+
+  selectedAgent =
+    firstAgent;
+
+  showPage("Command");
+
+  setActiveForgeNav("Command");
+
+  window.commandSessionMode =
+    context.type;
+
+  window.commandSessionTitle =
+    context.title;
+
+  window.commandSessionAgents =
+    context.agents;
+
+  window.commandSessionIndex = 0;
+
+  renderCommandAgentList?.();
+
+  showCommandProfile(
+    firstAgent
+  );
 }
 
 function getWorkReasonIcon(reason) {
@@ -1269,6 +1440,179 @@ function renderFocusList(agents) {
   });
 }
 
+document.addEventListener(
+  "click",
+  (event) => {
+
+    const button =
+      event.target.closest(
+        ".home-kpi-link"
+      );
+
+    if (!button) return;
+
+    const action =
+      button.dataset.kpiAction;
+
+    switch (action) {
+
+      case "all":
+
+        launchForgeContext({
+          type: "agents",
+          title: "Organization"
+        });
+
+        break;
+
+
+      case "pipeline":
+
+        launchForgeContext({
+          type: "journey",
+          title: "Licensing Pipeline"
+        });
+
+        break;
+
+
+      case "licensed":
+
+        launchForgeContext({
+          type: "journey",
+          stage: "Licensed",
+          title: "Licensed Agents"
+        });
+
+        break;
+
+
+      case "contracted":
+
+        launchForgeContext({
+          type: "journey",
+          stage: "Contracted",
+          title: "Contracted Agents"
+        });
+
+        break;
+
+    }
+
+  }
+);
+document
+  .getElementById("pulseActionBtn")
+  ?.addEventListener(
+    "click",
+    () => {
+
+      const agents =
+        allAgents.filter(
+          (agent) =>
+            agent.stage === "Licensed"
+        );
+
+      launchForgeContext({
+        type: "contracting",
+
+        title:
+          "Contracting Focus",
+
+        reason:
+          "Licensed agents awaiting contracting",
+
+        agents
+      });
+
+    }
+  );
+function getPrimaryForgeOpportunity(
+  agents
+) {
+
+  const licensed =
+    agents.filter(
+      (a) =>
+        a.stage === "Licensed"
+    );
+
+
+  const notPlaced =
+    agents.filter(
+      (a) =>
+        a.stage === "Not Placed"
+    );
+
+
+  const quizSent =
+    agents.filter(
+      (a) =>
+        a.stage === "Quiz Sent"
+    );
+
+
+  // Contracting has immediate downstream value
+  if (licensed.length) {
+    return {
+      type: "contracting",
+      title: "Complete Contracting",
+      agents: licensed
+    };
+  }
+
+
+  // Then activation
+  if (notPlaced.length) {
+    return {
+      type: "follow-up",
+      title: "Activate Not Placed Agents",
+      agents: notPlaced
+    };
+  }
+
+
+  // Then quiz follow-up
+  if (quizSent.length) {
+    return {
+      type: "follow-up",
+      title: "Quiz Follow-Ups",
+      agents: quizSent
+    };
+  }
+
+
+  return null;
+}
+document
+  .getElementById(
+    "forgeInsightBtn"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      const opportunity =
+        getPrimaryForgeOpportunity(
+          allAgents
+        );
+
+      if (!opportunity) {
+        launchForgeContext({
+          type: "journey"
+        });
+
+        return;
+      }
+
+      launchForgeContext(
+        opportunity
+      );
+
+    }
+  );
+
+
 function renderPipelineBoard(agents) {
   renderStage("Not Placed",   "notStartedCount",         "notStartedList",         agents);
   renderStage("Quiz Sent",    "quizSentCount",            "quizSentList",            agents);
@@ -1804,6 +2148,40 @@ document.querySelectorAll(".filter").forEach((button) => {
     renderDashboard(button.dataset.filter);
   });
 });
+// ==========================================================
+// HOME PAGE INTELLIGENT NAVIGATION
+// ==========================================================
+
+// Pipeline Overview → Journey
+[
+  "openJourneyBtn",
+  "viewFullJourneyBtn"
+].forEach((id) => {
+
+  document
+    .getElementById(id)
+    ?.addEventListener("click", () => {
+
+      launchForgeContext({
+        type: "journey"
+      });
+
+    });
+
+});
+
+
+// Organization Pulse → Growth
+document
+  .getElementById("pulseDetailsBtn")
+  ?.addEventListener("click", () => {
+
+    launchForgeContext({
+      type: "growth",
+      title: "Organization Performance"
+    });
+
+  });
 
 // ─── LOAD AGENTS FROM SUPABASE ────────────────────────────────────────────────
 
