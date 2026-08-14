@@ -1139,86 +1139,91 @@ document
 // ==========================================================
 
 function renderHomePipelineOverview(agents) {
-  const total =
-    Math.max(agents.length, 1);
+  const container =
+    document.getElementById("pipelineOverviewList");
 
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const total = agents.length;
+
+  // Uses the SAME stage configuration already used by FORGE.
   const stages = [
-    {
-      stage: "Not Placed",
-      countId: "notStartedCount",
-      percentId: "notPlacedPercent",
-      barId: "notPlacedBar"
-    },
-    {
-      stage: "Quiz Sent",
-      countId: "quizSentCount",
-      percentId: "quizSentPercent",
-      barId: "quizSentBar"
-    },
-    {
-      stage: "XCEL Completed",
-      countId: "xcelCount",
-      percentId: "xcelPercent",
-      barId: "xcelBar"
-    },
-    {
-      stage: "Exam Passed",
-      countId: "examCount",
-      percentId: "examPercent",
-      barId: "examBar"
-    },
-    {
-      stage: "Licensed",
-      countId: "licensedPipelineCount",
-      percentId: "licensedPercent",
-      barId: "licensedBar"
-    },
-    {
-      stage: "Contracted",
-      countId: "contractedPipelineCount",
-      percentId: "contractedPercent",
-      barId: "contractedBar"
-    }
+    ...pipelineStages,
+    "Licensed",
+    "Contracted"
   ];
 
+  stages.forEach((stage) => {
+    const stageAgents = agents.filter(
+      (agent) => agent.stage === stage
+    );
 
-  stages.forEach((item) => {
-
-    const count =
-      agents.filter(
-        (agent) =>
-          agent.stage === item.stage
-      ).length;
+    const count = stageAgents.length;
 
     const percent =
-      Math.round(
-        (count / total) * 100
-      );
+      total > 0
+        ? Math.round((count / total) * 100)
+        : 0;
 
+    const row = document.createElement("div");
+    row.className = "pipeline-overview-row";
 
-    setText(
-      item.countId,
-      count
-    );
+    row.innerHTML = `
+      <div class="pipeline-overview-stage">
+        <div class="pipeline-overview-icon">
+          ${getPipelineStageIcon(stage)}
+        </div>
 
-    setText(
-      item.percentId,
-      `${percent}%`
-    );
+        <span>${getPipelineStageLabel(stage)}</span>
+      </div>
 
+      <div class="pipeline-overview-track">
+        <div
+          class="pipeline-overview-fill"
+          style="width:${percent}%"
+        ></div>
+      </div>
 
-    const bar =
-      document.getElementById(
-        item.barId
-      );
+      <strong>${count}</strong>
 
-    if (bar) {
-      bar.style.width =
-        `${percent}%`;
-    }
+      <span class="pipeline-overview-percent">
+        ${percent}%
+      </span>
+    `;
 
+    container.appendChild(row);
   });
 }
+
+function getPipelineStageLabel(stage) {
+  const labels = {
+    "Not Placed": "Not Placed",
+    "Quiz Sent": "Quiz Sent",
+    "XCEL Completed": "XCEL",
+    "Exam Passed": "Exam",
+    "Licensed": "Licensed",
+    "Contracted": "Contracted"
+  };
+
+  return labels[stage] || stage;
+}
+
+
+function getPipelineStageIcon(stage) {
+  const icons = {
+    "Not Placed": "⊙",
+    "Quiz Sent": "↗",
+    "XCEL Completed": "▣",
+    "Exam Passed": "▦",
+    "Licensed": "◇",
+    "Contracted": "✓"
+  };
+
+  return icons[stage] || "•";
+}
+
 function renderStage(stageName, countId, listId, agents) {
 
   const stageAgents =
