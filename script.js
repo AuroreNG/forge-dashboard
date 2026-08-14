@@ -1148,47 +1148,52 @@ function renderHomePipelineOverview(agents) {
 
   const total = agents.length;
 
-  // Uses the SAME stage configuration already used by FORGE.
   const stages = [
-  ...new Set([
-    ...pipelineStages,
-    "Licensed",
-    "Contracted"
-  ])
-];
+    ...new Set([
+      ...pipelineStages,
+      "Licensed",
+      "Contracted"
+    ])
+  ];
 
   stages.forEach((stage) => {
-    const stageAgents = agents.filter(
-      (agent) => agent.stage === stage
-    );
 
-    const count = stageAgents.length;
+    const count = agents.filter(
+      (agent) => agent.stage === stage
+    ).length;
 
     const percent =
       total > 0
         ? Math.round((count / total) * 100)
         : 0;
 
-    const row = document.createElement("div");
-    row.className = "pipeline-overview-row";
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "pipeline-overview-row";
 
     row.innerHTML = `
-      <div class="pipeline-overview-stage">
-        <div class="pipeline-overview-icon">
+      <div class="pipeline-overview-label">
+        <span class="pipeline-mini-icon">
           ${getPipelineStageIcon(stage)}
-        </div>
+        </span>
 
-        <span>${getPipelineStageLabel(stage)}</span>
+        <strong>
+          ${getPipelineStageLabel(stage)}
+        </strong>
       </div>
 
       <div class="pipeline-overview-track">
-        <div
+        <span
           class="pipeline-overview-fill"
-          style="width:${percent}%"
-        ></div>
+          style="width: ${percent}%"
+        ></span>
       </div>
 
-      <strong>${count}</strong>
+      <strong class="pipeline-overview-count">
+        ${count}
+      </strong>
 
       <span class="pipeline-overview-percent">
         ${percent}%
@@ -1198,7 +1203,6 @@ function renderHomePipelineOverview(agents) {
     container.appendChild(row);
   });
 }
-
 function getPipelineStageLabel(stage) {
   const labels = {
     "Not Placed": "Not Placed",
