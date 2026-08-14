@@ -162,6 +162,266 @@ function renderAllPages() {
   renderGrowthPage();
 }
 
+// ==========================================================
+// HOME — TODAY'S WORK QUEUE
+// ==========================================================
+
+function renderHomeWorkQueue(agents) {
+  const container =
+    document.getElementById("workQueueList");
+
+  if (!container) return;
+
+  const queue = [];
+
+  agents.forEach((agent) => {
+    const stage = agent.stage || "Not Placed";
+
+    // Highest priority:
+    // licensed but not yet contracted
+    if (stage === "Licensed") {
+      queue.push({
+        agent,
+        priority: "High",
+        score: 100,
+        reason: "Ready for contracting",
+        detail: "Licensed",
+        action: "Start contracting"
+      });
+
+      return;
+    }
+
+    // Has not entered licensing yet
+    if (stage === "Not Placed") {
+      queue.push({
+        agent,
+        priority: "High",
+        score: 90,
+        reason: "Licensing not started",
+        detail: "Needs follow-up",
+        action: "Follow up"
+      });
+
+      return;
+    }
+
+    // Quiz sent but not advanced
+    if (stage === "Quiz Sent") {
+      queue.push({
+        agent,
+        priority: "Medium",
+        score: 75,
+        reason: "Quiz awaiting completion",
+        detail: "Quiz Sent",
+        action: "Check in"
+      });
+
+      return;
+    }
+
+    // Studying / XCEL
+    if (stage === "XCEL Completed") {
+      queue.push({
+        agent,
+        priority: "Medium",
+        score: 60,
+        reason: "Ready for next milestone",
+        detail: "XCEL Completed",
+        action: "Follow up"
+      });
+    }
+  });
+
+
+  // ========================================================
+  // SORT BY PRIORITY
+  // ========================================================
+
+  queue.sort(
+    (a, b) => b.score - a.score
+  );
+
+
+  // Only show first 5 on Home
+  const visibleQueue =
+    queue.slice(0, 5);
+
+
+  // ========================================================
+  // COUNT
+  // ========================================================
+
+  setText(
+    "workQueueAttentionCount",
+    `${visibleQueue.length} ${
+      visibleQueue.length === 1
+        ? "needs"
+        : "need"
+    } your attention`
+  );
+
+
+  container.innerHTML = "";
+
+
+  // ========================================================
+  // EMPTY STATE
+  // ========================================================
+
+  if (!visibleQueue.length) {
+    container.innerHTML = `
+      <div class="work-queue-empty">
+        No priority follow-ups right now.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  // ========================================================
+  // RENDER QUEUE
+  // ========================================================
+
+  visibleQueue.forEach((item) => {
+    const agent = item.agent;
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "work-queue-row";
+
+
+    const priorityClass =
+      item.priority === "High"
+        ? "priority-high"
+        : item.priority === "Medium"
+        ? "priority-medium"
+        : "priority-low";
+
+
+    row.innerHTML = `
+
+      <div class="work-person">
+
+        <div class="work-avatar">
+          ${getInitials(
+            getAgentDisplayName(agent)
+          )}
+        </div>
+
+        <div class="work-person-copy">
+          <strong>
+            ${getAgentDisplayName(agent)}
+          </strong>
+
+          <span>
+            ${agent.stage || "Not Placed"}
+          </span>
+        </div>
+
+      </div>
+
+
+      <div class="work-reason">
+
+        <div class="work-reason-icon">
+          ◷
+        </div>
+
+        <div class="work-reason-copy">
+          <strong>
+            ${item.reason}
+          </strong>
+
+          <span>
+            ${item.detail}
+          </span>
+        </div>
+
+      </div>
+
+
+      <div>
+        <button
+          type="button"
+          class="work-action-btn"
+        >
+          ${item.action}
+        </button>
+      </div>
+
+
+      <div
+        class="work-priority ${priorityClass}"
+      >
+        <span class="priority-dot"></span>
+
+        ${item.priority}
+      </div>
+
+
+      <div class="work-last-activity">
+        ${
+          agent.recruitDate
+            ? formatHomeDate(agent.recruitDate)
+            : "—"
+        }
+      </div>
+    `;
+
+
+    // Open agent
+    row
+      .querySelector(".work-action-btn")
+      ?.addEventListener(
+        "click",
+        () => {
+
+          selectedAgent = agent;
+
+          showPage("Agents");
+          showAgentProfile(agent);
+
+          document
+            .querySelectorAll(".nav-btn")
+            .forEach((btn) =>
+              btn.classList.toggle(
+                "active",
+                btn.textContent.trim() ===
+                  "Agents"
+              )
+            );
+        }
+      );
+
+
+    container.appendChild(row);
+  });
+}
+
+
+function formatHomeDate(value) {
+  if (!value) return "—";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "—";
+  }
+
+  return date.toLocaleDateString(
+    undefined,
+    {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    }
+  );
+}
+
 // ─── CSV ──────────────────────────────────────────────────────────────────────
 
 function parseCSV(text) {
@@ -778,8 +1038,13 @@ function renderDashboard(filter = "all") {
   );
 
   renderFocusList(visibleAgents);
-  renderPipelineBoard(visibleAgents);
-  updateHomeIntelligence(visibleAgents);
+renderPipelineBoard(visibleAgents);
+
+updateHomeIntelligence(visibleAgents);
+
+renderHomeWorkQueue(visibleAgents);
+
+renderHomePipelineOverview(visibleAgents);
 }
 
 function setRing(id, percent, color) {
@@ -868,6 +1133,92 @@ document
       );
 
   });
+
+// ==========================================================
+// HOME — PIPELINE OVERVIEW
+// ==========================================================
+
+function renderHomePipelineOverview(agents) {
+  const total =
+    Math.max(agents.length, 1);
+
+  const stages = [
+    {
+      stage: "Not Placed",
+      countId: "notStartedCount",
+      percentId: "notPlacedPercent",
+      barId: "notPlacedBar"
+    },
+    {
+      stage: "Quiz Sent",
+      countId: "quizSentCount",
+      percentId: "quizSentPercent",
+      barId: "quizSentBar"
+    },
+    {
+      stage: "XCEL Completed",
+      countId: "xcelCount",
+      percentId: "xcelPercent",
+      barId: "xcelBar"
+    },
+    {
+      stage: "Exam Passed",
+      countId: "examCount",
+      percentId: "examPercent",
+      barId: "examBar"
+    },
+    {
+      stage: "Licensed",
+      countId: "licensedPipelineCount",
+      percentId: "licensedPercent",
+      barId: "licensedBar"
+    },
+    {
+      stage: "Contracted",
+      countId: "contractedPipelineCount",
+      percentId: "contractedPercent",
+      barId: "contractedBar"
+    }
+  ];
+
+
+  stages.forEach((item) => {
+
+    const count =
+      agents.filter(
+        (agent) =>
+          agent.stage === item.stage
+      ).length;
+
+    const percent =
+      Math.round(
+        (count / total) * 100
+      );
+
+
+    setText(
+      item.countId,
+      count
+    );
+
+    setText(
+      item.percentId,
+      `${percent}%`
+    );
+
+
+    const bar =
+      document.getElementById(
+        item.barId
+      );
+
+    if (bar) {
+      bar.style.width =
+        `${percent}%`;
+    }
+
+  });
+}
 function renderStage(stageName, countId, listId, agents) {
 
   const stageAgents =
