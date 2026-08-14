@@ -685,7 +685,6 @@ function startForgeWorkSession(context) {
       "FORGE session has no agents:",
       context
     );
-
     return;
   }
 
@@ -700,26 +699,47 @@ function startForgeWorkSession(context) {
   selectedAgent =
     firstAgent;
 
-  showPage("Command");
-
-  setActiveForgeNav("Command");
-
+  // Save session state
   window.commandSessionMode =
-    context.type;
+    context.type || "mission";
 
   window.commandSessionTitle =
-    context.title;
+    context.title || "FORGE Mission";
 
   window.commandSessionAgents =
     context.agents;
 
   window.commandSessionIndex = 0;
 
-  renderCommandAgentList?.();
 
-  showCommandProfile(
-    firstAgent
-  );
+  // Go to Command page
+  showPage("Command");
+
+  setActiveForgeNav("Command");
+
+
+  // Only call this if it actually exists
+  if (
+    typeof renderCommandAgentList ===
+    "function"
+  ) {
+    renderCommandAgentList();
+  }
+
+
+  // Open the first person's Command profile
+  if (
+    typeof showCommandProfile ===
+    "function"
+  ) {
+    showCommandProfile(
+      firstAgent
+    );
+  } else {
+    console.error(
+      "showCommandProfile() is not available."
+    );
+  }
 }
 
 function getWorkReasonIcon(reason) {
