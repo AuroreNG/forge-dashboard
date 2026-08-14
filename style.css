@@ -18037,3 +18037,11 @@ header {
 .work-queue-empty span {
   font-size: 11px;
 }
+.forge-stage-highlight {
+  box-shadow:
+    0 0 0 2px #2563eb,
+    0 14px 35px rgba(37, 99, 235, 0.18)
+    !important;
+
+  transform: translateY(-2px);
+}
