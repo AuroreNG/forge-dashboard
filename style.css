@@ -18015,3 +18015,25 @@ header {
   );
   transition: width 0.4s ease;
 }
+
+.work-queue-empty {
+  min-height: 150px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  color: #6f7f99;
+}
+
+.work-queue-empty strong {
+  color: #142847;
+  font-size: 14px;
+}
+
+.work-queue-empty span {
+  font-size: 11px;
+}
