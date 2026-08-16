@@ -18078,3 +18078,278 @@ header {
     box-shadow 0.25s ease,
     transform 0.25s ease;
 }
+
+/* =========================================================
+   FORGE PLATFORM ORGANIZATION SWITCHER
+========================================================= */
+
+.platform-org-switcher {
+  padding: 14px 16px 8px;
+}
+
+.org-switcher-label {
+  margin-bottom: 8px;
+
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+
+  color: #7b8aa7;
+}
+
+
+/* CURRENT ORGANIZATION */
+
+.current-org-button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 12px 13px;
+
+  border: 1px solid rgba(188, 204, 228, 0.75);
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.98),
+      rgba(244,248,255,0.88)
+    );
+
+  box-shadow:
+    0 8px 20px rgba(13, 43, 92, 0.07),
+    inset 0 1px 0 rgba(255,255,255,0.95);
+
+  color: #081b3d;
+
+  cursor: pointer;
+
+  transition: 0.18s ease;
+}
+
+.current-org-button:hover {
+  border-color: rgba(39, 93, 219, 0.45);
+
+  box-shadow:
+    0 10px 26px rgba(23, 72, 158, 0.11),
+    inset 0 1px 0 rgba(255,255,255,0.95);
+
+  transform: translateY(-1px);
+}
+
+
+.current-org-copy {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  text-align: left;
+}
+
+.current-org-copy strong {
+  max-width: 190px;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  font-size: 13px;
+  font-weight: 900;
+
+  color: #071936;
+}
+
+.current-org-copy span {
+  margin-top: 3px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  color: #7989a6;
+}
+
+.current-org-chevron {
+  flex: none;
+
+  color: #617391;
+
+  font-size: 13px;
+}
+
+
+/* ORGANIZATION LIST */
+
+.organization-list {
+  margin-top: 8px;
+
+  padding: 6px;
+
+  border: 1px solid rgba(203, 215, 235, 0.8);
+  border-radius: 15px;
+
+  background: rgba(255,255,255,0.97);
+
+  box-shadow:
+    0 18px 40px rgba(13, 39, 81, 0.12);
+
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+
+/* EACH ORGANIZATION */
+
+.organization-option {
+  width: 100%;
+
+  border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 11px 12px;
+
+  border-radius: 11px;
+
+  background: transparent;
+
+  color: #0c2147;
+
+  cursor: pointer;
+
+  transition: 0.16s ease;
+}
+
+.organization-option:hover {
+  background: #f2f6fd;
+}
+
+.organization-option.active {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(227,237,255,0.95),
+      rgba(244,239,255,0.8)
+    );
+}
+
+
+.organization-option-copy {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  text-align: left;
+}
+
+.organization-option-copy strong {
+  max-width: 190px;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  font-size: 12px;
+  font-weight: 900;
+
+  color: #0a1e42;
+}
+
+.organization-option-copy span {
+  margin-top: 3px;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  color: #8391aa;
+}
+
+
+.organization-option-state {
+  flex: none;
+
+  width: 24px;
+  height: 24px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+  font-weight: 900;
+
+  color: #2357c8;
+
+  background: #edf3ff;
+}
+
+
+.organization-option.active
+.organization-option-state {
+  color: white;
+
+  background:
+    linear-gradient(
+      145deg,
+      #164ebf,
+      #3426c8
+    );
+}
+
+
+/* MAKE USER DROPDOWN WIDER */
+
+.user-dropdown {
+  width: 290px;
+  min-width: 290px;
+
+  overflow: visible;
+}
+
+
+/* DIVIDERS */
+
+.user-dropdown-divider {
+  height: 1px;
+
+  margin: 10px 0;
+
+  background: rgba(211, 220, 235, 0.8);
+}
+
+
+/* LOG OUT */
+
+.logout-btn {
+  width: calc(100% - 24px);
+
+  margin: 2px 12px 10px;
+  padding: 10px 12px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: transparent;
+
+  text-align: left;
+
+  color: #d92d20;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: #fff1f0;
+}
