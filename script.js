@@ -3107,13 +3107,15 @@ function renderLoggedInUser() {
     currentUserProfile.email ||
     "User";
 
-  const role =
-    currentUserProfile.role ||
-    "Coordinator";
-
   const email =
     currentUserProfile.email ||
     "";
+
+  const role =
+    isPlatformAdmin
+      ? "Platform Admin"
+      : currentUserProfile.role || "Coordinator";
+
 
   setText(
     "headerUserName",
@@ -3139,8 +3141,11 @@ function renderLoggedInUser() {
     "headerUserAvatar",
     getInitials(fullName)
   );
-}
 
+
+  // PLATFORM ADMIN ORGANIZATION SWITCHER
+  renderOrganizationSwitcher();
+}
 
 function formatUserRole(role) {
   return String(role || "")
