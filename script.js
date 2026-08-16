@@ -253,6 +253,79 @@ function getActiveOrganizationId() {
     null
   );
 }
+
+function renderOrganizationSwitcher() {
+  const switcher =
+    document.getElementById("platformOrgSwitcher");
+
+  const list =
+    document.getElementById("organizationList");
+
+  if (!switcher || !list) return;
+
+  // Only Platform Admin sees this
+  if (!isPlatformAdmin) {
+    switcher.classList.add("hidden");
+    return;
+  }
+
+  switcher.classList.remove("hidden");
+
+  setText(
+    "currentOrgName",
+    currentOrganization?.name || "Select organization"
+  );
+
+  setText(
+    "currentOrgMeta",
+    `${allAgents.length} people`
+  );
+
+  list.innerHTML = "";
+
+  availableOrganizations.forEach((organization) => {
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+    button.className = "organization-option";
+
+    if (
+      organization.id ===
+      currentOrganization?.id
+    ) {
+      button.classList.add("active");
+    }
+
+    button.innerHTML = `
+      <div class="organization-option-copy">
+        <strong>
+          ${organization.name}
+        </strong>
+      </div>
+
+      <span>
+        ${
+          organization.id ===
+          currentOrganization?.id
+            ? "✓"
+            : "›"
+        }
+      </span>
+    `;
+
+    button.addEventListener(
+      "click",
+      async () => {
+        await switchForgeOrganization(
+          organization.id
+        );
+      }
+    );
+
+    list.appendChild(button);
+  });
+}
 // ─── MERGE ────────────────────────────────────────────────────────────────────
 
 function mergeCsvWithSavedPipeline(csvAgents, savedAgents) {
@@ -1974,6 +2047,7 @@ function setText(id, value) {
 }
 
 // ==========================================================
+// ==========================================================
 // LOGGED-IN USER MENU
 // ==========================================================
 
@@ -2020,6 +2094,10 @@ function renderLoggedInUser() {
   document
     .getElementById("userDropdown")
     ?.classList.add("hidden");
+
+
+  // NEW: render org switcher for platform admin
+  renderOrganizationSwitcher();
 }
 
 function formatUserRole(role) {
