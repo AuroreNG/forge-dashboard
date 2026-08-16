@@ -7478,47 +7478,31 @@ document.addEventListener("click", function (event) {
 
 
   // --------------------------------------------------------
-  // VIEW LICENSED
-  // --------------------------------------------------------
+// VIEW LICENSED
+// --------------------------------------------------------
 
-  if (target === "licensed") {
+if (target === "licensed") {
 
-    showPage("Journey");
+  openActivateStageFromHome(
+    "Licensed"
+  );
 
-    setHomeNavActive("Journey");
-
-    setTimeout(() => {
-
-      focusJourneyStageFromSummary(
-        "Licensed"
-      );
-
-    }, 150);
-
-    return;
-  }
+  return;
+}
 
 
-  // --------------------------------------------------------
-  // VIEW CONTRACTED
-  // --------------------------------------------------------
+// --------------------------------------------------------
+// VIEW CONTRACTED
+// --------------------------------------------------------
 
-  if (target === "contracted") {
+if (target === "contracted") {
 
-    showPage("Journey");
+  openActivateStageFromHome(
+    "Contracted"
+  );
 
-    setHomeNavActive("Journey");
-
-    setTimeout(() => {
-
-      focusJourneyStageFromSummary(
-        "Contracted"
-      );
-
-    }, 150);
-
-    return;
-  }
+  return;
+}
 
 });
 
@@ -7539,60 +7523,86 @@ function setHomeNavActive(pageName) {
     });
 }
 
-function focusJourneyStageFromSummary(stage) {
+// ==========================================================
+// HOME → JOURNEY ACTIVATE STAGE
+// ==========================================================
 
-  // First try data attributes
-  let target =
-    document.querySelector(
-      `[data-stage="${stage}"]`
-    );
+function openActivateStageFromHome(stage) {
+
+  // 1. Switch Journey to ACTIVATE mode
+  currentJourneyMode = "activate";
 
 
-  // Then try common FORGE column classes
-  if (!target) {
+  // 2. Update Launch / Activate toggle buttons
+  document
+    .querySelectorAll(".journey-mode")
+    .forEach((button) => {
 
-    const classMap = {
-      "Licensed":
-        ".licensed-column",
-
-      "Contracted":
-        ".contracted-column"
-    };
-
-    target =
-      document.querySelector(
-        classMap[stage]
+      button.classList.toggle(
+        "active",
+        button.dataset.mode === "activate"
       );
-  }
+
+    });
 
 
-  if (!target) {
+  // 3. Open Journey
+  showPage("Journey");
 
-    console.log(
-      "Journey opened, but stage element was not found:",
-      stage
-    );
-
-    return;
-  }
+  setHomeNavActive("Journey");
 
 
-  target.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
+  // 4. Render Journey using Activate mode
+  renderJourneyPage();
 
 
-  target.classList.add(
-    "forge-stage-focus"
-  );
-
-
+  // 5. Focus the requested column
   setTimeout(() => {
 
-    target.classList.remove(
+    const listId =
+      stage === "Licensed"
+        ? "journeyLicensedList"
+        : "journeyContractedList";
+
+
+    const list =
+      document.getElementById(listId);
+
+
+    const column =
+      list?.closest(".journey-column");
+
+
+    if (!column) {
+
+      console.warn(
+        "FORGE could not locate Journey stage:",
+        stage
+      );
+
+      return;
+    }
+
+
+    column.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "center"
+    });
+
+
+    column.classList.add(
       "forge-stage-focus"
     );
 
-  }, 1800);
+
+    setTimeout(() => {
+
+      column.classList.remove(
+        "forge-stage-focus"
+      );
+
+    }, 1800);
+
+  }, 100);
 }
