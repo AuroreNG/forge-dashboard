@@ -466,6 +466,23 @@ async function switchForgeOrganization(
     allAgents.length
   );
 }
+document
+  .getElementById("addOrganizationBtn")
+  ?.addEventListener("click", () => {
+
+    if (!isPlatformAdmin) {
+      return;
+    }
+
+    openCreateOrganizationModal();
+
+  });
+
+function openCreateOrganizationModal() {
+  alert(
+    "Create Organization modal coming next."
+  );
+}
 // ─── MERGE ────────────────────────────────────────────────────────────────────
 
 function mergeCsvWithSavedPipeline(csvAgents, savedAgents) {
