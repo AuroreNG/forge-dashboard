@@ -2341,14 +2341,107 @@ TEAM INTELLIGENCE DRAWER
         id="growthDrawerOrgList"
         class="growth-drawer-list"
       ></div>
-
     </section>
-
   </aside>
-
 </div>
-
 </section>
+
+    <!-- =====================================================
+     CREATE ORGANIZATION MODAL
+====================================================== -->
+
+<div
+  id="createOrganizationModal"
+  class="modal hidden"
+>
+  <div class="modal-backdrop"></div>
+
+  <div class="modal-card create-org-modal-card">
+
+    <div class="modal-header">
+      <div>
+        <h3>Create Organization</h3>
+
+        <p>
+          Add a new FORGE workspace and assign its first administrator.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        id="closeCreateOrganizationModal"
+        class="modal-close-btn"
+      >
+        ×
+      </button>
+    </div>
+
+
+    <div class="create-org-form">
+
+      <label>
+        Organization Name
+
+        <input
+          type="text"
+          id="newOrganizationName"
+          placeholder="Example Financial Group"
+        />
+      </label>
+
+
+      <label>
+        Admin Name
+
+        <input
+          type="text"
+          id="newOrganizationAdminName"
+          placeholder="Jane Smith"
+        />
+      </label>
+
+
+      <label>
+        Admin Email
+
+        <input
+          type="email"
+          id="newOrganizationAdminEmail"
+          placeholder="jane@example.com"
+        />
+      </label>
+
+    </div>
+
+
+    <div
+      id="createOrganizationStatus"
+      class="create-org-status hidden"
+    ></div>
+
+
+    <div class="modal-actions">
+
+      <button
+        type="button"
+        id="cancelCreateOrganization"
+        class="secondary-btn"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        id="saveCreateOrganization"
+        class="primary-btn"
+      >
+        Create Organization
+      </button>
+
+    </div>
+
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./supabase-config.js?v=2"></script>
