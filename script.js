@@ -483,6 +483,162 @@ function openCreateOrganizationModal() {
     "Create Organization modal coming next."
   );
 }
+
+
+function openCreateOrganizationModal() {
+
+  if (!isPlatformAdmin) {
+    return;
+  }
+
+  document
+    .getElementById("createOrganizationModal")
+    ?.classList.remove("hidden");
+
+  const nameInput =
+    document.getElementById("newOrganizationName");
+
+  if (nameInput) {
+    nameInput.value = "";
+    nameInput.focus();
+  }
+
+  document.getElementById(
+    "newOrganizationAdminName"
+  ).value = "";
+
+  document.getElementById(
+    "newOrganizationAdminEmail"
+  ).value = "";
+
+  document
+    .getElementById("createOrganizationStatus")
+    ?.classList.add("hidden");
+}
+
+
+function closeCreateOrganizationModal() {
+
+  document
+    .getElementById("createOrganizationModal")
+    ?.classList.add("hidden");
+
+}
+
+document
+  .getElementById("addOrganizationBtn")
+  ?.addEventListener("click", () => {
+
+    if (!isPlatformAdmin) return;
+
+    openCreateOrganizationModal();
+
+  });
+
+
+document
+  .getElementById("closeCreateOrganizationModal")
+  ?.addEventListener(
+    "click",
+    closeCreateOrganizationModal
+  );
+
+
+document
+  .getElementById("cancelCreateOrganization")
+  ?.addEventListener(
+    "click",
+    closeCreateOrganizationModal
+  );
+
+document.addEventListener("click", (event) => {
+
+  if (
+    event.target.classList.contains(
+      "modal-backdrop"
+    )
+  ) {
+    closeCreateOrganizationModal();
+  }
+
+});
+
+function openCreateOrganizationModal() {
+  document
+    .getElementById("createOrganizationModal")
+    ?.classList.remove("hidden");
+}
+
+function closeCreateOrganizationModal() {
+  document
+    .getElementById("createOrganizationModal")
+    ?.classList.add("hidden");
+}
+
+
+// OPEN MODAL
+document
+  .getElementById("addOrganizationBtn")
+  ?.addEventListener("click", () => {
+    openCreateOrganizationModal();
+  });
+
+
+// CLOSE WITH X
+document
+  .getElementById("closeCreateOrganizationModal")
+  ?.addEventListener("click", () => {
+    closeCreateOrganizationModal();
+  });
+
+
+// CLOSE WITH CANCEL
+document
+  .getElementById("cancelCreateOrganization")
+  ?.addEventListener("click", () => {
+    closeCreateOrganizationModal();
+  });
+
+
+// CREATE BUTTON — TEST ONLY FOR NOW
+document
+  .getElementById("saveCreateOrganization")
+  ?.addEventListener("click", () => {
+
+    const organizationName =
+      document
+        .getElementById("newOrganizationName")
+        ?.value.trim();
+
+    const adminName =
+      document
+        .getElementById("newOrganizationAdminName")
+        ?.value.trim();
+
+    const adminEmail =
+      document
+        .getElementById("newOrganizationAdminEmail")
+        ?.value.trim();
+
+
+    if (!organizationName) {
+      alert("Enter the organization name.");
+      return;
+    }
+
+    if (!adminName) {
+      alert("Enter the admin name.");
+      return;
+    }
+
+    if (!adminEmail) {
+      alert("Enter the admin email.");
+      return;
+    }
+
+
+    alert("Perfect — the form works!");
+  });
 // ─── MERGE ────────────────────────────────────────────────────────────────────
 
 function mergeCsvWithSavedPipeline(csvAgents, savedAgents) {
