@@ -138,20 +138,38 @@ async function protectForge() {
 }
 
 async function loadPlatformAdminStatus() {
-  if (!currentUserProfile?.id) {
+
+  const {
+    data: { user },
+    error: authError
+  } = await forgeSupabase.auth.getUser();
+
+  if (authError || !user?.id) {
+
+    console.error(
+      "FORGE: Could not determine authenticated user for platform admin check.",
+      authError
+    );
+
     isPlatformAdmin = false;
     return;
   }
 
-  const { data, error } = await forgeSupabase
+
+  const {
+    data,
+    error
+  } = await forgeSupabase
     .from("platform_admins")
     .select("user_id")
-    .eq("user_id", currentUserProfile.id)
+    .eq("user_id", user.id)
     .maybeSingle();
 
+
   if (error) {
+
     console.error(
-      "Could not check platform admin:",
+      "FORGE PLATFORM ADMIN CHECK ERROR:",
       error
     );
 
@@ -159,7 +177,9 @@ async function loadPlatformAdminStatus() {
     return;
   }
 
+
   isPlatformAdmin = !!data;
+
 
   console.log(
     "FORGE Platform Admin:",
