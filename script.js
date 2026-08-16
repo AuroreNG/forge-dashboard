@@ -255,76 +255,216 @@ function getActiveOrganizationId() {
 }
 
 function renderOrganizationSwitcher() {
+
   const switcher =
-    document.getElementById("platformOrgSwitcher");
+    document.getElementById(
+      "platformOrgSwitcher"
+    );
 
   const list =
-    document.getElementById("organizationList");
+    document.getElementById(
+      "organizationList"
+    );
 
   if (!switcher || !list) return;
 
-  // Only Platform Admin sees this
+
+  // Only Platform Admin gets organization switching
   if (!isPlatformAdmin) {
     switcher.classList.add("hidden");
     return;
   }
 
+
   switcher.classList.remove("hidden");
 
+
+  // Current organization
   setText(
     "currentOrgName",
-    currentOrganization?.name || "Select organization"
+    currentOrganization?.name ||
+      "Select organization"
   );
+
 
   setText(
     "currentOrgMeta",
     `${allAgents.length} people`
   );
 
+
+  // Build organization options
   list.innerHTML = "";
 
-  availableOrganizations.forEach((organization) => {
-    const button =
-      document.createElement("button");
 
-    button.type = "button";
-    button.className = "organization-option";
+  availableOrganizations.forEach(
+    (organization) => {
 
-    if (
-      organization.id ===
-      currentOrganization?.id
-    ) {
-      button.classList.add("active");
-    }
+      const option =
+        document.createElement("button");
 
-    button.innerHTML = `
-      <div class="organization-option-copy">
-        <strong>
-          ${organization.name}
-        </strong>
-      </div>
+      option.type = "button";
 
-      <span>
-        ${
-          organization.id ===
-          currentOrganization?.id
-            ? "✓"
-            : "›"
-        }
-      </span>
-    `;
+      option.className =
+        "organization-option";
 
-    button.addEventListener(
-      "click",
-      async () => {
-        await switchForgeOrganization(
-          organization.id
-        );
+
+      const active =
+        organization.id ===
+        currentOrganization?.id;
+
+
+      if (active) {
+        option.classList.add("active");
       }
+
+
+      option.innerHTML = `
+
+        <div class="organization-option-copy">
+
+          <strong>
+            ${organization.name}
+          </strong>
+
+          <span>
+            ${
+              active
+                ? `${allAgents.length} people`
+                : "Switch workspace"
+            }
+          </span>
+
+        </div>
+
+        <span class="organization-option-state">
+          ${active ? "✓" : "→"}
+        </span>
+
+      `;
+
+
+      option.addEventListener(
+        "click",
+        async (event) => {
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          await switchForgeOrganization(
+            organization.id
+          );
+
+        }
+      );
+
+
+      list.appendChild(option);
+    }
+  );
+}
+document
+  .getElementById("currentOrgButton")
+  ?.addEventListener("click", (event) => {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    document
+      .getElementById("organizationList")
+      ?.classList.toggle("hidden");
+
+  });
+
+async function switchForgeOrganization(
+  organizationId
+) {
+
+  if (!isPlatformAdmin) {
+    console.warn(
+      "Organization switching denied."
     );
 
-    list.appendChild(button);
-  });
+    return;
+  }
+
+
+  const organization =
+    availableOrganizations.find(
+      (org) =>
+        org.id === organizationId
+    );
+
+
+  if (!organization) {
+    console.error(
+      "FORGE organization not found:",
+      organizationId
+    );
+
+    return;
+  }
+
+
+  // Already viewing this organization
+  if (
+    currentOrganization?.id ===
+    organization.id
+  ) {
+    document
+      .getElementById("organizationList")
+      ?.classList.add("hidden");
+
+    return;
+  }
+
+
+  console.log(
+    "Switching FORGE organization:",
+    organization.name
+  );
+
+
+  // Change active tenant
+  currentOrganization =
+    organization;
+
+
+  // Clear anything belonging to previous organization
+  selectedAgent = null;
+  selectedGrowthTeam = null;
+  commandCurrentPage = 1;
+
+  expandedJourneyStages.clear();
+
+
+  // Close menu
+  document
+    .getElementById("organizationList")
+    ?.classList.add("hidden");
+
+
+  // Show temporary loading state
+  setText(
+    "currentOrgName",
+    organization.name
+  );
+
+  setText(
+    "currentOrgMeta",
+    "Loading..."
+  );
+
+
+  // Reload ONLY this organization's agents
+  await loadCSV();
+
+
+  console.log(
+    "FORGE organization switched:",
+    organization.name,
+    allAgents.length
+  );
 }
 // ─── MERGE ────────────────────────────────────────────────────────────────────
 
