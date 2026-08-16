@@ -7425,3 +7425,174 @@ function rewriteActionMessage(style) {
       .trim() + ".";
   }
 }
+
+
+// ==========================================================
+// HOME SUMMARY LINKS
+// ==========================================================
+
+document.addEventListener("click", function (event) {
+
+  const button =
+    event.target.closest(".summary-link");
+
+  if (!button) return;
+
+  event.preventDefault();
+
+  const target =
+    button.dataset.filterTarget;
+
+  console.log(
+    "HOME SUMMARY CLICK:",
+    target
+  );
+
+
+  // --------------------------------------------------------
+  // VIEW ALL
+  // --------------------------------------------------------
+
+  if (target === "all") {
+
+    showPage("Agents");
+
+    setHomeNavActive("Agents");
+
+    return;
+  }
+
+
+  // --------------------------------------------------------
+  // VIEW PIPELINE
+  // --------------------------------------------------------
+
+  if (target === "pipeline") {
+
+    showPage("Journey");
+
+    setHomeNavActive("Journey");
+
+    return;
+  }
+
+
+  // --------------------------------------------------------
+  // VIEW LICENSED
+  // --------------------------------------------------------
+
+  if (target === "licensed") {
+
+    showPage("Journey");
+
+    setHomeNavActive("Journey");
+
+    setTimeout(() => {
+
+      focusJourneyStageFromSummary(
+        "Licensed"
+      );
+
+    }, 150);
+
+    return;
+  }
+
+
+  // --------------------------------------------------------
+  // VIEW CONTRACTED
+  // --------------------------------------------------------
+
+  if (target === "contracted") {
+
+    showPage("Journey");
+
+    setHomeNavActive("Journey");
+
+    setTimeout(() => {
+
+      focusJourneyStageFromSummary(
+        "Contracted"
+      );
+
+    }, 150);
+
+    return;
+  }
+
+});
+
+function setHomeNavActive(pageName) {
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach((button) => {
+
+      button.classList.toggle(
+        "active",
+        button.textContent
+          .trim()
+          .toLowerCase() ===
+          pageName.toLowerCase()
+      );
+
+    });
+}
+
+function focusJourneyStageFromSummary(stage) {
+
+  // First try data attributes
+  let target =
+    document.querySelector(
+      `[data-stage="${stage}"]`
+    );
+
+
+  // Then try common FORGE column classes
+  if (!target) {
+
+    const classMap = {
+      "Licensed":
+        ".licensed-column",
+
+      "Contracted":
+        ".contracted-column"
+    };
+
+    target =
+      document.querySelector(
+        classMap[stage]
+      );
+  }
+
+
+  if (!target) {
+
+    console.log(
+      "Journey opened, but stage element was not found:",
+      stage
+    );
+
+    return;
+  }
+
+
+  target.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+
+  target.classList.add(
+    "forge-stage-focus"
+  );
+
+
+  setTimeout(() => {
+
+    target.classList.remove(
+      "forge-stage-focus"
+    );
+
+  }, 1800);
+}
