@@ -18353,3 +18353,47 @@ header {
 .logout-btn:hover {
   background: #fff1f0;
 }
+
+.org-admin-actions {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(210, 220, 236, 0.8);
+}
+
+.add-organization-btn {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 11px 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  background: transparent;
+  color: #1748b5;
+
+  font-weight: 900;
+  cursor: pointer;
+
+  transition: 0.16s ease;
+}
+
+.add-organization-btn:hover {
+  background: rgba(234, 241, 255, 0.95);
+}
+
+.add-org-icon {
+  width: 26px;
+  height: 26px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 8px;
+
+  background: #edf3ff;
+
+  font-size: 18px;
+  line-height: 1;
+}
