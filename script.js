@@ -2615,9 +2615,15 @@ allAgents = (data || []).map((agent) => ({
   notes: agent.notes || ""
 }));
 
-console.log("Agents loaded from Supabase:", allAgents.length);
+console.log(
+  "Agents loaded from Supabase:",
+  allAgents.length
+);
 
 renderAllPages();
+
+// Refresh organization switcher after agents load
+renderOrganizationSwitcher();
 
 } catch (error) {
   console.error(
