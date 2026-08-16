@@ -7464,17 +7464,32 @@ document.addEventListener("click", function (event) {
 
 
   // --------------------------------------------------------
-  // VIEW PIPELINE
-  // --------------------------------------------------------
+// VIEW PIPELINE
+// --------------------------------------------------------
 
-  if (target === "pipeline") {
+if (target === "pipeline") {
 
-    showPage("Journey");
+  currentJourneyMode = "launch";
 
-    setHomeNavActive("Journey");
+  document
+    .querySelectorAll(".journey-mode")
+    .forEach((button) => {
 
-    return;
-  }
+      button.classList.toggle(
+        "active",
+        button.dataset.mode === "launch"
+      );
+
+    });
+
+  showPage("Journey");
+
+  setHomeNavActive("Journey");
+
+  renderJourneyPage();
+
+  return;
+}
 
 
   // --------------------------------------------------------
