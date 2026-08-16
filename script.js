@@ -6,6 +6,9 @@ let selectedAgent = null;
 let commandCurrentPage = 1;
 let selectedGrowthTeam = null;
 let currentForgeMission = [];
+let availableOrganizations = [];
+let currentOrganization = null;
+let isPlatformAdmin = false;
 const commandPageSize = 11;
 const journeyPreviewLimit = 5;
 
@@ -24,7 +27,13 @@ function saveChecklistLog() {
     JSON.stringify(checklistLog)
   );
 }
-
+function getActiveOrganizationId() {
+  return (
+    currentOrganization?.id ||
+    currentUserProfile?.organization_id ||
+    null
+  );
+}
 // ==========================================================
 // FORGE JOURNEY STAGES
 // Journey tracks only the major licensing milestones.
@@ -126,6 +135,96 @@ async function protectForge() {
 
     return false;
   }
+}
+
+async function loadPlatformAdminStatus() {
+  if (!currentUserProfile?.id) {
+    isPlatformAdmin = false;
+    return;
+  }
+
+  const { data, error } = await forgeSupabase
+    .from("platform_admins")
+    .select("user_id")
+    .eq("user_id", currentUserProfile.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error(
+      "Could not check platform admin:",
+      error
+    );
+
+    isPlatformAdmin = false;
+    return;
+  }
+
+  isPlatformAdmin = !!data;
+
+  console.log(
+    "FORGE Platform Admin:",
+    isPlatformAdmin
+  );
+}
+
+//Add org loading 
+async function loadAvailableOrganizations() {
+  if (!currentUserProfile?.id) return;
+
+  let query = forgeSupabase
+    .from("organizations")
+    .select(`
+      id,
+      name,
+      slug,
+      status
+    `)
+    .eq("status", "active")
+    .order("name");
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error(
+      "Could not load organizations:",
+      error
+    );
+
+    availableOrganizations = [];
+    return;
+  }
+
+  availableOrganizations = data || [];
+
+  console.log(
+    "FORGE organizations:",
+    availableOrganizations
+  );
+}
+//set initial org
+function setInitialOrganization() {
+  if (!availableOrganizations.length) {
+    currentOrganization = null;
+    return;
+  }
+
+  // Prefer the organization already attached
+  // to the profile when FORGE first loads.
+  const profileOrg =
+    availableOrganizations.find(
+      (org) =>
+        org.id ===
+        currentUserProfile?.organization_id
+    );
+
+  currentOrganization =
+    profileOrg ||
+    availableOrganizations[0];
+
+  console.log(
+    "Active FORGE organization:",
+    currentOrganization
+  );
 }
 // ─── MERGE ────────────────────────────────────────────────────────────────────
 
@@ -2339,7 +2438,7 @@ function focusJourneyStageSafe(stage) {
 
 async function loadCSV() {
   try {
-    if (!currentUserProfile?.organization_id) {
+   if (!getActiveOrganizationId()) {
       console.error("Current user has no organization assigned.");
       allAgents = [];
       renderAllPages();
@@ -2350,9 +2449,9 @@ async function loadCSV() {
       .from("agents")
       .select("*")
       .eq(
-        "organization_id",
-        currentUserProfile.organization_id
-      );
+  "organization_id",
+  getActiveOrganizationId()
+);
 
     if (error) {
       console.error("Supabase agent load error:", error);
@@ -2880,7 +2979,15 @@ document.addEventListener("click", (event) => {
           return;
         }
 
-        await loadCSV();
+        await loadCurrentUserProfile();
+
+await loadPlatformAdminStatus();
+
+await loadAvailableOrganizations();
+
+setInitialOrganization();
+
+await loadCSV();
       }
     );
 
