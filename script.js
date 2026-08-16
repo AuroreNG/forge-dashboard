@@ -226,6 +226,13 @@ function setInitialOrganization() {
     currentOrganization
   );
 }
+function getActiveOrganizationId() {
+  return (
+    currentOrganization?.id ||
+    currentUserProfile?.organization_id ||
+    null
+  );
+}
 // ─── MERGE ────────────────────────────────────────────────────────────────────
 
 function mergeCsvWithSavedPipeline(csvAgents, savedAgents) {
@@ -7440,9 +7447,15 @@ console.log(
   currentUserProfile
 );
 
+// Load platform / organization context
+await loadPlatformAdminStatus();
+await loadAvailableOrganizations();
+setInitialOrganization();
+
+// Render user after context is known
 renderLoggedInUser();
 
-  return profile;
+return profile;
 }
 // ─── DOM READY ────────────────────────────────────────────────────────────────
 
