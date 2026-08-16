@@ -140,9 +140,26 @@ button {
   font-weight: 900;
 }
 
-nav {
+.topbar .brand {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.topbar nav {
+  grid-column: 2;
+
   display: flex;
-  gap: 14px;
+  align-items: center;
+  justify-content: center;
+
+  gap: 28px;
+
+  justify-self: center;
+}
+
+.topbar .user-menu-wrap {
+  grid-column: 3;
+  justify-self: end;
 }
 
 .nav-btn {
@@ -150,7 +167,9 @@ nav {
   background: transparent;
   color: var(--navy);
   font-weight: 800;
-  padding: 14px 19px;
+
+  padding: 14px 16px;
+
   border-radius: 15px;
   cursor: pointer;
   transition: 0.18s ease;
