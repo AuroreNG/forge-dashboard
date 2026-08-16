@@ -18045,3 +18045,15 @@ header {
 
   transform: translateY(-2px);
 }
+.forge-stage-focus {
+  box-shadow:
+    0 0 0 2px rgba(37, 99, 235, 0.75),
+    0 18px 42px rgba(37, 99, 235, 0.16)
+    !important;
+
+  transform: translateY(-2px);
+
+  transition:
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
