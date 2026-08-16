@@ -77,16 +77,18 @@ button {
   -webkit-backdrop-filter: blur(28px);
   border: 1px solid var(--line);
   border-radius: 22px;
-  display: flex;
+
+  display: grid;
+
+  /* Brand | centered navigation | user */
+  grid-template-columns: 1fr auto 1fr;
+
   align-items: center;
-  justify-content: space-between;
+
   padding: 0 30px;
   margin-bottom: 24px;
-  box-shadow: var(--shadow);
 
-  position: relative;
-  z-index: 1000;
-  overflow: visible;
+  box-shadow: var(--shadow);
 }
 
 .brand {
