@@ -2705,7 +2705,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
 }
 
 /* ================================
-   GROWTH PAGE â€” FINAL POLISH
+   GROWTH PAGE - FINAL POLISH
 ================================ */
 
 .growth-page{
@@ -3134,7 +3134,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
 .mission-icon::before{content:"M";}
 .script-icon::before{content:"S";}
 .steps-icon::before{content:"1";}
-.success-icon::before{content:"âœ“";}
+.success-icon::before{content:"OK";}
 .coach-icon::before{content:"AI";}
 
 .guide-script::before{
@@ -3763,7 +3763,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
 }
 
 /* ==========================================================
-   JOURNEY â€” PREMIUM REDESIGN
+   JOURNEY - PREMIUM REDESIGN
 ========================================================== */
 
 .journey-hero {
@@ -4336,7 +4336,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
 }
 
 .journey-flow-arrow::after {
-  content: "â€º";
+  content: ">";
   position: absolute;
   font-size: 30px;
   font-weight: 300;
@@ -4419,7 +4419,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
 }
 
 /* ==========================================================
-   GLOBAL PAGE VISIBILITY â€” KEEP AT VERY BOTTOM
+   GLOBAL PAGE VISIBILITY - KEEP AT VERY BOTTOM
 ========================================================== */
 
 .hidden {
@@ -4427,7 +4427,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
 }
 
 /* ==========================================================
-   JOURNEY PIPELINE â€” LARGER / CLEANER
+   JOURNEY PIPELINE - LARGER / CLEANER
 ========================================================== */
 
 .journey-board {
@@ -4559,7 +4559,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
 }
 
 .journey-flow-arrow::after {
-  content: "â€º";
+  content: ">";
 
   margin-left: -2px;
 
@@ -4660,7 +4660,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
   transform: translateY(-2px);
 }
 /* ==========================================================
-   JOURNEY PIPELINE â€” CLEAN CONTINUOUS FLOW
+   JOURNEY PIPELINE - CLEAN CONTINUOUS FLOW
 ========================================================== */
 
 .journey-board {
@@ -4939,7 +4939,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
 }
 
 .journey-flow-arrow::after {
-  content: "â€º";
+  content: ">";
 
   margin-left: -1px;
 
@@ -4951,7 +4951,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
 
 
 /* ==========================================================
-   VIEW ALL â€” TIGHTER FOOTER
+   VIEW ALL - TIGHTER FOOTER
 ========================================================== */
 
 .journey-view-all {
@@ -5156,7 +5156,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
 }
 
 /* ==========================================================
-   JOURNEY â€” INDEPENDENT PIPELINE SCROLLING
+   JOURNEY - INDEPENDENT PIPELINE SCROLLING
 ========================================================== */
 
 .journey-board {
@@ -5245,7 +5245,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
     0 5px 15px rgba(23, 51, 95, .045);
 }
 /* ==========================================================
-   JOURNEY PIPELINE â€” FINAL CLEAN DESIGN
+   JOURNEY PIPELINE - FINAL CLEAN DESIGN
 ========================================================== */
 
 .journey-board {
@@ -5754,7 +5754,7 @@ grid-template-columns: 30% 70%;  gap: 24px;
 }
 
 .journey-flow-arrow::after {
-  content: "â€º";
+  content: ">";
 
   margin-left: -1px;
 
@@ -5906,7 +5906,7 @@ body {
 }
 
 /* ==========================================================
-   AGENTS â€” CLEAN COMPACT DESKTOP
+   AGENTS - CLEAN COMPACT DESKTOP
 ========================================================== */
 
 #agentsPage {
@@ -5999,7 +5999,7 @@ body {
 }
 
 /* ==========================================================
-   COMMAND CENTER â€” CLEAN COMPACT DESKTOP
+   COMMAND CENTER - CLEAN COMPACT DESKTOP
 ========================================================== */
 
 #commandPage {
@@ -6118,7 +6118,7 @@ body {
   color: #c33d3d;
 }
 /* ==========================================================
-   JOURNEY BOARD â€” CLEAN 3-COLUMN LAYOUT
+   JOURNEY BOARD - CLEAN 3-COLUMN LAYOUT
 ========================================================== */
 
 .journey-board {
@@ -6152,7 +6152,7 @@ body {
 /* subtle arrow between stages */
 
 .journey-column.has-next::after {
-  content: "â€º";
+  content: ">";
 
   position: absolute;
 
@@ -6190,7 +6190,7 @@ body {
 
 
 /* ==========================================================
-   JOURNEY â€” EXACTLY 3 COLUMNS
+   JOURNEY - EXACTLY 3 COLUMNS
 ========================================================== */
 
 #journeyPage .journey-board {
@@ -6503,7 +6503,7 @@ body {
 
 
 /* ==========================================================
-   SEARCH â€” REMOVE WEIRD ICON + FILTER BUTTON
+   SEARCH - REMOVE WEIRD ICON + FILTER BUTTON
 ========================================================== */
 
 #journeyPage .journey-search-icon,
@@ -6559,7 +6559,7 @@ body {
 
 
 /* ==========================================================
-   AGENTS PAGE â€” ABOUT 20% SMALLER
+   AGENTS PAGE - ABOUT 20% SMALLER
 ========================================================== */
 
 #agentsPage {
@@ -6698,7 +6698,7 @@ body {
 
 
 /* ==========================================================
-   COMMAND CENTER â€” ABOUT 20% SMALLER
+   COMMAND CENTER - ABOUT 20% SMALLER
 ========================================================== */
 
 #commandPage {
@@ -6798,7 +6798,7 @@ body {
 }
 
 /* ==========================================================
-   JOURNEY â€” FINAL VIEW ALL SCROLL
+   JOURNEY - FINAL VIEW ALL SCROLL
 ========================================================== */
 
 /* Normal preview */
@@ -6843,7 +6843,7 @@ body {
   border-radius: 999px;
 }
 /* ==========================================================
-   JOURNEY â€” CLEAN SINGLE ACCENT / NO DOUBLE SHADOW
+   JOURNEY - CLEAN SINGLE ACCENT / NO DOUBLE SHADOW
 ========================================================== */
 
 #journeyPage .journey-column {
@@ -6931,7 +6931,7 @@ body {
 }
 
 /* ==========================================================
-   FORGE â€” AGENTS PAGE FINAL PROFESSIONAL REDESIGN
+   FORGE - AGENTS PAGE FINAL PROFESSIONAL REDESIGN
    KEEP AT ABSOLUTE BOTTOM OF STYLE.CSS
 ========================================================== */
 
@@ -8065,7 +8065,7 @@ body {
   font-weight: 600;
 }
 /* ==========================================================
-   FORGE AGENTS â€” VISUAL POLISH ONLY
+   FORGE AGENTS - VISUAL POLISH ONLY
    Keeps current layout exactly as-is
 ========================================================== */
 
@@ -8559,8 +8559,8 @@ body {
     rgba(48, 103, 214, .06) !important;
 }
 /* ==========================================================
-   FORGE AGENTS â€” PREMIUM GLASS POLISH
-   VISUAL ONLY â€” NO LAYOUT CHANGES
+   FORGE AGENTS - PREMIUM GLASS POLISH
+   VISUAL ONLY - NO LAYOUT CHANGES
 ========================================================== */
 
 /* PAGE ATMOSPHERE */
@@ -9068,7 +9068,7 @@ body {
 }
 
 /* =========================================================
-   NEXT ACTION â€” MATCH REFERENCE
+   NEXT ACTION - MATCH REFERENCE
 ========================================================= */
 
 .next-action-card {
@@ -9235,7 +9235,7 @@ body {
 }
 
 /* =========================================================
-   NEXT ACTION â€” USE FULL IMAGE AS CARD BACKGROUND
+   NEXT ACTION - USE FULL IMAGE AS CARD BACKGROUND
 ========================================================= */
 
 #agentsPage .agent-action-card {
@@ -9363,10 +9363,10 @@ body {
 }
 
  /* =========================================================
-   NEXT ACTION â€” ICON + TEXT + BUTTON REFINEMENT
+   NEXT ACTION - ICON + TEXT + BUTTON REFINEMENT
 ========================================================= */
 
-/* LIGHTNING ICON â€” smaller premium glass circle */
+/* LIGHTNING ICON - smaller premium glass circle */
 #agentsPage .agent-action-card .action-icon {
   width: 48px !important;
   height: 48px !important;
@@ -9554,7 +9554,7 @@ body {
   font-weight: inherit;
 }
 /* =========================================================
-   AGENT MILESTONES â€” PENDING / COMPLETED
+   AGENT MILESTONES - PENDING / COMPLETED
 ========================================================= */
 
 /* STATUS LINE */
@@ -9654,7 +9654,7 @@ body {
 
 
 /* =========================================================
-   CHECKMARK â€” ONLY COMPLETED STEPS
+   CHECKMARK - ONLY COMPLETED STEPS
 ========================================================= */
 
 #agentsPage .progress-check {
@@ -9708,7 +9708,7 @@ body {
   letter-spacing: -.2px;
 }
 /* =========================================================
-   AGENT PROFILE â€” FINAL LAYOUT RECOVERY
+   AGENT PROFILE - FINAL LAYOUT RECOVERY
    MUST STAY AT ABSOLUTE BOTTOM OF STYLE.CSS
 ========================================================= */
 
@@ -9748,7 +9748,7 @@ body {
 
 
 /* =========================================================
-   HERO â€” FIX ZERO WIDTH / ZERO HEIGHT
+   HERO - FIX ZERO WIDTH / ZERO HEIGHT
 ========================================================= */
 
 #agentsPage #agentProfile .agent-hero {
@@ -9882,7 +9882,7 @@ body {
   transform: none !important;
 }
 /* =========================================================
-   AGENT PROFILE â€” STEP 1
+   AGENT PROFILE - STEP 1
    HERO + AGENT INFORMATION ONLY
 ========================================================= */
 
@@ -10084,7 +10084,7 @@ body {
 
 
 /* =========================================================
-   AGENT INFORMATION â€” 3 Ã— 2 GRID
+   AGENT INFORMATION - 3 x 2 GRID
 ========================================================= */
 
 #agentsPage .agent-information-card {
@@ -10229,7 +10229,7 @@ body {
   width: 100% !important;
 }
 /* =========================================================
-   AGENT PROFILE â€” STEP 2
+   AGENT PROFILE - STEP 2
    COMPLIANCE ONLY
 ========================================================= */
 
@@ -10442,7 +10442,7 @@ body {
   margin: 0 !important;
 }
 /* =========================================================
-   FORGE â€” ALLOW FULL PAGE SCROLL AT 100% ZOOM
+   FORGE - ALLOW FULL PAGE SCROLL AT 100% ZOOM
 ========================================================= */
 
 html,
@@ -10507,7 +10507,7 @@ body {
 }
 
 /* =========================================================
-   FORGE AGENTS PAGE â€” FINAL CLEAN OVERRIDE
+   FORGE AGENTS PAGE - FINAL CLEAN OVERRIDE
    KEEP THIS AT THE ABSOLUTE BOTTOM OF style.css
 ========================================================= */
 
@@ -10976,7 +10976,7 @@ body {
 
 
 /* =========================================================
-   BASIC INFO â€” 3 Ã— 2
+   BASIC INFO - 3 x 2
 ========================================================= */
 
 #agentsPage .agent-information-card {
@@ -11355,7 +11355,7 @@ body {
 
 
 /* =========================================================
-   NEXT ACTION â€” REFERENCE STYLE
+   NEXT ACTION - REFERENCE STYLE
 ========================================================= */
 
 #agentsPage .agent-action-card {
@@ -11920,7 +11920,7 @@ body {
 }
 
 /* =========================================================
-   NEXT ACTION â€” FINAL PROPORTIONS
+   NEXT ACTION - FINAL PROPORTIONS
 ========================================================= */
 
 #agentsPage .agent-action-card {
@@ -11974,7 +11974,7 @@ body {
 }
 
 /* =========================================================
-   MILESTONE TRACKER â€” FINAL ALIGNMENT
+   MILESTONE TRACKER - FINAL ALIGNMENT
 ========================================================= */
 
 #agentsPage .agent-progress-card {
@@ -12016,11 +12016,11 @@ body {
 }
 
 /* =========================================================
-   AGENT PROFILE â€” FINAL POLISH
+   AGENT PROFILE - FINAL POLISH
 ========================================================= */
 
 
-/* NEXT ACTION â€” tighter, cleaner */
+/* NEXT ACTION - tighter, cleaner */
 #agentsPage .agent-action-card {
   min-height: 195px !important;
 }
@@ -12113,7 +12113,7 @@ body {
 }
 
 /* =========================================================
-   COMPLIANCE â€” FINAL SPACING
+   COMPLIANCE - FINAL SPACING
 ========================================================= */
 
 #agentsPage .profile-compliance-card {
@@ -12134,7 +12134,7 @@ body {
   margin-bottom: 12px !important;
 }
 /* =========================================================
-   AGENT PROFILE â€” COMPLIANCE + NEXT ACTION SIDE BY SIDE
+   AGENT PROFILE - COMPLIANCE + NEXT ACTION SIDE BY SIDE
 ========================================================= */
 
 #agentsPage .agent-middle-grid {
@@ -12152,7 +12152,7 @@ body {
 
 
 /* =========================================================
-   COMPLIANCE â€” LEFT PANEL
+   COMPLIANCE - LEFT PANEL
 ========================================================= */
 
 #agentsPage .profile-compliance-card {
@@ -12213,7 +12213,7 @@ body {
 
 
 /* =========================================================
-   NEXT ACTION â€” RIGHT PANEL
+   NEXT ACTION - RIGHT PANEL
 ========================================================= */
 
 #agentsPage .agent-action-card {
@@ -12311,7 +12311,7 @@ body {
 
 
 /* =========================================================
-   MILESTONE BAR â€” FULL WIDTH UNDER BOTH
+   MILESTONE BAR - FULL WIDTH UNDER BOTH
 ========================================================= */
 
 #agentsPage .agent-progress-card {
@@ -12341,7 +12341,7 @@ body {
 }
 
 /* =========================================================
-   NEXT ACTION â€” ACTUAL HTML STRUCTURE
+   NEXT ACTION - ACTUAL HTML STRUCTURE
 ========================================================= */
 
 #agentsPage .agent-action-card {
@@ -12492,7 +12492,7 @@ body {
 }
 
 /* =========================================================
-   COMPLIANCE â€” ACTUAL HTML
+   COMPLIANCE - ACTUAL HTML
 ========================================================= */
 
 #agentsPage .profile-compliance-card {
@@ -12526,7 +12526,7 @@ body {
 
 /* Add clean blue shield */
 #agentsPage .profile-compliance-card > h3::before {
-  content: "â™¢";
+  content: "";
 
   display: inline-flex !important;
   align-items: center !important;
@@ -12543,7 +12543,7 @@ body {
   display: none !important;
 }
 /* =========================================================
-   AGENT PROFILE â€” MATCH REFERENCE LAYOUT
+   AGENT PROFILE - MATCH REFERENCE LAYOUT
    LEFT: COMPLIANCE
    RIGHT: NEXT ACTION
    BOTTOM: MILESTONES
@@ -12571,7 +12571,7 @@ body {
 
 
 /* =========================================================
-   COMPLIANCE â€” LEFT SIDE
+   COMPLIANCE - LEFT SIDE
 ========================================================= */
 
 #agentsPage .profile-compliance-card {
@@ -12671,7 +12671,7 @@ body {
 
 
 /* =========================================================
-   NEXT ACTION â€” RIGHT SIDE
+   NEXT ACTION - RIGHT SIDE
 ========================================================= */
 
 #agentsPage .agent-action-card {
@@ -12808,7 +12808,7 @@ body {
 
 
 /* =========================================================
-   MILESTONES â€” FULL WIDTH UNDER BOTH
+   MILESTONES - FULL WIDTH UNDER BOTH
 ========================================================= */
 
 #agentsPage .agent-progress-card {
@@ -12919,7 +12919,7 @@ body {
 }
 
 /* =========================================================
-   NEXT ACTION â€” TOP / MIDDLE / BOTTOM LAYOUT
+   NEXT ACTION - TOP / MIDDLE / BOTTOM LAYOUT
 ========================================================= */
 
 #agentsPage .agent-action-card {
@@ -13049,7 +13049,7 @@ body {
 }
 
 /* =========================================================
-   NEXT ACTION â€” SLIMMER + SOFTER BACKGROUND
+   NEXT ACTION - SLIMMER + SOFTER BACKGROUND
 ========================================================= */
 
 #agentsPage .agent-action-card {
@@ -13104,7 +13104,7 @@ body {
 }
 
 
-/* ICON â€” SMALLER */
+/* ICON - SMALLER */
 #agentsPage .action-icon {
   width: 46px !important;
   height: 46px !important;
@@ -13158,7 +13158,7 @@ body {
 }
 
 
-/* BUTTON â€” SMALLER + BOTTOM */
+/* BUTTON - SMALLER + BOTTOM */
 #agentsPage .open-command-btn {
   width: 245px !important;
   min-width: 245px !important;
@@ -13195,7 +13195,7 @@ body {
     0 7px 16px rgba(19, 88, 203, .16) !important;
 }
 /* =========================================================
-   AGENT PROFILE â€” TALLER LIKE REFERENCE
+   AGENT PROFILE - TALLER LIKE REFERENCE
 ========================================================= */
 
 /* Main agent header/profile area */
@@ -13259,7 +13259,7 @@ body {
 }
 
 /* =========================================
-   NEXT ACTION â€” SQUARE CARD
+   NEXT ACTION - SQUARE CARD
 ========================================= */
 
 #agentsPage .agent-action-card {
@@ -13320,7 +13320,7 @@ body {
 }
 
 
-/* OPEN COMMAND CENTER â€” ALWAYS FULLY VISIBLE */
+/* OPEN COMMAND CENTER - ALWAYS FULLY VISIBLE */
 #agentsPage .open-command-btn {
   margin-top: auto !important;
 
@@ -13381,7 +13381,7 @@ body {
   line-height: 1.2 !important;
 }
 /* =========================================================
-   NEXT ACTION â€” SQUARE, CENTERED, SAME VISUAL WEIGHT
+   NEXT ACTION - SQUARE, CENTERED, SAME VISUAL WEIGHT
    AS COMPLIANCE
 ========================================================= */
 
@@ -13479,7 +13479,7 @@ body {
 }
 
 
-/* DESCRIPTION â€” TRY TO KEEP ON ONE LINE */
+/* DESCRIPTION - TRY TO KEEP ON ONE LINE */
 #agentsPage .action-copy p {
   width: 100% !important;
   max-width: none !important;
@@ -13496,7 +13496,7 @@ body {
 }
 
 
-/* COMMAND BUTTON â€” FULLY VISIBLE */
+/* COMMAND BUTTON - FULLY VISIBLE */
 #agentsPage .open-command-btn {
   width: 82% !important;
   max-width: 300px !important;
@@ -13543,7 +13543,7 @@ body {
 }
 
 /* =========================================================
-   COMMAND CENTER â€” MATCH REFERENCE TOP PROFILE
+   COMMAND CENTER - MATCH REFERENCE TOP PROFILE
 ========================================================= */
 
 #commandPage .command-main {
@@ -13805,7 +13805,7 @@ body {
 
 
 #commandPage .recommended-card > div:first-child::before {
-  content: "âœ¦";
+  content: "";
 
   position: absolute;
 
@@ -13965,7 +13965,7 @@ body {
 }
 
 /* =========================================================
-   COMMAND CENTER â€” LOWER 4 PANEL GRID
+   COMMAND CENTER - LOWER 4 PANEL GRID
 ========================================================= */
 
 #commandPage .command-grid {
@@ -14439,7 +14439,7 @@ body {
   }
 }
 
-/* COMMAND â€” COORDINATOR PILL ONLY */
+/* COMMAND - COORDINATOR PILL ONLY */
 
 #commandPage #commandMeta {
   display: inline-flex !important;
@@ -14469,7 +14469,7 @@ body {
 
 /* person icon */
 #commandPage #commandMeta::before {
-  content: "â™™";
+  content: "";
 
   display: inline-flex !important;
   align-items: center !important;
@@ -14481,7 +14481,7 @@ body {
 }
 
 /* =========================================================
-   COMMAND SIDEBAR â€” CLEANER / MORE PREMIUM
+   COMMAND SIDEBAR - CLEANER / MORE PREMIUM
 ========================================================= */
 
 #commandPage .command-sidebar {
@@ -14663,7 +14663,7 @@ body {
 }
 
 /* =========================================================
-   COMMAND SIDEBAR â€” WIDER + SEAMLESS LIKE REFERENCE
+   COMMAND SIDEBAR - WIDER + SEAMLESS LIKE REFERENCE
 ========================================================= */
 
 #commandPage .command-layout {
@@ -14877,7 +14877,7 @@ body {
 
 /* RIGHT CHEVRON */
 #commandPage .command-agent-item::after {
-  content: "â€º";
+  content: ">";
 
   color: #1767ed !important;
 
@@ -14946,7 +14946,7 @@ body {
 }
 
 /* =========================================================
-   RECOMMENDED NEXT ACTION â€” CLEAN PREMIUM VERSION
+   RECOMMENDED NEXT ACTION - CLEAN PREMIUM VERSION
 ========================================================= */
 
 #commandPage .recommended-card {
@@ -15153,7 +15153,7 @@ body {
   font-size: 0 !important;
 }
 /* =========================================================
-   COMMAND QUICK ACTIONS â€” CLEAN PROFESSIONAL ICONS
+   COMMAND QUICK ACTIONS - CLEAN PROFESSIONAL ICONS
 ========================================================= */
 
 #commandPage .quick-actions {
@@ -15248,13 +15248,13 @@ body {
 }
 
 
-/* OPTIONAL â€” WhatsApp remains subtly recognizable */
+/* OPTIONAL - WhatsApp remains subtly recognizable */
 #commandPage .quick-actions button[data-method="WhatsApp"] svg {
   stroke: #299a58 !important;
 }
 
 
-/* OPTIONAL â€” Zoom slight FORGE blue */
+/* OPTIONAL - Zoom slight FORGE blue */
 #commandPage .quick-actions button[data-method="Zoom"] svg {
   stroke: #1767ed !important;
 }
@@ -15279,7 +15279,7 @@ body {
   stroke-width: 1.65 !important;
 }
 /* =========================================================
-   COORDINATOR ACTIONS â€” PREMIUM CLEANUP
+   COORDINATOR ACTIONS - PREMIUM CLEANUP
 ========================================================= */
 
 #commandPage .coordinator-action-icon {
@@ -15410,7 +15410,7 @@ body {
 }
 
 /* =========================================================
-   COMMENTS & ACTIVITY â€” CLEAN PROFESSIONAL STYLE
+   COMMENTS & ACTIVITY - CLEAN PROFESSIONAL STYLE
 ========================================================= */
 
 #commandPage #activityTimeline {
@@ -15585,7 +15585,7 @@ body {
 }
 
 /* =========================================================
-   GROWTH TABLE â€” DIRECT VS ORGANIZATION
+   GROWTH TABLE - DIRECT VS ORGANIZATION
 ========================================================= */
 
 #growthPage .growth-table-head,
@@ -15728,7 +15728,7 @@ body {
 }
 
 /* =========================================================
-   GROWTH â€” TEAM INTELLIGENCE DRAWER
+   GROWTH - TEAM INTELLIGENCE DRAWER
 ========================================================= */
 
 #growthTeamDrawer {
@@ -16167,7 +16167,7 @@ body.growth-drawer-open {
   background: #eef5ff;
 }
 /* =========================================================
-   GROWTH â€” INTELLIGENT STATUS
+   GROWTH - INTELLIGENT STATUS
 ========================================================= */
 
 #growthPage .status-pill.building {
@@ -16517,7 +16517,7 @@ header {
 
 
 .date-row span + span::before {
-  content: "â€¢";
+  content: "-";
 
   margin-right: 12px;
 
@@ -17112,7 +17112,7 @@ header {
 
 
 .pulse-header h3::before {
-  content: "âŒ";
+  content: "";
 
   display: inline-block;
 
@@ -18387,7 +18387,7 @@ header {
 }
 
 /* =========================================================
-   FORGE â€” CREATE ORGANIZATION MODAL
+   FORGE - CREATE ORGANIZATION MODAL
 ========================================================= */
 
 #createOrganizationModal {
@@ -19065,7 +19065,7 @@ body.forge-drawer-open {
   }
 }
 /* ==========================================================
-   FORGE COMMAND CENTER â€” CLEAN CONSOLIDATED LAYOUT
+   FORGE COMMAND CENTER - CLEAN CONSOLIDATED LAYOUT
    This is the only Command Center override block.
 ========================================================== */
 
@@ -19733,6 +19733,24 @@ body.forge-drawer-open {
   background: #fff;
   box-shadow: none;
 }
+
+#commandPage .command-journey-insight { display:flex; align-items:center; gap:12px; padding:14px 16px; border:1px solid #e1e8f3; border-radius:14px; background:linear-gradient(90deg,#f6f9ff,#fbfcff); }
+#commandPage .command-journey-insight > span { width:36px; height:36px; display:grid; place-items:center; flex:0 0 36px; border-radius:11px; color:#6845e4; background:#eeeaff; }
+#commandPage .command-journey-insight strong, #commandPage .command-journey-insight small { display:block; }
+#commandPage .command-journey-insight strong { color:#10264c; font-size:14px; font-weight:850; }
+#commandPage .command-journey-insight small { margin-top:3px; color:#74849e; font-size:12px; }
+#commandPage .command-tab-list { min-height:58px; display:flex; align-items:center; gap:36px; border-bottom:1px solid #e9eef6; }
+#commandPage .command-tab { position:relative; align-self:stretch; display:flex; align-items:center; gap:7px; padding:0; border:0; color:#687894; font:inherit; font-size:13px; font-weight:800; cursor:pointer; background:transparent; }
+#commandPage .command-tab.active { color:#155ee0; }
+#commandPage .command-tab.active::after { content:""; position:absolute; right:0; bottom:-1px; left:0; height:3px; border-radius:4px; background:#155ee0; }
+#commandPage .command-tab span { min-width:24px; padding:3px 7px; border-radius:999px; color:#5a43d2; font-size:10px; background:#eeeaff; }
+#commandPage .command-add-activity { min-height:36px; margin-left:auto; padding:0 14px; border:1px solid #dbe5f2; border-radius:10px; color:#173f80; font:inherit; font-size:12px; font-weight:800; cursor:pointer; background:#f9fbff; }
+#commandPage .command-tab-panel { padding-top:18px; }
+#commandPage .command-bottom-card #activityTimeline { display:flex; flex-wrap:wrap; gap:14px; }
+#commandPage .command-bottom-card .timeline-entry { min-width:240px; flex:1; padding:15px; border:1px solid #e5ebf4; border-radius:14px; background:#fbfcff; }
+#commandPage .command-bottom-card .timeline-entry b { display:block; color:#11284e; font-size:13px; }
+#commandPage .command-bottom-card .timeline-entry span { display:block; margin-top:4px; color:#8390a6; font-size:11px; }
+#commandPage .command-bottom-card .timeline-entry p { margin:8px 0 0; color:#687893; font-size:12px; line-height:1.55; }
 
 @media (max-width: 1250px) {
   #commandPage .command-layout-v2 {
