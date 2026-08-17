@@ -756,21 +756,47 @@ document
     );
 
     try {
-      const { data, error } =
-        await forgeSupabase.rpc(
-          "create_forge_organization",
+            const { data, error } =
+        await forgeSupabase.functions.invoke(
+          "create-organization-invite",
           {
-            p_name: organizationName,
-            p_admin_name: adminName,
-            p_admin_email: adminEmail
+            body: {
+              organizationName,
+              adminName,
+              adminEmail
+            }
           }
         );
 
       if (error) {
-        throw error;
+        let errorMessage =
+          error.message ||
+          "FORGE could not create the organization.";
+
+        try {
+          const errorBody =
+            await error.context?.json();
+
+          if (errorBody?.error) {
+            errorMessage =
+              errorBody.error;
+          }
+        } catch (responseError) {
+          console.warn(
+            "Could not read function error response:",
+            responseError
+          );
+        }
+
+        throw new Error(errorMessage);
       }
 
-      const createdOrganization = data?.[0];
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      const createdOrganization =
+        data?.organization;
 
       if (!createdOrganization?.id) {
         throw new Error(
@@ -778,8 +804,9 @@ document
         );
       }
 
-      setCreateOrganizationStatus(
-        `${createdOrganization.name} was created successfully.`,
+           setCreateOrganizationStatus(
+        data?.message ||
+          `${createdOrganization.name} was created successfully.`,
         "success"
       );
 
