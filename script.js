@@ -3,7 +3,7 @@ let allAgents = [];
 let pendingImportAgents = [];
 let selectedCoordinator = "All";
 let selectedAgent = null;
-let commandCurrentPage = 1;
+let commandListFilter = "priority";
 let selectedGrowthTeam = null;
 let currentForgeMission = [];
 let availableOrganizations = [];
@@ -34,6 +34,49 @@ function getActiveOrganizationId() {
     null
   );
 }
+document.addEventListener(
+  "click",
+  (event) => {
+    const tab =
+      event.target.closest(
+        "[data-command-tab]"
+      );
+
+    if (!tab) return;
+
+    const selectedTab =
+      tab.dataset.commandTab;
+
+    document
+      .querySelectorAll(
+        ".command-tab"
+      )
+      .forEach((button) => {
+        button.classList.toggle(
+          "active",
+          button === tab
+        );
+      });
+
+    document
+      .getElementById(
+        "commandActivityPanel"
+      )
+      ?.classList.toggle(
+        "hidden",
+        selectedTab !== "activity"
+      );
+
+    document
+      .getElementById(
+        "commandActionsPanel"
+      )
+      ?.classList.toggle(
+        "hidden",
+        selectedTab !== "actions"
+      );
+  }
+);
 // ==========================================================
 // FORGE JOURNEY STAGES
 // Journey tracks only the major licensing milestones.
@@ -5731,64 +5774,290 @@ document.addEventListener("click", (event) => {
   renderCommandCenter(selectedAgent);
 });
 
-function renderCommandCenter(agent = selectedAgent) {
-  const list = document.getElementById("commandAgentList");
+function getCommandPriorityScore(agent) {
+  const stageScores = {
+    "Licensed": 100,
+    "Exam Passed": 92,
+    "Not Placed": 85,
+    "Quiz Sent": 75,
+    "XCEL Completed": 65,
+    "Contracted": 10
+  };
+
+  return stageScores[agent.stage] || 50;
+}
+
+
+function getCommandFilteredAgents() {
+  const searchValue =
+    document
+      .getElementById("commandSearch")
+      ?.value.trim()
+      .toLowerCase() || "";
+
+  let agents =
+    allAgents.filter((agent) => {
+      const searchableText = [
+        getAgentDisplayName(agent),
+        agent.coordinator,
+        agent.stage,
+        agent.email,
+        agent.phone,
+        agent.code
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return searchableText.includes(searchValue);
+    });
+
+
+  if (commandListFilter === "priority") {
+    agents = agents
+      .filter(
+        (agent) =>
+          agent.stage !== "Contracted"
+      )
+      .sort(
+        (a, b) =>
+          getCommandPriorityScore(b) -
+          getCommandPriorityScore(a)
+      );
+  } else {
+    agents.sort((a, b) =>
+      getAgentDisplayName(a).localeCompare(
+        getAgentDisplayName(b)
+      )
+    );
+  }
+
+  return agents;
+}
+
+
+function renderCommandCenter(
+  agent = selectedAgent,
+  skipProfileRender = false
+) {
+  const list =
+    document.getElementById(
+      "commandAgentList"
+    );
+
   if (!list) return;
 
-  const searchValue    = document.getElementById("commandSearch")?.value.toLowerCase() || "";
-  const filteredAgents = allAgents.filter((a) => a.name.toLowerCase().includes(searchValue));
-  const totalPages     = Math.ceil(filteredAgents.length / commandPageSize) || 1;
+  const filteredAgents =
+    getCommandFilteredAgents();
 
-  if (commandCurrentPage > totalPages) commandCurrentPage = 1;
+  setText(
+    "commandAgentTotal",
+    `${filteredAgents.length} agents`
+  );
 
-  const start      = (commandCurrentPage - 1) * commandPageSize;
-  const pageAgents = filteredAgents.slice(start, start + commandPageSize);
+  const totalPages =
+    Math.max(
+      1,
+      Math.ceil(
+        filteredAgents.length /
+        commandPageSize
+      )
+    );
+
+  if (commandCurrentPage > totalPages) {
+    commandCurrentPage = totalPages;
+  }
+
+  const start =
+    (commandCurrentPage - 1) *
+    commandPageSize;
+
+  const pageAgents =
+    filteredAgents.slice(
+      start,
+      start + commandPageSize
+    );
 
   list.innerHTML = "";
 
-  pageAgents.forEach((a) => {
-    const row = document.createElement("div");
-    row.className = "command-agent-row";
-    if (selectedAgent && selectedAgent.name === a.name) row.classList.add("active");
-
-    row.innerHTML = `
-      <div class="command-avatar">${getInitials(a.name)}</div>
-      <div>
-        <b>${a.name}</b>
-        <span>${a.coordinator || "No coordinator"} • ${a.stage}</span>
+  if (!pageAgents.length) {
+    list.innerHTML = `
+      <div class="command-list-empty">
+        <strong>No agents found</strong>
+        <span>Try a different search or filter.</span>
       </div>
     `;
 
-    row.onclick = () => {
-      selectedAgent = a;
-      renderCommandCenter(a);
-      showCommandProfile(a);
-    };
+    renderCommandPagination(0);
+    return;
+  }
+
+
+  pageAgents.forEach((listedAgent) => {
+    const row =
+      document.createElement("button");
+
+    row.type = "button";
+    row.className =
+      "command-agent-row";
+
+    row.dataset.stage =
+      listedAgent.stage ||
+      "Not Placed";
+
+    if (
+      selectedAgent &&
+      selectedAgent.id === listedAgent.id
+    ) {
+      row.classList.add("active");
+    }
+
+    const risk =
+      getCommandRisk(listedAgent);
+
+    row.innerHTML = `
+      <div class="command-avatar">
+        ${getInitials(
+          getAgentDisplayName(listedAgent)
+        )}
+      </div>
+
+      <div class="command-agent-copy">
+        <strong>
+          ${getAgentDisplayName(listedAgent)}
+        </strong>
+
+        <span>
+          ${
+            listedAgent.coordinator ||
+            "No coordinator"
+          }
+          ·
+          ${
+            listedAgent.stage ||
+            "Not Placed"
+          }
+        </span>
+      </div>
+
+      <span
+        class="command-agent-status"
+        title="${risk.label} priority"
+      ></span>
+    `;
+
+    row.addEventListener(
+      "click",
+      () => {
+        selectedAgent = listedAgent;
+        showCommandProfile(listedAgent);
+      }
+    );
 
     list.appendChild(row);
   });
 
-  renderCommandPagination(filteredAgents.length);
-  if (agent) showCommandProfile(agent);
+
+  renderCommandPagination(
+    filteredAgents.length
+  );
+
+  if (
+    agent &&
+    !skipProfileRender
+  ) {
+    showCommandProfile(agent);
+  }
 }
 
-document.getElementById("commandSearch")?.addEventListener("input", () => {
-  commandCurrentPage = 1;
-  renderCommandCenter();
-});
+// ==========================================================
+// COMMAND CENTER FILTERS
+// ==========================================================
+
+document
+  .querySelectorAll("[data-command-filter]")
+  .forEach((button) => {
+    button.addEventListener("click", () => {
+      commandListFilter =
+        button.dataset.commandFilter;
+
+      commandCurrentPage = 1;
+
+      document
+        .querySelectorAll("[data-command-filter]")
+        .forEach((filterButton) => {
+          filterButton.classList.toggle(
+            "active",
+            filterButton === button
+          );
+        });
+
+      renderCommandCenter(
+        selectedAgent,
+        true
+      );
+    });
+  });
+
+
+// ==========================================================
+// COMMAND CENTER SEARCH
+// ==========================================================
+
+document
+  .getElementById("commandSearch")
+  ?.addEventListener("input", () => {
+    commandCurrentPage = 1;
+
+    renderCommandCenter(
+      selectedAgent,
+      true
+    );
+  });
+
+
+// ==========================================================
+// COMMAND CENTER PAGINATION
+// ==========================================================
 
 document.addEventListener("click", (event) => {
-  const btn = event.target.closest("[data-command-page]");
-  if (!btn) return;
+  const button =
+    event.target.closest(
+      "[data-command-page]"
+    );
 
-  const searchValue    = document.getElementById("commandSearch")?.value.toLowerCase() || "";
-  const filteredAgents = allAgents.filter((a) => a.name.toLowerCase().includes(searchValue));
-  const totalPages     = Math.ceil(filteredAgents.length / commandPageSize) || 1;
+  if (!button) return;
 
-  if (btn.dataset.commandPage === "next" && commandCurrentPage < totalPages) commandCurrentPage++;
-  if (btn.dataset.commandPage === "prev" && commandCurrentPage > 1)          commandCurrentPage--;
+  const filteredAgents =
+    getCommandFilteredAgents();
 
-  renderCommandCenter();
+  const totalPages =
+    Math.max(
+      1,
+      Math.ceil(
+        filteredAgents.length /
+        commandPageSize
+      )
+    );
+
+  if (
+    button.dataset.commandPage === "next" &&
+    commandCurrentPage < totalPages
+  ) {
+    commandCurrentPage++;
+  }
+
+  if (
+    button.dataset.commandPage === "prev" &&
+    commandCurrentPage > 1
+  ) {
+    commandCurrentPage--;
+  }
+
+  renderCommandCenter(
+    selectedAgent,
+    true
+  );
 });
 
 function renderCommandPagination(total) {
@@ -5892,69 +6161,460 @@ const recommendedActionMap = {
   "Licensed":            { title: "Send Contracting Instructions", text: "Move agent toward carrier contracting." },
   "Contracted":          { title: "Welcome Contracted Agent",   text: "Prepare agent for production." },
 };
+// ==========================================================
+// COMMAND CENTER V2 INTELLIGENCE
+// ==========================================================
+
+const commandStageOrder = [
+  "Not Placed",
+  "Quiz Sent",
+  "XCEL Completed",
+  "Exam Passed",
+  "Licensed",
+  "Contracted"
+];
+
+
+const commandStageIntelligence = {
+  "Not Placed": {
+    title:
+      "Licensing has not started",
+    text:
+      "Start onboarding and send the licensing readiness quiz.",
+    primary:
+      "Start Licensing",
+    insight:
+      "Begin the journey today",
+    playbook:
+      "3-Step Licensing Launch"
+  },
+
+  "Quiz Sent": {
+    title:
+      "Quiz is awaiting completion",
+    text:
+      "Follow up and remove any barrier preventing completion.",
+    primary:
+      "Send Reminder",
+    insight:
+      "One step from XCEL",
+    playbook:
+      "3-Step Quiz Follow-Up"
+  },
+
+  "XCEL Completed": {
+    title:
+      "Ready for exam preparation",
+    text:
+      "Confirm readiness and help schedule the state exam.",
+    primary:
+      "Prepare Exam",
+    insight:
+      "Move toward the state exam",
+    playbook:
+      "3-Step Exam Playbook"
+  },
+
+  "Exam Passed": {
+    title:
+      "Exam passed—activate the license",
+    text:
+      "Complete fingerprints and the state license application.",
+    primary:
+      "Activate License",
+    insight:
+      "One milestone from licensing",
+    playbook:
+      "3-Step License Activation"
+  },
+
+  "Licensed": {
+    title:
+      "Licensed and ready for contracting",
+    text:
+      "Complete contracting to move this agent into production.",
+    primary:
+      "Start Contracting",
+    insight:
+      "One milestone from production",
+    playbook:
+      "3-Step Contracting Playbook"
+  },
+
+  "Contracted": {
+    title:
+      "Contracted and ready for production",
+    text:
+      "Launch fast-start activity and schedule field training.",
+    primary:
+      "Launch Production",
+    insight:
+      "Ready to write business",
+    playbook:
+      "3-Step Production Launch"
+  }
+};
+
+
+function getCommandFirstName(agent) {
+  return String(
+    getAgentDisplayName(agent) ||
+    "Agent"
+  )
+    .trim()
+    .split(/\s+/)[0];
+}
+
+
+function getCommandDays(agent) {
+  const value =
+    agent.lastActivity ||
+    agent.updatedAt ||
+    agent.recruitDate ||
+    agent.recruit_date;
+
+  if (!value) return null;
+
+  const date =
+    new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return Math.max(
+    0,
+    Math.floor(
+      (Date.now() - date.getTime()) /
+      86400000
+    )
+  );
+}
+
+
+function getCommandRisk(agent) {
+  const stage =
+    agent.stage || "Not Placed";
+
+  const days =
+    getCommandDays(agent);
+
+  if (stage === "Contracted") {
+    return {
+      label: "Low",
+      className: "low"
+    };
+  }
+
+  if (stage === "Licensed") {
+    return {
+      label:
+        days !== null && days >= 14
+          ? "High"
+          : "Medium",
+      className:
+        days !== null && days >= 14
+          ? "high"
+          : "medium"
+    };
+  }
+
+  if (
+    stage === "Not Placed" &&
+    days !== null &&
+    days >= 7
+  ) {
+    return {
+      label: "High",
+      className: "high"
+    };
+  }
+
+  if (
+    days !== null &&
+    days >= 14
+  ) {
+    return {
+      label: "High",
+      className: "high"
+    };
+  }
+
+  return {
+    label: "Medium",
+    className: "medium"
+  };
+}
+
+
+function getCommandLastActivity(agent) {
+  const key =
+    agent.code ||
+    agent.email ||
+    agent.name;
+
+  const latestActivity =
+    activityLog[key]?.[0];
+
+  if (latestActivity?.date) {
+    return latestActivity.date;
+  }
+
+  const fallback =
+    agent.lastActivity ||
+    agent.updatedAt ||
+    agent.recruitDate ||
+    agent.recruit_date;
+
+  if (!fallback) return "—";
+
+  const date =
+    new Date(fallback);
+
+  if (Number.isNaN(date.getTime())) {
+    return "—";
+  }
+
+  return date.toLocaleDateString(
+    "en-US",
+    {
+      month: "short",
+      day: "numeric"
+    }
+  );
+}
+
+
+function renderCommandJourney(agent) {
+  const currentStage =
+    agent.stage || "Not Placed";
+
+  const currentIndex =
+    Math.max(
+      0,
+      commandStageOrder.indexOf(
+        currentStage
+      )
+    );
+
+  document
+    .querySelectorAll(
+      ".command-milestone"
+    )
+    .forEach(
+      (milestone, index) => {
+        milestone.classList.remove(
+          "complete",
+          "current"
+        );
+
+        const icon =
+          milestone.querySelector("i");
+
+        const status =
+          milestone.querySelector("span");
+
+        if (index < currentIndex) {
+          milestone.classList.add(
+            "complete"
+          );
+
+          if (icon) {
+            icon.textContent = "✓";
+          }
+
+          if (status) {
+            status.textContent =
+              "Completed";
+          }
+        }
+
+        else if (index === currentIndex) {
+          milestone.classList.add(
+            "current"
+          );
+
+          if (icon) {
+            icon.textContent = "";
+          }
+
+          if (status) {
+            status.textContent =
+              currentStage === "Contracted"
+                ? "Complete"
+                : "Current";
+          }
+        }
+
+        else {
+          if (icon) {
+            icon.textContent = "";
+          }
+
+          if (status) {
+            status.textContent =
+              index === currentIndex + 1
+                ? "Next"
+                : "Upcoming";
+          }
+        }
+      }
+    );
+}
 
 function showCommandProfile(agent) {
+  if (!agent) return;
+
   selectedAgent = agent;
 
-  document.getElementById("commandEmpty")?.classList.add("hidden");
-  document.getElementById("commandProfile")?.classList.remove("hidden");
-  document.getElementById("messageComposer")?.classList.add("hidden");
+  document
+    .getElementById("commandEmpty")
+    ?.classList.add("hidden");
 
-  setText(
-  "commandAvatar",
-  getInitials(getAgentDisplayName(agent))
-);
-  setText(
-  "commandName",
-  getAgentDisplayName(agent)
-);
-  // UPLINE
-setText(
-  "commandMeta",
-  agent.upline ||
-  agent.coordinator ||
-  "No upline"
-);
-  setText("commandStageBadge", agent.stage || "Not Placed");
+  document
+    .getElementById("commandProfile")
+    ?.classList.remove("hidden");
 
-  // ==========================================================
-  // COMMAND CENTER - COMPLIANCE STATUS
-  // ==========================================================
-  setComplianceValue(
-    "commandResidentLicense",
-    agent.residentLicense
-  );
+  document
+    .getElementById("messageComposer")
+    ?.classList.add("hidden");
 
-  setComplianceValue(
-    "commandEO",
-    agent.eoStatus
-  );
 
-  setComplianceValue(
-    "commandAML",
-    agent.amlStatus
-  );
+  const stage =
+    agent.stage || "Not Placed";
 
-  setComplianceValue(
-    "commandTevahFee",
-    agent.tevahPlatformFee
-  );
-
-  const recommended =
-    recommendedActionMap[agent.stage] || {
-      title: "Review Agent",
-      text: "Review this agent's current licensing status."
+  const intelligence =
+    commandStageIntelligence[stage] ||
+    {
+      title: "Review this agent",
+      text:
+        "Review the current licensing position and choose the next step.",
+      primary: "Take Action",
+      insight:
+        "Review journey progress",
+      playbook:
+        "3-Step Action Playbook"
     };
 
-  setText("recommendedTitle", recommended.title);
-  setText("recommendedText", recommended.text);
+  const days =
+    getCommandDays(agent);
+
+  const risk =
+    getCommandRisk(agent);
+
+
+  setText(
+    "commandAvatar",
+    getInitials(
+      getAgentDisplayName(agent)
+    )
+  );
+
+  setText(
+    "commandName",
+    getAgentDisplayName(agent)
+  );
+
+  setText(
+    "commandFirstName",
+    getCommandFirstName(agent)
+  );
+
+  setText(
+    "commandMeta",
+    agent.upline ||
+    agent.coordinator ||
+    "No coordinator"
+  );
+
+  setText(
+    "commandStageBadge",
+    stage
+  );
+
+  setText(
+    "commandDaysInStage",
+    days === null
+      ? "—"
+      : `${days} ${
+          days === 1
+            ? "day"
+            : "days"
+        }`
+  );
+
+  setText(
+    "commandRiskLevel",
+    risk.label
+  );
+
+  const riskElement =
+    document.getElementById(
+      "commandRiskLevel"
+    );
+
+  riskElement?.classList.remove(
+    "low",
+    "medium",
+    "high"
+  );
+
+  riskElement?.classList.add(
+    risk.className
+  );
+
+  setText(
+    "commandLastActivity",
+    getCommandLastActivity(agent)
+  );
+
+  setText(
+    "recommendedTitle",
+    intelligence.title
+  );
+
+  setText(
+    "recommendedText",
+    intelligence.text
+  );
+
+  setText(
+    "commandPrimaryActionText",
+    intelligence.primary
+  );
+
+  setText(
+    "commandPlaybookTitle",
+    intelligence.playbook
+  );
+
+  setText(
+    "commandJourneyInsight",
+    intelligence.insight
+  );
+
+  setText(
+    "commandJourneyInsightDetail",
+    intelligence.text
+  );
+
+
+  renderCommandJourney(agent);
 
   renderCoordinatorActions(agent);
+
   renderLicensingChecklist(agent);
+
   renderActivityTimeline(agent);
-  updateCommandInsights(agent);
+
   renderTodayQueue();
+
+  renderCommandCenter(
+    agent,
+    true
+  );
 }
+
 function getCoordinatorActionIcon(action) {
 
   const title = String(
@@ -6091,84 +6751,70 @@ function getRecommendedActionIcon(title) {
 }
 
 function renderCoordinatorActions(agent) {
-  const container = document.getElementById("coordinatorActions");
+  const container =
+    document.getElementById(
+      "coordinatorActions"
+    );
+
   if (!container) return;
 
-  const actions = coordinatorActionMap[agent.stage] || [{ icon: "🔎", title: "Review Agent", desc: "Review this agent's current status." }];
+  const actions =
+    coordinatorActionMap[agent.stage] ||
+    [
+      {
+        title: "Review Agent",
+        desc:
+          "Review the agent’s current licensing status."
+      }
+    ];
 
   container.innerHTML = "";
 
-  actions.forEach((action) => {
-    const row = document.createElement("div");
-    row.className = "action-row";
-    row.innerHTML = `
-      <div class="action-header">
-        <div class="action-left">
-          <div class="coordinator-action-icon">
-  ${getCoordinatorActionIcon(action)}
-        </div>
-          <div>
-            <strong>${action.title}</strong>
-            <p>${action.desc || ""}</p>
+  actions
+    .slice(0, 3)
+    .forEach(
+      (action, index) => {
+        const row =
+          document.createElement("div");
+
+        row.className =
+          "action-row";
+
+        const state =
+          index === 0
+            ? "Start"
+            : index === 1
+            ? "Waiting"
+            : "Pending";
+
+        row.innerHTML = `
+          <div class="action-icon">
+            ${getCoordinatorActionIcon(action)}
           </div>
-        </div>
-        <div class="action-buttons">
-          <button data-compose="${action.title}">Send</button>
-          <button class="expand-btn">Customize</button>
-        </div>
-      </div>
-      <div class="action-body hidden">
-        <textarea class="custom-message">${getActionMessage(action.title, selectedAgent)}</textarea>
-        <div class="message-actions">
-          <button>✨ AI Rewrite</button>
-          <button>Shorter</button>
-          <button>Friendlier</button>
-          <button>Save Template</button>
-        </div>
-      </div>
-    `;
-    container.appendChild(row);
-  });
+
+          <div class="action-copy">
+            <strong>
+              ${action.title}
+            </strong>
+
+            <span>
+              ${action.desc || ""}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            data-compose="${action.title}"
+            data-method="Text"
+          >
+            ${state}
+          </button>
+        `;
+
+        container.appendChild(row);
+      }
+    );
 }
-
-// FIX 3: expand button toggle
-document.addEventListener("click", (e) => {
-  const expand = e.target.closest(".expand-btn");
-  if (!expand) return;
-
-  const body = expand.closest(".action-row").querySelector(".action-body");
-  body.classList.toggle("hidden");
-  expand.textContent = body.classList.contains("hidden") ? "Customize" : "▲";
-});
-
-// ─── ACTION MESSAGES ─────────────────────────────────────────────────────────
-
-const actionMessages = {
-  "Send Welcome": `Hi {agent}, welcome to the team!
-
-My name is {coordinator}, and I will be your Licensing Coordinator working with {upline}.
-
-My goal is to help you get licensed and contracted as quickly as possible. Please let me know if you have any questions.`,
-
-  "Send Quiz Invitation": `Hi {agent}, please complete your licensing readiness quiz today.
-
-This helps us know where you are and how to support you through the licensing process.`,
-
-  "Send Quiz Reminder": `Hi {agent}, quick reminder to complete your licensing quiz today so we can move you to the next step.`,
-
-  "Send XCEL Login": `Hi {agent}, please use your email to log in and complete your XCEL licensing course.
-
-Password: Blessed100%
-
-Let me know once you are inside.`,
-
-  "Complete CE Requirements": `Hi {agent}, please complete your CE requirements so we can move you forward to contracting.`,
-
-  "Send Contracting Instructions": `Hi {agent}, congratulations on being licensed!
-
-The next step is contracting. Please complete the contracting requirements so we can appoint you quickly.`,
-};
-
 function getActionMessage(actionTitle, agent) {
   const template = actionMessages[actionTitle] || "Hi {agent}, following up on your licensing journey.";
   return template
@@ -6417,8 +7063,8 @@ document.addEventListener("click", (event) => {
 
 document.addEventListener("click", (event) => {
   const actionBtn = event.target.closest(
-    ".quick-actions button, #takeActionBtn, .take-action-btn, [data-compose]"
-  );
+  ".quick-actions button, .command-channel-actions button, .command-add-activity, #takeActionBtn, .take-action-btn, [data-compose]"
+);
 
   if (!actionBtn) return;
 
