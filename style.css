@@ -20361,3 +20361,603 @@ body.forge-drawer-open {
     display: none;
   }
 }
+
+/* ==========================================================
+   FORGE COMMAND CENTER — FINAL POLISH
+========================================================== */
+
+#commandPage {
+  padding: 26px 28px 60px;
+  background:
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(122, 92, 255, 0.08),
+      transparent 30%
+    ),
+    #f4f8ff;
+}
+
+.command-center-heading {
+  max-width: 1920px;
+  margin: 0 auto 18px;
+  color: #0a2147;
+  font-size: 26px;
+  font-weight: 850;
+  letter-spacing: -0.5px;
+}
+
+
+/* ==========================================================
+   MAIN LAYOUT
+========================================================== */
+
+.command-layout-v2 {
+  display: grid;
+  grid-template-columns:
+    350px
+    minmax(0, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+
+/* ==========================================================
+   LONGER AGENT SIDEBAR
+========================================================== */
+
+.command-sidebar-v2,
+.command-sidebar {
+  position: sticky;
+  top: 22px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 48px);
+  min-height: 820px;
+  max-height: 1100px;
+  padding: 22px 18px 18px;
+  overflow: hidden;
+  border: 1px solid #dae4f3;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow:
+    0 18px 45px rgba(27, 61, 116, 0.08);
+}
+
+.command-sidebar-head {
+  flex: 0 0 auto;
+}
+
+.command-sidebar-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.command-sidebar-title h2 {
+  margin: 0;
+  color: #0a2147;
+  font-size: 24px;
+  font-weight: 850;
+}
+
+#commandAgentTotal {
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #edf3ff;
+  color: #285bba;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* Filter buttons */
+.command-filter-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.command-filter-tabs button {
+  min-height: 42px;
+  border: 1px solid #dce5f2;
+  border-radius: 12px;
+  background: #f8faff;
+  color: #72809a;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.command-filter-tabs button.active {
+  border-color: transparent;
+  background:
+    linear-gradient(
+      135deg,
+      #1261df,
+      #6438ee
+    );
+  color: #fff;
+  box-shadow:
+    0 8px 18px rgba(48, 80, 219, 0.2);
+}
+
+
+/* Single search field */
+#commandSearch {
+  flex: 0 0 auto;
+  width: 100% !important;
+  height: 46px !important;
+  margin: 0 0 16px !important;
+  padding: 0 15px !important;
+  border: 1px solid #dce5f2 !important;
+  border-radius: 13px !important;
+  background: #fff !important;
+  color: #10264a;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+
+/* Scrollable agent list */
+#commandAgentList {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 2px 5px 12px 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c8d6ea transparent;
+}
+
+#commandAgentList::-webkit-scrollbar {
+  width: 6px;
+}
+
+#commandAgentList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#commandAgentList::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: #c8d6ea;
+}
+
+
+/* Cleaner agent rows */
+.command-agent-row {
+  width: 100%;
+  min-height: 68px;
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow:
+    0 5px 15px rgba(35, 67, 115, 0.045);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.command-agent-row:hover {
+  transform: translateY(-1px);
+  border-color: #b9cefb;
+  box-shadow:
+    0 8px 20px rgba(35, 77, 155, 0.09);
+}
+
+.command-agent-row.active {
+  border-color: #3f7df3;
+  background:
+    linear-gradient(
+      135deg,
+      #f0f6ff,
+      #f8f5ff
+    );
+  box-shadow:
+    0 9px 22px rgba(39, 96, 213, 0.12);
+}
+
+.command-avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background:
+    linear-gradient(
+      145deg,
+      #2773ec,
+      #073d9b
+    );
+  color: #fff;
+  font-size: 12px;
+  font-weight: 850;
+  box-shadow:
+    0 7px 16px rgba(13, 78, 184, 0.18);
+}
+
+.command-agent-copy strong {
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.command-agent-copy span {
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+
+/* Keep pagination at bottom */
+#commandPagination {
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid #e3eaf4;
+  background: #fff;
+}
+
+#commandPagination > span {
+  color: #61718d;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.page-buttons button,
+.page-buttons strong {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #d8e3f2;
+  border-radius: 12px;
+  background: #fff;
+  color: #163a73;
+  font-size: 16px;
+}
+
+
+/* ==========================================================
+   MAIN COMMAND AREA
+========================================================== */
+
+.command-main-v2,
+.command-main {
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid #dce5f2;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 20px 50px rgba(31, 64, 115, 0.07);
+}
+
+
+/* ==========================================================
+   COMPACT AGENT HEADER
+========================================================== */
+
+.command-agent-header-v2 {
+  display: grid;
+  grid-template-columns:
+    auto
+    minmax(300px, 1fr)
+    repeat(3, minmax(110px, auto))
+    auto
+    auto;
+  align-items: center;
+  gap: 24px;
+  min-height: 126px;
+  padding: 24px 28px;
+  border: 1px solid #dce5f2;
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff,
+      #f2f7ff
+    );
+}
+
+.command-agent-header-v2 .profile-avatar {
+  width: 74px;
+  height: 74px;
+  font-size: 22px;
+}
+
+.command-agent-identity {
+  min-width: 0;
+}
+
+#commandName {
+  margin: 0 0 8px;
+  color: #081f44;
+  font-size: clamp(25px, 2vw, 35px);
+  font-weight: 870;
+  line-height: 1.1;
+}
+
+#commandMeta {
+  margin: 0;
+  color: #7887a2;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.command-header-stat {
+  min-width: 110px;
+  padding: 4px 0 4px 20px;
+  border-left: 1px solid #e0e8f3;
+}
+
+
+/* ==========================================================
+   INTELLIGENCE HERO
+========================================================== */
+
+.command-intelligence-hero {
+  position: relative;
+  min-height: 218px;
+  margin-top: 22px;
+  padding: 28px 32px;
+  overflow: hidden;
+  border-radius: 24px;
+  background:
+    radial-gradient(
+      circle at 75% 20%,
+      rgba(50, 119, 255, 0.72),
+      transparent 38%
+    ),
+    linear-gradient(
+      130deg,
+      #061f50,
+      #0c367e 52%,
+      #092766
+    );
+  box-shadow:
+    0 20px 40px rgba(6, 37, 91, 0.19);
+}
+
+.command-intelligence-hero::after {
+  content: "";
+  position: absolute;
+  right: -140px;
+  bottom: -240px;
+  width: 570px;
+  height: 570px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 50%;
+}
+
+.command-intelligence-content {
+  position: relative;
+  z-index: 2;
+}
+
+.command-intelligence-hero h2 {
+  margin: 12px 0 10px;
+  color: #fff;
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.command-intelligence-hero h3 {
+  margin: 0 0 5px;
+  color: #fff;
+  font-size: 19px;
+}
+
+.command-intelligence-hero p {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.command-channel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.command-channel-actions button {
+  min-width: 76px;
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+  font-weight: 750;
+  backdrop-filter: blur(10px);
+}
+
+#takeActionBtn {
+  min-width: 190px;
+  min-height: 58px;
+  border: 0;
+  border-radius: 15px;
+  background:
+    linear-gradient(
+      135deg,
+      #2184f7,
+      #245cef
+    );
+  box-shadow:
+    0 13px 28px rgba(22, 101, 240, 0.3);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 850;
+}
+
+
+/* ==========================================================
+   PLAYBOOK AND JOURNEY
+========================================================== */
+
+.command-intelligence-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(440px, 0.9fr)
+    minmax(600px, 1.45fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.command-playbook-card,
+.command-journey-card {
+  min-height: 320px;
+  padding: 22px;
+  border: 1px solid #dfe7f2;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow:
+    0 9px 25px rgba(31, 63, 111, 0.055);
+}
+
+.command-playbook-card h3,
+.command-journey-card h3 {
+  margin: 4px 0 18px;
+  color: #0b2248;
+  font-size: 19px;
+}
+
+.action-row {
+  min-height: 72px;
+  padding: 13px 8px;
+  border-bottom: 1px solid #edf1f7;
+}
+
+.action-row:last-child {
+  border-bottom: 0;
+}
+
+.action-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border-radius: 13px;
+  background: #eff5ff;
+  color: #2367d8;
+  font-size: 19px;
+}
+
+.action-row button {
+  min-width: 96px;
+  height: 42px;
+  border: 1px solid #d7e2f3;
+  border-radius: 11px;
+  background: #f8faff;
+  color: #2160ca;
+  font-weight: 800;
+}
+
+
+/* ==========================================================
+   ACTIVITY PANEL
+========================================================== */
+
+.command-bottom-panel {
+  min-height: 260px;
+  margin-top: 20px;
+  padding: 20px 24px;
+  border: 1px solid #dfe7f2;
+  border-radius: 22px;
+  background: #fff;
+}
+
+.command-bottom-tabs {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  border-bottom: 1px solid #e7edf5;
+}
+
+.command-bottom-tab {
+  position: relative;
+  min-height: 48px;
+  border: 0;
+  background: transparent;
+  color: #72809a;
+  font-weight: 800;
+}
+
+.command-bottom-tab.active {
+  color: #1764df;
+}
+
+.command-bottom-tab.active::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 3px;
+  border-radius: 3px;
+  background: #1764df;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1450px) {
+  .command-layout-v2 {
+    grid-template-columns:
+      320px
+      minmax(0, 1fr);
+  }
+
+  .command-agent-header-v2 {
+    grid-template-columns:
+      auto
+      minmax(220px, 1fr)
+      auto
+      auto;
+  }
+
+  .command-header-stat {
+    display: none;
+  }
+
+  .command-intelligence-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 950px) {
+  #commandPage {
+    padding: 18px;
+  }
+
+  .command-layout-v2 {
+    grid-template-columns: 1fr;
+  }
+
+  .command-sidebar-v2,
+  .command-sidebar {
+    position: static;
+    height: 620px;
+    min-height: 620px;
+    max-height: 620px;
+  }
+
+  .command-agent-header-v2 {
+    grid-template-columns:
+      auto
+      minmax(0, 1fr)
+      auto;
+  }
+
+  .command-intelligence-grid {
+    grid-template-columns: 1fr;
+  }
+}
