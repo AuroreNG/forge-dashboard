@@ -10,7 +10,7 @@ let currentForgeMission = [];
 let availableOrganizations = [];
 let currentOrganization = null;
 let isPlatformAdmin = false;
-const commandPageSize = 11;
+const commandPageSize = 18;
 const journeyPreviewLimit = 5;
 
 const expandedJourneyStages = new Set();
