@@ -2452,6 +2452,118 @@ TEAM INTELLIGENCE DRAWER
 
   </div>
 </div>
+    <!-- ======================================================
+     FORGE INTELLIGENCE DRAWER
+======================================================= -->
+
+<div
+  id="forgeIntelligenceOverlay"
+  class="forge-intelligence-overlay hidden"
+></div>
+
+<aside
+  id="forgeIntelligenceDrawer"
+  class="forge-intelligence-drawer"
+  aria-hidden="true"
+>
+  <div class="forge-drawer-header">
+
+    <div class="forge-drawer-heading">
+      <div class="forge-drawer-icon">✦</div>
+
+      <div>
+        <span class="forge-drawer-eyebrow">
+          FORGE INTELLIGENCE
+        </span>
+
+        <h2>Organization Priorities</h2>
+
+        <p id="forgeDrawerOrganization">
+          Active workspace
+        </p>
+      </div>
+    </div>
+
+    <button
+      id="closeForgeIntelligence"
+      class="forge-drawer-close"
+      type="button"
+      aria-label="Close priorities"
+    >
+      ×
+    </button>
+
+  </div>
+
+
+  <div class="forge-drawer-body">
+
+    <section class="forge-recommendation-card">
+      <span class="forge-recommendation-label">
+        RECOMMENDED FOCUS
+      </span>
+
+      <h3 id="forgeRecommendationTitle">
+        Review your licensing priorities
+      </h3>
+
+      <p id="forgeRecommendationText">
+        FORGE is analyzing your active organization.
+      </p>
+
+      <button
+        id="startForgePrioritySession"
+        class="forge-start-priorities"
+        type="button"
+      >
+        Start Priority Session
+        <span>→</span>
+      </button>
+    </section>
+
+
+    <section class="forge-drawer-metrics">
+
+      <article class="forge-drawer-metric contracting">
+        <span>Ready to Contract</span>
+        <strong id="drawerContractingCount">0</strong>
+        <small>Immediate opportunity</small>
+      </article>
+
+      <article class="forge-drawer-metric activation">
+        <span>Need Activation</span>
+        <strong id="drawerActivationCount">0</strong>
+        <small>Licensing not started</small>
+      </article>
+
+      <article class="forge-drawer-metric stalled">
+        <span>Stalled</span>
+        <strong id="drawerStalledCount">0</strong>
+        <small>Follow-up overdue</small>
+      </article>
+
+    </section>
+
+
+    <section class="forge-priority-section">
+
+      <div class="forge-priority-section-title">
+        <div>
+          <h3>Priority Queue</h3>
+          <p>Ranked by urgency and business impact.</p>
+        </div>
+
+        <span id="forgePriorityCount">
+          0 people
+        </span>
+      </div>
+
+      <div id="forgePriorityList"></div>
+
+    </section>
+
+  </div>
+</aside>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./supabase-config.js?v=2"></script>
