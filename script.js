@@ -267,6 +267,11 @@ function renderOrganizationSwitcher() {
     );
 
   if (!switcher || !list) return;
+    setText(
+    "dashboardOrgName",
+    currentOrganization?.name ||
+      "No Organization"
+  );
 
 
   // Only Platform Admin gets organization switching
