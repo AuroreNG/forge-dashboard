@@ -3181,9 +3181,227 @@ function getJourneyActionLabel(stage) {
 
   return labels[stage] || "";
 }
+
+// ==========================================================
+// JOURNEY — FORGE INTELLIGENCE
+// ==========================================================
+
+let journeyPriorityAgents = [];
+
+
+function getJourneyDaysSinceRecruit(agent) {
+  const value =
+    agent.recruitDate ||
+    agent.recruit_date ||
+    null;
+
+  if (!value) return null;
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return Math.max(
+    0,
+    Math.floor(
+      (Date.now() - date.getTime()) /
+      (1000 * 60 * 60 * 24)
+    )
+  );
+}
+
+
+function isJourneyAgentStalled(agent) {
+  const stage =
+    agent.stage || "Not Placed";
+
+  if (stage === "Contracted") {
+    return false;
+  }
+
+  const days =
+    getJourneyDaysSinceRecruit(agent);
+
+  if (days === null) {
+    return false;
+  }
+
+  const stageLimits = {
+    "Not Placed": 7,
+    "Quiz Sent": 10,
+    "XCEL Completed": 21,
+    "Exam Passed": 30,
+    "Licensed": 45
+  };
+
+  const limit =
+    stageLimits[stage];
+
+  return (
+    typeof limit === "number" &&
+    days >= limit
+  );
+}
+
+
+function getJourneyPriorityScore(agent) {
+  let score = 0;
+
+  if (isJourneyAgentStalled(agent)) {
+    score += 100;
+  }
+
+  if (agent.stage === "Licensed") {
+    score += 90;
+  }
+
+  if (agent.stage === "Exam Passed") {
+    score += 80;
+  }
+
+  if (agent.stage === "Not Placed") {
+    score += 70;
+  }
+
+  if (agent.stage === "Quiz Sent") {
+    score += 60;
+  }
+
+  const days =
+    getJourneyDaysSinceRecruit(agent);
+
+  if (days !== null) {
+    score += Math.min(days, 50);
+  }
+
+  return score;
+}
+
+
+function updateJourneyIntelligence(agents) {
+  const organizationAgents =
+    Array.isArray(agents)
+      ? agents
+      : [];
+
+  const needAttentionStages = [
+    "Not Placed",
+    "Quiz Sent",
+    "Exam Passed",
+    "Licensed"
+  ];
+
+  const readyStages = [
+    "Exam Passed",
+    "Licensed"
+  ];
+
+  const needAttention =
+    organizationAgents.filter(
+      (agent) =>
+        needAttentionStages.includes(
+          agent.stage
+        )
+    );
+
+  const readyToAdvance =
+    organizationAgents.filter(
+      (agent) =>
+        readyStages.includes(
+          agent.stage
+        )
+    );
+
+  const stalled =
+    organizationAgents.filter(
+      isJourneyAgentStalled
+    );
+
+  setText(
+    "journeyNeedAttention",
+    needAttention.length
+  );
+
+  setText(
+    "journeyReadyAdvance",
+    readyToAdvance.length
+  );
+
+  setText(
+    "journeyStalled",
+    stalled.length
+  );
+
+  // Combine all priority groups without duplicates.
+  const priorityMap =
+    new Map();
+
+  [
+    ...stalled,
+    ...readyToAdvance,
+    ...needAttention
+  ].forEach((agent) => {
+    const key =
+      agent.id ||
+      agent.code ||
+      agent.email ||
+      agent.name;
+
+    if (!key) return;
+
+    priorityMap.set(
+      String(key),
+      agent
+    );
+  });
+
+  journeyPriorityAgents =
+    [...priorityMap.values()]
+      .sort(
+        (a, b) =>
+          getJourneyPriorityScore(b) -
+          getJourneyPriorityScore(a)
+      );
+
+  const priorityButton =
+    document.getElementById(
+      "viewJourneyPriorities"
+    );
+
+  if (priorityButton) {
+    priorityButton.disabled =
+      journeyPriorityAgents.length === 0;
+
+    priorityButton.title =
+      journeyPriorityAgents.length
+        ? `Open ${journeyPriorityAgents.length} priority agents`
+        : "No priority agents right now";
+  }
+}
+
+
+document
+  .getElementById("viewJourneyPriorities")
+  ?.addEventListener("click", () => {
+    if (!journeyPriorityAgents.length) {
+      return;
+    }
+
+    launchForgeContext({
+      type: "mission",
+      title: "Journey Priorities",
+      reason:
+        "Agents requiring immediate licensing follow-up",
+      agents: journeyPriorityAgents
+    });
+  });
+
 // ─── JOURNEY PAGE ─────────────────────────────────────────────────────────────
 
 function renderJourneyPage() {
+    updateJourneyIntelligence(allAgents);
 const searchInput =
   document.getElementById("journeySearch");
 
