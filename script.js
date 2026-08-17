@@ -1,4 +1,4 @@
-console.log("✅ FORGE SCRIPT LOADED - NEW VERSION");
+console.log("âœ… FORGE SCRIPT LOADED - NEW VERSION");
 let allAgents = [];
 let pendingImportAgents = [];
 let selectedCoordinator = "All";
@@ -387,7 +387,7 @@ function renderOrganizationSwitcher() {
         </div>
 
         <span class="organization-option-state">
-          ${active ? "✓" : "→"}
+          ${active ? "âœ“" : "â†’"}
         </span>
 
       `;
@@ -760,7 +760,7 @@ document
 
     if (!adminName) {
       setCreateOrganizationStatus(
-        "Enter the administrator’s name.",
+        "Enter the administratorâ€™s name.",
         "error"
       );
 
@@ -769,7 +769,7 @@ document
 
     if (!adminEmail) {
       setCreateOrganizationStatus(
-        "Enter the administrator’s email.",
+        "Enter the administratorâ€™s email.",
         "error"
       );
 
@@ -922,7 +922,7 @@ document
       }
     }
   });
-// ─── MERGE ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ MERGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function mergeCsvWithSavedPipeline(csvAgents, savedAgents) {
   const savedMap = new Map();
@@ -947,7 +947,7 @@ function mergeCsvWithSavedPipeline(csvAgents, savedAgents) {
   });
 }
 
-// ─── RENDER ALL ───────────────────────────────────────────────────────────────
+// â”€â”€â”€ RENDER ALL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function renderAllPages() {
   updateTime();
@@ -959,7 +959,7 @@ function renderAllPages() {
 }
 
 // ==========================================================
-// HOME — TODAY'S WORK QUEUE
+// HOME â€” TODAY'S WORK QUEUE
 // ==========================================================
 
 function renderHomeWorkQueue(agents) {
@@ -994,7 +994,7 @@ function renderHomeWorkQueue(agents) {
 
 
     // =====================================================
-    // LICENSED — READY FOR CONTRACTING
+    // LICENSED â€” READY FOR CONTRACTING
     // =====================================================
 
     if (stage === "Licensed") {
@@ -1018,7 +1018,7 @@ function renderHomeWorkQueue(agents) {
 
 
     // =====================================================
-    // NOT PLACED — STALLED / NOT STARTED
+    // NOT PLACED â€” STALLED / NOT STARTED
     // =====================================================
 
     if (stage === "Not Placed") {
@@ -1181,7 +1181,7 @@ function renderHomeWorkQueue(agents) {
   );
 
   // ==========================================================
-// HOME WORK QUEUE → INTELLIGENCE DRAWER
+// HOME WORK QUEUE â†’ INTELLIGENCE DRAWER
 // ==========================================================
 
 [
@@ -1317,7 +1317,7 @@ function renderHomeWorkQueue(agents) {
             ? formatHomeDate(
                 agent.recruitDate
               )
-            : "—"
+            : "â€”"
         }
       </div>
 
@@ -1531,39 +1531,39 @@ function getWorkReasonIcon(reason) {
   if (
     text.includes("contract")
   ) {
-    return "✓";
+    return "âœ“";
   }
 
   if (
     text.includes("exam")
   ) {
-    return "□";
+    return "â–¡";
   }
 
   if (
     text.includes("quiz")
   ) {
-    return "→";
+    return "â†’";
   }
 
   if (
     text.includes("movement") ||
     text.includes("started")
   ) {
-    return "◷";
+    return "â—·";
   }
 
-  return "•";
+  return "â€¢";
 }
 
 
 function formatHomeDate(value) {
-  if (!value) return "—";
+  if (!value) return "â€”";
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return "—";
+    return "â€”";
   }
 
   return date.toLocaleDateString(
@@ -1576,7 +1576,7 @@ function formatHomeDate(value) {
   );
 }
 
-// ─── CSV ──────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ CSV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function parseCSV(text) {
   const rows = [];
@@ -1664,12 +1664,12 @@ function parseCSV(text) {
 // This decides where each person belongs in the Journey.
 //
 // Examples:
-// Active, License, Contracted  → Contracted
-// Active, Contracted, License  → Contracted
-// Active, License              → Licensed
-// Inactive, License            → Licensed
-// Active, Non-Licensed         → XCEL
-// Inactive, Non-Licensed       → Not Placed
+// Active, License, Contracted  â†’ Contracted
+// Active, Contracted, License  â†’ Contracted
+// Active, License              â†’ Licensed
+// Inactive, License            â†’ Licensed
+// Active, Non-Licensed         â†’ XCEL
+// Inactive, Non-Licensed       â†’ Not Placed
 // ==========================================================
 
 function normalizeTeamStage(teamStatus) {
@@ -1953,7 +1953,7 @@ function findExistingTeamAgent(complianceAgent) {
   const name =
     normalizeMatchName(complianceAgent.name);
 
-  // 1. Agent Code — strongest match
+  // 1. Agent Code â€” strongest match
   if (code) {
     const byCode = allAgents.find(
       a =>
@@ -2473,7 +2473,7 @@ function analyzeForgePriority(agent) {
       score = 100;
       reason = "Ready for contracting";
       detail =
-        "License approved—convert this agent into production.";
+        "License approvedâ€”convert this agent into production.";
       action = "Start Contracting";
       level = "ready";
       break;
@@ -2482,7 +2482,7 @@ function analyzeForgePriority(agent) {
       score = 92;
       reason = "License activation required";
       detail =
-        "Exam passed—complete the state licensing step.";
+        "Exam passedâ€”complete the state licensing step.";
       action = "Activate License";
       level = "ready";
       break;
@@ -2518,7 +2518,7 @@ function analyzeForgePriority(agent) {
       score = 40;
       reason = "Journey review needed";
       detail =
-        "Review the agent’s licensing progress.";
+        "Review the agentâ€™s licensing progress.";
       action = "Review Agent";
       level = "medium";
   }
@@ -2529,7 +2529,7 @@ function analyzeForgePriority(agent) {
 
     detail =
       age !== null
-        ? `${age} days since recruitment—follow-up is overdue.`
+        ? `${age} days since recruitmentâ€”follow-up is overdue.`
         : "Follow-up is overdue.";
   }
 
@@ -2695,7 +2695,7 @@ function renderForgeIntelligenceDrawer() {
   if (!analysis.length) {
     list.innerHTML = `
       <div class="forge-priority-empty">
-        ✦ No priority actions right now.
+        âœ¦ No priority actions right now.
       </div>
     `;
 
@@ -2734,7 +2734,7 @@ function renderForgeIntelligenceDrawer() {
 
           <span>
             ${escapeForgeText(item.stage)}
-            ·
+            Â·
             ${escapeForgeText(
               agent.upline ||
               agent.coordinator ||
@@ -2745,10 +2745,10 @@ function renderForgeIntelligenceDrawer() {
           <span class="forge-priority-reason ${item.level}">
             ${
               item.stalled
-                ? "◷"
+                ? "â—·"
                 : item.level === "ready"
-                ? "→"
-                : "●"
+                ? "â†’"
+                : "â—"
             }
 
             ${escapeForgeText(item.reason)}
@@ -2955,7 +2955,7 @@ document
 
 
 // ==========================================================
-// HOME — PIPELINE OVERVIEW
+// HOME â€” PIPELINE OVERVIEW
 // ==========================================================
 
 function renderHomePipelineOverview(agents) {
@@ -3039,15 +3039,15 @@ function getPipelineStageLabel(stage) {
 
 function getPipelineStageIcon(stage) {
   const icons = {
-    "Not Placed": "⊙",
-    "Quiz Sent": "↗",
-    "XCEL Completed": "▣",
-    "Exam Passed": "▦",
-    "Licensed": "◇",
-    "Contracted": "✓"
+    "Not Placed": "âŠ™",
+    "Quiz Sent": "â†—",
+    "XCEL Completed": "â–£",
+    "Exam Passed": "â–¦",
+    "Licensed": "â—‡",
+    "Contracted": "âœ“"
   };
 
-  return icons[stage] || "•";
+  return icons[stage] || "â€¢";
 }
 
 function renderStage(stageName, countId, listId, agents) {
@@ -3108,7 +3108,7 @@ function renderStage(stageName, countId, listId, agents) {
 
 }
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€ HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getInitials(name) {
   return (
@@ -3438,7 +3438,7 @@ function updateHomeIntelligence(agents) {
 
   }
 }
-// ─── FILTER BUTTONS ───────────────────────────────────────────────────────────
+// â”€â”€â”€ FILTER BUTTONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 document.querySelectorAll(".filter").forEach((button) => {
   button.addEventListener("click", () => {
@@ -3451,7 +3451,7 @@ document.querySelectorAll(".filter").forEach((button) => {
 // HOME PAGE INTELLIGENT NAVIGATION
 // ==========================================================
 
-// Pipeline Overview → Journey
+// Pipeline Overview â†’ Journey
 [
   "openJourneyBtn",
   "viewFullJourneyBtn"
@@ -3470,7 +3470,7 @@ document.querySelectorAll(".filter").forEach((button) => {
 });
 
 
-// Organization Pulse → Growth
+// Organization Pulse â†’ Growth
 document
   .getElementById("pulseDetailsBtn")
   ?.addEventListener("click", () => {
@@ -3614,7 +3614,7 @@ function focusJourneyStageSafe(stage) {
   }
 }
 
-// ─── LOAD AGENTS FROM SUPABASE ────────────────────────────────────────────────
+// â”€â”€â”€ LOAD AGENTS FROM SUPABASE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 async function loadCSV() {
   try {
@@ -3725,9 +3725,9 @@ function getJourneyActionLabel(stage) {
   const labels = {
     "Not Placed": "Mark Quiz Sent",
     "Quiz Sent": "Move to XCEL",
-    "XCEL Completed": "✓ Passed Exam",
-    "Exam Passed": "✓ Licensed",
-    "Licensed": "✓ Contracted",
+    "XCEL Completed": "âœ“ Passed Exam",
+    "Exam Passed": "âœ“ Licensed",
+    "Licensed": "âœ“ Contracted",
     "Contracted": ""
   };
 
@@ -3735,7 +3735,7 @@ function getJourneyActionLabel(stage) {
 }
 
 // ==========================================================
-// JOURNEY — FORGE INTELLIGENCE
+// JOURNEY â€” FORGE INTELLIGENCE
 // ==========================================================
 
 let journeyPriorityAgents = [];
@@ -3950,7 +3950,7 @@ document
     });
   });
 
-// ─── JOURNEY PAGE ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ JOURNEY PAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function renderJourneyPage() {
     updateJourneyIntelligence(allAgents);
@@ -4134,12 +4134,12 @@ const filteredAgents =
               data-advance-agent="${agent.id}"
             >
               ${getJourneyActionLabel(agent.stage)}
-              <span>→</span>
+              <span>â†’</span>
             </button>
           `
           : `
             <span class="journey-complete">
-              ✓ Complete
+              âœ“ Complete
             </span>
           `
       }
@@ -4149,7 +4149,7 @@ const filteredAgents =
         data-agent-menu="${agent.id}"
         aria-label="Agent options"
       >
-        •••
+        â€¢â€¢â€¢
       </button>
 
     </div>
@@ -4188,8 +4188,8 @@ if (viewButton) {
 
     viewButton.textContent =
       isExpanded
-        ? "Show less ↑"
-        : `View all ${stageAgents.length} agents →`;
+        ? "Show less â†‘"
+        : `View all ${stageAgents.length} agents â†’`;
 
     column?.classList.toggle(
       "stage-expanded",
@@ -4769,7 +4769,7 @@ document.addEventListener("click", async (event) => {
     nextStage
   );
 });
-// ─── JOURNEY MODE TOGGLE ─────────────────────────────────────────────────────
+// â”€â”€â”€ JOURNEY MODE TOGGLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 document.addEventListener("click", (event) => {
   const btn = event.target.closest(".journey-mode");
@@ -4848,7 +4848,7 @@ document.addEventListener("click", (event) => {
   showAgentProfile(agent);
 });
 
-// ─── DELETE AGENT ────────────────────────────────────────────────────────────
+// â”€â”€â”€ DELETE AGENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 document.addEventListener("click", (event) => {
   const deleteBtn = event.target.closest("[data-delete-agent]");
@@ -4864,7 +4864,7 @@ document.addEventListener("click", (event) => {
   renderAllPages();
 });
 
-// ─── ADD / EDIT AGENT MODAL ──────────────────────────────────────────────────
+// â”€â”€â”€ ADD / EDIT AGENT MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const addAgentModal = document.getElementById("addAgentModal");
 
@@ -4942,7 +4942,7 @@ document.addEventListener("click", (e) => {
   document.getElementById("addAgentModal").classList.remove("hidden");
 });
 
-// ─── PAGE NAVIGATION ─────────────────────────────────────────────────────────
+// â”€â”€â”€ PAGE NAVIGATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function showPage(pageName) {
   document.querySelector(".dashboard").style.display  = pageName === "Home" ? "grid" : "none";
@@ -4966,7 +4966,7 @@ document.querySelector(".view-btn")?.addEventListener("click", () => {
   renderJourneyPage();
 });
 
-// ─── DRAG AND DROP ────────────────────────────────────────────────────────────
+// â”€â”€â”€ DRAG AND DROP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 let draggedAgentId = null;
 
@@ -5060,7 +5060,7 @@ document.addEventListener("drop", async (event) => {
 });
 // ==========================================================
 // AGENT PROFILE
-// KEEP THIS AT TOP LEVEL — NOT INSIDE ANOTHER FUNCTION
+// KEEP THIS AT TOP LEVEL â€” NOT INSIDE ANOTHER FUNCTION
 // ==========================================================
 
 function showAgentProfile(agent) {
@@ -5092,34 +5092,34 @@ function showAgentProfile(agent) {
     "profileCoordinator",
     agent.upline ||
     agent.coordinator ||
-    "—"
+    "â€”"
   );
 
   setText(
     "profileStatus",
     agent.teamStatus ||
     agent.status ||
-    "—"
+    "â€”"
   );
 
   setText(
     "profileStage",
-    agent.stage || "—"
+    agent.stage || "â€”"
   );
 
   setText(
     "profileCode",
-    agent.code || "—"
+    agent.code || "â€”"
   );
 
   setText(
     "profilePhone",
-    agent.phone || "—"
+    agent.phone || "â€”"
   );
 
   setText(
     "profileEmail",
-    agent.email || "—"
+    agent.email || "â€”"
   );
 
   setText(
@@ -5157,7 +5157,7 @@ function showAgentProfile(agent) {
     renderAgentMilestones(agent);
   }
 }
-// ─── AGENTS PAGE ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ AGENTS PAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function renderAgentsPage() {
   const list = document.getElementById("agentsList");
@@ -5372,7 +5372,7 @@ if (agentsSearchInput) {
 }
 
 /* =========================================================
-   AGENT PROFILE — MILESTONE PROGRESS
+   AGENT PROFILE â€” MILESTONE PROGRESS
 ========================================================= */
 
 function getLaunchDate(agent) {
@@ -5702,7 +5702,7 @@ const normalizedValue =
   cleanValue.toLowerCase();
 
 const isOnlyDashes =
-  /^[-–—]+$/.test(cleanValue);
+  /^[-â€“â€”]+$/.test(cleanValue);
 
 const hasValue =
   cleanValue !== "" &&
@@ -5713,7 +5713,7 @@ const hasValue =
   normalizedValue !== "n/a";
 
 el.textContent =
-  hasValue ? cleanValue : "—";
+  hasValue ? cleanValue : "â€”";
 
 const card =
   el.closest(".compliance-item");
@@ -5760,7 +5760,7 @@ function getNextAction(stage) {
   return actions[stage] || "Review agent status.";
 }
 
-// ─── COMMAND CENTER ───────────────────────────────────────────────────────────
+// â”€â”€â”€ COMMAND CENTER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 document.addEventListener("click", (event) => {
   const button = event.target.closest(".command-btn");
@@ -5933,7 +5933,7 @@ function renderCommandCenter(
             listedAgent.coordinator ||
             "No coordinator"
           }
-          ·
+          Â·
           ${
             listedAgent.stage ||
             "Not Placed"
@@ -6072,9 +6072,9 @@ function renderCommandPagination(total) {
   pagination.innerHTML = `
     <span>Showing ${start} - ${end} of ${total} agents</span>
     <div class="page-buttons">
-      <button data-command-page="prev">‹</button>
+      <button data-command-page="prev">â€¹</button>
       <strong>${commandCurrentPage}</strong>
-      <button data-command-page="next">›</button>
+      <button data-command-page="next">â€º</button>
     </div>
   `;
 }
@@ -6117,38 +6117,38 @@ document
       showCommandProfile(agentToOpen);
     }
   });
-// ─── COMMAND PROFILE ─────────────────────────────────────────────────────────
+// â”€â”€â”€ COMMAND PROFILE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const coordinatorActionMap = {
   "Not Placed": [
-    { icon: "👋", title: "Send Welcome",          desc: "Introduce yourself as the licensing coordinator." },
-    { icon: "📝", title: "Send Quiz Invitation",  desc: "Send the readiness quiz to begin licensing." },
-    { icon: "📅", title: "Schedule First Follow-Up", desc: "Book a check-in to keep momentum." },
+    { icon: "ðŸ‘‹", title: "Send Welcome",          desc: "Introduce yourself as the licensing coordinator." },
+    { icon: "ðŸ“", title: "Send Quiz Invitation",  desc: "Send the readiness quiz to begin licensing." },
+    { icon: "ðŸ“…", title: "Schedule First Follow-Up", desc: "Book a check-in to keep momentum." },
   ],
   "Quiz Sent": [
-    { icon: "⏰", title: "Send Quiz Reminder",    desc: "Remind agent to complete the quiz." },
-    { icon: "📞", title: "Call Agent",            desc: "Check if they need help." },
-    { icon: "🚨", title: "Inactive Re-Engagement",desc: "Restart conversation if inactive." },
+    { icon: "â°", title: "Send Quiz Reminder",    desc: "Remind agent to complete the quiz." },
+    { icon: "ðŸ“ž", title: "Call Agent",            desc: "Check if they need help." },
+    { icon: "ðŸš¨", title: "Inactive Re-Engagement",desc: "Restart conversation if inactive." },
   ],
   "Quiz Passed": [
-    { icon: "📚", title: "Send XCEL Instructions",desc: "Guide agent to start XCEL." },
-    { icon: "🔐", title: "Send XCEL Login",       desc: "Send access details and password." },
-    { icon: "✅", title: "Confirm Enrollment",    desc: "Confirm agent is enrolled." },
+    { icon: "ðŸ“š", title: "Send XCEL Instructions",desc: "Guide agent to start XCEL." },
+    { icon: "ðŸ”", title: "Send XCEL Login",       desc: "Send access details and password." },
+    { icon: "âœ…", title: "Confirm Enrollment",    desc: "Confirm agent is enrolled." },
   ],
   "Continuing Education": [
-    { icon: "📘", title: "Complete CE Requirements",desc: "Help agent finish CE." },
-    { icon: "⏰", title: "CE Reminder",            desc: "Follow up on CE completion." },
-    { icon: "📞", title: "Call Agent",             desc: "Check progress directly." },
+    { icon: "ðŸ“˜", title: "Complete CE Requirements",desc: "Help agent finish CE." },
+    { icon: "â°", title: "CE Reminder",            desc: "Follow up on CE completion." },
+    { icon: "ðŸ“ž", title: "Call Agent",             desc: "Check progress directly." },
   ],
   "Licensed": [
-    { icon: "🤝", title: "Send Contracting Instructions", desc: "Move agent into contracting." },
-    { icon: "📄", title: "Request Required Documents",    desc: "Collect needed contracting documents." },
-    { icon: "✅", title: "Confirm Compliance",            desc: "Verify compliance is completed." },
+    { icon: "ðŸ¤", title: "Send Contracting Instructions", desc: "Move agent into contracting." },
+    { icon: "ðŸ“„", title: "Request Required Documents",    desc: "Collect needed contracting documents." },
+    { icon: "âœ…", title: "Confirm Compliance",            desc: "Verify compliance is completed." },
   ],
   "Contracted": [
-    { icon: "🚀", title: "Welcome Contracted Agent", desc: "Prepare agent for production." },
-    { icon: "📈", title: "Send Fast Start Steps",    desc: "Give first production actions." },
-    { icon: "🎥", title: "Schedule First Field Training", desc: "Book initial field training." },
+    { icon: "ðŸš€", title: "Welcome Contracted Agent", desc: "Prepare agent for production." },
+    { icon: "ðŸ“ˆ", title: "Send Fast Start Steps",    desc: "Give first production actions." },
+    { icon: "ðŸŽ¥", title: "Schedule First Field Training", desc: "Book initial field training." },
   ],
 };
 
@@ -6218,7 +6218,7 @@ const commandStageIntelligence = {
 
   "Exam Passed": {
     title:
-      "Exam passed—activate the license",
+      "Exam passedâ€”activate the license",
     text:
       "Complete fingerprints and the state license application.",
     primary:
@@ -6367,13 +6367,13 @@ function getCommandLastActivity(agent) {
     agent.recruitDate ||
     agent.recruit_date;
 
-  if (!fallback) return "—";
+  if (!fallback) return "â€”";
 
   const date =
     new Date(fallback);
 
   if (Number.isNaN(date.getTime())) {
-    return "—";
+    return "â€”";
   }
 
   return date.toLocaleDateString(
@@ -6421,7 +6421,7 @@ function renderCommandJourney(agent) {
           );
 
           if (icon) {
-            icon.textContent = "✓";
+            icon.textContent = "âœ“";
           }
 
           if (status) {
@@ -6536,7 +6536,7 @@ function showCommandProfile(agent) {
   setText(
     "commandDaysInStage",
     days === null
-      ? "—"
+      ? "â€”"
       : `${days} ${
           days === 1
             ? "day"
@@ -6765,7 +6765,7 @@ function renderCoordinatorActions(agent) {
       {
         title: "Review Agent",
         desc:
-          "Review the agent’s current licensing status."
+          "Review the agentâ€™s current licensing status."
       }
     ];
 
@@ -6824,7 +6824,7 @@ function getActionMessage(actionTitle, agent) {
     .replaceAll("{upline}",     agent?.coordinator || "your upline");
 }
 
-// ─── SMART COMPOSER ───────────────────────────────────────────────────────────
+// â”€â”€â”€ SMART COMPOSER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 // FIX 4: buildRecommendedMessage referenced undefined `currentCoordinator`; now uses selectedCoordinator
 function buildRecommendedMessage(agent, action) {
@@ -6873,12 +6873,12 @@ function openSmartComposer(method = "Text") {
   const template = getStageMessageTemplate(stage, method, selectedAgent);
 
   setText("smartMethodBadge", method);
-  setText("actionTitle", `${method} • ${selectedAgent.name}`);
+  setText("actionTitle", `${method} â€¢ ${selectedAgent.name}`);
   setText("actionSubtitle", getActionSubtitle(method, stage));
 
-  setText("smartAgentName", selectedAgent.name || "—");
+  setText("smartAgentName", selectedAgent.name || "â€”");
   setText("smartAgentStage", stage);
-  setText("smartAgentUpline", selectedAgent.upline || selectedAgent.coordinator || "—");
+  setText("smartAgentUpline", selectedAgent.upline || selectedAgent.coordinator || "â€”");
 
   //---phone 
   const smartPhone = document.getElementById("smartAgentPhone");
@@ -6888,7 +6888,7 @@ if (smartPhone) {
 
   if (phone) {
     const cleanPhone = phone.replace(/\D/g, "");
-    smartPhone.innerHTML = `<a href="tel:${cleanPhone}" class="phone-link">📱 ${phone}</a>`;
+    smartPhone.innerHTML = `<a href="tel:${cleanPhone}" class="phone-link">ðŸ“± ${phone}</a>`;
   } else {
     smartPhone.textContent = "No phone";
   }
@@ -6902,7 +6902,7 @@ if (phoneEl) {
         phoneEl.innerHTML = `
             <a href="tel:${selectedAgent.phone.replace(/\D/g, "")}"
                class="phone-link">
-               📱 ${selectedAgent.phone}
+               ðŸ“± ${selectedAgent.phone}
             </a>
         `;
     } else {
@@ -7045,7 +7045,7 @@ document.getElementById("makeShorter")?.addEventListener("click", () => {
 document.getElementById("makeFriendly")?.addEventListener("click", () => {
   const box = document.getElementById("actionMessage");
   if (!box || !selectedAgent) return;
-  box.value = `Hi ${selectedAgent.name}, 😊\n\n` + box.value.replace(/^Hi .*?,\s*/i, "");
+  box.value = `Hi ${selectedAgent.name}, ðŸ˜Š\n\n` + box.value.replace(/^Hi .*?,\s*/i, "");
 });
 
 document.getElementById("closeComposer")?.addEventListener("click", () => {
@@ -7088,7 +7088,7 @@ document.addEventListener("click", (event) => {
 
   openSmartComposer(deliveryBtn.dataset.delivery || "Text");
 });
-// ─── ACTIVITY LOG ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ ACTIVITY LOG â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function saveActivityLog() {
   localStorage.setItem("forgeActivityLog", JSON.stringify(activityLog));
@@ -7121,7 +7121,7 @@ function renderActivityTimeline(agent) {
   });
 }
 
-// ─── CHECKLIST ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ CHECKLIST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function renderLicensingChecklist(agent) {
   const container = document.getElementById("licensingChecklist");
@@ -7168,7 +7168,7 @@ document.addEventListener("change", (event) => {
   updateCommandInsights(selectedAgent);
 });
 
-// ─── INSIGHTS ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ INSIGHTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function updateCommandInsights(agent) {
   const key       = agent.code || agent.email || agent.name;
@@ -7186,12 +7186,12 @@ function updateCommandInsights(agent) {
   if (agent.stage === "Contracted")          { risk = "Low";    coachText = "Agent is contracted. Prepare fast-start and field training."; }
 
   setText("riskLevel",    risk);
-  setText("daysInStage",  "—");
+  setText("daysInStage",  "â€”");
   setText("nextFollowUp", risk === "High" ? "Today" : "Soon");
   setText("aiCoachText",  coachText);
 }
 
-// ─── TODAY QUEUE ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ TODAY QUEUE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function renderTodayQueue() {
   const queue = document.getElementById("todayQueue");
@@ -7324,7 +7324,7 @@ function renderTodayQueue() {
   );
 }
 
-// ─── GUIDE MODAL ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ GUIDE MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const guideLibrary = {
   "Not Placed":     { title: "Welcome Guide",     goal: "Move the agent to Quiz Sent today.",         steps: ["Introduce yourself.","Explain your role as Licensing Coordinator.","Build rapport.","Send Quiz Invitation.","Schedule tomorrow's follow-up."],          success: ["Welcome Sent","Quiz Sent"] },
@@ -7341,7 +7341,7 @@ function openGuide(agent) {
 
   document.getElementById("guideModal")?.classList.remove("hidden");
   setText("guideTitle", guide.title);
-  setText("guideStage", `${agent.name} • ${agent.stage}`);
+  setText("guideStage", `${agent.name} â€¢ ${agent.stage}`);
 
   document.getElementById("guideBody").innerHTML = `
     <div class="guide-card">
@@ -7411,7 +7411,7 @@ document.addEventListener("click", (event) => {
   alert("Guide script copied.");
 });
 
-// ─── CSV IMPORT ───────────────────────────────────────────────────────────────
+// â”€â”€â”€ CSV IMPORT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 document.getElementById("csvImportInput")?.addEventListener("change", (event) => {
   const file = event.target.files[0];
@@ -7502,8 +7502,8 @@ import_source:
 
 console.log("Rows being sent to Supabase:", rows);
      // UPSERT =
-// If agent does not exist → create them.
-// If agent already exists → update their existing record.
+// If agent does not exist â†’ create them.
+// If agent already exists â†’ update their existing record.
 //
 // We identify an agent using:
 // organization_id + agent_code
@@ -7946,7 +7946,7 @@ document.addEventListener("click", (event) => {
 
 });
 
-// ─── COMPLIANCE CSV IMPORT ────────────────────────────────────────────────────
+// â”€â”€â”€ COMPLIANCE CSV IMPORT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const STAGE_RANK = {
   "Not Placed": 0,
@@ -8242,13 +8242,13 @@ document
     reader.readAsText(file);
 
   });
-// ─── STORAGE ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€ STORAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function saveAgentsToLocalStorage() {
   localStorage.setItem("forgeAgents", JSON.stringify(allAgents));
 }
 
-// ─── GROWTH PAGE ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ GROWTH PAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getGrowthStatus(team) {
   const total = Number(team.total || 0);
@@ -8306,7 +8306,7 @@ function getGrowthStatus(team) {
   // STRONG
   //
   // Strong licensing progress AND
-  // strong movement from licensed → contracted.
+  // strong movement from licensed â†’ contracted.
   // ========================================================
 
   if (
@@ -8520,7 +8520,7 @@ function getDirectRecruits(leader) {
   });
 }
 // ==========================================================
-// GROWTH PAGE — FULL ORGANIZATION HIERARCHY
+// GROWTH PAGE â€” FULL ORGANIZATION HIERARCHY
 // ==========================================================
 
 function renderGrowthPage() {
@@ -8727,7 +8727,7 @@ function renderGrowthRows(growthTeams) {
       <strong>${team.leader}</strong>
 
       <small>
-        ${team.direct} direct • ${team.total} organization
+        ${team.direct} direct â€¢ ${team.total} organization
       </small>
     </div>
 
@@ -8909,7 +8909,7 @@ function openGrowthTeamDrawer(team) {
 
   setText(
     "growthDrawerSummary",
-    `${team.total} organization members • ${team.direct} direct recruits`
+    `${team.total} organization members â€¢ ${team.direct} direct recruits`
   );
 
   setText(
@@ -9090,7 +9090,7 @@ function renderGrowthDrawerAgents(
         </span>
 
         <span class="growth-drawer-chevron">
-          ›
+          â€º
         </span>
       `;
 
@@ -9243,7 +9243,7 @@ document.addEventListener(
     }
   }
 );
-// ─── STAGE MESSAGE TEMPLATES ─────────────────────────────────────────────────
+// â”€â”€â”€ STAGE MESSAGE TEMPLATES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getStageMessageTemplate(stage, method, agent) {
   const name            = agent?.name || "there";
@@ -9251,7 +9251,7 @@ function getStageMessageTemplate(stage, method, agent) {
 
   const templates = {
     "Not Placed": {
-      subject: "Welcome — Let's Get You Started",
+      subject: "Welcome â€” Let's Get You Started",
       body: `Hi ${name},
 
 Welcome to the team. My name is ${coordinatorName}, and I will help guide you through your licensing journey.
@@ -9275,7 +9275,7 @@ Please complete it today so we can move you forward without delay.
 Once you finish, reply "Done" so I can update your status and help you get to the next step.`,
     },
     "Quiz Passed": {
-      subject: "Great Job — Let's Move You to XCEL",
+      subject: "Great Job â€” Let's Move You to XCEL",
       body: `Hi ${name},
 
 Congratulations on passing your quiz.
@@ -9285,7 +9285,7 @@ This means you are ready to move into the next important step: starting your XCE
 Please confirm once you have access to XCEL, and let me know if you need help getting started.`,
     },
     "XCEL Completed": {
-      subject: "XCEL Completed — Time to Schedule Your Exam",
+      subject: "XCEL Completed â€” Time to Schedule Your Exam",
       body: `Hi ${name},
 
 Congratulations on completing XCEL.
@@ -9367,7 +9367,7 @@ Let's get you fully appointed and ready for production.`,
   return selected;
 }
 
-// ─── STAGE COLOR ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ STAGE COLOR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getStageColor(stage) {
   if (stage === "Contracted")          return "green";
@@ -9380,7 +9380,7 @@ function getStageColor(stage) {
   return "gray";
 }
 
-// ─── GROWTH HELPERS ───────────────────────────────────────────────────────────
+// â”€â”€â”€ GROWTH HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function getDirectDownlineCount(leaderName, agents) {
   return agents.filter((a) =>
@@ -9462,7 +9462,7 @@ renderLoggedInUser();
 
 return profile;
 }
-// ─── DOM READY ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ DOM READY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 document.addEventListener("DOMContentLoaded", async () => {
   const authenticated = await protectForge();
@@ -9531,13 +9531,13 @@ function rewriteActionMessage(style) {
   if (style === "professional") {
     box.value = text
       .replace(/Hi /i, "Hello ")
-      .replace(/😊/g, "")
+      .replace(/ðŸ˜Š/g, "")
       + "\n\nThank you.";
   }
 
   if (style === "friendly") {
     box.value =
-      `Hi ${selectedAgent?.name || ""}, 😊\n\n` +
+      `Hi ${selectedAgent?.name || ""}, ðŸ˜Š\n\n` +
       text.replace(/^Hi .*?,\s*/i, "");
   }
 
@@ -9664,7 +9664,7 @@ function setHomeNavActive(pageName) {
 }
 
 // ==========================================================
-// HOME → JOURNEY ACTIVATE STAGE
+// HOME â†’ JOURNEY ACTIVATE STAGE
 // ==========================================================
 
 function openActivateStageFromHome(stage) {
