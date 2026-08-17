@@ -2272,32 +2272,7 @@ document.addEventListener(
 
   }
 );
-document
-  .getElementById("pulseActionBtn")
-  ?.addEventListener(
-    "click",
-    () => {
 
-      const agents =
-        allAgents.filter(
-          (agent) =>
-            agent.stage === "Licensed"
-        );
-
-      launchForgeContext({
-        type: "contracting",
-
-        title:
-          "Contracting Focus",
-
-        reason:
-          "Licensed agents awaiting contracting",
-
-        agents
-      });
-
-    }
-  );
 function getPrimaryForgeOpportunity(
   agents
 ) {
@@ -2388,6 +2363,7 @@ document
 // ==========================================================
 
 let forgeDrawerPriorityAgents = [];
+let forgeDrawerMode = "all";
 
 
 function escapeForgeText(value) {
@@ -2553,28 +2529,36 @@ function getForgePriorityAnalysis(agents) {
 
 
 function renderForgeIntelligenceDrawer() {
-  const analysis =
+    const completeAnalysis =
     getForgePriorityAnalysis(allAgents);
+
+  const analysis =
+    forgeDrawerMode === "contracting"
+      ? completeAnalysis.filter(
+          (item) =>
+            item.stage === "Licensed"
+        )
+      : completeAnalysis;
 
   forgeDrawerPriorityAgents =
     analysis.map(
       (item) => item.agent
     );
 
-  const licensed =
-    analysis.filter(
+    const licensed =
+    completeAnalysis.filter(
       (item) =>
         item.stage === "Licensed"
     );
 
   const activation =
-    analysis.filter(
+    completeAnalysis.filter(
       (item) =>
         item.stage === "Not Placed"
     );
 
   const stalled =
-    analysis.filter(
+    completeAnalysis.filter(
       (item) => item.stalled
     );
 
@@ -2759,7 +2743,14 @@ function renderForgeIntelligenceDrawer() {
 }
 
 
-function openForgeIntelligenceDrawer() {
+function openForgeIntelligenceDrawer(
+  mode = "all"
+) {
+  forgeDrawerMode =
+    typeof mode === "string"
+      ? mode
+      : "all";
+
   renderForgeIntelligenceDrawer();
 
   document
@@ -2812,7 +2803,11 @@ document
   .getElementById("forgeInsightBtn")
   ?.addEventListener(
     "click",
-    openForgeIntelligenceDrawer
+    () => {
+      openForgeIntelligenceDrawer(
+        "all"
+      );
+    }
   );
 
 
@@ -2917,23 +2912,17 @@ renderStage(
   renderStage("Licensed",     "licensedPipelineCount",    "licensedPipelineList",    agents);
   renderStage("Contracted",   "contractedPipelineCount",  "contractedPipelineList",  agents);
 }
-
 document
   .getElementById("pulseActionBtn")
-  ?.addEventListener("click", () => {
-
-    showPage("Agents");
-
-    document
-      .querySelectorAll(".nav-btn")
-      .forEach((btn) =>
-        btn.classList.toggle(
-          "active",
-          btn.textContent.trim() === "Agents"
-        )
+  ?.addEventListener(
+    "click",
+    () => {
+      openForgeIntelligenceDrawer(
+        "contracting"
       );
+    }
+  );
 
-  });
 
 // ==========================================================
 // HOME — PIPELINE OVERVIEW
