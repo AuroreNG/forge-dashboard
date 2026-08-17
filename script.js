@@ -3,6 +3,7 @@ let allAgents = [];
 let pendingImportAgents = [];
 let selectedCoordinator = "All";
 let selectedAgent = null;
+let commandCurrentPage = 1;
 let commandListFilter = "priority";
 let selectedGrowthTeam = null;
 let currentForgeMission = [];
