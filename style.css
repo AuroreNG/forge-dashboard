@@ -18614,3 +18614,45 @@ header {
 #createOrganizationModal .secondary-btn:hover {
   background: #f8fafc;
 }
+
+.dashboard-organization-badge {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 14px;
+  padding: 8px 13px;
+  border: 1px solid rgba(63, 94, 220, 0.24);
+  border-radius: 999px;
+  color: #153d83;
+  background:
+    rgba(247, 250, 255, 0.88);
+  box-shadow:
+    0 8px 20px rgba(54, 80, 170, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.dashboard-organization-spark {
+  color: #6d4af2;
+  font-size: 12px;
+  line-height: 1;
+}
+
+#dashboardOrgName {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.dashboard-organization-dot {
+  color: #6b7c99;
+  font-size: 12px;
+}
+
+.dashboard-organization-badge small {
+  color: #284c89;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.03em;
+}
