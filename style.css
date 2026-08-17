@@ -20280,3 +20280,84 @@ body.forge-drawer-open {
     max-height: 520px;
   }
 }
+
+/* ==========================================================
+   FINAL COMMAND SEARCH FIX
+========================================================== */
+
+/* Remove styling from the wrapper around the real input */
+.command-sidebar-v2 *:has(> #commandSearch),
+.command-sidebar *:has(> #commandSearch) {
+  width: 100%;
+  margin: 14px 0 18px;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Hide the extra search icon/container content */
+.command-sidebar-v2 *:has(> #commandSearch) > :not(#commandSearch),
+.command-sidebar *:has(> #commandSearch) > :not(#commandSearch) {
+  display: none !important;
+}
+
+/* Make the actual input the only visible search box */
+#commandSearch {
+  display: block !important;
+  width: 100% !important;
+  height: 48px !important;
+  margin: 0 !important;
+  padding: 0 16px !important;
+  border: 1px solid #d8e2f1 !important;
+  border-radius: 14px !important;
+  outline: none !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  color: #10264a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#commandSearch:focus {
+  border-color: #2563eb !important;
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+}
+
+
+/* ==========================================================
+   PREVENT HEADER FROM SQUISHING
+========================================================== */
+
+.command-agent-header-v2 {
+  grid-template-columns:
+    auto
+    minmax(260px, 1fr)
+    repeat(3, minmax(100px, auto))
+    auto
+    auto;
+}
+
+#commandName {
+  overflow: visible;
+  font-size: clamp(24px, 2vw, 36px);
+  line-height: 1.1;
+  text-overflow: unset;
+  white-space: normal;
+}
+
+@media (max-width: 1250px) {
+  .command-agent-header-v2 {
+    grid-template-columns:
+      auto
+      minmax(220px, 1fr)
+      auto
+      auto;
+  }
+
+  .command-header-stat {
+    display: none;
+  }
+}
