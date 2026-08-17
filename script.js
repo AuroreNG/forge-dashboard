@@ -1116,11 +1116,12 @@ function renderHomeWorkQueue(agents) {
   // SORT
   // ========================================================
 
-  queue.sort(
+    queue.sort(
     (a, b) =>
       b.score - a.score
   );
 
+  currentForgeMission = queue;
 
   const visibleQueue =
     queue.slice(0, 5);
@@ -1134,43 +1135,28 @@ function renderHomeWorkQueue(agents) {
         : "need"
     } your attention`
   );
+
+  // ==========================================================
+// HOME WORK QUEUE → INTELLIGENCE DRAWER
+// ==========================================================
+
+[
+  "startFollowUpsBtn",
+  "viewAllWorkQueueBtn"
+].forEach((buttonId) => {
   document
-  .getElementById(
-    "startFollowUpsBtn"
-  )
-  ?.addEventListener(
-    "click",
-    () => {
-
-      const agents =
-        currentForgeMission
-          .map(
-            (item) =>
-              item.agent
-          );
-
-
-      if (!agents.length) {
-        return;
+    .getElementById(buttonId)
+    ?.addEventListener(
+      "click",
+      () => {
+        openForgeIntelligenceDrawer(
+          "work-queue"
+        );
       }
+    );
+});
 
-
-      launchForgeContext({
-        type: "mission",
-
-        title:
-          "Today's Mission",
-
-        reason:
-          "Highest-impact coordinator actions",
-
-        agents
-      });
-
-    }
-  );
-
-
+  
   container.innerHTML = "";
 
 
