@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FORGE Dashboard</title>
-  <link rel="stylesheet" href="style.css?v=11" />
+  <link rel="stylesheet" href="style.css?v=12" />
 </head>
 <body>
   <div class="app">
@@ -47,7 +47,7 @@
     </div>
 
     <span class="user-menu-chevron">
-      ▾
+      v
     </span>
   </button>
 
@@ -63,7 +63,7 @@
     </strong>
 
     <span id="dropdownUserEmail">
-      —
+      -
     </span>
 
   </div>
@@ -93,13 +93,13 @@
         </strong>
 
         <span id="currentOrgMeta">
-          —
+          -
         </span>
 
       </div>
 
       <span class="current-org-chevron">
-        ▾
+        v
       </span>
     </button>
 
@@ -116,7 +116,7 @@
     id="addOrganizationBtn"
     class="add-organization-btn"
   >
-    <span class="add-org-icon">＋</span>
+    <span class="add-org-icon">+</span>
 
     <span>
       Add organization
@@ -161,11 +161,11 @@
         </div>
 
         <div class="dashboard-organization-badge">
-  <span class="dashboard-organization-spark">✦</span>
+  <span class="dashboard-organization-spark"></span>
 
   <strong id="dashboardOrgName"></strong>
 
-  <span class="dashboard-organization-dot">•</span>
+  <span class="dashboard-organization-dot">-</span>
 
   <small>WORKSPACE</small>
 </div>
@@ -175,7 +175,7 @@
         </h2>
 
         <p>
-          Here’s what matters most in your organization today.
+          Here's what matters most in your organization today.
         </p>
 
       </div>
@@ -273,7 +273,7 @@
             class="summary-link"
             data-filter-target="all"
           >
-            View all →
+            View all ->
           </button>
         </div>
 
@@ -314,7 +314,7 @@
             class="summary-link"
             data-filter-target="pipeline"
           >
-            View pipeline →
+            View pipeline ->
           </button>
         </div>
 
@@ -354,7 +354,7 @@
             class="summary-link"
             data-filter-target="licensed"
           >
-            View licensed →
+            View licensed ->
           </button>
         </div>
 
@@ -393,7 +393,7 @@
             class="summary-link"
             data-filter-target="contracted"
           >
-            View contracted →
+            View contracted ->
           </button>
         </div>
 
@@ -411,7 +411,7 @@
       <div class="forge-insight-brand">
 
         <div class="forge-insight-icon">
-          ✦
+          
         </div>
 
         <strong>
@@ -439,7 +439,7 @@
         type="button"
         class="forge-insight-btn"
       >
-        See priorities →
+        See priorities ->
       </button>
 
     </div>
@@ -469,7 +469,7 @@
         type="button"
         class="pulse-details-btn"
       >
-        View details →
+        View details ->
       </button>
 
     </div>
@@ -486,7 +486,7 @@
         </h4>
 
         <small>
-          Licensed ÷ Total Team
+          Licensed / Total Team
         </small>
 
         <div
@@ -514,7 +514,7 @@
         </h4>
 
         <small>
-          Contracted ÷ Licensed
+          Contracted / Licensed
         </small>
 
         <div
@@ -569,7 +569,7 @@
         id="pulseActionBtn"
         type="button"
       >
-        View list →
+        View list ->
       </button>
 
     </div>
@@ -610,7 +610,7 @@
         type="button"
         class="start-followups-btn"
       >
-        Start My Follow-Ups →
+        Start My Follow-Ups ->
       </button>
 
     </div>
@@ -636,7 +636,7 @@
       type="button"
       class="view-all-workqueue"
     >
-      View all work queue →
+      View all work queue ->
     </button>
 
   </div>
@@ -661,7 +661,7 @@
       id="openJourneyBtn"
       type="button"
     >
-      Open Journey →
+      Open Journey ->
     </button>
 
   </div>
@@ -678,7 +678,7 @@
     type="button"
     class="view-full-journey-btn"
   >
-    View full journey →
+    View full journey ->
   </button>
 
 </aside>
@@ -694,7 +694,7 @@
     <div>
       <div class="journey-title-row">
         <h1>Journey</h1>
-        <span class="journey-sparkle">✦</span>
+        <span class="journey-sparkle"></span>
       </div>
 
       <p class="journey-subtitle">
@@ -708,7 +708,7 @@
         class="journey-action-btn import-csv-btn"
         id="smartImportBtn"
       >
-        <span>↥</span>
+        <span>up</span>
         Import
       </button>
 
@@ -716,12 +716,12 @@
         class="journey-action-btn export-csv-btn"
         id="exportForgeBtn"
       >
-        <span>↧</span>
+        <span>down</span>
         Export
       </button>
 
       <button class="journey-add-btn add-agent-btn">
-        <span>＋</span>
+        <span>+</span>
         Add Agent
       </button>
 
@@ -738,7 +738,7 @@
         class="journey-mode active"
         data-mode="launch"
       >
-        <span class="journey-mode-icon">🚀</span>
+        <span class="journey-mode-icon"></span>
 
         <span>
           <strong>Launch</strong>
@@ -750,7 +750,7 @@
         class="journey-mode"
         data-mode="activate"
       >
-        <span class="journey-mode-icon">⚡</span>
+        <span class="journey-mode-icon"></span>
 
         <span>
           <strong>Activate</strong>
@@ -772,7 +772,7 @@
     class="journey-filter-btn"
     id="journeyFilterBtn"
   >
-    ☷
+    
   </button>
 
 </div>
@@ -787,7 +787,7 @@
   <div class="journey-intelligence-title">
 
     <div class="intelligence-icon">
-      ✦
+      
     </div>
 
     <div>
@@ -800,7 +800,7 @@
 
   <div class="intelligence-metric">
     <div class="intelligence-metric-icon attention">
-      ◉
+      
     </div>
 
     <div>
@@ -813,7 +813,7 @@
 
   <div class="intelligence-metric">
     <div class="intelligence-metric-icon ready">
-      →
+      ->
     </div>
 
     <div>
@@ -826,7 +826,7 @@
 
   <div class="intelligence-metric">
     <div class="intelligence-metric-icon stalled">
-      ◷
+      
     </div>
 
     <div>
@@ -842,7 +842,7 @@
     id="viewJourneyPriorities"
   >
     View Priorities
-    <span>→</span>
+    <span>-></span>
   </button>
 
 </section>
@@ -851,13 +851,13 @@
 <div class="journey-board">
 
   <!-- =========================
-       LAUNCH — NOT PLACED
+       LAUNCH - NOT PLACED
   ========================== -->
   <div class="journey-column launch-column has-next">
 
     <div class="journey-column-header">
       <div>
-        <span class="journey-stage-icon">◉</span>
+        <span class="journey-stage-icon"></span>
 
         <div>
           <h3>Not Placed</h3>
@@ -882,20 +882,20 @@
       class="journey-view-all"
       data-view-stage="Not Placed"
     >
-      View all agents →
+      View all agents ->
     </button>
 
   </div>
 
 
   <!-- =========================
-       LAUNCH — QUIZ SENT
+       LAUNCH - QUIZ SENT
   ========================== -->
   <div class="journey-column launch-column has-next">
 
     <div class="journey-column-header">
       <div>
-        <span class="journey-stage-icon">➤</span>
+        <span class="journey-stage-icon">></span>
 
         <div>
           <h3>Quiz Sent</h3>
@@ -920,20 +920,20 @@
       class="journey-view-all"
       data-view-stage="Quiz Sent"
     >
-      View all agents →
+      View all agents ->
     </button>
 
   </div>
 
 
   <!-- =========================
-       LAUNCH — XCEL
+       LAUNCH - XCEL
   ========================== -->
   <div class="journey-column launch-column xcel-column">
 
     <div class="journey-column-header">
       <div>
-        <span class="journey-stage-icon">◇</span>
+        <span class="journey-stage-icon"></span>
 
         <div>
           <h3>XCEL</h3>
@@ -958,20 +958,20 @@
       class="journey-view-all"
       data-view-stage="XCEL Completed"
     >
-      View all agents →
+      View all agents ->
     </button>
 
   </div>
 
 
   <!-- =========================
-       ACTIVATE — EXAM PASSED
+       ACTIVATE - EXAM PASSED
   ========================== -->
   <div class="journey-column activate-column exam-column has-next hidden">
 
     <div class="journey-column-header">
       <div>
-        <span class="journey-stage-icon">✓</span>
+        <span class="journey-stage-icon">OK</span>
 
         <div>
           <h3>Exam Passed</h3>
@@ -996,20 +996,20 @@
       class="journey-view-all"
       data-view-stage="Exam Passed"
     >
-      View all agents →
+      View all agents ->
     </button>
 
   </div>
 
 
   <!-- =========================
-       ACTIVATE — LICENSED
+       ACTIVATE - LICENSED
   ========================== -->
   <div class="journey-column activate-column licensed-column has-next hidden">
 
     <div class="journey-column-header">
       <div>
-        <span class="journey-stage-icon">✓</span>
+        <span class="journey-stage-icon">OK</span>
 
         <div>
           <h3>Licensed</h3>
@@ -1034,20 +1034,20 @@
       class="journey-view-all"
       data-view-stage="Licensed"
     >
-      View all agents →
+      View all agents ->
     </button>
 
   </div>
 
 
   <!-- =========================
-       ACTIVATE — CONTRACTED
+       ACTIVATE - CONTRACTED
   ========================== -->
   <div class="journey-column activate-column contracted-column hidden">
 
     <div class="journey-column-header">
       <div>
-        <span class="journey-stage-icon">✦</span>
+        <span class="journey-stage-icon"></span>
 
         <div>
           <h3>Contracted</h3>
@@ -1072,7 +1072,7 @@
       class="journey-view-all"
       data-view-stage="Contracted"
     >
-      View all agents →
+      View all agents ->
     </button>
 
   </div>
@@ -1176,7 +1176,7 @@
  <div id="importGuideModal" class="modal hidden">
   <div class="import-guide-modal">
 
-    <button id="closeImportGuide" class="guide-x">×</button>
+    <button id="closeImportGuide" class="guide-x">x</button>
 
     <div class="import-guide-header">
       <div class="csv-icon">CSV</div>
@@ -1190,7 +1190,7 @@
 
       <div class="guide-panel">
         <div class="guide-panel-title">
-          <div class="guide-round blue">▤</div>
+          <div class="guide-round blue"></div>
           <div>
             <h3>Required Columns</h3>
             <p>Your CSV file must include these columns exactly as listed.</p>
@@ -1198,19 +1198,19 @@
         </div>
 
         <div class="guide-rows">
-          <div><span>👤</span><b>Full name</b><small>The agent’s full name</small></div>
-          <div><span>✉️</span><b>Email</b><small>Valid email address</small></div>
-          <div><span>📞</span><b>Phone</b><small>Contact phone number</small></div>
-          <div><span>🪪</span><b>Agent Code</b><small>Unique agent identifier</small></div>
-          <div><span>⬆️</span><b>Upline Name</b><small>Name of the upline</small></div>
-          <div><span>🔗</span><b>Upline Code</b><small>Upline agent code</small></div>
-          <div><span>🚩</span><b>Team Status</b><small>Current stage/status</small></div>
+          <div><span></span><b>Full name</b><small>The agent's full name</small></div>
+          <div><span>Email</span><b>Email</b><small>Valid email address</small></div>
+          <div><span></span><b>Phone</b><small>Contact phone number</small></div>
+          <div><span></span><b>Agent Code</b><small>Unique agent identifier</small></div>
+          <div><span>up</span><b>Upline Name</b><small>Name of the upline</small></div>
+          <div><span></span><b>Upline Code</b><small>Upline agent code</small></div>
+          <div><span></span><b>Team Status</b><small>Current stage/status</small></div>
         </div>
       </div>
 
       <div class="guide-panel">
         <div class="guide-panel-title">
-          <div class="guide-round green">◇</div>
+          <div class="guide-round green"></div>
           <div>
             <h3>Team Status Options</h3>
             <p>Use one of these values in the Team Status column.</p>
@@ -1232,12 +1232,12 @@
     </div>
 
     <div class="guide-tips">
-      <div class="tip-icon">💡</div>
+      <div class="tip-icon"></div>
       <div>
         <h3>Pro Tips</h3>
-        <p>✓ Ensure upline names match exactly.</p>
-        <p>✓ Remove extra rows or empty columns.</p>
-        <p>✓ Save your file as CSV UTF-8.</p>
+        <p>OK Ensure upline names match exactly.</p>
+        <p>OK Remove extra rows or empty columns.</p>
+        <p>OK Save your file as CSV UTF-8.</p>
       </div>
     </div>
 
@@ -1247,7 +1247,7 @@ Gives the user separate import choices
 ========================================================= -->
 <div class="guide-footer">
 
-  <span>🛡️ Your data is safe and secure.</span>
+  <span> Your data is safe and secure.</span>
 
   <div class="import-choice-actions">
 
@@ -1287,7 +1287,7 @@ JavaScript opens these when an import button is clicked.
   <div class="agents-layout">
 
     <!-- =====================================================
-         LEFT SIDE — AGENTS LIST
+         LEFT SIDE - AGENTS LIST
     ====================================================== -->
     <aside class="agents-sidebar card">
 
@@ -1363,7 +1363,7 @@ JavaScript opens these when an import button is clicked.
               type="button"
               class="edit-agent-btn"
             >
-              <span>✎</span>
+              <span></span>
               <span>Edit Agent</span>
             </button>
 
@@ -1373,7 +1373,7 @@ JavaScript opens these when an import button is clicked.
               class="profile-more-btn"
               aria-label="More options"
             >
-              ⋮
+              ...
             </button>
 
           </div>
@@ -1392,7 +1392,7 @@ JavaScript opens these when an import button is clicked.
           <div class="info-cell">
 
             <div class="info-icon blue">
-              👤
+              
             </div>
 
             <div class="info-content">
@@ -1411,7 +1411,7 @@ JavaScript opens these when an import button is clicked.
           <div class="info-cell">
 
             <div class="info-icon green">
-              ✓
+              OK
             </div>
 
             <div class="info-content">
@@ -1433,7 +1433,7 @@ JavaScript opens these when an import button is clicked.
           <div class="info-cell">
 
             <div class="info-icon purple">
-              ⚑
+              
             </div>
 
             <div class="info-content">
@@ -1471,7 +1471,7 @@ JavaScript opens these when an import button is clicked.
           <div class="info-cell">
 
             <div class="info-icon blue">
-              ☎
+              Call
             </div>
 
             <div class="info-content">
@@ -1490,7 +1490,7 @@ JavaScript opens these when an import button is clicked.
           <div class="info-cell">
 
             <div class="info-icon blue">
-              ✉
+              Email
             </div>
 
             <div class="info-content">
@@ -1521,7 +1521,7 @@ JavaScript opens these when an import button is clicked.
             <div class="section-heading">
 
               <span class="section-heading-icon">
-                ♢
+                
               </span>
 
               <h3>Compliance</h3>
@@ -1536,7 +1536,7 @@ JavaScript opens these when an import button is clicked.
               <div class="compliance-item">
 
                 <div class="compliance-icon">
-                  ▣
+                  
                 </div>
 
                 <div class="compliance-content">
@@ -1544,13 +1544,13 @@ JavaScript opens these when an import button is clicked.
                   <span>Resident License</span>
 
                   <strong id="profileResidentLicense">
-                    —
+                    -
                   </strong>
 
                 </div>
 
                 <span class="compliance-check">
-                  ✓
+                  OK
                 </span>
 
               </div>
@@ -1561,7 +1561,7 @@ JavaScript opens these when an import button is clicked.
               <div class="compliance-item">
 
                 <div class="compliance-icon">
-                  ♢
+                  
                 </div>
 
                 <div class="compliance-content">
@@ -1569,13 +1569,13 @@ JavaScript opens these when an import button is clicked.
                   <span>E&amp;O</span>
 
                   <strong id="profileEO">
-                    —
+                    -
                   </strong>
 
                 </div>
 
                 <span class="compliance-check">
-                  ✓
+                  OK
                 </span>
 
               </div>
@@ -1586,7 +1586,7 @@ JavaScript opens these when an import button is clicked.
               <div class="compliance-item">
 
                 <div class="compliance-icon">
-                  🔒
+                  
                 </div>
 
                 <div class="compliance-content">
@@ -1594,13 +1594,13 @@ JavaScript opens these when an import button is clicked.
                   <span>AML</span>
 
                   <strong id="profileAML">
-                    —
+                    -
                   </strong>
 
                 </div>
 
                 <span class="compliance-check">
-                  ✓
+                  OK
                 </span>
 
               </div>
@@ -1611,7 +1611,7 @@ JavaScript opens these when an import button is clicked.
               <div class="compliance-item">
 
                 <div class="compliance-icon">
-                  ▤
+                  
                 </div>
 
                 <div class="compliance-content">
@@ -1619,13 +1619,13 @@ JavaScript opens these when an import button is clicked.
                   <span>Tevah Fee</span>
 
                   <strong id="profileTevahFee">
-                    —
+                    -
                   </strong>
 
                 </div>
 
                 <span class="compliance-check">
-                  ✓
+                  OK
                 </span>
 
               </div>
@@ -1644,7 +1644,7 @@ JavaScript opens these when an import button is clicked.
   <div class="agent-action-content">
 
     <div class="action-icon">
-      ⚡
+      
     </div>
 
     <div class="action-copy">
@@ -1663,7 +1663,7 @@ JavaScript opens these when an import button is clicked.
         class="open-command-btn"
       >
         <span>Open Command Center</span>
-        <span>↗</span>
+        <span>open</span>
       </button>
 
     </div>
@@ -1694,10 +1694,10 @@ JavaScript opens these when an import button is clicked.
 
             <div class="progress-circle launched">
 
-              🚀
+              
 
               <span class="progress-check">
-                ✓
+                OK
               </span>
 
             </div>
@@ -1718,7 +1718,7 @@ JavaScript opens these when an import button is clicked.
                 id="profileLaunchState"
                 class="milestone-status"
               >
-                —
+                -
               </span>
 
             </div>
@@ -1743,8 +1743,8 @@ JavaScript opens these when an import button is clicked.
           >
 
            <div class="progress-circle">
-            🪪
-        <span class="progress-check">✓</span>
+            
+        <span class="progress-check">OK</span>
         </div>
 
 
@@ -1813,8 +1813,8 @@ JavaScript opens these when an import button is clicked.
           >
 
             <div class="progress-circle">
-              🤝
-          <span class="progress-check">✓</span>
+              
+          <span class="progress-check">OK</span>
         </div>
 
 
@@ -1914,7 +1914,7 @@ JavaScript opens these when an import button is clicked.
       </div>
 
       <div class="command-search-wrap">
-        <span>⌕</span>
+        <span></span>
 
         <input
           id="commandSearch"
@@ -1937,7 +1937,7 @@ JavaScript opens these when an import button is clicked.
     <main class="command-main command-main-v2">
 
       <div id="commandEmpty" class="command-empty-v2">
-        <div class="command-empty-icon">✦</div>
+        <div class="command-empty-icon"></div>
         <h2>Select an agent</h2>
         <p>
           Choose an agent to see their recommended next action.
@@ -1968,7 +1968,7 @@ JavaScript opens these when an import button is clicked.
 
           <div class="command-agent-fact">
             <span>Days in Stage</span>
-            <strong id="commandDaysInStage">—</strong>
+            <strong id="commandDaysInStage">-</strong>
           </div>
 
           <div class="command-agent-fact">
@@ -1976,13 +1976,13 @@ JavaScript opens these when an import button is clicked.
 
             <strong id="commandRiskLevel">
               <i class="command-risk-dot"></i>
-              —
+              -
             </strong>
           </div>
 
           <div class="command-agent-fact">
             <span>Last Activity</span>
-            <strong id="commandLastActivity">—</strong>
+            <strong id="commandLastActivity">-</strong>
           </div>
 
           <span
@@ -1997,7 +1997,7 @@ JavaScript opens these when an import button is clicked.
             class="more-btn"
             aria-label="More agent options"
           >
-            •••
+            ---
           </button>
 
         </section>
@@ -2010,7 +2010,7 @@ JavaScript opens these when an import button is clicked.
           <div class="command-intelligence-copy">
 
             <span class="command-intelligence-label">
-              ✦ FORGE Intelligence
+               FORGE Intelligence
             </span>
 
             <div class="command-intelligence-title-row">
@@ -2029,23 +2029,23 @@ JavaScript opens these when an import button is clicked.
             </h3>
 
             <p id="recommendedText">
-              FORGE is analyzing this agent’s current journey.
+              FORGE is analyzing this agent's current journey.
             </p>
 
             <div class="command-channel-actions">
 
               <button type="button" data-method="Call">
-                <span>☎</span>
+                <span>Call</span>
                 Call
               </button>
 
               <button type="button" data-method="Text">
-                <span>▣</span>
+                <span></span>
                 Text
               </button>
 
               <button type="button" data-method="Email">
-                <span>✉</span>
+                <span>Email</span>
                 Email
               </button>
 
@@ -2054,7 +2054,7 @@ JavaScript opens these when an import button is clicked.
                 data-method="WhatsApp"
                 class="whatsapp-action"
               >
-                <span>◉</span>
+                <span></span>
                 WhatsApp
               </button>
 
@@ -2071,7 +2071,7 @@ JavaScript opens these when an import button is clicked.
               Start Action
             </span>
 
-            <strong>→</strong>
+            <strong>-></strong>
           </button>
 
         </section>
@@ -2127,7 +2127,7 @@ JavaScript opens these when an import button is clicked.
                 class="command-milestone"
                 data-command-stage="Not Placed"
               >
-                <i>✓</i>
+                <i>OK</i>
                 <strong>Welcome</strong>
                 <span>Completed</span>
               </div>
@@ -2136,7 +2136,7 @@ JavaScript opens these when an import button is clicked.
                 class="command-milestone"
                 data-command-stage="Quiz Sent"
               >
-                <i>✓</i>
+                <i>OK</i>
                 <strong>Quiz</strong>
                 <span>Completed</span>
               </div>
@@ -2145,7 +2145,7 @@ JavaScript opens these when an import button is clicked.
                 class="command-milestone"
                 data-command-stage="XCEL Completed"
               >
-                <i>✓</i>
+                <i>OK</i>
                 <strong>XCEL</strong>
                 <span>Completed</span>
               </div>
@@ -2154,7 +2154,7 @@ JavaScript opens these when an import button is clicked.
                 class="command-milestone"
                 data-command-stage="Exam Passed"
               >
-                <i>✓</i>
+                <i>OK</i>
                 <strong>Exam</strong>
                 <span>Completed</span>
               </div>
@@ -2180,7 +2180,7 @@ JavaScript opens these when an import button is clicked.
             </div>
 
             <div class="command-journey-insight">
-              <span>✦</span>
+              <span></span>
 
               <div>
                 <strong id="commandJourneyInsight">
@@ -2229,7 +2229,7 @@ JavaScript opens these when an import button is clicked.
               class="command-add-activity"
               data-method="Note"
             >
-              ＋ Add activity
+              + Add activity
             </button>
 
           </div>
@@ -2281,7 +2281,7 @@ JavaScript opens these when an import button is clicked.
         <p id="guideStage"></p>
       </div>
 
-      <button id="closeGuide">✕</button>
+      <button id="closeGuide">x</button>
 
     </div>
 
@@ -2297,7 +2297,7 @@ Appears when coordinator clicks Take Action
  <div id="actionModal" class="modal hidden">
   <div class="smart-action-panel">
 
-    <button id="closeActionModal" class="smart-close">✕</button>
+    <button id="closeActionModal" class="smart-close">x</button>
 
     <div class="smart-action-head">
       <span id="smartMethodBadge">Text</span>
@@ -2310,32 +2310,32 @@ Appears when coordinator clicks Take Action
     <div class="smart-agent-box">
   <div>
     <small>Agent</small>
-    <strong id="smartAgentName">—</strong>
+    <strong id="smartAgentName">-</strong>
   </div>
 
   <div>
     <small>Phone</small>
-    <strong id="smartAgentPhone">—</strong>
+    <strong id="smartAgentPhone">-</strong>
   </div>
 
   <div>
     <small>Stage</small>
-    <strong id="smartAgentStage">—</strong>
+    <strong id="smartAgentStage">-</strong>
   </div>
 
   <div>
     <small>Upline</small>
-    <strong id="smartAgentUpline">—</strong>
+    <strong id="smartAgentUpline">-</strong>
   </div>
 </div>
 
     <div class="delivery-buttons">
-      <button class="delivery active" data-delivery="Text">💬 Text</button>
-      <button class="delivery" data-delivery="Email">✉️ Email</button>
-      <button class="delivery" data-delivery="WhatsApp">🟢 WhatsApp</button>
-      <button class="delivery" data-delivery="Call">📞 Call</button>
-      <button class="delivery" data-delivery="Zoom">🎥 Zoom</button>
-      <button class="delivery" data-delivery="Note">📝 Note</button>
+      <button class="delivery active" data-delivery="Text"> Text</button>
+      <button class="delivery" data-delivery="Email">Email Email</button>
+      <button class="delivery" data-delivery="WhatsApp"> WhatsApp</button>
+      <button class="delivery" data-delivery="Call"> Call</button>
+      <button class="delivery" data-delivery="Zoom"> Zoom</button>
+      <button class="delivery" data-delivery="Note"> Note</button>
     </div>
 
     <div id="emailSubjectWrap" class="smart-field hidden">
@@ -2361,10 +2361,10 @@ Appears when coordinator clicks Take Action
     </div>
 
     <div class="ai-toolbar">
-      <button id="rewriteProfessional">📈 Professional</button>
-      <button id="rewriteFriendly">😊 Friendlier</button>
-      <button id="rewriteShorter">✂ Shorter</button>
-      <button id="copyActionMessage">📋 Copy</button>
+      <button id="rewriteProfessional"> Professional</button>
+      <button id="rewriteFriendly"> Friendlier</button>
+      <button id="rewriteShorter"> Shorter</button>
+      <button id="copyActionMessage"> Copy</button>
     </div>
 
     <div class="action-footer">
@@ -2423,7 +2423,7 @@ GROWTH PAGE
  <div class="growth-kpis">
 
   <div class="growth-kpi">
-    <div>👥</div>
+    <div></div>
 
     <span>Organization Size</span>
 
@@ -2433,7 +2433,7 @@ GROWTH PAGE
   </div>
 
   <div class="growth-kpi">
-    <div>📈</div>
+    <div></div>
 
     <span>Avg. Progress</span>
 
@@ -2445,7 +2445,7 @@ GROWTH PAGE
   </div>
 
   <div class="growth-kpi">
-    <div>🏆</div>
+    <div></div>
 
     <span>Top Team</span>
 
@@ -2457,7 +2457,7 @@ GROWTH PAGE
   </div>
 
   <div class="growth-kpi">
-    <div>⚠️</div>
+    <div>Warning</div>
 
     <span>Needs Attention</span>
 
@@ -2486,7 +2486,7 @@ GROWTH PAGE
   </div>
 
 <div class="growth-note">
-  ⓘ Momentum reflects overall team growth activity and engagement.
+  Info Momentum reflects overall team growth activity and engagement.
 </div>
   <!-- =========================================================
 TEAM INTELLIGENCE DRAWER
@@ -2520,7 +2520,7 @@ TEAM INTELLIGENCE DRAWER
         class="growth-drawer-close"
         aria-label="Close"
       >
-        ×
+        x
       </button>
 
     </div>
@@ -2627,7 +2627,7 @@ TEAM INTELLIGENCE DRAWER
         id="closeCreateOrganizationModal"
         class="modal-close-btn"
       >
-        ×
+        x
       </button>
     </div>
 
@@ -2714,7 +2714,7 @@ TEAM INTELLIGENCE DRAWER
   <div class="forge-drawer-header">
 
     <div class="forge-drawer-heading">
-      <div class="forge-drawer-icon">✦</div>
+      <div class="forge-drawer-icon"></div>
 
       <div>
         <span class="forge-drawer-eyebrow">
@@ -2735,7 +2735,7 @@ TEAM INTELLIGENCE DRAWER
       type="button"
       aria-label="Close priorities"
     >
-      ×
+      x
     </button>
 
   </div>
@@ -2762,7 +2762,7 @@ TEAM INTELLIGENCE DRAWER
         type="button"
       >
         Start Priority Session
-        <span>→</span>
+        <span>-></span>
       </button>
     </section>
 
@@ -2812,6 +2812,6 @@ TEAM INTELLIGENCE DRAWER
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./supabase-config.js?v=2"></script>
-<script src="script.js?v=18"></script>
+<script src="script.js?v=19"></script>
 </body>
 </html>
