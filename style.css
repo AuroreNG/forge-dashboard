@@ -20053,3 +20053,100 @@ body.forge-drawer-open {
     width: 100%;
   }
 }
+
+/* ==========================================================
+   COMMAND CENTER — AGENT PRIORITY STATUS
+========================================================== */
+
+.command-agent-row {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 10px;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.command-agent-copy {
+  min-width: 0;
+}
+
+.command-agent-copy strong {
+  display: block;
+  overflow: hidden;
+  color: #0c2348;
+  font-size: 13px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-agent-copy span {
+  display: block;
+  margin-top: 3px;
+  overflow: hidden;
+  color: #71809d;
+  font-size: 10px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-agent-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #94a3b8;
+  box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.12);
+}
+
+/* High priority */
+.command-agent-row[data-stage="Licensed"]
+.command-agent-status,
+.command-agent-row[data-stage="Exam Passed"]
+.command-agent-status {
+  background: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+}
+
+/* Needs follow-up */
+.command-agent-row[data-stage="Not Placed"]
+.command-agent-status,
+.command-agent-row[data-stage="Quiz Sent"]
+.command-agent-status {
+  background: #f59e0b;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.13);
+}
+
+/* Moving forward */
+.command-agent-row[data-stage="XCEL Completed"]
+.command-agent-status {
+  background: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+/* Completed */
+.command-agent-row[data-stage="Contracted"]
+.command-agent-status {
+  background: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+}
+
+.command-agent-row.active {
+  border-color: #2563eb;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(37, 99, 235, 0.12),
+      rgba(124, 58, 237, 0.06)
+    );
+  box-shadow:
+    0 8px 22px rgba(37, 99, 235, 0.12);
+}
+
+.command-agent-row:hover {
+  border-color: #93b4ff;
+  transform: translateY(-1px);
+}
