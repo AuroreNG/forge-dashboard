@@ -2383,6 +2383,526 @@ document
     }
   );
 
+// ==========================================================
+// FORGE INTELLIGENCE DRAWER ENGINE
+// ==========================================================
+
+let forgeDrawerPriorityAgents = [];
+
+
+function escapeForgeText(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+
+function getForgeAgentAge(agent) {
+  const value =
+    agent.recruitDate ||
+    agent.recruit_date ||
+    null;
+
+  if (!value) return null;
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return Math.max(
+    0,
+    Math.floor(
+      (Date.now() - date.getTime()) /
+      (1000 * 60 * 60 * 24)
+    )
+  );
+}
+
+
+function getForgeStallLimit(stage) {
+  const limits = {
+    "Not Placed": 7,
+    "Quiz Sent": 10,
+    "XCEL Completed": 21,
+    "Exam Passed": 30,
+    "Licensed": 45
+  };
+
+  return limits[stage] ?? null;
+}
+
+
+function analyzeForgePriority(agent) {
+  const stage =
+    agent.stage || "Not Placed";
+
+  if (stage === "Contracted") {
+    return null;
+  }
+
+  const age =
+    getForgeAgentAge(agent);
+
+  const stallLimit =
+    getForgeStallLimit(stage);
+
+  const stalled =
+    age !== null &&
+    stallLimit !== null &&
+    age >= stallLimit;
+
+  let score = 0;
+  let reason = "";
+  let detail = "";
+  let action = "";
+  let level = "medium";
+
+  switch (stage) {
+    case "Licensed":
+      score = 100;
+      reason = "Ready for contracting";
+      detail =
+        "License approved—convert this agent into production.";
+      action = "Start Contracting";
+      level = "ready";
+      break;
+
+    case "Exam Passed":
+      score = 92;
+      reason = "License activation required";
+      detail =
+        "Exam passed—complete the state licensing step.";
+      action = "Activate License";
+      level = "ready";
+      break;
+
+    case "Not Placed":
+      score = 78;
+      reason = "Licensing not started";
+      detail =
+        "Begin onboarding and send the readiness quiz.";
+      action = "Start Follow-Up";
+      level = "high";
+      break;
+
+    case "Quiz Sent":
+      score = 70;
+      reason = "Quiz awaiting completion";
+      detail =
+        "Follow up and remove the completion barrier.";
+      action = "Send Reminder";
+      level = "medium";
+      break;
+
+    case "XCEL Completed":
+      score = 62;
+      reason = "Exam preparation";
+      detail =
+        "Confirm exam readiness and scheduling.";
+      action = "Prepare Exam";
+      level = "medium";
+      break;
+
+    default:
+      score = 40;
+      reason = "Journey review needed";
+      detail =
+        "Review the agent’s licensing progress.";
+      action = "Review Agent";
+      level = "medium";
+  }
+
+  if (stalled) {
+    score += 28;
+    level = "high";
+
+    detail =
+      age !== null
+        ? `${age} days since recruitment—follow-up is overdue.`
+        : "Follow-up is overdue.";
+  }
+
+  return {
+    agent,
+    stage,
+    score,
+    reason,
+    detail,
+    action,
+    level,
+    stalled,
+    age
+  };
+}
+
+
+function getForgePriorityAnalysis(agents) {
+  return (agents || [])
+    .map(analyzeForgePriority)
+    .filter(Boolean)
+    .sort(
+      (a, b) =>
+        b.score - a.score
+    );
+}
+
+
+function renderForgeIntelligenceDrawer() {
+  const analysis =
+    getForgePriorityAnalysis(allAgents);
+
+  forgeDrawerPriorityAgents =
+    analysis.map(
+      (item) => item.agent
+    );
+
+  const licensed =
+    analysis.filter(
+      (item) =>
+        item.stage === "Licensed"
+    );
+
+  const activation =
+    analysis.filter(
+      (item) =>
+        item.stage === "Not Placed"
+    );
+
+  const stalled =
+    analysis.filter(
+      (item) => item.stalled
+    );
+
+  setText(
+    "forgeDrawerOrganization",
+    `${currentOrganization?.name || "Organization"} Workspace`
+  );
+
+  setText(
+    "drawerContractingCount",
+    licensed.length
+  );
+
+  setText(
+    "drawerActivationCount",
+    activation.length
+  );
+
+  setText(
+    "drawerStalledCount",
+    stalled.length
+  );
+
+  setText(
+    "forgePriorityCount",
+    `${analysis.length} ${
+      analysis.length === 1
+        ? "person"
+        : "people"
+    }`
+  );
+
+
+  // ========================================================
+  // INTELLIGENT RECOMMENDATION
+  // ========================================================
+
+  let recommendationTitle =
+    "Your organization is moving forward";
+
+  let recommendationText =
+    "No urgent licensing bottleneck was detected.";
+
+  if (licensed.length > 0) {
+    recommendationTitle =
+      `Convert ${licensed.length} licensed ${
+        licensed.length === 1
+          ? "agent"
+          : "agents"
+      } into production`;
+
+    recommendationText =
+      "Contracting is the highest-impact opportunity because these agents are already licensed and closest to writing business.";
+  }
+
+  else if (stalled.length > 0) {
+    recommendationTitle =
+      `Recover ${stalled.length} stalled ${
+        stalled.length === 1
+          ? "agent"
+          : "agents"
+      }`;
+
+    recommendationText =
+      "These agents have exceeded their expected follow-up window. Start with the longest-delayed cases.";
+  }
+
+  else if (activation.length > 0) {
+    recommendationTitle =
+      `Activate ${activation.length} new ${
+        activation.length === 1
+          ? "recruit"
+          : "recruits"
+      }`;
+
+    recommendationText =
+      "Move these recruits from Not Placed by sending the welcome message and licensing readiness quiz.";
+  }
+
+  setText(
+    "forgeRecommendationTitle",
+    recommendationTitle
+  );
+
+  setText(
+    "forgeRecommendationText",
+    recommendationText
+  );
+
+
+  // ========================================================
+  // PRIORITY LIST
+  // ========================================================
+
+  const list =
+    document.getElementById(
+      "forgePriorityList"
+    );
+
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  if (!analysis.length) {
+    list.innerHTML = `
+      <div class="forge-priority-empty">
+        ✦ No priority actions right now.
+      </div>
+    `;
+
+    document
+      .getElementById("startForgePrioritySession")
+      ?.setAttribute("disabled", "true");
+
+    return;
+  }
+
+  document
+    .getElementById("startForgePrioritySession")
+    ?.removeAttribute("disabled");
+
+
+  analysis
+    .slice(0, 12)
+    .forEach((item) => {
+      const agent = item.agent;
+
+      const row =
+        document.createElement("article");
+
+      row.className =
+        "forge-priority-item";
+
+      row.innerHTML = `
+        <div class="forge-priority-avatar">
+          ${getInitials(agent.name || "Agent")}
+        </div>
+
+        <div class="forge-priority-copy">
+          <strong>
+            ${escapeForgeText(agent.name || "Unnamed Agent")}
+          </strong>
+
+          <span>
+            ${escapeForgeText(item.stage)}
+            ·
+            ${escapeForgeText(
+              agent.upline ||
+              agent.coordinator ||
+              "No upline"
+            )}
+          </span>
+
+          <span class="forge-priority-reason ${item.level}">
+            ${
+              item.stalled
+                ? "◷"
+                : item.level === "ready"
+                ? "→"
+                : "●"
+            }
+
+            ${escapeForgeText(item.reason)}
+          </span>
+
+          <span>
+            ${escapeForgeText(item.detail)}
+          </span>
+        </div>
+
+        <button
+          type="button"
+          class="forge-priority-open"
+          data-forge-priority-agent="${escapeForgeText(agent.id)}"
+        >
+          ${escapeForgeText(item.action)}
+        </button>
+      `;
+
+      list.appendChild(row);
+    });
+}
+
+
+function openForgeIntelligenceDrawer() {
+  renderForgeIntelligenceDrawer();
+
+  document
+    .getElementById("forgeIntelligenceOverlay")
+    ?.classList.remove("hidden");
+
+  const drawer =
+    document.getElementById(
+      "forgeIntelligenceDrawer"
+    );
+
+  drawer?.classList.add("open");
+
+  drawer?.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.classList.add(
+    "forge-drawer-open"
+  );
+}
+
+
+function closeForgeIntelligenceDrawer() {
+  document
+    .getElementById("forgeIntelligenceOverlay")
+    ?.classList.add("hidden");
+
+  const drawer =
+    document.getElementById(
+      "forgeIntelligenceDrawer"
+    );
+
+  drawer?.classList.remove("open");
+
+  drawer?.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.classList.remove(
+    "forge-drawer-open"
+  );
+}
+
+
+// OPEN DRAWER
+document
+  .getElementById("forgeInsightBtn")
+  ?.addEventListener(
+    "click",
+    openForgeIntelligenceDrawer
+  );
+
+
+// CLOSE DRAWER
+document
+  .getElementById("closeForgeIntelligence")
+  ?.addEventListener(
+    "click",
+    closeForgeIntelligenceDrawer
+  );
+
+
+document
+  .getElementById("forgeIntelligenceOverlay")
+  ?.addEventListener(
+    "click",
+    closeForgeIntelligenceDrawer
+  );
+
+
+document.addEventListener(
+  "keydown",
+  (event) => {
+    if (event.key === "Escape") {
+      closeForgeIntelligenceDrawer();
+    }
+  }
+);
+
+
+// START THE COMPLETE PRIORITY SESSION
+document
+  .getElementById("startForgePrioritySession")
+  ?.addEventListener(
+    "click",
+    () => {
+      if (!forgeDrawerPriorityAgents.length) {
+        return;
+      }
+
+      closeForgeIntelligenceDrawer();
+
+      launchForgeContext({
+        type: "mission",
+        title: "FORGE Priority Session",
+        reason:
+          "Highest-impact licensing actions for the active organization",
+        agents:
+          forgeDrawerPriorityAgents
+      });
+    }
+  );
+
+
+// OPEN ONE PRIORITY AGENT
+document.addEventListener(
+  "click",
+  (event) => {
+    const button =
+      event.target.closest(
+        "[data-forge-priority-agent]"
+      );
+
+    if (!button) return;
+
+    const agent =
+      allAgents.find(
+        (item) =>
+          String(item.id) ===
+          String(
+            button.dataset
+              .forgePriorityAgent
+          )
+      );
+
+    if (!agent) return;
+
+    closeForgeIntelligenceDrawer();
+
+    launchForgeContext({
+      type: "mission",
+      title:
+        `Priority: ${agent.name}`,
+      reason:
+        "FORGE Intelligence recommended action",
+      agents: [agent]
+    });
+  }
+);
+
 
 function renderPipelineBoard(agents) {
   renderStage("Not Placed",   "notStartedCount",         "notStartedList",         agents);
@@ -2398,22 +2918,6 @@ renderStage(
   renderStage("Contracted",   "contractedPipelineCount",  "contractedPipelineList",  agents);
 }
 
-document
-  .getElementById("forgeInsightBtn")
-  ?.addEventListener("click", () => {
-
-    showPage("Command");
-
-    document
-      .querySelectorAll(".nav-btn")
-      .forEach((btn) =>
-        btn.classList.toggle(
-          "active",
-          btn.textContent.trim() === "Command"
-        )
-      );
-
-  });
 document
   .getElementById("pulseActionBtn")
   ?.addEventListener("click", () => {
