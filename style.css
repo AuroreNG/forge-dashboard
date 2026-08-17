@@ -19076,3 +19076,980 @@ body.forge-drawer-open {
     min-height: 0;
   }
 }
+
+/* ==========================================================
+   FORGE COMMAND CENTER V2
+========================================================== */
+
+.command-page {
+  padding: 20px 22px 40px;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(100, 76, 232, 0.07),
+      transparent 30%
+    ),
+    #f4f8ff;
+}
+
+.command-center-heading {
+  margin: 0 0 15px;
+}
+
+.command-center-heading h1 {
+  margin: 0;
+  color: #0a2148;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+
+.command-layout-v2 {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+}
+
+
+/* ==========================================================
+   AGENT SIDEBAR
+========================================================== */
+
+.command-sidebar-v2 {
+  position: sticky;
+  top: 18px;
+  height: calc(100vh - 75px);
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(30, 70, 140, 0.11);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.93);
+  box-shadow:
+    0 18px 45px rgba(20, 48, 101, 0.08);
+}
+
+.command-sidebar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 11px;
+}
+
+.command-sidebar-heading > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.command-sidebar-heading h2 {
+  margin: 0;
+  color: #0b2248;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+#commandAgentTotal {
+  min-width: 34px;
+  padding: 5px 8px;
+  border-radius: 9px;
+  color: #183c7a;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 850;
+  background: #eef4ff;
+}
+
+.command-sidebar-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-bottom: 10px;
+}
+
+.command-filter {
+  min-height: 34px;
+  border: 1px solid #dfe7f3;
+  border-radius: 10px;
+  color: #6a7892;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  background: #f9fbff;
+}
+
+.command-filter.active {
+  color: white;
+  border-color: #1657cc;
+  background:
+    linear-gradient(
+      110deg,
+      #084fca,
+      #6340e5
+    );
+}
+
+.command-search-wrap {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 11px;
+  padding: 0 11px;
+  border: 1px solid #dbe5f3;
+  border-radius: 11px;
+  background: white;
+}
+
+.command-search-wrap span {
+  color: #8290a8;
+  font-size: 16px;
+}
+
+.command-search-wrap input {
+  width: 100%;
+  height: auto;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  color: #0c2349;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  background: transparent;
+}
+
+#commandAgentList {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 3px;
+}
+
+.command-sidebar-v2 .command-agent-row {
+  position: relative;
+  min-height: 54px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 8px;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 5px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  background: transparent;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    transform 0.2s;
+}
+
+.command-sidebar-v2 .command-agent-row:hover {
+  border-color: #dce6f5;
+  background: #f7faff;
+  transform: translateX(2px);
+}
+
+.command-sidebar-v2 .command-agent-row.active {
+  border-color: #d4e2fb;
+  background:
+    linear-gradient(
+      90deg,
+      #edf4ff,
+      #f8faff
+    );
+}
+
+.command-sidebar-v2 .command-agent-row::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f0a422;
+}
+
+.command-sidebar-v2
+.command-agent-row[data-stage="Licensed"]::after,
+.command-sidebar-v2
+.command-agent-row[data-stage="Contracted"]::after {
+  background: #20b86a;
+}
+
+.command-sidebar-v2 .command-avatar {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  font-size: 10px;
+  font-weight: 900;
+  background:
+    linear-gradient(
+      145deg,
+      #1765df,
+      #0b347f
+    );
+}
+
+.command-sidebar-v2 .command-agent-row > div:nth-child(2) {
+  min-width: 0;
+}
+
+.command-sidebar-v2 .command-agent-row b {
+  display: block;
+  overflow: hidden;
+  color: #10264c;
+  font-size: 10px;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-sidebar-v2 .command-agent-row span {
+  display: block;
+  overflow: hidden;
+  margin-top: 2px;
+  color: #7887a1;
+  font-size: 8px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#commandPagination {
+  padding-top: 10px;
+  border-top: 1px solid #edf1f7;
+}
+
+
+/* ==========================================================
+   MAIN WORKSPACE
+========================================================== */
+
+.command-main-v2 {
+  min-width: 0;
+}
+
+.command-empty-v2 {
+  min-height: 560px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  border: 1px solid rgba(30, 70, 140, 0.1);
+  border-radius: 22px;
+  color: #74829c;
+  text-align: center;
+  background: white;
+  box-shadow:
+    0 18px 45px rgba(20, 48, 101, 0.07);
+}
+
+.command-empty-v2 h2 {
+  margin: 14px 0 5px;
+  color: #10264c;
+}
+
+.command-empty-v2 p {
+  margin: 0;
+}
+
+.command-empty-icon {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  color: #6243e5;
+  font-size: 24px;
+  background: #f0ecff;
+}
+
+
+/* ==========================================================
+   AGENT HEADER
+========================================================== */
+
+.command-agent-header-v2 {
+  display: grid;
+  grid-template-columns:
+    58px
+    minmax(190px, 1.4fr)
+    minmax(90px, 0.6fr)
+    minmax(100px, 0.7fr)
+    minmax(100px, 0.7fr)
+    auto
+    40px;
+  align-items: center;
+  gap: 16px;
+  min-height: 104px;
+  padding: 20px;
+  border: 1px solid rgba(30, 70, 140, 0.1);
+  border-radius: 21px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow:
+    0 15px 38px rgba(20, 48, 101, 0.07);
+}
+
+.command-avatar-v2 {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  font-size: 17px;
+  font-weight: 900;
+  background:
+    linear-gradient(
+      145deg,
+      #1768e9,
+      #08358b
+    );
+  box-shadow:
+    0 12px 24px rgba(27, 90, 196, 0.22);
+}
+
+.command-agent-identity {
+  min-width: 0;
+}
+
+.command-agent-identity h1 {
+  overflow: hidden;
+  margin: 0 0 7px;
+  color: #091f45;
+  font-size: 22px;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-agent-identity span,
+.command-agent-fact span {
+  display: block;
+  margin-bottom: 4px;
+  color: #7d8ba3;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.command-agent-identity strong,
+.command-agent-fact strong {
+  color: #142a50;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.command-agent-fact {
+  min-height: 45px;
+  padding-left: 15px;
+  border-left: 1px solid #e7edf6;
+}
+
+#commandRiskLevel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.command-risk-dot {
+  width: 7px;
+  height: 7px;
+  display: inline-block;
+  border-radius: 50%;
+  background: #f1a21e;
+}
+
+.command-agent-header-v2 .stage-badge {
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: #18834a;
+  font-size: 10px;
+  font-weight: 850;
+  background: #eaf9ef;
+}
+
+.command-agent-header-v2 .more-btn {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #dce5f2;
+  border-radius: 11px;
+  color: #315076;
+  cursor: pointer;
+  background: white;
+}
+
+
+/* ==========================================================
+   INTELLIGENCE HERO
+========================================================== */
+
+.command-intelligence-hero {
+  position: relative;
+  min-height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  margin-top: 14px;
+  padding: 25px 29px;
+  overflow: hidden;
+  border-radius: 22px;
+  color: white;
+  background:
+    radial-gradient(
+      circle at 76% 30%,
+      rgba(72, 111, 255, 0.24),
+      transparent 32%
+    ),
+    linear-gradient(
+      115deg,
+      #041f52,
+      #073c98 58%,
+      #102765
+    );
+  box-shadow:
+    0 20px 42px rgba(5, 37, 92, 0.2);
+}
+
+.command-intelligence-hero::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  bottom: -125px;
+  width: 430px;
+  height: 260px;
+  border: 1px solid rgba(118, 151, 255, 0.12);
+  border-radius: 50%;
+  transform: rotate(-12deg);
+}
+
+.command-intelligence-copy {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.command-intelligence-label {
+  display: block;
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+}
+
+.command-intelligence-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 13px;
+}
+
+.command-intelligence-title-row h2 {
+  margin: 0;
+  color: white;
+  font-size: 27px;
+  font-weight: 900;
+}
+
+.impact-chip {
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 9px;
+  color: #f3f5ff;
+  font-size: 10px;
+  font-weight: 800;
+  background:
+    linear-gradient(
+      100deg,
+      rgba(37, 109, 241, 0.72),
+      rgba(116, 57, 234, 0.78)
+    );
+}
+
+.command-intelligence-hero h3 {
+  margin: 13px 0 4px;
+  color: white;
+  font-size: 16px;
+  font-weight: 780;
+}
+
+.command-intelligence-hero p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.command-channel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.command-channel-actions button {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 15px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  color: white;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.command-channel-actions button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.command-primary-action {
+  position: relative;
+  z-index: 2;
+  min-width: 200px;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border: 0;
+  border-radius: 15px;
+  color: white;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  background:
+    linear-gradient(
+      100deg,
+      #1981f4,
+      #7734f1
+    );
+  box-shadow:
+    0 17px 30px rgba(46, 54, 221, 0.3);
+}
+
+.command-primary-action strong {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #3d50cc;
+  background: white;
+}
+
+
+/* ==========================================================
+   PLAYBOOK + JOURNEY
+========================================================== */
+
+.command-focus-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(310px, 0.8fr)
+    minmax(460px, 1.4fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.command-focus-card {
+  min-height: 270px;
+  padding: 20px;
+  border: 1px solid rgba(30, 70, 140, 0.1);
+  border-radius: 20px;
+  background: white;
+  box-shadow:
+    0 14px 35px rgba(20, 48, 101, 0.06);
+}
+
+.command-focus-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.command-focus-heading span {
+  display: block;
+  margin-bottom: 5px;
+  color: #3265c7;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.command-focus-heading h3 {
+  margin: 0;
+  color: #0b234b;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.command-text-button {
+  border: 0;
+  color: #155bd2;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 850;
+  cursor: pointer;
+  background: transparent;
+}
+
+
+/* Existing action rows transformed into playbook rows */
+
+.command-playbook-card #coordinatorActions {
+  display: grid;
+  gap: 0;
+}
+
+.command-playbook-card .action-row {
+  min-height: 63px;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 0;
+  border-bottom: 1px solid #edf1f7;
+}
+
+.command-playbook-card .action-row:last-child {
+  border-bottom: 0;
+}
+
+.command-playbook-card .action-icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: #1b60d4;
+  background: #eef4ff;
+}
+
+.command-playbook-card .action-copy strong {
+  display: block;
+  color: #10264c;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.command-playbook-card .action-copy span,
+.command-playbook-card .action-copy p {
+  display: block;
+  margin: 3px 0 0;
+  color: #7b89a1;
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.command-playbook-card .action-row button {
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid #d9e4f3;
+  border-radius: 9px;
+  color: #155bd2;
+  font: inherit;
+  font-size: 9px;
+  font-weight: 850;
+  background: #f8fbff;
+}
+
+
+/* JOURNEY */
+
+.command-journey-progress {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  margin: 42px 0 29px;
+}
+
+.command-journey-progress::before {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 8%;
+  right: 8%;
+  height: 3px;
+  border-radius: 4px;
+  background: #dce4f0;
+}
+
+.command-milestone {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.command-milestone i {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 10px;
+  border: 3px solid white;
+  border-radius: 50%;
+  color: white;
+  font-style: normal;
+  font-size: 10px;
+  background: #cbd5e4;
+  box-shadow: 0 0 0 2px #cbd5e4;
+}
+
+.command-milestone.complete i {
+  background: #1764dc;
+  box-shadow: 0 0 0 2px #1764dc;
+}
+
+.command-milestone.current i {
+  background: white;
+  box-shadow:
+    0 0 0 3px #1764dc,
+    0 0 0 6px rgba(23, 100, 220, 0.12);
+}
+
+.command-milestone strong {
+  display: block;
+  color: #10264c;
+  font-size: 9px;
+  font-weight: 850;
+}
+
+.command-milestone span {
+  display: block;
+  margin-top: 4px;
+  color: #8491a8;
+  font-size: 8px;
+  font-weight: 650;
+}
+
+.command-journey-insight {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 15px;
+  border: 1px solid #e1e8f3;
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      90deg,
+      #f6f9ff,
+      #fbfcff
+    );
+}
+
+.command-journey-insight > span {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 34px;
+  border-radius: 11px;
+  color: #6845e4;
+  background: #eeeaff;
+}
+
+.command-journey-insight strong {
+  display: block;
+  color: #10264c;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.command-journey-insight small {
+  display: block;
+  margin-top: 3px;
+  color: #74849e;
+  font-size: 9px;
+}
+
+
+/* ==========================================================
+   ACTIVITY TABS
+========================================================== */
+
+.command-bottom-card {
+  min-height: 150px;
+  margin-top: 14px;
+  padding: 0 20px 18px;
+  border: 1px solid rgba(30, 70, 140, 0.1);
+  border-radius: 20px;
+  background: white;
+  box-shadow:
+    0 14px 35px rgba(20, 48, 101, 0.06);
+}
+
+.command-tab-list {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+  min-height: 55px;
+  border-bottom: 1px solid #e9eef6;
+}
+
+.command-tab {
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  color: #687894;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 850;
+  cursor: pointer;
+  background: transparent;
+}
+
+.command-tab.active {
+  color: #155ee0;
+}
+
+.command-tab.active::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  border-radius: 4px;
+  background: #155ee0;
+}
+
+.command-tab span {
+  min-width: 22px;
+  padding: 3px 6px;
+  border-radius: 999px;
+  color: #5a43d2;
+  font-size: 8px;
+  background: #eeeaff;
+}
+
+.command-add-activity {
+  min-height: 34px;
+  margin-left: auto;
+  padding: 0 12px;
+  border: 1px solid #dbe5f2;
+  border-radius: 10px;
+  color: #173f80;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 850;
+  cursor: pointer;
+  background: #f9fbff;
+}
+
+.command-tab-panel {
+  padding-top: 16px;
+}
+
+.command-bottom-card #activityTimeline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.command-bottom-card .timeline-entry {
+  min-width: 210px;
+  flex: 1;
+  padding: 13px;
+  border: 1px solid #e5ebf4;
+  border-radius: 13px;
+  background: #fbfcff;
+}
+
+.command-bottom-card .timeline-entry b {
+  display: block;
+  color: #11284e;
+  font-size: 10px;
+}
+
+.command-bottom-card .timeline-entry span {
+  display: block;
+  margin-top: 4px;
+  color: #8390a6;
+  font-size: 8px;
+}
+
+.command-bottom-card .timeline-entry p {
+  margin: 7px 0 0;
+  color: #687893;
+  font-size: 9px;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1180px) {
+  .command-layout-v2 {
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
+
+  .command-agent-header-v2 {
+    grid-template-columns:
+      54px
+      minmax(180px, 1fr)
+      repeat(2, minmax(85px, 0.6fr))
+      auto
+      38px;
+  }
+
+  .command-agent-fact:nth-of-type(3) {
+    display: none;
+  }
+
+  .command-focus-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .command-layout-v2 {
+    grid-template-columns: 1fr;
+  }
+
+  .command-sidebar-v2 {
+    position: relative;
+    top: auto;
+    height: 410px;
+  }
+
+  .command-agent-header-v2 {
+    grid-template-columns:
+      52px
+      minmax(160px, 1fr)
+      auto;
+  }
+
+  .command-agent-fact,
+  .command-agent-header-v2 .more-btn {
+    display: none;
+  }
+
+  .command-intelligence-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .command-primary-action {
+    width: 100%;
+  }
+}
