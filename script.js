@@ -755,11 +755,35 @@ document
       "info"
     );
 
-    try {
-            const { data, error } =
+        try {
+      // Refresh the authenticated session before
+      // calling the protected Edge Function.
+      const {
+        data: refreshedSession,
+        error: refreshError
+      } =
+        await forgeSupabase.auth
+          .refreshSession();
+
+      const accessToken =
+        refreshedSession?.session
+          ?.access_token;
+
+      if (refreshError || !accessToken) {
+        throw new Error(
+          "Your FORGE session has expired. Please log out and log in again."
+        );
+      }
+
+      const { data, error } =
         await forgeSupabase.functions.invoke(
           "create-organization-invite",
           {
+            headers: {
+              Authorization:
+                `Bearer ${accessToken}`
+            },
+
             body: {
               organizationName,
               adminName,
