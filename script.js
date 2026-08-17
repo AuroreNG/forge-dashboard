@@ -576,15 +576,79 @@ function closeCreateOrganizationModal() {
 }
 
 
-// OPEN MODAL
+// ==========================================================
+// CREATE ORGANIZATION
+// ==========================================================
+
+function setCreateOrganizationStatus(message, type = "info") {
+  const status =
+    document.getElementById("createOrganizationStatus");
+
+  if (!status) return;
+
+  status.textContent = message;
+  status.dataset.type = type;
+  status.classList.remove("hidden");
+}
+
+
+function openCreateOrganizationModal() {
+  if (!isPlatformAdmin) return;
+
+  const modal =
+    document.getElementById("createOrganizationModal");
+
+  modal?.classList.remove("hidden");
+
+  const organizationNameInput =
+    document.getElementById("newOrganizationName");
+
+  const adminNameInput =
+    document.getElementById("newOrganizationAdminName");
+
+  const adminEmailInput =
+    document.getElementById("newOrganizationAdminEmail");
+
+  const status =
+    document.getElementById("createOrganizationStatus");
+
+  if (organizationNameInput) {
+    organizationNameInput.value = "";
+  }
+
+  if (adminNameInput) {
+    adminNameInput.value = "";
+  }
+
+  if (adminEmailInput) {
+    adminEmailInput.value = "";
+  }
+
+  status?.classList.add("hidden");
+
+  setTimeout(() => {
+    organizationNameInput?.focus();
+  }, 50);
+}
+
+
+function closeCreateOrganizationModal() {
+  document
+    .getElementById("createOrganizationModal")
+    ?.classList.add("hidden");
+}
+
+
 document
   .getElementById("addOrganizationBtn")
-  ?.addEventListener("click", () => {
+  ?.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     openCreateOrganizationModal();
   });
 
 
-// CLOSE WITH X
 document
   .getElementById("closeCreateOrganizationModal")
   ?.addEventListener("click", () => {
@@ -592,7 +656,6 @@ document
   });
 
 
-// CLOSE WITH CANCEL
 document
   .getElementById("cancelCreateOrganization")
   ?.addEventListener("click", () => {
@@ -600,10 +663,26 @@ document
   });
 
 
-// CREATE BUTTON — TEST ONLY FOR NOW
+document
+  .getElementById("createOrganizationModal")
+  ?.addEventListener("click", (event) => {
+    if (event.target.classList.contains("modal-backdrop")) {
+      closeCreateOrganizationModal();
+    }
+  });
+
+
 document
   .getElementById("saveCreateOrganization")
-  ?.addEventListener("click", () => {
+  ?.addEventListener("click", async () => {
+    if (!isPlatformAdmin) {
+      setCreateOrganizationStatus(
+        "Only a Platform Admin can create organizations.",
+        "error"
+      );
+
+      return;
+    }
 
     const organizationName =
       document
@@ -618,26 +697,130 @@ document
     const adminEmail =
       document
         .getElementById("newOrganizationAdminEmail")
-        ?.value.trim();
-
+        ?.value.trim()
+        .toLowerCase();
 
     if (!organizationName) {
-      alert("Enter the organization name.");
+      setCreateOrganizationStatus(
+        "Enter the organization name.",
+        "error"
+      );
+
       return;
     }
 
     if (!adminName) {
-      alert("Enter the admin name.");
+      setCreateOrganizationStatus(
+        "Enter the administrator’s name.",
+        "error"
+      );
+
       return;
     }
 
     if (!adminEmail) {
-      alert("Enter the admin email.");
+      setCreateOrganizationStatus(
+        "Enter the administrator’s email.",
+        "error"
+      );
+
       return;
     }
 
+    const emailIsValid =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(adminEmail);
 
-    alert("Perfect — the form works!");
+    if (!emailIsValid) {
+      setCreateOrganizationStatus(
+        "Enter a valid administrator email.",
+        "error"
+      );
+
+      return;
+    }
+
+    const saveButton =
+      document.getElementById("saveCreateOrganization");
+
+    const originalButtonText =
+      saveButton?.textContent || "Create Organization";
+
+    if (saveButton) {
+      saveButton.disabled = true;
+      saveButton.textContent = "Creating...";
+    }
+
+    setCreateOrganizationStatus(
+      "Creating the organization...",
+      "info"
+    );
+
+    try {
+      const { data, error } =
+        await forgeSupabase.rpc(
+          "create_forge_organization",
+          {
+            p_name: organizationName,
+            p_admin_name: adminName,
+            p_admin_email: adminEmail
+          }
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      const createdOrganization = data?.[0];
+
+      if (!createdOrganization?.id) {
+        throw new Error(
+          "The organization was created, but FORGE did not receive its information."
+        );
+      }
+
+      setCreateOrganizationStatus(
+        `${createdOrganization.name} was created successfully.`,
+        "success"
+      );
+
+      await loadAvailableOrganizations();
+
+      currentOrganization =
+        availableOrganizations.find(
+          (organization) =>
+            organization.id === createdOrganization.id
+        ) || createdOrganization;
+
+      selectedAgent = null;
+      selectedGrowthTeam = null;
+      commandCurrentPage = 1;
+      expandedJourneyStages.clear();
+
+      await loadCSV();
+      renderOrganizationSwitcher();
+
+      setTimeout(() => {
+        closeCreateOrganizationModal();
+      }, 800);
+
+    } catch (error) {
+      console.error(
+        "FORGE CREATE ORGANIZATION ERROR:",
+        error
+      );
+
+      setCreateOrganizationStatus(
+        error?.message ||
+          "FORGE could not create the organization.",
+        "error"
+      );
+
+    } finally {
+      if (saveButton) {
+        saveButton.disabled = false;
+        saveButton.textContent = originalButtonText;
+      }
+    }
   });
 // ─── MERGE ────────────────────────────────────────────────────────────────────
 
