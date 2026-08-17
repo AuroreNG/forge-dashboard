@@ -20961,3 +20961,125 @@ body.forge-drawer-open {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================
+   COMMAND PLAYBOOK — CLEAN NUMBERED STEPS
+========================================================== */
+
+#coordinatorActions {
+  counter-reset: forge-step;
+}
+
+#coordinatorActions .action-row {
+  counter-increment: forge-step;
+
+  display: grid;
+  grid-template-columns:
+    42px
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+  gap: 14px;
+
+  min-height: 72px;
+  padding: 12px 6px;
+
+  border-bottom: 1px solid #e9eef6;
+}
+
+#coordinatorActions .action-row:last-child {
+  border-bottom: 0;
+}
+
+/* Remove the broken black icons */
+#coordinatorActions .action-icon {
+  position: relative;
+
+  display: grid;
+  place-items: center;
+
+  width: 34px;
+  height: 34px;
+
+  overflow: hidden;
+  border: 0;
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1469ef,
+      #6b32f0
+    );
+
+  color: transparent !important;
+  font-size: 0 !important;
+
+  box-shadow:
+    0 6px 14px rgba(56, 70, 225, 0.2);
+}
+
+#coordinatorActions .action-icon > * {
+  display: none !important;
+}
+
+#coordinatorActions .action-icon::after {
+  content: counter(forge-step);
+
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+#coordinatorActions .action-copy {
+  min-width: 0;
+}
+
+#coordinatorActions .action-copy strong {
+  display: block;
+
+  color: #10264b;
+  font-size: 13px;
+  font-weight: 820;
+  line-height: 1.25;
+}
+
+#coordinatorActions .action-copy span {
+  display: block;
+  margin-top: 4px;
+
+  color: #71809b;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+#coordinatorActions .action-row button {
+  min-width: 88px;
+  height: 38px;
+  padding: 0 14px;
+
+  border: 1px solid #d8e3f3;
+  border-radius: 10px;
+
+  background: #f8faff;
+  color: #2162cf;
+
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+#coordinatorActions .action-row:first-child button {
+  border-color: transparent;
+
+  background:
+    linear-gradient(
+      135deg,
+      #176be8,
+      #5942ee
+    );
+
+  color: #ffffff;
+}
