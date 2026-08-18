@@ -1,4 +1,8 @@
-console.log("OK FORGE SCRIPT LOADED - NEW VERSION");
+console.log("FORGE SCRIPT LOADED - VISUAL SAFE VERSION");
+
+function forgeSymbol(codePoint) {
+  return String.fromCodePoint(codePoint);
+}
 let allAgents = [];
 let pendingImportAgents = [];
 let selectedCoordinator = "All";
@@ -387,7 +391,7 @@ function renderOrganizationSwitcher() {
         </div>
 
         <span class="organization-option-state">
-          ${active ? "OK" : "->"}
+          ${active ? "&#10003;" : "&#8594;"}
         </span>
 
       `;
@@ -1531,29 +1535,29 @@ function getWorkReasonIcon(reason) {
   if (
     text.includes("contract")
   ) {
-    return "OK";
+    return "&#10003;";
   }
 
   if (
     text.includes("exam")
   ) {
-    return "";
+    return "&#9671;";
   }
 
   if (
     text.includes("quiz")
   ) {
-    return "->";
+    return "&#8594;";
   }
 
   if (
     text.includes("movement") ||
     text.includes("started")
   ) {
-    return "";
+    return "&#9687;";
   }
 
-  return "-";
+  return "&#8226;";
 }
 
 
@@ -2747,8 +2751,8 @@ function renderForgeIntelligenceDrawer() {
               item.stalled
                 ? ""
                 : item.level === "ready"
-                ? "->"
-                : ""
+                ? "&#8594;"
+                : "&#9679;"
             }
 
             ${escapeForgeText(item.reason)}
@@ -3039,15 +3043,15 @@ function getPipelineStageLabel(stage) {
 
 function getPipelineStageIcon(stage) {
   const icons = {
-    "Not Placed": "",
-    "Quiz Sent": "open",
-    "XCEL Completed": "",
-    "Exam Passed": "",
-    "Licensed": "",
-    "Contracted": "OK"
+    "Not Placed": "&#9675;",
+    "Quiz Sent": "&#8594;",
+    "XCEL Completed": "&#9671;",
+    "Exam Passed": "&#10003;",
+    "Licensed": "&#9734;",
+    "Contracted": "&#10003;"
   };
 
-  return icons[stage] || "-";
+  return icons[stage] || "&#8226;";
 }
 
 function renderStage(stageName, countId, listId, agents) {
@@ -3725,9 +3729,9 @@ function getJourneyActionLabel(stage) {
   const labels = {
     "Not Placed": "Mark Quiz Sent",
     "Quiz Sent": "Move to XCEL",
-    "XCEL Completed": "OK Passed Exam",
-    "Exam Passed": "OK Licensed",
-    "Licensed": "OK Contracted",
+    "XCEL Completed": "Passed Exam",
+    "Exam Passed": "Licensed",
+    "Licensed": "Contracted",
     "Contracted": ""
   };
 
@@ -4134,12 +4138,12 @@ const filteredAgents =
               data-advance-agent="${agent.id}"
             >
               ${getJourneyActionLabel(agent.stage)}
-              <span>-></span>
+              <span aria-hidden="true">&#8594;</span>
             </button>
           `
           : `
             <span class="journey-complete">
-              OK Complete
+              <span aria-hidden="true">&#10003;</span> Complete
             </span>
           `
       }
@@ -4188,8 +4192,8 @@ if (viewButton) {
 
     viewButton.textContent =
       isExpanded
-        ? "Show less up"
-        : `View all ${stageAgents.length} agents ->`;
+        ? "Show less"
+        : `View all ${stageAgents.length} agents ${forgeSymbol(8594)}`;
 
     column?.classList.toggle(
       "stage-expanded",
@@ -6133,7 +6137,7 @@ const coordinatorActionMap = {
   "Quiz Passed": [
     { icon: "", title: "Send XCEL Instructions",desc: "Guide agent to start XCEL." },
     { icon: "", title: "Send XCEL Login",       desc: "Send access details and password." },
-    { icon: "OK", title: "Confirm Enrollment",    desc: "Confirm agent is enrolled." },
+    { icon: "&#10003;", title: "Confirm Enrollment",    desc: "Confirm agent is enrolled." },
   ],
   "Continuing Education": [
     { icon: "", title: "Complete CE Requirements",desc: "Help agent finish CE." },
@@ -6143,7 +6147,7 @@ const coordinatorActionMap = {
   "Licensed": [
     { icon: "", title: "Send Contracting Instructions", desc: "Move agent into contracting." },
     { icon: "", title: "Request Required Documents",    desc: "Collect needed contracting documents." },
-    { icon: "OK", title: "Confirm Compliance",            desc: "Verify compliance is completed." },
+    { icon: "&#10003;", title: "Confirm Compliance",            desc: "Verify compliance is completed." },
   ],
   "Contracted": [
     { icon: "", title: "Welcome Contracted Agent", desc: "Prepare agent for production." },
@@ -6421,7 +6425,7 @@ function renderCommandJourney(agent) {
           );
 
           if (icon) {
-            icon.textContent = "OK";
+            icon.textContent = forgeSymbol(10003);
           }
 
           if (status) {
