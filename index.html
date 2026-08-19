@@ -1885,22 +1885,19 @@ JavaScript opens these when an import button is clicked.
     <aside class="command-sidebar command-sidebar-v2 card">
 
       <div class="command-sidebar-heading">
-        <div class="command-sidebar-title-row">
-          <div>
-            <span class="command-sidebar-eyebrow">COMMAND CENTER</span>
-            <h2>Agents</h2>
-          </div>
+        <div>
+          <h2>Agents</h2>
           <span id="commandAgentTotal">0</span>
         </div>
       </div>
 
-      <div class="command-sidebar-filters command-primary-tabs">
+      <div class="command-sidebar-filters">
         <button
           type="button"
           class="command-filter active"
           data-command-filter="all"
         >
-          <span>All Agents</span>
+          All Agents
         </button>
 
         <button
@@ -1908,13 +1905,14 @@ JavaScript opens these when an import button is clicked.
           class="command-filter"
           data-command-filter="priority"
         >
-          <span>Priority</span>
+          <span>Flagged</span>
           <strong id="commandFlaggedCount">0</strong>
         </button>
       </div>
 
       <div class="command-search-wrap">
-        <span aria-hidden="true">⌕</span>
+        <span>&#x2315;</span>
+
         <input
           id="commandSearch"
           type="search"
@@ -1922,28 +1920,9 @@ JavaScript opens these when an import button is clicked.
         />
       </div>
 
-      <div class="command-sidebar-tools">
-        <div class="command-stage-chips" aria-label="Filter agents by stage">
-          <button type="button" class="command-stage-chip active" data-command-stage-filter="all">All</button>
-          <button type="button" class="command-stage-chip" data-command-stage-filter="pipeline">Pipeline</button>
-          <button type="button" class="command-stage-chip" data-command-stage-filter="licensed">Licensed</button>
-        </div>
-
-        <select id="commandSort" class="command-sort" aria-label="Sort agents">
-          <option value="priority">Priority first</option>
-          <option value="recent">Recent activity</option>
-          <option value="name">Name A-Z</option>
-        </select>
-      </div>
-
       <div id="commandAgentList"></div>
 
       <div id="commandPagination"></div>
-
-      <button type="button" id="collapseCommandSidebar" class="command-sidebar-collapse">
-        <span class="collapse-icon">«</span>
-        <span class="collapse-label">Collapse</span>
-      </button>
 
     </aside>
 
@@ -1984,7 +1963,7 @@ JavaScript opens these when an import button is clicked.
 
             <h1 id="commandName"></h1>
 
-            <span class="command-agent-role">Upline</span>
+            <span class="command-agent-role">Coordinator</span>
 
             <div class="command-coordinator-pill">
               <span aria-hidden="true">&#x2659;</span>
@@ -2362,14 +2341,6 @@ Appears when coordinator clicks Take Action
       <button class="delivery" data-delivery="Call">&#x1F4DE; Call</button>
       <button class="delivery" data-delivery="Zoom">&#x1F3A5; Zoom</button>
       <button class="delivery" data-delivery="Note">&#x1F4DD; Note</button>
-    </div>
-
-    <div class="template-picker">
-      <div class="template-picker-head">
-        <label>Template Options</label>
-        <span id="templatePickerHint">Choose a starting template for this channel.</span>
-      </div>
-      <div id="messageTemplateOptions" class="template-options"></div>
     </div>
 
     <div id="emailSubjectWrap" class="smart-field hidden">
