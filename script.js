@@ -8178,6 +8178,136 @@ document.addEventListener("click", (event) => {
 
 });
 
+async function importComplianceFile(parsedRows, file) {
+
+  console.log(
+    "Starting Smart Compliance import..."
+  );
+
+  if (!getActiveOrganizationId()) {
+    throw new Error(
+      "FORGE does not have an active organization selected."
+    );
+  }
+
+  const complianceAgents =
+    parsedRows.map(normalizeComplianceAgent);
+
+  const validAgents =
+    complianceAgents.filter((agent) => {
+      return (
+        agent.code &&
+        String(agent.code).trim() !== ""
+      );
+    });
+
+  const skippedCount =
+    complianceAgents.length -
+    validAgents.length;
+
+  let updatedCount = 0;
+  let unmatchedCount = 0;
+  let failedCount = 0;
+
+  for (const complianceAgent of validAgents) {
+
+    const existingAgent =
+      findExistingTeamAgent(
+        complianceAgent
+      );
+
+    if (!existingAgent) {
+
+      console.warn(
+        "Compliance record has no Team match:",
+        complianceAgent.code,
+        complianceAgent.name
+      );
+
+      unmatchedCount++;
+      continue;
+    }
+
+    const finalStage =
+      getComplianceJourneyStage(
+        complianceAgent,
+        existingAgent
+      );
+
+    const updates = {
+
+      agent_level:
+        complianceAgent.level || null,
+
+      resident_state:
+        complianceAgent.residentState || null,
+
+      resident_license:
+        complianceAgent.residentLicense || null,
+
+      eo_status:
+        complianceAgent.eoStatus || null,
+
+      aml_status:
+        complianceAgent.amlStatus || null,
+
+      tevah_platform_fee:
+        complianceAgent.tevahPlatformFee || null,
+
+      npn:
+        complianceAgent.npn || null,
+
+      stage:
+        finalStage,
+
+      import_source:
+        "Team CSV + Compliance"
+    };
+
+    const { error } =
+      await forgeSupabase
+        .from("agents")
+        .update(updates)
+        .eq(
+          "organization_id",
+          getActiveOrganizationId()
+        )
+        .eq(
+          "id",
+          existingAgent.id
+        );
+
+    if (error) {
+
+      console.error(
+        "COMPLIANCE UPDATE ERROR:",
+        complianceAgent.code,
+        error
+      );
+
+      failedCount++;
+      continue;
+    }
+
+    updatedCount++;
+  }
+
+  await loadCSV();
+
+  alert(
+    `${updatedCount} compliance records updated successfully.` +
+    (unmatchedCount
+      ? ` ${unmatchedCount} unmatched records were skipped.`
+      : "") +
+    (failedCount
+      ? ` ${failedCount} records failed to update.`
+      : "") +
+    (skippedCount
+      ? ` ${skippedCount} records without Agent Code were skipped.`
+      : "")
+  );
+}
+
 //  COMPLIANCE CSV IMPORT 
 
 const STAGE_RANK = {
