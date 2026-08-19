@@ -19814,3 +19814,762 @@ body.forge-drawer-open {
   --glass: rgba(255, 255, 255, 0.78);
   --shadow: 0 22px 55px rgba(15, 42, 84, 0.09);
 }
+/* ==========================================================
+   COMMAND CENTER — EXECUTIVE LIGHT REDESIGN
+   Final override. Inspired by the approved FORGE mockup.
+   Keeps all existing IDs / JavaScript behavior intact.
+========================================================== */
+
+#commandPage {
+  --cc-navy: #06265f;
+  --cc-navy-deep: #031b49;
+  --cc-blue: #1768e9;
+  --cc-gold: #e59a18;
+  --cc-gold-soft: #fff8e9;
+  --cc-green: #0a9f5a;
+  --cc-text: #0a1f47;
+  --cc-muted: #64748b;
+  --cc-line: #dfe7f1;
+  --cc-panel: #ffffff;
+  --cc-page: #f8fbff;
+
+  padding: 12px 10px 36px;
+  background: var(--cc-page);
+}
+
+#commandPage .command-layout-v2 {
+  width: 100%;
+  max-width: 1900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 390px minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+  border: 1px solid #e2e9f3;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 18px 48px rgba(14, 42, 83, 0.08);
+}
+
+/* -------------------------
+   LEFT AGENT RAIL
+------------------------- */
+#commandPage .command-sidebar-v2 {
+  min-height: 820px;
+  height: calc(100vh - 170px);
+  max-height: 1040px;
+  padding: 22px 18px 18px;
+  border: 0;
+  border-right: 1px solid #e7edf5;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+#commandPage .command-sidebar-heading {
+  margin: 0 0 16px;
+}
+
+#commandPage .command-sidebar-heading h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--cc-text);
+  font-size: 25px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+#commandPage #commandAgentTotal {
+  min-width: 92px;
+  padding: 8px 13px;
+  border: 1px solid #d9e3f1;
+  border-radius: 999px;
+  color: #234878;
+  font-size: 12px;
+  font-weight: 800;
+  background: #fff;
+}
+
+#commandPage .command-sidebar-filters {
+  gap: 0;
+  padding: 0;
+  margin: 0 0 14px;
+  border: 1px solid #dbe4f0;
+  border-radius: 11px;
+  overflow: hidden;
+  background: #fff;
+}
+
+#commandPage .command-filter {
+  height: 44px;
+  border: 0;
+  border-radius: 0;
+  color: #1b3764;
+  font-size: 13px;
+  font-weight: 800;
+  background: #fff;
+  box-shadow: none;
+}
+
+#commandPage .command-filter + .command-filter {
+  border-left: 1px solid #dbe4f0;
+}
+
+#commandPage .command-filter.active {
+  color: #fff;
+  background: linear-gradient(135deg, #082b69, #031d4e);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+}
+
+#commandPage .command-search-wrap {
+  height: 45px;
+  margin: 0 0 10px;
+  padding: 0 13px;
+  border: 1px solid #dbe4f0;
+  border-radius: 11px;
+  background: #fff;
+}
+
+#commandPage .command-search-wrap > span {
+  color: #4c6a94;
+  font-size: 19px;
+  transform: rotate(-15deg);
+}
+
+#commandPage #commandSearch {
+  height: 43px;
+  color: #17345f;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#commandPage #commandSearch::placeholder {
+  color: #8190a6;
+}
+
+#commandPage #commandAgentList {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 3px 6px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #c5d2e5 transparent;
+}
+
+#commandPage #commandAgentList::-webkit-scrollbar { width: 6px; }
+#commandPage #commandAgentList::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #c5d2e5;
+}
+
+#commandPage .command-agent-row {
+  grid-template-columns: 42px minmax(0, 1fr) 10px;
+  gap: 11px;
+  min-height: 62px;
+  margin: 0 0 3px;
+  padding: 9px 11px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: none;
+}
+
+#commandPage .command-agent-row:hover {
+  border-color: #dce6f3;
+  background: #f9fbff;
+}
+
+#commandPage .command-agent-row.active {
+  border-color: #efb24d;
+  background: linear-gradient(90deg, #fffaf0, #ffffff 78%);
+  box-shadow: 0 5px 14px rgba(229, 154, 24, 0.08);
+}
+
+#commandPage .command-agent-row .command-avatar {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  color: #275fc9;
+  font-size: 13px;
+  font-weight: 800;
+  background: #e9f1ff;
+}
+
+#commandPage .command-agent-row.active .command-avatar {
+  border: 1px solid #efb24d;
+  color: #c88008;
+  background: #fff;
+}
+
+#commandPage .command-agent-copy strong {
+  color: #12284d;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+#commandPage .command-agent-copy span {
+  margin-top: 3px;
+  color: #667994;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+#commandPage .command-agent-status {
+  width: 9px;
+  height: 9px;
+  background: #f2a014;
+}
+
+#commandPage .command-agent-row[data-stage="Licensed"] .command-agent-status,
+#commandPage .command-agent-row[data-stage="Contracted"] .command-agent-status {
+  background: #0eb86b;
+}
+
+#commandPage #commandPagination {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #edf1f6;
+}
+
+/* -------------------------
+   MAIN WORKSPACE
+------------------------- */
+#commandPage .command-main-v2 {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: none;
+}
+
+#commandPage #commandProfile {
+  padding: 0 16px 16px;
+}
+
+#commandPage .command-agent-header-v2 {
+  position: relative;
+  display: grid;
+  grid-template-columns: 125px minmax(330px, 1fr) 130px 150px 118px 46px;
+  grid-template-rows: 1fr auto;
+  grid-template-areas:
+    "avatar identity days risk stage more"
+    "avatar last     days risk stage more";
+  align-items: center;
+  gap: 10px 20px;
+  min-height: 205px;
+  margin: 0 -16px 0;
+  padding: 28px 28px 24px;
+  overflow: hidden;
+  border: 0;
+  border-bottom: 1px solid #e1e8f2;
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 78% 76%, rgba(23,104,233,.04), transparent 35%),
+    linear-gradient(135deg, #ffffff 0%, #ffffff 61%, #fbfdff 100%);
+  box-shadow: none;
+}
+
+#commandPage .command-agent-header-v2::after {
+  content: "";
+  position: absolute;
+  right: 42px;
+  bottom: 6px;
+  width: 54%;
+  height: 84px;
+  pointer-events: none;
+  opacity: .62;
+  background:
+    radial-gradient(ellipse at center, transparent 58%, rgba(53,125,232,.08) 59%, transparent 61%) 0 0/72px 26px,
+    radial-gradient(ellipse at center, transparent 58%, rgba(229,154,24,.08) 59%, transparent 61%) 20px 12px/82px 28px;
+  transform: rotate(-2deg);
+}
+
+#commandPage .command-avatar-v2 {
+  grid-area: avatar;
+  z-index: 1;
+  width: 112px;
+  height: 112px;
+  border: 1px solid #e7a72e;
+  color: #c9810b;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 38px;
+  font-weight: 600;
+  background: #fff;
+  box-shadow: 0 10px 22px rgba(19, 48, 91, .12);
+}
+
+#commandPage .command-agent-identity {
+  grid-area: identity;
+  z-index: 2;
+  align-self: center;
+}
+
+#commandPage .command-profile-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 10px;
+  color: #cf8312;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+#commandPage .command-profile-eyebrow span {
+  color: #e6a020;
+  font-size: 16px;
+}
+
+#commandPage .command-agent-identity h1 {
+  margin: 0 0 5px;
+  color: #071f52;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(32px, 3vw, 49px);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+#commandPage .command-agent-role {
+  display: block !important;
+  margin: 0 0 10px !important;
+  color: #31598f !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+}
+
+#commandPage .command-coordinator-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid #dbe4ef;
+  border-radius: 999px;
+  background: rgba(255,255,255,.9);
+}
+
+#commandPage .command-coordinator-pill > span {
+  color: #db9119;
+  font-size: 17px;
+}
+
+#commandPage .command-coordinator-pill strong {
+  color: #1f3b68;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+#commandPage .command-agent-fact {
+  z-index: 2;
+  min-height: 58px;
+  padding: 8px 0 8px 22px;
+  border-left: 1px solid #e1e8f1;
+}
+
+#commandPage .command-days-fact { grid-area: days; }
+#commandPage .command-risk-fact { grid-area: risk; }
+#commandPage .command-last-activity {
+  grid-area: last;
+  min-height: auto;
+  padding: 0;
+  border: 0;
+  align-self: end;
+}
+
+#commandPage .command-agent-fact span {
+  margin: 0 0 7px;
+  color: #4f6790;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+#commandPage .command-agent-fact strong {
+  color: #112b57;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+#commandPage .command-risk-fact #commandRiskLevel {
+  color: #d7870d;
+  font-size: 15px;
+}
+
+#commandPage .command-agent-header-v2 .stage-badge {
+  grid-area: stage;
+  justify-self: center;
+  align-self: end;
+  z-index: 2;
+  padding: 9px 14px;
+  border-radius: 9px;
+  color: #10884d;
+  font-size: 11px;
+  background: #e9f9f0;
+}
+
+#commandPage .command-agent-header-v2 .more-btn {
+  grid-area: more;
+  align-self: end;
+  z-index: 2;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  color: #173d73;
+  font-size: 14px;
+}
+
+/* -------------------------
+   FORGE INTELLIGENCE CARD
+------------------------- */
+#commandPage .command-intelligence-hero {
+  position: relative;
+  min-height: 202px;
+  margin: 14px 0 0;
+  padding: 25px 30px;
+  border: 1px solid #b9d0f4;
+  border-radius: 16px;
+  color: var(--cc-text);
+  background:
+    radial-gradient(circle at 75% 40%, rgba(59,130,246,.08), transparent 34%),
+    linear-gradient(110deg, #ffffff 0%, #ffffff 48%, #f3f8ff 100%);
+  box-shadow: 0 7px 18px rgba(33, 72, 124, 0.05);
+}
+
+#commandPage .command-intelligence-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 48%;
+  opacity: .72;
+  pointer-events: none;
+  background:
+    linear-gradient(132deg, transparent 0 44%, rgba(63,130,246,.04) 45% 46%, transparent 47% 54%, rgba(255,255,255,.9) 55% 57%, transparent 58%),
+    linear-gradient(146deg, transparent 0 52%, rgba(18,88,190,.055) 53% 54%, transparent 55% 63%, rgba(229,154,24,.03) 64% 65%, transparent 66%);
+}
+
+#commandPage .command-intelligence-copy,
+#commandPage .command-primary-action { z-index: 2; }
+
+#commandPage .command-intelligence-label {
+  display: block;
+  margin-bottom: 6px;
+  color: #174b9d;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+#commandPage .command-intelligence-title-row {
+  gap: 16px;
+}
+
+#commandPage .command-intelligence-title-row h2 {
+  color: #0a2250;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+#commandPage .impact-chip {
+  color: #325d99;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#commandPage .command-intelligence-hero h3 {
+  margin: 11px 0 5px;
+  color: #102b5a;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+#commandPage .command-intelligence-hero p {
+  max-width: 720px;
+  color: #526c92;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#commandPage .command-channel-actions {
+  gap: 8px;
+  margin-top: 16px;
+}
+
+#commandPage .command-channel-actions button {
+  min-width: 78px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid #d6e1ef;
+  border-radius: 9px;
+  color: #17396f;
+  font-size: 10px;
+  font-weight: 800;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(15,42,84,.025);
+}
+
+#commandPage .command-channel-actions button:hover {
+  border-color: #8eb4ed;
+  background: #f8fbff;
+}
+
+#commandPage .command-primary-action {
+  min-width: 220px;
+  min-height: 58px;
+  border-radius: 9px;
+  color: #fff;
+  font-size: 14px;
+  background: linear-gradient(135deg, #08357c, #031d4e);
+  box-shadow: 0 10px 20px rgba(6,38,95,.18);
+}
+
+/* -------------------------
+   WORKFLOW + JOURNEY
+------------------------- */
+#commandPage .command-focus-grid {
+  grid-template-columns: minmax(430px, .9fr) minmax(620px, 1.35fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+#commandPage .command-focus-card {
+  min-height: 304px;
+  padding: 18px 20px;
+  border: 1px solid #dfe7f1;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(20, 53, 97, .035);
+}
+
+#commandPage .command-focus-heading > div > span {
+  display: block;
+  margin-bottom: 6px;
+  color: #47658e;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+
+#commandPage .command-focus-heading h3 {
+  color: #102850;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+#commandPage .command-text-button {
+  min-height: 36px;
+  padding: 0 13px;
+  border-color: #5e91dd;
+  color: #2264c5;
+  border-radius: 8px;
+  background: #fff;
+}
+
+#commandPage #coordinatorActions .action-row {
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  min-height: 68px;
+  padding: 9px 0;
+}
+
+#commandPage #coordinatorActions .action-icon {
+  width: 32px;
+  height: 32px;
+  background: #082e6d;
+}
+
+#commandPage #coordinatorActions .action-copy strong {
+  color: #132b50;
+  font-size: 11px;
+}
+
+#commandPage #coordinatorActions .action-copy span,
+#commandPage #coordinatorActions .action-copy p {
+  color: #6d7f99;
+  font-size: 9px;
+}
+
+#commandPage #coordinatorActions .action-row button {
+  min-width: 78px;
+  min-height: 34px;
+  border-radius: 8px;
+  color: #2264c5;
+  background: #fff;
+}
+
+#commandPage .command-journey-progress {
+  margin: 38px 0 28px;
+}
+
+#commandPage .command-journey-progress::before {
+  top: 14px;
+  height: 2px;
+  background: #d9e1eb;
+}
+
+#commandPage .command-milestone i {
+  width: 29px;
+  height: 29px;
+  border: 4px solid #fff;
+  background: #e5e9ef;
+  box-shadow: 0 0 0 2px #d8dfe9;
+}
+
+#commandPage .command-milestone.complete i {
+  background: #0a367e;
+  box-shadow: 0 0 0 2px #0a367e;
+}
+
+#commandPage .command-milestone.current i {
+  background: #fff;
+  box-shadow: 0 0 0 3px #0a367e, 0 0 0 7px rgba(10,54,126,.08);
+}
+
+#commandPage .command-milestone strong {
+  color: #142e59;
+  font-size: 9px;
+}
+
+#commandPage .command-milestone span {
+  color: #71819a;
+  font-size: 8px;
+}
+
+#commandPage .command-journey-insight {
+  padding: 14px 16px;
+  border: 1px solid #e1e8f1;
+  border-radius: 12px;
+  background: #fbfcff;
+}
+
+#commandPage .command-journey-insight > span {
+  color: #d98c13;
+  background: #fff7e8;
+}
+
+#commandPage .command-journey-insight strong {
+  color: #142d58;
+  font-size: 13px;
+}
+
+#commandPage .command-journey-insight small {
+  color: #70819b;
+  font-size: 10px;
+}
+
+/* Lower activity area is visually secondary. */
+#commandPage .command-bottom-card {
+  margin-top: 14px;
+  border-radius: 15px;
+  box-shadow: none;
+}
+
+#commandPage .command-tab.active { color: #0a4cae; }
+#commandPage .command-tab.active::after { background: #0a4cae; }
+
+/* -------------------------
+   RESPONSIVE
+------------------------- */
+@media (max-width: 1450px) {
+  #commandPage .command-layout-v2 {
+    grid-template-columns: 330px minmax(0, 1fr);
+  }
+
+  #commandPage .command-agent-header-v2 {
+    grid-template-columns: 105px minmax(260px, 1fr) 112px 130px 100px 42px;
+  }
+
+  #commandPage .command-avatar-v2 {
+    width: 94px;
+    height: 94px;
+    font-size: 32px;
+  }
+
+  #commandPage .command-focus-grid {
+    grid-template-columns: .9fr 1.2fr;
+  }
+}
+
+@media (max-width: 1180px) {
+  #commandPage .command-layout-v2 {
+    grid-template-columns: 290px minmax(0, 1fr);
+  }
+
+  #commandPage .command-agent-header-v2 {
+    grid-template-columns: 92px minmax(220px, 1fr) 100px 118px 42px;
+    grid-template-areas:
+      "avatar identity days risk more"
+      "avatar last     days risk more";
+  }
+
+  #commandPage .command-agent-header-v2 .stage-badge {
+    position: absolute;
+    right: 78px;
+    bottom: 23px;
+  }
+
+  #commandPage .command-focus-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  #commandPage {
+    padding: 10px;
+  }
+
+  #commandPage .command-layout-v2 {
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+
+  #commandPage .command-sidebar-v2 {
+    height: auto;
+    min-height: 0;
+    max-height: 520px;
+    border-right: 0;
+    border-bottom: 1px solid #e7edf5;
+  }
+
+  #commandPage .command-agent-header-v2 {
+    grid-template-columns: 78px minmax(0, 1fr) 42px;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "avatar identity more"
+      "avatar last more"
+      "days risk stage";
+    min-height: 245px;
+  }
+
+  #commandPage .command-avatar-v2 {
+    width: 74px;
+    height: 74px;
+    font-size: 26px;
+  }
+
+  #commandPage .command-agent-header-v2 .stage-badge {
+    position: static;
+    grid-area: stage;
+    justify-self: start;
+    align-self: center;
+  }
+
+  #commandPage .command-agent-fact {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  #commandPage .command-intelligence-hero {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #commandPage .command-primary-action {
+    width: 100%;
+  }
+}

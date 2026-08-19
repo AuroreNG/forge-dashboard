@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FORGE Dashboard</title>
-  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="style.css?v=14" />
 </head>
 <body>
   <div class="app">
@@ -1876,10 +1876,6 @@ JavaScript opens these when an import button is clicked.
 </section>
 <section id="commandPage" class="command-page hidden">
 
-  <div class="command-center-heading">
-    <h1>FORGE Command Center</h1>
-  </div>
-
   <div class="command-layout command-layout-v2">
 
     <!-- ==============================================
@@ -1959,19 +1955,27 @@ JavaScript opens these when an import button is clicked.
           </div>
 
           <div class="command-agent-identity">
+            <div class="command-profile-eyebrow">
+              <span>&#x2726;</span>
+              AGENT PROFILE
+            </div>
+
             <h1 id="commandName"></h1>
 
-            <span>Coordinator</span>
+            <span class="command-agent-role">Coordinator</span>
 
-            <strong id="commandMeta"></strong>
+            <div class="command-coordinator-pill">
+              <span aria-hidden="true">&#x2659;</span>
+              <strong id="commandMeta"></strong>
+            </div>
           </div>
 
-          <div class="command-agent-fact">
+          <div class="command-agent-fact command-days-fact">
             <span>Days in Stage</span>
             <strong id="commandDaysInStage">&#x2014;</strong>
           </div>
 
-          <div class="command-agent-fact">
+          <div class="command-agent-fact command-risk-fact">
             <span>Risk / Priority</span>
 
             <strong id="commandRiskLevel">
@@ -1980,7 +1984,7 @@ JavaScript opens these when an import button is clicked.
             </strong>
           </div>
 
-          <div class="command-agent-fact">
+          <div class="command-agent-fact command-last-activity">
             <span>Last Activity</span>
             <strong id="commandLastActivity">&#x2014;</strong>
           </div>
@@ -2812,6 +2816,6 @@ TEAM INTELLIGENCE DRAWER
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./supabase-config.js?v=2"></script>
-<script src="script.js?v=20"></script>
+<script src="script.js?v=21"></script>
 </body>
 </html>

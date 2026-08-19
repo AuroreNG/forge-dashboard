@@ -5857,7 +5857,7 @@ function renderCommandCenter(
 
   setText(
     "commandAgentTotal",
-    `${filteredAgents.length} agents`
+    `${allAgents.length} agents`
   );
 
   const totalPages =
