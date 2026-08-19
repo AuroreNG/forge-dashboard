@@ -22035,3 +22035,415 @@ body.forge-drawer-open {
     align-self: center;
   }
 }
+
+
+/* ==========================================================
+   V7 FIX — STRUCTURED DARK BLUE AGENT HERO
+   This override intentionally simplifies the hero layout to
+   avoid inherited width/grid rules from older Command Center CSS.
+========================================================== */
+
+#commandPage .command-agent-header-v2 {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 150px minmax(0, 1fr) auto !important;
+  grid-template-rows: auto auto !important;
+  grid-template-areas:
+    "avatar identity identity"
+    "stats stats actions" !important;
+  gap: 28px 30px !important;
+
+  min-height: 310px !important;
+  margin: 0 !important;
+  padding: 32px 34px 28px !important;
+
+  overflow: hidden !important;
+  border: 1px solid rgba(67, 103, 169, .55) !important;
+  border-radius: 28px !important;
+
+  background:
+    radial-gradient(circle at 18% 10%, rgba(50, 126, 255, .18), transparent 25%),
+    radial-gradient(circle at 88% 8%, rgba(26, 75, 181, .26), transparent 30%),
+    linear-gradient(100deg, #041a3e 0%, #072a65 40%, #041d49 72%, #02142f 100%) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.07),
+    0 24px 55px rgba(4, 22, 58, .24) !important;
+}
+
+#commandPage .command-agent-header-v2::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  opacity: .42 !important;
+  background:
+    repeating-radial-gradient(
+      ellipse at 88% 18%,
+      transparent 0 30px,
+      rgba(87, 131, 215, .11) 31px 33px,
+      transparent 34px 47px
+    ) !important;
+}
+
+#commandPage .command-agent-header-v2::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 34px !important;
+  right: 34px !important;
+  top: 195px !important;
+  height: 1px !important;
+  background: rgba(143, 174, 229, .22) !important;
+}
+
+/* avatar */
+#commandPage .command-avatar-v2 {
+  grid-area: avatar !important;
+  align-self: start !important;
+  justify-self: start !important;
+
+  width: 128px !important;
+  height: 128px !important;
+  margin: 0 !important;
+
+  border: 3px solid #55a0ff !important;
+  border-radius: 50% !important;
+
+  color: #fff !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: 48px !important;
+  font-weight: 700 !important;
+
+  background: linear-gradient(180deg, #4288f2 0%, #1f54c6 100%) !important;
+
+  box-shadow:
+    0 0 0 8px rgba(4, 28, 72, .42),
+    0 18px 32px rgba(0,0,0,.25) !important;
+
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* identity */
+#commandPage .command-agent-identity {
+  grid-area: identity !important;
+  align-self: start !important;
+  justify-self: stretch !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding: 0 !important;
+
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+#commandPage .command-profile-eyebrow {
+  display: flex !important;
+  width: fit-content !important;
+  align-items: center !important;
+  gap: 10px !important;
+
+  margin: 0 0 12px !important;
+  padding: 0 !important;
+
+  color: #e3a22f !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  letter-spacing: .09em !important;
+  text-transform: uppercase !important;
+
+  background: transparent !important;
+  border: 0 !important;
+}
+
+#commandPage .command-profile-eyebrow span {
+  color: #e3a22f !important;
+  font-size: 18px !important;
+}
+
+#commandPage .command-agent-identity h1 {
+  width: auto !important;
+  max-width: 100% !important;
+  margin: 0 0 10px !important;
+  padding: 0 !important;
+
+  color: #fff !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(42px, 4.4vw, 68px) !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: -.045em !important;
+
+  background: transparent !important;
+  border: 0 !important;
+}
+
+/* IMPORTANT: Upline must be a small badge, never a full-width bar */
+#commandPage .command-agent-role {
+  display: inline-flex !important;
+  width: fit-content !important;
+  max-width: max-content !important;
+  min-width: 0 !important;
+
+  align-items: center !important;
+
+  margin: 0 0 12px !important;
+  padding: 7px 12px !important;
+
+  border: 1px solid rgba(104, 143, 220, .34) !important;
+  border-radius: 999px !important;
+
+  color: #b9ceff !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+
+  background: rgba(31, 72, 158, .5) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+/* actual upline person */
+#commandPage .command-coordinator-pill {
+  display: inline-flex !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  min-height: 42px !important;
+
+  align-items: center !important;
+  gap: 9px !important;
+
+  margin: 0 !important;
+  padding: 0 16px !important;
+
+  border: 1px solid rgba(118, 151, 214, .34) !important;
+  border-radius: 13px !important;
+
+  background: rgba(5, 25, 61, .48) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+#commandPage .command-coordinator-pill > span {
+  color: #d7e6ff !important;
+  font-size: 17px !important;
+}
+
+#commandPage #commandMeta {
+  display: inline !important;
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  border: 0 !important;
+  color: #fff !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  background: transparent !important;
+}
+
+#commandPage #commandMeta::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* bottom stats row */
+#commandPage .command-last-activity,
+#commandPage .command-days-fact,
+#commandPage .command-risk-fact {
+  position: relative !important;
+  z-index: 2 !important;
+
+  min-height: 72px !important;
+  margin: 0 !important;
+  padding: 0 34px !important;
+
+  border: 0 !important;
+  background: transparent !important;
+}
+
+#commandPage .command-last-activity {
+  grid-area: stats !important;
+  display: grid !important;
+  grid-template-columns: minmax(250px, 1.15fr) minmax(160px, .8fr) minmax(180px, .9fr) !important;
+  column-gap: 0 !important;
+
+  align-self: end !important;
+  padding: 0 !important;
+}
+
+/* Hide the duplicate days/risk blocks from the grid — their values
+   will be visually positioned using the existing elements below. */
+#commandPage .command-days-fact {
+  grid-area: stats !important;
+  justify-self: center !important;
+  align-self: end !important;
+  width: 220px !important;
+  margin-left: 28% !important;
+  padding-left: 34px !important;
+  border-left: 1px solid rgba(143, 174, 229, .24) !important;
+}
+
+#commandPage .command-risk-fact {
+  grid-area: stats !important;
+  justify-self: end !important;
+  align-self: end !important;
+  width: 230px !important;
+  margin-right: 170px !important;
+  padding-left: 34px !important;
+  border-left: 1px solid rgba(143, 174, 229, .24) !important;
+}
+
+#commandPage .command-agent-fact span {
+  display: block !important;
+  margin: 0 0 8px !important;
+
+  color: #a9c0ea !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: .02em !important;
+  text-transform: none !important;
+}
+
+#commandPage .command-agent-fact strong {
+  display: block !important;
+  color: #fff !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+}
+
+#commandPage #commandRiskLevel.low {
+  color: #78d99f !important;
+}
+
+#commandPage #commandRiskLevel.medium {
+  color: #f1bf61 !important;
+}
+
+#commandPage #commandRiskLevel.high {
+  color: #ff8b74 !important;
+}
+
+/* action group */
+#commandPage .command-agent-header-v2 .stage-badge {
+  grid-area: actions !important;
+  align-self: end !important;
+  justify-self: start !important;
+
+  position: relative !important;
+  z-index: 2 !important;
+
+  width: fit-content !important;
+  margin: 0 74px 0 0 !important;
+  padding: 12px 20px !important;
+
+  border: 0 !important;
+  border-radius: 999px !important;
+
+  color: #208f4d !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+
+  background: #e9f8ee !important;
+  box-shadow: none !important;
+}
+
+#commandPage .command-agent-header-v2 .more-btn {
+  grid-area: actions !important;
+  align-self: end !important;
+  justify-self: end !important;
+
+  position: relative !important;
+  z-index: 2 !important;
+
+  width: 54px !important;
+  height: 48px !important;
+  margin: 0 !important;
+
+  border: 1px solid rgba(105, 137, 199, .33) !important;
+  border-radius: 14px !important;
+
+  color: #fff !important;
+  font-size: 16px !important;
+
+  background: rgba(5, 26, 63, .5) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+/* responsive */
+@media (max-width: 1280px) {
+  #commandPage .command-agent-header-v2 {
+    grid-template-columns: 125px minmax(0, 1fr) auto !important;
+    padding: 28px 26px 26px !important;
+  }
+
+  #commandPage .command-avatar-v2 {
+    width: 108px !important;
+    height: 108px !important;
+    font-size: 40px !important;
+  }
+
+  #commandPage .command-days-fact {
+    margin-left: 23% !important;
+  }
+
+  #commandPage .command-risk-fact {
+    margin-right: 150px !important;
+  }
+}
+
+@media (max-width: 980px) {
+  #commandPage .command-agent-header-v2 {
+    grid-template-columns: 92px minmax(0, 1fr) !important;
+    grid-template-rows: auto auto auto auto !important;
+    grid-template-areas:
+      "avatar identity"
+      "activity activity"
+      "days risk"
+      "actions actions" !important;
+
+    min-height: 0 !important;
+    gap: 22px 18px !important;
+  }
+
+  #commandPage .command-agent-header-v2::after {
+    top: 185px !important;
+  }
+
+  #commandPage .command-avatar-v2 {
+    width: 82px !important;
+    height: 82px !important;
+    font-size: 30px !important;
+  }
+
+  #commandPage .command-agent-identity h1 {
+    font-size: 36px !important;
+  }
+
+  #commandPage .command-last-activity {
+    grid-area: activity !important;
+    display: block !important;
+  }
+
+  #commandPage .command-days-fact {
+    grid-area: days !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    border-left: 0 !important;
+  }
+
+  #commandPage .command-risk-fact {
+    grid-area: risk !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding-left: 20px !important;
+    border-left: 1px solid rgba(143, 174, 229, .24) !important;
+  }
+
+  #commandPage .command-agent-header-v2 .stage-badge {
+    margin-right: 62px !important;
+  }
+}
