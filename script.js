@@ -10,6 +10,8 @@ let selectedAgent = null;
 let commandCurrentPage = 1;
 let commandListFilter = "all";
 let selectedGrowthTeam = null;
+let currentMessageVariant = "default";
+let currentDeliveryMethod = "Text";
 let currentForgeMission = [];
 let availableOrganizations = [];
 let currentOrganization = null;
@@ -6084,11 +6086,11 @@ function renderCommandPagination(total) {
   const end   = Math.min(commandCurrentPage * commandPageSize, total);
 
   pagination.innerHTML = `
-    <span>Showing ${start} - ${end} of ${total} agents</span>
-    <div class="page-buttons">
-      <button data-command-page="prev"><</button>
-      <strong>${commandCurrentPage}</strong>
-      <button data-command-page="next">></button>
+    <span class="pagination-summary">Showing ${start} - ${end} of ${total} agents</span>
+    <div class="pagination-controls">
+      <button type="button" data-command-page="prev">&lt;</button>
+      <span>${commandCurrentPage}</span>
+      <button type="button" data-command-page="next">&gt;</button>
     </div>
   `;
 }
@@ -6881,52 +6883,40 @@ function openSmartComposer(method = "Text") {
 
   modal.classList.remove("hidden");
 
+  currentDeliveryMethod = method;
   setActiveDelivery(method);
+  renderTemplateOptions(method);
 
   const stage = selectedAgent.stage || "Not Placed";
-  const template = getStageMessageTemplate(stage, method, selectedAgent);
+  const template = getStageMessageTemplate(stage, method, selectedAgent, currentMessageVariant);
 
   setText("smartMethodBadge", method);
   setText("actionTitle", `${method} - ${selectedAgent.name}`);
   setText("actionSubtitle", getActionSubtitle(method, stage));
+  setText("messageLabel", getActionMessageLabel(method));
 
   setText("smartAgentName", selectedAgent.name || "-");
   setText("smartAgentStage", stage);
   setText("smartAgentUpline", selectedAgent.upline || selectedAgent.coordinator || "-");
+  setText("templatePickerHint", getTemplatePickerHint(method));
 
-  //---phone 
-  const smartPhone = document.getElementById("smartAgentPhone");
-
-if (smartPhone) {
-  const phone = selectedAgent.phone || "";
-
-  if (phone) {
-    const cleanPhone = phone.replace(/\D/g, "");
-    smartPhone.innerHTML = `<a href="tel:${cleanPhone}" class="phone-link"> ${phone}</a>`;
-  } else {
-    smartPhone.textContent = "No phone";
-  }
-}
-
-  // Phone Number
-const phoneEl = document.getElementById("smartAgentPhone");
-
-if (phoneEl) {
+  const phoneEl = document.getElementById("smartAgentPhone");
+  if (phoneEl) {
     if (selectedAgent.phone) {
-        phoneEl.innerHTML = `
-            <a href="tel:${selectedAgent.phone.replace(/\D/g, "")}"
-               class="phone-link">
-                ${selectedAgent.phone}
-            </a>
-        `;
+      phoneEl.innerHTML = `
+        <a href="tel:${selectedAgent.phone.replace(/\D/g, "")}"
+           class="phone-link">
+            ${selectedAgent.phone}
+        </a>
+      `;
     } else {
-        phoneEl.innerHTML = `
-            <span class="missing-phone">
-                No phone number on file
-            </span>
-        `;
+      phoneEl.innerHTML = `
+        <span class="missing-phone">
+          No phone number on file
+        </span>
+      `;
     }
-}
+  }
 
   const subjectWrap = document.getElementById("emailSubjectWrap");
   const subjectEl = document.getElementById("actionSubject");
@@ -6936,11 +6926,123 @@ if (phoneEl) {
   subjectWrap?.classList.toggle("hidden", method !== "Email");
   callWrap?.classList.toggle("hidden", method !== "Call");
 
+  const draft = getSavedActionDraft(selectedAgent, method, currentMessageVariant);
+
+  if (subjectEl) subjectEl.value = draft?.subject ?? template.subject ?? "";
+  if (messageEl) messageEl.value = draft?.body ?? template.body ?? "";
+}
+
+/*Helper*/
+function getActionMessageLabel(method) {
+  if (method === "Call") return "Call Script";
+  if (method === "Note") return "Coordinator Note";
+  if (method === "Zoom") return "Invite Message";
+  return "Message";
+}
+
+function getTemplatePickerHint(method) {
+  const hints = {
+    Text: "Use a balanced, direct, or encouragement text.",
+    Email: "Choose between professional, concise, or accountability email templates.",
+    WhatsApp: "Use a warmer, conversational WhatsApp message.",
+    Call: "Switch between a live script, voicemail, or follow-up script.",
+    Zoom: "Pick an invite or reminder format.",
+    Note: "Choose a quick documentation note template."
+  };
+  return hints[method] || "Choose a template.";
+}
+
+function getTemplateOptionsForMethod(method) {
+  const libraries = {
+    Text: [
+      { key: "default", label: "Balanced" },
+      { key: "friendly", label: "Warm" },
+      { key: "direct", label: "Direct" },
+      { key: "urgent", label: "Urgent" }
+    ],
+    Email: [
+      { key: "default", label: "Professional" },
+      { key: "concise", label: "Concise" },
+      { key: "accountability", label: "Accountability" },
+      { key: "celebration", label: "Celebration" }
+    ],
+    WhatsApp: [
+      { key: "friendly", label: "Warm" },
+      { key: "default", label: "Balanced" },
+      { key: "direct", label: "Direct" },
+      { key: "urgent", label: "Reminder" }
+    ],
+    Call: [
+      { key: "opening", label: "Live Call" },
+      { key: "voicemail", label: "Voicemail" },
+      { key: "objection", label: "Obstacle" },
+      { key: "followup", label: "Follow-Up" }
+    ],
+    Zoom: [
+      { key: "invite", label: "Invite" },
+      { key: "reminder", label: "Reminder" }
+    ],
+    Note: [
+      { key: "summary", label: "Summary" },
+      { key: "nextstep", label: "Next Step" },
+      { key: "attempted", label: "Attempted" }
+    ]
+  };
+
+  return libraries[method] || libraries.Text;
+}
+
+function renderTemplateOptions(method) {
+  const container = document.getElementById("messageTemplateOptions");
+  if (!container) return;
+
+  const options = getTemplateOptionsForMethod(method);
+  if (!options.some((option) => option.key === currentMessageVariant)) {
+    currentMessageVariant = options[0]?.key || "default";
+  }
+
+  container.innerHTML = options.map((option) => `
+    <button
+      type="button"
+      class="template-chip ${option.key === currentMessageVariant ? "active" : ""}"
+      data-template-variant="${option.key}"
+      data-template-method="${method}"
+    >
+      ${option.label}
+    </button>
+  `).join("");
+}
+
+function getSavedActionDraft(agent, method, variant) {
+  const key = `forgeActionDraft::${agent?.code || agent?.email || agent?.name || "agent"}::${method}::${variant}`;
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch (error) {
+    console.warn("Could not load action draft:", error);
+    return null;
+  }
+}
+
+function saveActionDraft(agent, method, variant, payload) {
+  const key = `forgeActionDraft::${agent?.code || agent?.email || agent?.name || "agent"}::${method}::${variant}`;
+  try {
+    localStorage.setItem(key, JSON.stringify(payload));
+  } catch (error) {
+    console.warn("Could not save action draft:", error);
+  }
+}
+
+function refreshComposerTemplate() {
+  if (!selectedAgent) return;
+  const stage = selectedAgent.stage || "Not Placed";
+  const template = getStageMessageTemplate(stage, currentDeliveryMethod, selectedAgent, currentMessageVariant);
+  const subjectEl = document.getElementById("actionSubject");
+  const messageEl = document.getElementById("actionMessage");
   if (subjectEl) subjectEl.value = template.subject || "";
   if (messageEl) messageEl.value = template.body || "";
 }
 
-/*Helper*/
 function setActiveDelivery(method) {
   document.querySelectorAll(".delivery").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.delivery === method);
@@ -6970,6 +7072,18 @@ document.getElementById("cancelAction")?.addEventListener("click", () => {
   document.getElementById("actionModal")?.classList.add("hidden");
 });
 
+document.getElementById("saveDraft")?.addEventListener("click", () => {
+  if (!selectedAgent) return;
+  const method = currentDeliveryMethod || document.getElementById("smartMethodBadge")?.innerText || "Text";
+  const payload = {
+    subject: document.getElementById("actionSubject")?.value || "",
+    body: document.getElementById("actionMessage")?.value || "",
+    savedAt: new Date().toISOString()
+  };
+  saveActionDraft(selectedAgent, method, currentMessageVariant, payload);
+  alert("Draft saved.");
+});
+
 document.getElementById("sendAction")?.addEventListener("click", () => {
   if (!selectedAgent) return;
 
@@ -6988,8 +7102,14 @@ document.getElementById("sendAction")?.addEventListener("click", () => {
 function completeSmartAction(method, message, subject = "") {
   const phone = (selectedAgent.phone || "").replace(/\D/g, "");
   const email = selectedAgent.email || "";
+  const callOutcome = document.getElementById("callOutcome")?.value || "";
+  const activityMessage = method === "Call" && callOutcome
+    ? `${message}
 
-  logCoordinatorActivity(selectedAgent, method, message);
+Outcome: ${callOutcome}`
+    : message;
+
+  logCoordinatorActivity(selectedAgent, method, activityMessage);
   markChecklistFromMethod(method, selectedAgent.stage);
 
   if (method === "Call" && phone) {
@@ -7101,6 +7221,19 @@ document.addEventListener("click", (event) => {
   event.stopPropagation();
 
   openSmartComposer(deliveryBtn.dataset.delivery || "Text");
+});
+
+document.addEventListener("click", (event) => {
+  const templateBtn = event.target.closest("[data-template-variant]");
+  if (!templateBtn || !selectedAgent) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  currentMessageVariant = templateBtn.dataset.templateVariant || "default";
+  currentDeliveryMethod = templateBtn.dataset.templateMethod || currentDeliveryMethod || "Text";
+  renderTemplateOptions(currentDeliveryMethod);
+  refreshComposerTemplate();
 });
 //  ACTIVITY LOG 
 
@@ -7398,8 +7531,15 @@ function getGuideCoachText(stage) {
   return tips[stage] || "Review the agent's current stage and take the next best action.";
 }
 
+document.getElementById("openGuideBtn")?.addEventListener("click", (event) => {
+  if (!selectedAgent) return;
+  event.preventDefault();
+  event.stopPropagation();
+  openGuide(selectedAgent);
+});
+
 document.addEventListener("click", (event) => {
-  const guideBtn = event.target.closest("#openGuideBtn");
+  const guideBtn = event.target.closest("#openGuideBtn, .guide-btn");
   if (!guideBtn || !selectedAgent) return;
   event.preventDefault();
   event.stopPropagation();
@@ -9259,126 +9399,135 @@ document.addEventListener(
 );
 //  STAGE MESSAGE TEMPLATES 
 
-function getStageMessageTemplate(stage, method, agent) {
-  const name            = agent?.name || "there";
+function getStageMessageTemplate(stage, method, agent, variant = "default") {
+  const fullName = agent?.name || "there";
+  const firstName = String(fullName).trim().split(/\s+/)[0] || fullName;
   const coordinatorName = selectedCoordinator === "All" ? "your licensing coordinator" : selectedCoordinator;
 
-  const templates = {
+  const stageContextMap = {
     "Not Placed": {
-      subject: "Welcome - Let's Get You Started",
-      body: `Hi ${name},
-
-Welcome to the team. My name is ${coordinatorName}, and I will help guide you through your licensing journey.
-
-The first step is simple: we need to confirm where you are so we can place you on the right path.
-
-Please reply and let me know if you have already started your licensing process, completed any course, or taken any exam.
-
-Once I know where you are, I can help you move to the next step quickly.`,
+      milestone: "starting the licensing journey",
+      nextStep: "complete the readiness check so we can place you on the right path",
+      request: "Reply and let me know whether you have already started licensing, taken any course, or completed any exam.",
+      urgency: "The sooner we confirm your starting point, the faster we can move you forward."
     },
     "Quiz Sent": {
-      subject: "Your Licensing Quiz Is Ready",
-      body: `Hi ${name},
-
-Your licensing quiz has been sent.
-
-This quiz helps us understand where you are in the licensing process and what support you need next.
-
-Please complete it today so we can move you forward without delay.
-
-Once you finish, reply "Done" so I can update your status and help you get to the next step.`,
+      milestone: "the licensing readiness quiz",
+      nextStep: "complete the quiz so I can guide your next step",
+      request: "Please complete the quiz today and reply \"Done\" when finished.",
+      urgency: "That keeps your momentum moving and helps us avoid delay."
     },
     "Quiz Passed": {
-      subject: "Great Job - Let's Move You to XCEL",
-      body: `Hi ${name},
-
-Congratulations on passing your quiz.
-
-This means you are ready to move into the next important step: starting your XCEL pre-licensing course and preparing to schedule your state exam.
-
-Please confirm once you have access to XCEL, and let me know if you need help getting started.`,
+      milestone: "passing the readiness quiz",
+      nextStep: "move into XCEL and begin exam preparation",
+      request: "Please confirm once you have access to XCEL and let me know if you need help getting started.",
+      urgency: "I want to keep your momentum strong while everything is still fresh."
     },
     "XCEL Completed": {
-      subject: "XCEL Completed - Time to Schedule Your Exam",
-      body: `Hi ${name},
-
-Congratulations on completing XCEL.
-
-That is a major milestone. The next step is to schedule your state exam while the information is still fresh.
-
-Please schedule your exam as soon as possible and send me the date once it is confirmed.
-
-You are very close. Let's keep the momentum going.`,
+      milestone: "completing XCEL",
+      nextStep: "schedule your state exam",
+      request: "Please schedule your state exam and send me the confirmed date.",
+      urgency: "It is best to do that quickly while the material is still fresh."
     },
     "Exam Passed": {
-      subject: "Congratulations on Passing Your Life Exam",
-      body: `Hi ${name},
-
-Congratulations on passing your Life Exam.
-
-This is a big accomplishment and a major step toward becoming fully active in the business.
-
-The next step is to complete the remaining licensing requirements, including your license application, fingerprints or state requirements if applicable, and any required follow-up items.
-
-Please send me a quick update on what you have completed so far so I can help you move to the next stage.`,
+      milestone: "passing your exam",
+      nextStep: "complete your license application and remaining state requirements",
+      request: "Send me an update on what has already been completed so I can guide the rest.",
+      urgency: "You are very close, so now is the time to finish strong."
     },
     "Continuing Education": {
-      subject: "Let's Get Your CE Completed",
-      body: `Hi ${name},
-
-You are currently at the Continuing Education step.
-
-This step is important because it keeps your licensing progress moving and helps you stay compliant with the requirements.
-
-Please complete your CE as soon as possible and send me confirmation once it is done.
-
-If you are stuck, unsure where to log in, or not sure what is missing, reply to this message and I will help you figure it out.`,
+      milestone: "the continuing education step",
+      nextStep: "complete CE and clear any missing compliance items",
+      request: "Please complete the CE requirement and let me know if you need login or course help.",
+      urgency: "Removing this blocker quickly will keep your progress moving."
     },
     "Licensed": {
-      subject: "Congratulations on Becoming Licensed",
-      body: `Hi ${name},
-
-Congratulations on becoming licensed.
-
-This is a major achievement. Now we need to help you move from licensed to fully contracted and ready to write business.
-
-The next step is to complete your contracting requirements and submit everything needed for appointment.
-
-Please check your email for contracting instructions and let me know once you have started.`,
+      milestone: "becoming licensed",
+      nextStep: "complete contracting and move into production",
+      request: "Please review your contracting instructions and tell me once you have started.",
+      urgency: "I do not want you to sit licensed without moving into the next stage."
     },
     "Contracted": {
-      subject: "Let's Get You Appointed Through Tevah",
-      body: `Hi ${name},
-
-Congratulations on reaching the contracting stage.
-
-You are now very close to being fully ready to write business. The next step is to complete your appointment process through Tevah.
-
-Please log in, complete the appointment steps, and confirm once submitted.
-
-Let's get you fully appointed and ready for production.`,
-    },
+      milestone: "reaching the contracting stage",
+      nextStep: "complete appointment and fast-start activity",
+      request: "Please confirm once your appointment steps are submitted and we will prepare your next launch steps.",
+      urgency: "You are now very close to production."
+    }
   };
 
-  const selected = templates[stage] || templates["Not Placed"];
+  const context = stageContextMap[stage] || stageContextMap["Not Placed"];
 
-  if (method === "Text" || method === "WhatsApp") {
-    return { subject: "", body: selected.body.replace(/\n+/g, " ").replace(/\s+/g, " ").slice(0, 420) };
+  const emailTemplates = {
+    default: {
+      subject: `${stage} - Next Step`,
+      body: `Hi ${firstName},\n\nCongratulations on ${context.milestone}. The next step is to ${context.nextStep}.\n\n${context.request}\n\n${context.urgency}\n\nI am here to help.\n\n${coordinatorName}`
+    },
+    concise: {
+      subject: `${stage} - Quick Follow-Up`,
+      body: `Hi ${firstName},\n\nQuick follow-up: your next step is to ${context.nextStep}.\n\n${context.request}\n\nPlease update me once done.\n\n${coordinatorName}`
+    },
+    accountability: {
+      subject: `${stage} - Action Needed`,
+      body: `Hi ${firstName},\n\nI am following up because we need to keep your licensing journey moving. Your next step is to ${context.nextStep}.\n\n${context.request}\n\nPlease send me an update today so we can keep your progress on track.\n\n${coordinatorName}`
+    },
+    celebration: {
+      subject: `Congratulations, ${firstName}!`,
+      body: `Hi ${firstName},\n\nCongratulations on ${context.milestone}. That is a meaningful step forward.\n\nNow let us build on that momentum by making sure you ${context.nextStep}.\n\n${context.request}\n\nYou are doing well, and I am here to support you.\n\n${coordinatorName}`
+    }
+  };
+
+  const textTemplates = {
+    default: `Hi ${firstName}, congratulations on ${context.milestone}. Your next step is to ${context.nextStep}. ${context.request} ${context.urgency}`,
+    friendly: `Hi ${firstName}! Great job on ${context.milestone}. Now let’s keep the momentum going. The next step is to ${context.nextStep}. ${context.request}`,
+    direct: `Hi ${firstName}, next step: ${context.nextStep}. ${context.request} Please update me once done.`,
+    urgent: `Hi ${firstName}, quick reminder: you need to ${context.nextStep}. ${context.request} Please send me an update today.`
+  };
+
+  const callTemplates = {
+    opening: `Call ${fullName}. Start warm, congratulate them on ${context.milestone}, then say the purpose of the call is to help them ${context.nextStep}. Ask: what is the current status, what is blocking you, and what exact action can you complete today? End by confirming a specific next step and timeline.`,
+    voicemail: `Hi ${firstName}, this is ${coordinatorName}. I am calling to follow up on your licensing journey. Your next step is to ${context.nextStep}. Please call or text me back so I can help you move forward.`,
+    objection: `Call ${fullName}. Ask what has slowed them down. Listen first, identify the blocker, reassure them, then bring the conversation back to the key next step: ${context.nextStep}. Close with one concrete commitment for today.`,
+    followup: `Call ${fullName}. Remind them that the next step is to ${context.nextStep}. Review the last update, ask whether they have completed it, and if not, schedule the exact follow-up date before ending the call.`
+  };
+
+  const zoomTemplates = {
+    invite: {
+      subject: `Quick Zoom Support - ${stage}`,
+      body: `Hi ${firstName},\n\nLet’s schedule a quick Zoom session to help you move forward. We will review where you are, what is pending, and how to complete the next step: ${context.nextStep}.\n\nReply with a time that works for you today or tomorrow.\n\n${coordinatorName}`
+    },
+    reminder: {
+      subject: `Zoom Reminder - Licensing Support`,
+      body: `Hi ${firstName},\n\nFriendly reminder about our Zoom support session. We will use the time to help you ${context.nextStep}.\n\nPlease confirm your availability.\n\n${coordinatorName}`
+    }
+  };
+
+  const noteTemplates = {
+    summary: `${fullName} is currently in ${stage}. Reviewed current status and discussed next step: ${context.nextStep}. Awaiting agent update.`,
+    nextstep: `${fullName} needs to ${context.nextStep}. Follow up after the agent confirms completion.`,
+    attempted: `Attempted outreach to ${fullName} regarding ${stage}. Goal was to help the agent ${context.nextStep}. No final outcome recorded yet.`
+  };
+
+  if (method === "Email") {
+    return emailTemplates[variant] || emailTemplates.default;
   }
+
   if (method === "Call") {
-    return { subject: "", body: `Call ${name}. Goal: help them move forward from ${stage}. Ask what is blocking them, confirm the next step, and update their stage after the call.` };
-  }
-  if (method === "Zoom") {
-    return {
-      subject: "Quick Licensing Support Zoom",
-      body: `Hi ${name},\n\nLet's schedule a quick Zoom to help you move forward from your current stage: ${stage}.\n\nWe will review where you are, what is missing, and the exact next step to complete.\n\nPlease reply with a good time today or tomorrow.`,
-    };
-  }
-  if (method === "Note") {
-    return { subject: "", body: `${name} is currently in ${stage}. Add coordinator notes here.` };
+    return { subject: "", body: callTemplates[variant] || callTemplates.opening };
   }
 
-  return selected;
+  if (method === "Zoom") {
+    return zoomTemplates[variant] || zoomTemplates.invite;
+  }
+
+  if (method === "Note") {
+    return { subject: "", body: noteTemplates[variant] || noteTemplates.summary };
+  }
+
+  if (method === "WhatsApp") {
+    return { subject: "", body: (textTemplates[variant] || textTemplates.friendly).replace(/\s+/g, " ").trim().slice(0, 520) };
+  }
+
+  return { subject: "", body: (textTemplates[variant] || textTemplates.default).replace(/\s+/g, " ").trim().slice(0, 420) };
 }
 
 //  STAGE COLOR 
