@@ -20573,3 +20573,507 @@ body.forge-drawer-open {
     width: 100%;
   }
 }
+
+
+/* ==========================================================
+   COMMAND CENTER LIGHT-BLUE REFRESH
+   Sidebar + top agent intro updated per latest direction.
+========================================================== */
+#commandPage {
+  background: #f5f8ff;
+}
+
+#commandPage .command-layout-v2 {
+  max-width: 1920px;
+  border: 1px solid #dce7f8;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  box-shadow: 0 22px 58px rgba(47, 82, 145, 0.12);
+}
+
+#commandPage .command-sidebar-v2 {
+  padding: 24px 18px 18px;
+  background: linear-gradient(180deg, #fcfdff 0%, #f4f8ff 100%);
+}
+
+#commandPage .command-sidebar-heading > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#commandPage .command-sidebar-heading h2 {
+  font-size: 28px;
+  color: #162f5f;
+}
+
+#commandPage #commandAgentTotal {
+  min-width: 104px;
+  padding: 8px 14px;
+  border: 1px solid #d7e4f6;
+  border-radius: 999px;
+  color: #345687;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  background: rgba(255,255,255,0.9);
+}
+
+#commandPage .command-sidebar-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #d8e5f8;
+  border-radius: 15px;
+  background: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
+}
+
+#commandPage .command-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  border: 0 !important;
+  border-radius: 12px;
+  color: #264778;
+  font-size: 13px;
+  font-weight: 800;
+  background: transparent;
+}
+
+#commandPage .command-filter + .command-filter {
+  border-left: 0;
+}
+
+#commandPage .command-filter.active {
+  color: #ffffff;
+  background: linear-gradient(180deg, #2856b5 0%, #163f97 100%);
+  box-shadow: 0 8px 18px rgba(33, 73, 154, 0.22);
+}
+
+#commandPage #commandFlaggedCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  color: #274b81;
+  font-size: 12px;
+  font-weight: 900;
+  background: #edf4ff;
+}
+
+#commandPage .command-filter.active #commandFlaggedCount {
+  color: #ffffff;
+  background: rgba(255,255,255,0.18);
+}
+
+#commandPage .command-search-wrap {
+  height: 50px;
+  padding: 0 16px;
+  border: 1px solid #d8e4f5;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.88);
+  box-shadow: 0 1px 0 rgba(255,255,255,.8);
+}
+
+#commandPage .command-search-wrap > span {
+  color: #617faa;
+  font-size: 20px;
+  transform: none;
+}
+
+#commandPage #commandSearch {
+  height: 48px;
+  font-size: 14px;
+}
+
+#commandPage #commandSearch::placeholder {
+  color: #8093b2;
+}
+
+#commandPage #commandAgentList {
+  padding: 4px 4px 8px 0;
+}
+
+#commandPage .command-agent-row {
+  grid-template-columns: 48px minmax(0, 1fr) 14px;
+  gap: 14px;
+  min-height: 78px;
+  margin: 0 0 8px;
+  padding: 12px 12px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.78);
+  transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease, background .16s ease;
+}
+
+#commandPage .command-agent-row:hover {
+  transform: translateY(-1px);
+  border-color: #dbe6f6;
+  background: #ffffff;
+  box-shadow: 0 10px 22px rgba(74, 106, 160, 0.10);
+}
+
+#commandPage .command-agent-row.active {
+  border-color: #e9ab3e;
+  background: linear-gradient(90deg, #fff9ef 0%, #ffffff 82%);
+  box-shadow: 0 12px 28px rgba(233, 171, 62, 0.14);
+}
+
+#commandPage .command-agent-row .command-avatar {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  color: #2e5cc1;
+  font-size: 16px;
+  font-weight: 800;
+  background: linear-gradient(180deg, #eef4ff 0%, #dfebff 100%);
+}
+
+#commandPage .command-agent-row.active .command-avatar {
+  border: 1px solid #ecab39;
+  color: #c98514;
+  background: #ffffff;
+}
+
+#commandPage .command-agent-copy strong {
+  color: #163159;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+#commandPage .command-agent-copy span {
+  margin-top: 4px;
+  color: #6780a2;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+#commandPage .command-agent-status {
+  width: 11px;
+  height: 11px;
+  align-self: center;
+  justify-self: end;
+  border-radius: 999px;
+  background: #f0a11a;
+  box-shadow: 0 0 0 3px rgba(240,161,26,.10);
+}
+
+#commandPage .command-agent-row[data-stage="Licensed"] .command-agent-status,
+#commandPage .command-agent-row[data-stage="Contracted"] .command-agent-status {
+  background: #1ec16b;
+  box-shadow: 0 0 0 3px rgba(30,193,107,.10);
+}
+
+#commandPage .command-main-v2 {
+  background: transparent;
+}
+
+#commandPage #commandProfile {
+  padding: 12px 16px 16px;
+}
+
+#commandPage .command-agent-header-v2 {
+  position: relative;
+  grid-template-columns: 132px minmax(320px, 1fr) 170px 170px 160px 56px;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "avatar identity days risk spacer spacer"
+    "avatar last     days risk stage more";
+  gap: 12px 22px;
+  min-height: 252px;
+  margin: 0;
+  padding: 30px 30px 28px;
+  border: 1px solid #d6e4f7;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #f4f8ff 0%, #e9f2ff 45%, #e0edff 100%);
+  box-shadow: 0 18px 42px rgba(68, 102, 160, 0.12);
+}
+
+#commandPage .command-agent-header-v2::before {
+  content: "";
+  position: absolute;
+  top: -28px;
+  right: 46px;
+  width: 540px;
+  height: 140px;
+  pointer-events: none;
+  opacity: .52;
+  background:
+    radial-gradient(ellipse at center, transparent 62%, rgba(108,148,221,.16) 63%, transparent 66%) 0 0/120px 38px,
+    radial-gradient(ellipse at center, transparent 62%, rgba(163,189,236,.18) 63%, transparent 66%) 54px 16px/126px 42px;
+}
+
+#commandPage .command-agent-header-v2::after {
+  right: 36px;
+  bottom: 10px;
+  width: 48%;
+  height: 92px;
+  opacity: .5;
+  background:
+    radial-gradient(ellipse at center, transparent 58%, rgba(52,116,214,.11) 59%, transparent 61%) 0 0/76px 28px,
+    radial-gradient(ellipse at center, transparent 58%, rgba(151,180,232,.12) 59%, transparent 61%) 22px 12px/88px 30px;
+}
+
+#commandPage .command-avatar-v2 {
+  width: 116px;
+  height: 116px;
+  border: 3px solid #ebb14b;
+  color: #ffffff;
+  font-size: 40px;
+  font-weight: 700;
+  background: linear-gradient(180deg, #3f82ef 0%, #2157cd 100%);
+  box-shadow: 0 18px 30px rgba(34, 86, 183, .22);
+}
+
+#commandPage .command-agent-identity {
+  max-width: 620px;
+}
+
+#commandPage .command-profile-eyebrow {
+  gap: 11px;
+  margin-bottom: 14px;
+  color: #cf8611;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+#commandPage .command-profile-eyebrow span {
+  color: #e09a22;
+  font-size: 17px;
+}
+
+#commandPage .command-agent-identity h1 {
+  margin: 0 0 8px;
+  color: #0a2557;
+  font-size: clamp(40px, 4vw, 62px);
+  letter-spacing: -0.04em;
+}
+
+#commandPage .command-agent-role {
+  margin: 0 0 16px !important;
+  color: #2c5fa9 !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+}
+
+#commandPage .command-coordinator-pill {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid #cedff7;
+  border-radius: 999px;
+  background: rgba(255,255,255,.86);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+}
+
+#commandPage .command-coordinator-pill > span {
+  color: #de9620;
+  font-size: 18px;
+}
+
+#commandPage .command-coordinator-pill strong {
+  color: #1f3f73;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+#commandPage .command-agent-fact {
+  min-height: 82px;
+  padding: 4px 0 4px 28px;
+  border-left: 1px solid rgba(112, 140, 183, 0.24);
+}
+
+#commandPage .command-agent-fact span {
+  margin: 0 0 10px;
+  color: #4b6996;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+#commandPage .command-agent-fact strong {
+  color: #102b58;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+#commandPage .command-last-activity {
+  align-self: end;
+}
+
+#commandPage .command-last-activity strong {
+  display: block;
+  max-width: 230px;
+  line-height: 1.35;
+}
+
+#commandPage #commandRiskLevel {
+  position: relative;
+  padding-left: 0;
+  color: #d48c13;
+  font-size: 20px;
+}
+
+#commandPage .command-agent-header-v2 .stage-badge {
+  justify-self: end;
+  align-self: end;
+  padding: 14px 22px;
+  border-radius: 18px;
+  color: #1f9559;
+  font-size: 14px;
+  font-weight: 800;
+  background: linear-gradient(180deg, #eefaf3 0%, #dcf4e6 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
+}
+
+#commandPage .command-agent-header-v2 .more-btn {
+  justify-self: end;
+  align-self: end;
+  width: 52px;
+  height: 52px;
+  border: 1px solid #d2def0;
+  border-radius: 18px;
+  color: #234579;
+  font-size: 18px;
+  background: rgba(255,255,255,.82);
+  box-shadow: 0 8px 18px rgba(66, 97, 152, .12);
+}
+
+#commandPage .command-intelligence-hero {
+  min-height: 214px;
+  margin-top: 16px;
+  padding: 26px 30px;
+  border: 1px solid #c4d7f6;
+  border-radius: 18px;
+  background: linear-gradient(120deg, #ffffff 0%, #f8fbff 46%, #eef5ff 100%);
+  box-shadow: 0 8px 20px rgba(43, 76, 131, 0.06);
+}
+
+#commandPage .command-intelligence-hero::after {
+  inset: 0 0 0 50%;
+  opacity: .65;
+}
+
+#commandPage .command-intelligence-label {
+  color: #184d9a;
+}
+
+#commandPage .command-intelligence-title-row h2 {
+  font-size: 32px;
+}
+
+#commandPage .impact-chip {
+  color: #40699f;
+  font-size: 13px;
+}
+
+#commandPage .command-intelligence-hero h3 {
+  font-size: 16px;
+}
+
+#commandPage .command-intelligence-hero p {
+  font-size: 13px;
+}
+
+#commandPage .command-channel-actions button {
+  min-width: 86px;
+  min-height: 40px;
+  border-radius: 11px;
+  font-size: 11px;
+}
+
+#commandPage .command-primary-action {
+  min-width: 230px;
+  min-height: 60px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #1d4dab 0%, #113a94 100%);
+  box-shadow: 0 14px 28px rgba(30, 73, 156, .18);
+}
+
+#commandPage .command-focus-grid {
+  gap: 16px;
+  margin-top: 16px;
+}
+
+#commandPage .command-focus-card,
+#commandPage .command-bottom-card {
+  border-color: #dbe7f7;
+  border-radius: 18px;
+}
+
+#commandPage .command-bottom-card {
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(45, 76, 132, 0.05);
+}
+
+@media (max-width: 1450px) {
+  #commandPage .command-agent-header-v2 {
+    grid-template-columns: 112px minmax(250px, 1fr) 145px 145px 150px 54px;
+  }
+
+  #commandPage .command-agent-identity h1 {
+    font-size: clamp(34px, 3.2vw, 52px);
+  }
+}
+
+@media (max-width: 1180px) {
+  #commandPage .command-agent-header-v2 {
+    grid-template-columns: 92px minmax(0, 1fr) 1fr;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:
+      "avatar identity more"
+      "avatar last more"
+      "days risk stage"
+      "days risk stage";
+    min-height: 290px;
+  }
+
+  #commandPage .command-agent-fact {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  #commandPage .command-agent-header-v2 .stage-badge {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 900px) {
+  #commandPage .command-sidebar-v2 {
+    max-height: 560px;
+  }
+
+  #commandPage .command-agent-header-v2 {
+    grid-template-columns: 78px minmax(0, 1fr) 42px;
+    grid-template-areas:
+      "avatar identity more"
+      "avatar last more"
+      "days days stage"
+      "risk risk stage";
+    min-height: 325px;
+    padding: 24px 20px;
+  }
+
+  #commandPage .command-avatar-v2 {
+    width: 84px;
+    height: 84px;
+    font-size: 28px;
+  }
+
+  #commandPage .command-agent-identity h1 {
+    font-size: 34px;
+  }
+
+  #commandPage .command-filter {
+    min-height: 44px;
+  }
+}

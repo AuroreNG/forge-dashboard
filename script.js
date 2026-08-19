@@ -8,7 +8,7 @@ let pendingImportAgents = [];
 let selectedCoordinator = "All";
 let selectedAgent = null;
 let commandCurrentPage = 1;
-let commandListFilter = "priority";
+let commandListFilter = "all";
 let selectedGrowthTeam = null;
 let currentForgeMission = [];
 let availableOrganizations = [];
@@ -5855,9 +5855,19 @@ function renderCommandCenter(
   const filteredAgents =
     getCommandFilteredAgents();
 
+  const flaggedAgentCount =
+    allAgents.filter(
+      (agent) => agent.stage !== "Contracted"
+    ).length;
+
   setText(
     "commandAgentTotal",
     `${allAgents.length} agents`
+  );
+
+  setText(
+    "commandFlaggedCount",
+    flaggedAgentCount
   );
 
   const totalPages =
@@ -5933,14 +5943,14 @@ function renderCommandCenter(
         </strong>
 
         <span>
+          Coordinator
+          •
           ${
-            listedAgent.coordinator ||
-            "No coordinator"
-          }
-          -
-          ${
-            listedAgent.stage ||
-            "Not Placed"
+            ["Licensed", "Contracted"].includes(
+              listedAgent.stage
+            )
+              ? "Licensed"
+              : "Not Licensed"
           }
         </span>
       </div>
