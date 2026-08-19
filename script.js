@@ -1880,7 +1880,7 @@ async function importRecruitFile(parsedRows, file) {
 
     const row = {
       organization_id:
-        currentUserProfile.organization_id,
+        getActiveOrganizationId(),
 
       agent_code:
         recruit.code,
@@ -4371,7 +4371,7 @@ document.addEventListener("click", (event) => {
             .delete()
             .eq(
               "organization_id",
-              currentUserProfile.organization_id
+              getActiveOrganizationId()
             )
             .eq(
               "id",
@@ -4700,7 +4700,7 @@ async function updateJourneyStage(agent, newStage) {
       })
       .eq(
         "organization_id",
-        currentUserProfile.organization_id
+        getActiveOrganizationId()
       )
       .eq(
         "id",
@@ -7694,7 +7694,7 @@ const rows = validAgents
 
    return {
   organization_id:
-    currentUserProfile.organization_id,
+    getActiveOrganizationId(),
 
   agent_code: agent.code,
 
@@ -7969,7 +7969,7 @@ async function importTeamFile(parsedRows) {
       return {
 
         organization_id:
-          currentUserProfile.organization_id,
+          getActiveOrganizationId(),
 
         agent_code:
           String(agent.code)
@@ -8372,7 +8372,7 @@ document
               .update(updates)
               .eq(
                 "organization_id",
-                currentUserProfile.organization_id
+                getActiveOrganizationId()
               )
               .eq(
                 "id",
