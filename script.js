@@ -9,6 +9,8 @@ let selectedCoordinator = "All";
 let selectedAgent = null;
 let commandCurrentPage = 1;
 let commandListFilter = "all";
+let commandStageFilter = "all";
+let commandSortMode = "priority";
 let selectedGrowthTeam = null;
 let currentMessageVariant = "default";
 let currentDeliveryMethod = "Text";
@@ -5807,6 +5809,7 @@ function getCommandFilteredAgents() {
       const searchableText = [
         getAgentDisplayName(agent),
         agent.coordinator,
+        agent.upline,
         agent.stage,
         agent.email,
         agent.phone,
@@ -5819,23 +5822,37 @@ function getCommandFilteredAgents() {
       return searchableText.includes(searchValue);
     });
 
-
   if (commandListFilter === "priority") {
-    agents = agents
-      .filter(
-        (agent) =>
-          agent.stage !== "Contracted"
-      )
-      .sort(
-        (a, b) =>
-          getCommandPriorityScore(b) -
-          getCommandPriorityScore(a)
-      );
+    agents = agents.filter(
+      (agent) => agent.stage !== "Contracted"
+    );
+  }
+
+  if (commandStageFilter === "pipeline") {
+    agents = agents.filter((agent) =>
+      ["Not Placed", "Quiz Sent", "XCEL Completed", "Exam Passed"].includes(agent.stage)
+    );
+  }
+
+  if (commandStageFilter === "licensed") {
+    agents = agents.filter((agent) =>
+      ["Licensed", "Contracted"].includes(agent.stage)
+    );
+  }
+
+  if (commandSortMode === "name") {
+    agents.sort((a, b) =>
+      getAgentDisplayName(a).localeCompare(getAgentDisplayName(b))
+    );
+  } else if (commandSortMode === "recent") {
+    agents.sort((a, b) => {
+      const aDate = new Date(a.lastActivity || a.updatedAt || a.recruitDate || a.recruit_date || 0).getTime() || 0;
+      const bDate = new Date(b.lastActivity || b.updatedAt || b.recruitDate || b.recruit_date || 0).getTime() || 0;
+      return bDate - aDate;
+    });
   } else {
     agents.sort((a, b) =>
-      getAgentDisplayName(a).localeCompare(
-        getAgentDisplayName(b)
-      )
+      getCommandPriorityScore(b) - getCommandPriorityScore(a)
     );
   }
 
@@ -5917,6 +5934,8 @@ function renderCommandCenter(
     row.type = "button";
     row.className =
       "command-agent-row";
+
+    row.title = `${getAgentDisplayName(listedAgent)} · ${listedAgent.stage || "Not Placed"}`;
 
     row.dataset.stage =
       listedAgent.stage ||
@@ -6031,6 +6050,56 @@ document
       true
     );
   });
+
+// ==========================================================
+// COMMAND CENTER SMART SIDEBAR CONTROLS
+// ==========================================================
+document
+  .querySelectorAll("[data-command-stage-filter]")
+  .forEach((button) => {
+    button.addEventListener("click", () => {
+      commandStageFilter = button.dataset.commandStageFilter || "all";
+      commandCurrentPage = 1;
+
+      document
+        .querySelectorAll("[data-command-stage-filter]")
+        .forEach((chip) => chip.classList.toggle("active", chip === button));
+
+      renderCommandCenter(selectedAgent, true);
+    });
+  });
+
+document
+  .getElementById("commandSort")
+  ?.addEventListener("change", (event) => {
+    commandSortMode = event.target.value || "priority";
+    commandCurrentPage = 1;
+    renderCommandCenter(selectedAgent, true);
+  });
+
+function setCommandSidebarCollapsed(collapsed) {
+  const page = document.getElementById("commandPage");
+  if (!page) return;
+
+  page.classList.toggle("command-sidebar-collapsed", collapsed);
+  localStorage.setItem("forgeCommandSidebarCollapsed", collapsed ? "1" : "0");
+
+  const label = document.querySelector("#collapseCommandSidebar .collapse-label");
+  const icon = document.querySelector("#collapseCommandSidebar .collapse-icon");
+  if (label) label.textContent = collapsed ? "Expand" : "Collapse";
+  if (icon) icon.textContent = collapsed ? "»" : "«";
+}
+
+document
+  .getElementById("collapseCommandSidebar")
+  ?.addEventListener("click", () => {
+    const page = document.getElementById("commandPage");
+    setCommandSidebarCollapsed(!page?.classList.contains("command-sidebar-collapsed"));
+  });
+
+setCommandSidebarCollapsed(
+  localStorage.getItem("forgeCommandSidebarCollapsed") === "1"
+);
 
 
 // ==========================================================

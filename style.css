@@ -21434,3 +21434,278 @@ body.forge-drawer-open {
     grid-template-columns: 310px minmax(0, 1fr);
   }
 }
+
+
+/* ==========================================================
+   V5 GLASS COMMAND SIDEBAR
+   Longer, defined, collapsible and smarter.
+========================================================== */
+#commandPage .command-layout-v2 {
+  grid-template-columns: 380px minmax(0, 1fr);
+  gap: 18px;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#commandPage .command-sidebar-v2 {
+  position: sticky;
+  top: 16px;
+  height: calc(100vh - 36px);
+  min-height: 920px;
+  max-height: none;
+  padding: 24px 18px 16px;
+  border: 1px solid rgba(191, 211, 240, .72);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(116, 157, 231, .15), transparent 26%),
+    linear-gradient(180deg, rgba(255,255,255,.84) 0%, rgba(244,248,255,.76) 100%);
+  backdrop-filter: blur(28px) saturate(135%);
+  -webkit-backdrop-filter: blur(28px) saturate(135%);
+  box-shadow:
+    0 28px 70px rgba(45, 78, 135, .15),
+    inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+#commandPage .command-main-v2 {
+  border: 1px solid rgba(205, 219, 240, .72);
+  border-radius: 28px;
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 22px 60px rgba(50, 82, 136, .10);
+}
+
+#commandPage .command-sidebar-title-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+#commandPage .command-sidebar-eyebrow {
+  display: block;
+  margin-bottom: 7px;
+  color: #6c86ad;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+#commandPage .command-sidebar-heading h2 {
+  font-size: 32px;
+  letter-spacing: -.035em;
+}
+
+#commandPage .command-primary-tabs {
+  position: relative;
+  padding: 5px !important;
+  gap: 5px;
+  border: 1px solid rgba(204, 218, 239, .9) !important;
+  border-radius: 17px !important;
+  background: rgba(255,255,255,.62) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.92) !important;
+}
+
+#commandPage .command-primary-tabs .command-filter {
+  min-height: 46px;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none;
+}
+
+#commandPage .command-primary-tabs .command-filter.active {
+  color: #fff;
+  background: linear-gradient(180deg, #2351ad 0%, #173d91 100%) !important;
+  box-shadow: 0 10px 22px rgba(31, 72, 159, .24);
+}
+
+#commandPage .command-search-wrap {
+  height: 52px;
+  border-color: rgba(201, 216, 239, .9);
+  border-radius: 16px;
+  background: rgba(255,255,255,.76);
+  backdrop-filter: blur(10px);
+}
+
+#commandPage .command-sidebar-tools {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 128px;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+#commandPage .command-stage-chips {
+  display: flex;
+  min-width: 0;
+  gap: 6px;
+}
+
+#commandPage .command-stage-chip {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid rgba(205, 218, 239, .9);
+  border-radius: 11px;
+  color: #5c7397;
+  font-size: 10px;
+  font-weight: 900;
+  background: rgba(255,255,255,.66);
+  cursor: pointer;
+}
+
+#commandPage .command-stage-chip.active {
+  color: #2450a6;
+  border-color: #a9c0e8;
+  background: #eef4ff;
+}
+
+#commandPage .command-sort {
+  width: 100%;
+  height: 36px;
+  padding: 0 9px;
+  border: 1px solid rgba(205, 218, 239, .9);
+  border-radius: 11px;
+  outline: none;
+  color: #435f8a;
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(255,255,255,.76);
+}
+
+#commandPage #commandAgentList {
+  padding: 2px 4px 8px 0;
+}
+
+#commandPage .command-agent-row {
+  grid-template-columns: 48px minmax(0, 1fr) 12px;
+  min-height: 70px;
+  margin-bottom: 5px;
+  padding: 10px 10px;
+  border-radius: 15px;
+}
+
+#commandPage .command-agent-row:hover {
+  background: rgba(255,255,255,.80);
+  box-shadow: 0 9px 22px rgba(57, 88, 142, .08);
+}
+
+#commandPage .command-agent-row.active {
+  border-color: #e5ae49;
+  background: linear-gradient(90deg, rgba(255,246,226,.88), rgba(255,255,255,.82));
+}
+
+#commandPage #commandPagination {
+  flex-shrink: 0;
+  margin-top: 8px;
+  padding: 12px 2px 8px;
+  border-top: 1px solid rgba(211, 222, 239, .82);
+  background: transparent;
+}
+
+#commandPage .command-sidebar-collapse {
+  flex-shrink: 0;
+  width: 100%;
+  height: 52px;
+  margin-top: 8px;
+  border: 1px solid rgba(202, 216, 238, .88);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 0 16px;
+  color: #39577f;
+  font-size: 12px;
+  font-weight: 900;
+  background: rgba(255,255,255,.66);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+#commandPage .command-sidebar-collapse:hover {
+  border-color: #abc1e6;
+  background: rgba(255,255,255,.90);
+  transform: translateY(-1px);
+}
+
+#commandPage .collapse-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  color: #2852a2;
+  background: #edf4ff;
+  font-size: 18px;
+}
+
+/* collapsed mode */
+#commandPage.command-sidebar-collapsed .command-layout-v2 {
+  grid-template-columns: 92px minmax(0, 1fr);
+}
+
+#commandPage.command-sidebar-collapsed .command-sidebar-v2 {
+  padding: 18px 12px 14px;
+}
+
+#commandPage.command-sidebar-collapsed .command-sidebar-eyebrow,
+#commandPage.command-sidebar-collapsed .command-sidebar-heading h2,
+#commandPage.command-sidebar-collapsed #commandAgentTotal,
+#commandPage.command-sidebar-collapsed .command-sidebar-filters,
+#commandPage.command-sidebar-collapsed .command-search-wrap,
+#commandPage.command-sidebar-collapsed .command-sidebar-tools,
+#commandPage.command-sidebar-collapsed #commandPagination,
+#commandPage.command-sidebar-collapsed .command-agent-copy,
+#commandPage.command-sidebar-collapsed .command-agent-status,
+#commandPage.command-sidebar-collapsed .collapse-label {
+  display: none !important;
+}
+
+#commandPage.command-sidebar-collapsed .command-sidebar-heading {
+  margin-bottom: 12px;
+  min-height: 22px;
+}
+
+#commandPage.command-sidebar-collapsed #commandAgentList {
+  padding: 0;
+}
+
+#commandPage.command-sidebar-collapsed .command-agent-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  padding: 7px;
+  margin-bottom: 5px;
+  border-radius: 16px;
+}
+
+#commandPage.command-sidebar-collapsed .command-agent-row .command-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+#commandPage.command-sidebar-collapsed .command-sidebar-collapse {
+  justify-content: center;
+  padding: 0;
+}
+
+@media (max-width: 1180px) {
+  #commandPage .command-layout-v2 { grid-template-columns: 330px minmax(0, 1fr); }
+}
+
+@media (max-width: 980px) {
+  #commandPage .command-sidebar-v2 {
+    position: static;
+    height: auto;
+    min-height: 0;
+    max-height: 600px;
+  }
+  #commandPage.command-sidebar-collapsed .command-layout-v2,
+  #commandPage .command-layout-v2 { grid-template-columns: 1fr; }
+  #commandPage.command-sidebar-collapsed .command-sidebar-v2 { max-height: 180px; }
+}

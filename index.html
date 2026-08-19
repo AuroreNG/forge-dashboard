@@ -1885,19 +1885,22 @@ JavaScript opens these when an import button is clicked.
     <aside class="command-sidebar command-sidebar-v2 card">
 
       <div class="command-sidebar-heading">
-        <div>
-          <h2>Agents</h2>
+        <div class="command-sidebar-title-row">
+          <div>
+            <span class="command-sidebar-eyebrow">COMMAND CENTER</span>
+            <h2>Agents</h2>
+          </div>
           <span id="commandAgentTotal">0</span>
         </div>
       </div>
 
-      <div class="command-sidebar-filters">
+      <div class="command-sidebar-filters command-primary-tabs">
         <button
           type="button"
           class="command-filter active"
           data-command-filter="all"
         >
-          All Agents
+          <span>All Agents</span>
         </button>
 
         <button
@@ -1905,14 +1908,13 @@ JavaScript opens these when an import button is clicked.
           class="command-filter"
           data-command-filter="priority"
         >
-          <span>Flagged</span>
+          <span>Priority</span>
           <strong id="commandFlaggedCount">0</strong>
         </button>
       </div>
 
       <div class="command-search-wrap">
-        <span>&#x2315;</span>
-
+        <span aria-hidden="true">⌕</span>
         <input
           id="commandSearch"
           type="search"
@@ -1920,9 +1922,28 @@ JavaScript opens these when an import button is clicked.
         />
       </div>
 
+      <div class="command-sidebar-tools">
+        <div class="command-stage-chips" aria-label="Filter agents by stage">
+          <button type="button" class="command-stage-chip active" data-command-stage-filter="all">All</button>
+          <button type="button" class="command-stage-chip" data-command-stage-filter="pipeline">Pipeline</button>
+          <button type="button" class="command-stage-chip" data-command-stage-filter="licensed">Licensed</button>
+        </div>
+
+        <select id="commandSort" class="command-sort" aria-label="Sort agents">
+          <option value="priority">Priority first</option>
+          <option value="recent">Recent activity</option>
+          <option value="name">Name A-Z</option>
+        </select>
+      </div>
+
       <div id="commandAgentList"></div>
 
       <div id="commandPagination"></div>
+
+      <button type="button" id="collapseCommandSidebar" class="command-sidebar-collapse">
+        <span class="collapse-icon">«</span>
+        <span class="collapse-label">Collapse</span>
+      </button>
 
     </aside>
 
