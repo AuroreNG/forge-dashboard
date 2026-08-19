@@ -1851,16 +1851,22 @@ async function importRecruitFile(parsedRows, file) {
     recruiterName
   );
 
-  const recruiter =
-    findAgentBySmartMatch({
-      name: recruiterName
-    });
+  let recruiter =
+  findAgentBySmartMatch({
+    name: recruiterName
+  });
 
-  if (!recruiter) {
-    throw new Error(
-      `FORGE could not find recruiter "${recruiterName}" in the existing team.`
-    );
-  }
+if (!recruiter) {
+  console.warn(
+    `Recruiter "${recruiterName}" is not yet in this organization. ` +
+    `FORGE will still import the recruit list.`
+  );
+
+  recruiter = {
+    name: recruiterName,
+    code: null
+  };
+}
 
   const recruits =
     parsedRows
