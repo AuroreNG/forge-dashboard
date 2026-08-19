@@ -22447,3 +22447,1012 @@ body.forge-drawer-open {
     margin-right: 62px !important;
   }
 }
+
+
+/* ==========================================================
+   V8 — FINAL COMMAND CENTER REPAIR
+   Fixes:
+   1. Dark-blue hero hierarchy / overlapping stats
+   2. Wider + slightly taller sidebar
+   3. Clear card separation between agents
+   4. Better collapsed rail
+   5. Stage chips + sort control no longer collide
+========================================================== */
+
+/* -------------------------
+   COMMAND CENTER LAYOUT
+------------------------- */
+#commandPage .command-layout-v2 {
+  grid-template-columns: 430px minmax(0, 1fr) !important;
+  gap: 20px !important;
+  align-items: stretch !important;
+}
+
+#commandPage .command-main-v2 {
+  min-width: 0 !important;
+}
+
+/* -------------------------
+   SIDEBAR — EXPANDED
+------------------------- */
+#commandPage .command-sidebar-v2 {
+  position: sticky !important;
+  top: 18px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  width: 100% !important;
+  height: calc(100vh - 88px) !important;
+  min-height: 840px !important;
+  max-height: 980px !important;
+
+  padding: 24px 20px 18px !important;
+
+  border: 1px solid rgba(190, 207, 233, .92) !important;
+  border-radius: 28px !important;
+
+  background:
+    radial-gradient(circle at 10% 0%, rgba(92, 135, 217, .10), transparent 26%),
+    linear-gradient(165deg, rgba(255,255,255,.97), rgba(246,249,255,.93)) !important;
+
+  backdrop-filter: blur(22px) saturate(125%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(125%) !important;
+
+  box-shadow:
+    0 24px 58px rgba(35, 67, 120, .12),
+    inset 0 1px 0 rgba(255,255,255,.96) !important;
+
+  overflow: hidden !important;
+}
+
+/* heading */
+#commandPage .command-sidebar-heading {
+  margin-bottom: 18px !important;
+}
+
+#commandPage .command-sidebar-title-row {
+  align-items: center !important;
+}
+
+#commandPage .command-sidebar-eyebrow {
+  margin-bottom: 7px !important;
+  color: #6983ad !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  letter-spacing: .13em !important;
+}
+
+#commandPage .command-sidebar-heading h2 {
+  color: #10284f !important;
+  font-size: 32px !important;
+  line-height: 1 !important;
+  letter-spacing: -.035em !important;
+}
+
+#commandPage #commandAgentTotal {
+  min-width: 116px !important;
+  min-height: 44px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 0 16px !important;
+
+  border: 1px solid #cddbef !important;
+  border-radius: 999px !important;
+
+  color: #274b82 !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+
+  background: rgba(255,255,255,.88) !important;
+  box-shadow:
+    0 5px 14px rgba(43, 78, 136, .06),
+    inset 0 1px 0 rgba(255,255,255,.96) !important;
+}
+
+/* main All Agents / Priority tabs */
+#commandPage .command-primary-tabs {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 6px !important;
+
+  margin-bottom: 14px !important;
+  padding: 5px !important;
+
+  border: 1px solid #d3dff0 !important;
+  border-radius: 18px !important;
+
+  background: rgba(255,255,255,.80) !important;
+}
+
+#commandPage .command-primary-tabs .command-filter {
+  min-width: 0 !important;
+  min-height: 50px !important;
+
+  border: 0 !important;
+  border-radius: 14px !important;
+
+  color: #294978 !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#commandPage .command-primary-tabs .command-filter.active {
+  color: #fff !important;
+  background:
+    linear-gradient(180deg, #2050ab 0%, #123989 100%) !important;
+
+  box-shadow:
+    0 10px 20px rgba(27, 67, 153, .21) !important;
+}
+
+#commandPage #commandFlaggedCount {
+  min-width: 28px !important;
+  height: 28px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 999px !important;
+
+  color: #2c4c7b !important;
+  background: #edf3fc !important;
+}
+
+#commandPage .command-filter.active #commandFlaggedCount {
+  color: #fff !important;
+  background: rgba(255,255,255,.18) !important;
+}
+
+/* search */
+#commandPage .command-search-wrap {
+  height: 58px !important;
+  margin-bottom: 14px !important;
+  padding: 0 18px !important;
+
+  border: 1px solid #cfdbed !important;
+  border-radius: 18px !important;
+
+  background: rgba(255,255,255,.88) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.96),
+    0 5px 14px rgba(39, 73, 130, .035) !important;
+}
+
+#commandPage .command-search-wrap > span {
+  color: #6480aa !important;
+  font-size: 20px !important;
+}
+
+#commandPage #commandSearch {
+  height: 56px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: #19345f !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  background: transparent !important;
+}
+
+#commandPage #commandSearch::placeholder {
+  color: #7d8fae !important;
+}
+
+/* toolbar — chips get their own row, sort gets full row */
+#commandPage .command-sidebar-tools {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+
+  margin: 0 0 14px !important;
+}
+
+#commandPage .command-stage-chips {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+#commandPage .command-stage-chip {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 42px !important;
+  padding: 0 8px !important;
+
+  border: 1px solid #d2deef !important;
+  border-radius: 13px !important;
+
+  color: #5c7192 !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+
+  background: rgba(255,255,255,.82) !important;
+}
+
+#commandPage .command-stage-chip.active {
+  border-color: #2760c7 !important;
+  color: #174fae !important;
+  background: #edf4ff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(44, 98, 204, .08) !important;
+}
+
+#commandPage .command-sort {
+  width: 100% !important;
+  height: 46px !important;
+  padding: 0 14px !important;
+
+  border: 1px solid #d2deef !important;
+  border-radius: 14px !important;
+
+  color: #324e79 !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+
+  background: rgba(255,255,255,.88) !important;
+}
+
+/* agent list */
+#commandPage #commandAgentList {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  padding: 3px 5px 6px 1px !important;
+
+  scrollbar-width: thin !important;
+  scrollbar-color: #c7d4e7 transparent !important;
+}
+
+#commandPage #commandAgentList::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+#commandPage #commandAgentList::-webkit-scrollbar-thumb {
+  background: #c7d4e7 !important;
+  border-radius: 999px !important;
+}
+
+/* each agent = clearly separate card */
+#commandPage .command-agent-row {
+  position: relative !important;
+
+  display: grid !important;
+  grid-template-columns: 52px minmax(0, 1fr) 16px !important;
+  align-items: center !important;
+  gap: 14px !important;
+
+  width: 100% !important;
+  min-height: 78px !important;
+
+  margin: 0 !important;
+  padding: 12px 14px !important;
+
+  border: 1px solid #dce5f1 !important;
+  border-radius: 17px !important;
+
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.98), rgba(249,251,255,.96)) !important;
+
+  box-shadow:
+    0 5px 13px rgba(35, 67, 117, .055),
+    inset 0 1px 0 rgba(255,255,255,.98) !important;
+
+  transition:
+    transform .16s ease,
+    border-color .16s ease,
+    box-shadow .16s ease,
+    background .16s ease !important;
+}
+
+#commandPage .command-agent-row:hover {
+  transform: translateY(-1px) !important;
+
+  border-color: #b9cbed !important;
+
+  background:
+    linear-gradient(145deg, #ffffff, #f4f8ff) !important;
+
+  box-shadow:
+    0 9px 20px rgba(35, 70, 130, .09),
+    inset 0 1px 0 rgba(255,255,255,1) !important;
+}
+
+#commandPage .command-agent-row.active {
+  border-color: #e7aa3f !important;
+
+  background:
+    linear-gradient(90deg, #fff9ef 0%, #ffffff 82%) !important;
+
+  box-shadow:
+    0 8px 20px rgba(220, 151, 30, .13),
+    inset 3px 0 0 #e6a333 !important;
+}
+
+#commandPage .command-agent-row .command-avatar {
+  width: 44px !important;
+  height: 44px !important;
+
+  border: 1px solid #d4e0f2 !important;
+  border-radius: 50% !important;
+
+  color: #285ac2 !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+
+  background:
+    linear-gradient(145deg, #edf3ff, #dfe9fb) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+
+#commandPage .command-agent-row.active .command-avatar {
+  border-color: #edb650 !important;
+  color: #c78313 !important;
+  background: #fff !important;
+}
+
+#commandPage .command-agent-copy strong {
+  display: block !important;
+
+  color: #15305a !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  line-height: 1.25 !important;
+}
+
+#commandPage .command-agent-copy span {
+  display: block !important;
+
+  margin-top: 5px !important;
+
+  color: #687f9f !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+}
+
+#commandPage .command-agent-status {
+  width: 11px !important;
+  height: 11px !important;
+
+  justify-self: end !important;
+
+  border-radius: 50% !important;
+}
+
+/* pagination */
+#commandPage #commandPagination {
+  flex: 0 0 auto !important;
+
+  margin-top: 12px !important;
+  padding-top: 14px !important;
+
+  border-top: 1px solid #dde6f2 !important;
+}
+
+/* collapse button */
+#commandPage .command-sidebar-collapse {
+  flex: 0 0 auto !important;
+
+  width: 100% !important;
+  min-height: 56px !important;
+
+  margin-top: 12px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+
+  padding: 0 18px !important;
+
+  border: 1px solid #d5e0ef !important;
+  border-radius: 16px !important;
+
+  color: #284b7f !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+
+  background: rgba(255,255,255,.82) !important;
+
+  box-shadow:
+    0 5px 14px rgba(35, 70, 127, .045),
+    inset 0 1px 0 rgba(255,255,255,.96) !important;
+}
+
+#commandPage .command-sidebar-collapse:hover {
+  border-color: #adc2e4 !important;
+  background: #f7faff !important;
+}
+
+#commandPage .collapse-icon {
+  font-size: 22px !important;
+}
+
+/* -------------------------
+   COLLAPSED SIDEBAR
+------------------------- */
+#commandPage.command-sidebar-collapsed .command-layout-v2 {
+  grid-template-columns: 132px minmax(0, 1fr) !important;
+}
+
+#commandPage.command-sidebar-collapsed .command-sidebar-v2 {
+  width: 132px !important;
+  min-width: 132px !important;
+
+  height: calc(100vh - 88px) !important;
+  min-height: 840px !important;
+
+  padding: 20px 12px 16px !important;
+}
+
+#commandPage.command-sidebar-collapsed .command-sidebar-heading {
+  min-height: 18px !important;
+  margin: 0 !important;
+}
+
+#commandPage.command-sidebar-collapsed .command-sidebar-eyebrow,
+#commandPage.command-sidebar-collapsed .command-sidebar-heading h2,
+#commandPage.command-sidebar-collapsed #commandAgentTotal,
+#commandPage.command-sidebar-collapsed .command-sidebar-filters,
+#commandPage.command-sidebar-collapsed .command-search-wrap,
+#commandPage.command-sidebar-collapsed .command-sidebar-tools,
+#commandPage.command-sidebar-collapsed #commandPagination,
+#commandPage.command-sidebar-collapsed .command-agent-copy,
+#commandPage.command-sidebar-collapsed .command-agent-status,
+#commandPage.command-sidebar-collapsed .collapse-label {
+  display: none !important;
+}
+
+#commandPage.command-sidebar-collapsed #commandAgentList {
+  gap: 10px !important;
+  padding: 4px 2px 8px !important;
+}
+
+#commandPage.command-sidebar-collapsed .command-agent-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  min-height: 68px !important;
+
+  padding: 8px !important;
+
+  border: 1px solid #dce5f1 !important;
+  border-radius: 16px !important;
+
+  background: rgba(255,255,255,.86) !important;
+
+  box-shadow:
+    0 5px 12px rgba(34, 67, 118, .055) !important;
+}
+
+#commandPage.command-sidebar-collapsed .command-agent-row.active {
+  border-color: #e4a63c !important;
+  box-shadow:
+    0 6px 14px rgba(216, 147, 26, .12),
+    inset 3px 0 0 #e4a43a !important;
+}
+
+#commandPage.command-sidebar-collapsed .command-agent-row .command-avatar {
+  width: 46px !important;
+  height: 46px !important;
+  font-size: 14px !important;
+}
+
+#commandPage.command-sidebar-collapsed .command-sidebar-collapse {
+  justify-content: center !important;
+  min-height: 56px !important;
+  padding: 0 !important;
+}
+
+/* ==========================================================
+   HERO — CLEAN, NON-OVERLAPPING DARK BLUE STRUCTURE
+========================================================== */
+#commandPage .command-agent-header-v2 {
+  position: relative !important;
+  overflow: hidden !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    150px
+    minmax(320px, 1fr)
+    210px
+    210px
+    170px
+    58px !important;
+
+  grid-template-rows:
+    auto
+    1px
+    auto !important;
+
+  grid-template-areas:
+    "avatar identity identity identity identity identity"
+    "divider divider divider divider divider divider"
+    "activity activity days risk stage more" !important;
+
+  align-items: center !important;
+
+  gap: 26px 28px !important;
+
+  min-height: 330px !important;
+
+  margin: 0 !important;
+  padding: 30px 34px 28px !important;
+
+  border: 1px solid rgba(57, 92, 161, .62) !important;
+  border-radius: 28px !important;
+
+  background:
+    radial-gradient(circle at 17% 8%, rgba(48,126,255,.20), transparent 24%),
+    radial-gradient(circle at 87% 8%, rgba(27,70,166,.30), transparent 30%),
+    linear-gradient(100deg, #041a3c 0%, #072a66 36%, #05255a 64%, #031633 100%) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 25px 58px rgba(5, 24, 57, .26) !important;
+}
+
+#commandPage .command-agent-header-v2::before {
+  content: "" !important;
+
+  position: absolute !important;
+  inset: 0 !important;
+
+  pointer-events: none !important;
+
+  opacity: .32 !important;
+
+  background:
+    repeating-radial-gradient(
+      ellipse at 82% 14%,
+      transparent 0 28px,
+      rgba(89,132,214,.13) 29px 31px,
+      transparent 32px 48px
+    ) !important;
+}
+
+#commandPage .command-agent-header-v2::after {
+  content: "" !important;
+
+  position: absolute !important;
+
+  left: 34px !important;
+  right: 34px !important;
+  top: 201px !important;
+
+  height: 1px !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.03),
+      rgba(139,169,226,.22) 16%,
+      rgba(139,169,226,.18) 85%,
+      rgba(255,255,255,.03)
+    ) !important;
+}
+
+/* avatar */
+#commandPage .command-avatar-v2 {
+  grid-area: avatar !important;
+
+  width: 128px !important;
+  height: 128px !important;
+
+  align-self: start !important;
+  justify-self: start !important;
+
+  margin: 0 !important;
+
+  border: 3px solid #58a2ff !important;
+  border-radius: 50% !important;
+
+  color: #fff !important;
+
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: 46px !important;
+  font-weight: 700 !important;
+
+  background:
+    linear-gradient(180deg, #448cf6 0%, #2155c7 100%) !important;
+
+  box-shadow:
+    0 0 0 7px rgba(6,30,75,.40),
+    0 18px 34px rgba(0,0,0,.25) !important;
+
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* identity */
+#commandPage .command-agent-identity {
+  grid-area: identity !important;
+
+  align-self: start !important;
+
+  max-width: none !important;
+  min-width: 0 !important;
+
+  padding: 0 !important;
+
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+#commandPage .command-profile-eyebrow {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+
+  width: fit-content !important;
+
+  margin: 0 0 13px !important;
+
+  color: #e6a52d !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  letter-spacing: .09em !important;
+  text-transform: uppercase !important;
+
+  background: transparent !important;
+}
+
+#commandPage .command-profile-eyebrow span {
+  color: #e6a52d !important;
+  font-size: 19px !important;
+}
+
+/* force name WHITE — ID selector beats old #commandName rules */
+#commandPage #commandName {
+  width: auto !important;
+  max-width: 100% !important;
+
+  margin: 0 0 12px !important;
+  padding: 0 !important;
+
+  color: #ffffff !important;
+
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(44px, 4vw, 66px) !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: -.045em !important;
+
+  background: transparent !important;
+  border: 0 !important;
+  text-shadow: none !important;
+}
+
+/* Upline badge + name */
+#commandPage .command-agent-role {
+  display: inline-flex !important;
+
+  width: fit-content !important;
+  min-width: 0 !important;
+
+  align-items: center !important;
+
+  margin: 0 8px 0 0 !important;
+  padding: 7px 13px !important;
+
+  border: 1px solid rgba(106,145,220,.42) !important;
+  border-radius: 999px !important;
+
+  color: #b8ceff !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+
+  background: rgba(31,73,161,.52) !important;
+
+  vertical-align: middle !important;
+}
+
+#commandPage .command-coordinator-pill {
+  display: inline-flex !important;
+
+  width: fit-content !important;
+  min-width: 0 !important;
+  min-height: 42px !important;
+
+  align-items: center !important;
+  gap: 9px !important;
+
+  margin: 0 !important;
+  padding: 0 15px !important;
+
+  border: 1px solid rgba(111,145,210,.38) !important;
+  border-radius: 13px !important;
+
+  background: rgba(4,25,61,.46) !important;
+
+  vertical-align: middle !important;
+}
+
+#commandPage .command-coordinator-pill > span {
+  color: #dbe8ff !important;
+  font-size: 17px !important;
+}
+
+#commandPage #commandMeta {
+  display: inline !important;
+
+  width: auto !important;
+  min-width: 0 !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  border: 0 !important;
+
+  color: #ffffff !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+
+  background: transparent !important;
+}
+
+#commandPage #commandMeta::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* stats */
+#commandPage .command-last-activity {
+  grid-area: activity !important;
+}
+
+#commandPage .command-days-fact {
+  grid-area: days !important;
+}
+
+#commandPage .command-risk-fact {
+  grid-area: risk !important;
+}
+
+#commandPage .command-last-activity,
+#commandPage .command-days-fact,
+#commandPage .command-risk-fact {
+  min-width: 0 !important;
+  min-height: 74px !important;
+
+  align-self: end !important;
+
+  margin: 0 !important;
+  padding: 0 24px !important;
+
+  border: 0 !important;
+  border-left: 1px solid rgba(137,167,223,.24) !important;
+
+  background: transparent !important;
+
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+#commandPage .command-last-activity {
+  padding-left: 0 !important;
+  border-left: 0 !important;
+}
+
+#commandPage .command-agent-fact span {
+  display: block !important;
+
+  margin: 0 0 9px !important;
+
+  color: #aec3ec !important;
+
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  letter-spacing: .02em !important;
+  text-transform: none !important;
+}
+
+#commandPage .command-agent-fact strong {
+  display: block !important;
+
+  margin: 0 !important;
+
+  color: #ffffff !important;
+
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  line-height: 1.32 !important;
+
+  white-space: normal !important;
+}
+
+#commandPage #commandRiskLevel.low {
+  color: #77d79b !important;
+}
+
+#commandPage #commandRiskLevel.medium {
+  color: #f1bd5a !important;
+}
+
+#commandPage #commandRiskLevel.high {
+  color: #ff8c74 !important;
+}
+
+/* stage + menu */
+#commandPage .command-agent-header-v2 .stage-badge {
+  grid-area: stage !important;
+
+  align-self: end !important;
+  justify-self: center !important;
+
+  width: fit-content !important;
+
+  margin: 0 !important;
+  padding: 13px 20px !important;
+
+  border: 0 !important;
+  border-radius: 999px !important;
+
+  color: #258d4e !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+
+  background: #e8f8ee !important;
+
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+#commandPage .command-agent-header-v2 .more-btn {
+  grid-area: more !important;
+
+  align-self: end !important;
+  justify-self: end !important;
+
+  width: 54px !important;
+  height: 50px !important;
+
+  margin: 0 !important;
+
+  border: 1px solid rgba(102,135,197,.36) !important;
+  border-radius: 14px !important;
+
+  color: #ffffff !important;
+  font-size: 16px !important;
+
+  background: rgba(5,27,65,.48) !important;
+
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* -------------------------
+   RESPONSIVE
+------------------------- */
+@media (max-width: 1380px) {
+  #commandPage .command-layout-v2 {
+    grid-template-columns: 390px minmax(0, 1fr) !important;
+  }
+
+  #commandPage .command-agent-header-v2 {
+    grid-template-columns:
+      125px
+      minmax(250px, 1fr)
+      170px
+      180px
+      150px
+      52px !important;
+  }
+
+  #commandPage .command-avatar-v2 {
+    width: 106px !important;
+    height: 106px !important;
+    font-size: 38px !important;
+  }
+}
+
+@media (max-width: 1120px) {
+  #commandPage .command-layout-v2 {
+    grid-template-columns: 340px minmax(0, 1fr) !important;
+  }
+
+  #commandPage.command-sidebar-collapsed .command-layout-v2 {
+    grid-template-columns: 118px minmax(0, 1fr) !important;
+  }
+
+  #commandPage.command-sidebar-collapsed .command-sidebar-v2 {
+    width: 118px !important;
+    min-width: 118px !important;
+  }
+
+  #commandPage .command-agent-header-v2 {
+    grid-template-columns: 100px minmax(0, 1fr) 150px 150px 48px !important;
+    grid-template-areas:
+      "avatar identity identity identity identity"
+      "divider divider divider divider divider"
+      "activity days risk stage more" !important;
+  }
+}
+
+@media (max-width: 900px) {
+  #commandPage .command-layout-v2,
+  #commandPage.command-sidebar-collapsed .command-layout-v2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  #commandPage .command-sidebar-v2,
+  #commandPage.command-sidebar-collapsed .command-sidebar-v2 {
+    position: relative !important;
+    top: auto !important;
+
+    width: 100% !important;
+    min-width: 0 !important;
+
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: 620px !important;
+  }
+
+  #commandPage .command-agent-header-v2 {
+    grid-template-columns: 88px minmax(0, 1fr) !important;
+    grid-template-rows: auto 1px auto auto auto auto !important;
+    grid-template-areas:
+      "avatar identity"
+      "divider divider"
+      "activity activity"
+      "days risk"
+      "stage more" !important;
+
+    min-height: 0 !important;
+    gap: 20px 16px !important;
+  }
+
+  #commandPage .command-agent-header-v2::after {
+    top: 176px !important;
+  }
+
+  #commandPage .command-avatar-v2 {
+    width: 80px !important;
+    height: 80px !important;
+    font-size: 29px !important;
+  }
+
+  #commandPage #commandName {
+    font-size: 34px !important;
+  }
+
+  #commandPage .command-last-activity,
+  #commandPage .command-days-fact,
+  #commandPage .command-risk-fact {
+    padding-left: 0 !important;
+    border-left: 0 !important;
+  }
+
+  #commandPage .command-risk-fact {
+    padding-left: 18px !important;
+    border-left: 1px solid rgba(137,167,223,.24) !important;
+  }
+
+  #commandPage .command-agent-header-v2 .stage-badge {
+    justify-self: start !important;
+  }
+}
