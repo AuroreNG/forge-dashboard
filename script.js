@@ -8020,11 +8020,43 @@ async function importTeamFile(parsedRows) {
         team_status:
           teamStatus || null,
 
-        stage:
-          getTeamJourneyStage(teamStatus),
+       stage: (() => {
 
-        import_source:
-          "Team CSV"
+  const importedStage =
+    getTeamJourneyStage(teamStatus);
+
+  const existingAgent =
+    allAgents.find((existing) =>
+      String(existing.code || "")
+        .trim()
+        .toUpperCase() ===
+      String(agent.code || "")
+        .trim()
+        .toUpperCase()
+    );
+
+  if (!existingAgent) {
+    return importedStage;
+  }
+
+  const currentStage =
+    existingAgent.stage ||
+    "Not Placed";
+
+  const currentRank =
+    STAGE_RANK[currentStage] ?? 0;
+
+  const importedRank =
+    STAGE_RANK[importedStage] ?? 0;
+
+  return importedRank > currentRank
+    ? importedStage
+    : currentStage;
+
+})(),
+
+import_source:
+  "Team CSV"
       };
 
     });
@@ -8216,17 +8248,119 @@ async function importComplianceFile(parsedRows, file) {
         complianceAgent
       );
 
-    if (!existingAgent) {
+   if (!existingAgent) {
 
-      console.warn(
-        "Compliance record has no Team match:",
-        complianceAgent.code,
+  console.log(
+    "Creating Compliance-only team member:",
+    complianceAgent.code,
+    complianceAgent.name
+  );
+
+  const residentActive =
+    isComplianceActive(
+      complianceAgent.residentLicense
+    );
+
+  const amlActive =
+    isComplianceActive(
+      complianceAgent.amlStatus
+    );
+
+  let initialStage = "Not Placed";
+
+  if (residentActive) {
+    initialStage = "Licensed";
+  }
+
+  if (residentActive && amlActive) {
+    initialStage = "Contracted";
+  }
+
+  const newAgent = {
+
+    organization_id:
+      getActiveOrganizationId(),
+
+    agent_code:
+      String(complianceAgent.code)
+        .trim()
+        .toUpperCase(),
+
+    name:
+      cleanAgentName(
         complianceAgent.name
+      ),
+
+    email:
+      complianceAgent.email
+        ? String(complianceAgent.email)
+            .trim()
+            .toLowerCase()
+        : null,
+
+    agent_level:
+      complianceAgent.level || null,
+
+    resident_state:
+      complianceAgent.residentState || null,
+
+    resident_license:
+      complianceAgent.residentLicense || null,
+
+    eo_status:
+      complianceAgent.eoStatus || null,
+
+    aml_status:
+      complianceAgent.amlStatus || null,
+
+    tevah_platform_fee:
+      complianceAgent.tevahPlatformFee || null,
+
+    npn:
+      complianceAgent.npn || null,
+
+    upline_name:
+      complianceAgent.upline || null,
+
+    team_status:
+      complianceAgent.teamStatus || null,
+
+    stage:
+      initialStage,
+
+    import_source:
+      "Tevah Compliance"
+  };
+
+  const { error: insertError } =
+    await forgeSupabase
+      .from("agents")
+      .upsert(
+        newAgent,
+        {
+          onConflict:
+            "organization_id,agent_code",
+
+          ignoreDuplicates:
+            false
+        }
       );
 
-      unmatchedCount++;
-      continue;
-    }
+  if (insertError) {
+
+    console.error(
+      "COMPLIANCE INSERT ERROR:",
+      complianceAgent.code,
+      insertError
+    );
+
+    failedCount++;
+    continue;
+  }
+
+  updatedCount++;
+  continue;
+}
 
     const finalStage =
       getComplianceJourneyStage(
