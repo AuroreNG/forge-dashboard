@@ -5964,7 +5964,7 @@ function renderCommandCenter(
         </strong>
 
         <span>
-          Coordinator
+          Upline
           •
           ${
             ["Licensed", "Contracted"].includes(
