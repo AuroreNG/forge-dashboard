@@ -21216,3 +21216,221 @@ body.forge-drawer-open {
   .action-footer { flex-direction: column; }
   .action-btn { width: 100%; min-width: 0; }
 }
+
+
+/* ==========================================================
+   V4 PREMIUM CRM SIDEBAR PASS
+   Make the command rail feel like a refined SaaS CRM.
+========================================================== */
+#commandPage .command-layout-v2 {
+  grid-template-columns: 344px minmax(0, 1fr);
+}
+
+#commandPage .command-sidebar-v2 {
+  padding: 24px 16px 16px;
+  background:
+    radial-gradient(circle at top left, rgba(92,137,221,.07), transparent 32%),
+    linear-gradient(180deg, #fbfdff 0%, #f6f9ff 100%);
+}
+
+#commandPage .command-sidebar-heading {
+  padding: 0 4px;
+  margin-bottom: 16px;
+}
+
+#commandPage .command-sidebar-heading h2 {
+  font-size: 31px;
+  color: #102957;
+}
+
+#commandPage #commandAgentTotal {
+  min-width: 104px;
+  padding: 9px 14px;
+  border-color: #d5e1f2;
+  color: #365985;
+  background: rgba(255,255,255,.9);
+  box-shadow: 0 6px 18px rgba(60,93,148,.06);
+}
+
+#commandPage .command-sidebar-filters {
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+#commandPage .command-filter {
+  min-height: 44px;
+  border-radius: 13px !important;
+  font-size: 12px;
+  letter-spacing: .01em;
+}
+
+#commandPage .command-search-wrap {
+  margin-bottom: 12px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(50,86,146,.05);
+}
+
+#commandPage #commandAgentList {
+  padding: 4px 3px 6px 0;
+  scroll-padding-top: 6px;
+}
+
+#commandPage .command-agent-row {
+  position: relative;
+  grid-template-columns: 46px minmax(0, 1fr) 12px;
+  min-height: 72px;
+  gap: 12px;
+  margin-bottom: 6px;
+  padding: 10px 11px;
+  border-radius: 15px;
+  background: transparent;
+}
+
+#commandPage .command-agent-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 3px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+#commandPage .command-agent-row:hover {
+  transform: none;
+  border-color: #dce6f5;
+  background: rgba(255,255,255,.86);
+  box-shadow: 0 8px 20px rgba(63,97,154,.07);
+}
+
+#commandPage .command-agent-row.active {
+  border-color: #e7b45b;
+  background: linear-gradient(90deg, rgba(255,247,229,.92) 0%, rgba(255,255,255,.96) 88%);
+  box-shadow: 0 10px 24px rgba(220,163,57,.12);
+}
+
+#commandPage .command-agent-row.active::before {
+  background: linear-gradient(180deg, #f3b23e 0%, #d9921b 100%);
+}
+
+#commandPage .command-agent-row .command-avatar {
+  width: 42px;
+  height: 42px;
+  font-size: 14px;
+  color: #315ebe;
+  background: linear-gradient(180deg, #f0f5ff 0%, #e2ebff 100%);
+  box-shadow: inset 0 0 0 1px rgba(97,133,205,.08);
+}
+
+#commandPage .command-agent-row.active .command-avatar {
+  border: 1px solid #e7b04c;
+  color: #c6800a;
+  box-shadow: 0 6px 14px rgba(221,160,40,.11);
+}
+
+#commandPage .command-agent-copy {
+  min-width: 0;
+}
+
+#commandPage .command-agent-copy strong {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #17315d;
+  font-size: 13.5px;
+  line-height: 1.2;
+}
+
+#commandPage .command-agent-copy span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #71839f;
+  font-size: 10.5px;
+}
+
+#commandPage .command-agent-status {
+  width: 9px;
+  height: 9px;
+  box-shadow: none;
+}
+
+#commandPage #commandPagination {
+  margin-top: 10px;
+  padding: 14px 4px 2px;
+  background: linear-gradient(180deg, rgba(248,251,255,.55), rgba(248,251,255,.92));
+}
+
+#commandPage #commandPagination .pagination-summary {
+  max-width: 145px;
+  color: #657999;
+  font-size: 11px;
+}
+
+#commandPage #commandPagination .pagination-controls {
+  gap: 7px;
+}
+
+#commandPage #commandPagination button,
+#commandPage #commandPagination span {
+  min-width: 38px;
+  height: 38px;
+  border: 1px solid #d7e2f3;
+  border-radius: 12px;
+  color: #213e70;
+  font-size: 12px;
+  font-weight: 900;
+  background: rgba(255,255,255,.95);
+}
+
+#commandPage #commandPagination span {
+  display: inline-grid;
+  place-items: center;
+}
+
+/* more refined selected-agent hero relationship */
+#commandPage .command-agent-header-v2 {
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 86% 20%, rgba(124,164,231,.10), transparent 26%),
+    linear-gradient(135deg, #f8fbff 0%, #edf4ff 46%, #e6f0ff 100%);
+}
+
+#commandPage .command-avatar-v2 {
+  border-width: 2px;
+  background: linear-gradient(180deg, #4d8cf0 0%, #2458c7 100%);
+}
+
+#commandPage .command-intelligence-hero {
+  background:
+    radial-gradient(circle at 78% 36%, rgba(104,151,231,.07), transparent 28%),
+    linear-gradient(115deg, #ffffff 0%, #f8fbff 52%, #eef5ff 100%);
+}
+
+/* tighter modal polish */
+.template-picker {
+  background: linear-gradient(180deg, #fbfdff 0%, #f5f9ff 100%);
+}
+
+.template-chip {
+  transition: .16s ease;
+}
+
+.template-chip:hover {
+  transform: translateY(-1px);
+  border-color: #9ab7ea;
+  background: #f8fbff;
+}
+
+.template-chip.active:hover {
+  background: linear-gradient(180deg, #3d6de3 0%, #2350c9 100%);
+}
+
+@media (max-width: 1180px) {
+  #commandPage .command-layout-v2 {
+    grid-template-columns: 310px minmax(0, 1fr);
+  }
+}
