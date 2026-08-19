@@ -1869,12 +1869,12 @@ if (!recruiter) {
 }
 
   const recruits =
-    parsedRows
-      .map(normalizeRecruitAgent)
-      .filter(agent =>
-        agent.code &&
-        agent.code.trim() !== ""
-      );
+  parsedRows
+    .map(normalizeRecruitAgent)
+    .filter(agent =>
+      agent.name &&
+      agent.name.trim() !== ""
+    );
 
   let created = 0;
   let updated = 0;
@@ -1889,7 +1889,10 @@ if (!recruiter) {
         getActiveOrganizationId(),
 
       agent_code:
-        recruit.code,
+  recruit.code ||
+  recruit.email ||
+  recruit.phone ||
+  `RECRUIT-${normalizeMatchName(recruit.name)}`,
 
       name:
         cleanAgentName(recruit.name),
