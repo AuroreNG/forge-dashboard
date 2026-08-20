@@ -4276,19 +4276,25 @@ if (viewButton) {
 
 } // closes renderJourneyPage
 // ==========================================================
-// JOURNEY AGENT MENU
+// JOURNEY AGENT MENU - FIXED / PORTAL VERSION
 // ==========================================================
 
-document.addEventListener("click", (event) => {
+document.addEventListener("click", async (event) => {
 
   const menuButton =
     event.target.closest("[data-agent-menu]");
 
-  // Clicking somewhere else closes menus
+  // --------------------------------------------------------
+  // CLICK OUTSIDE = CLOSE MENU
+  // --------------------------------------------------------
+
   if (!menuButton) {
-    document
-      .querySelectorAll(".journey-agent-menu")
-      .forEach((menu) => menu.remove());
+
+    if (!event.target.closest(".journey-agent-menu")) {
+      document
+        .querySelectorAll(".journey-agent-menu")
+        .forEach((menu) => menu.remove());
+    }
 
     return;
   }
@@ -4296,21 +4302,42 @@ document.addEventListener("click", (event) => {
   event.preventDefault();
   event.stopPropagation();
 
+
+  // --------------------------------------------------------
+  // GET AGENT
+  // --------------------------------------------------------
+
   const agentId =
     menuButton.dataset.agentMenu;
 
   const agent =
     allAgents.find(
       (item) =>
-        String(item.id) ===
-        String(agentId)
+        String(item.id) === String(agentId)
     );
 
-  if (!agent) return;
+  if (!agent) {
+    console.error(
+      "FORGE could not find agent:",
+      agentId
+    );
+
+    return;
+  }
+
+
+  // --------------------------------------------------------
+  // CLOSE EXISTING MENU
+  // --------------------------------------------------------
 
   document
     .querySelectorAll(".journey-agent-menu")
     .forEach((menu) => menu.remove());
+
+
+  // --------------------------------------------------------
+  // CREATE MENU
+  // --------------------------------------------------------
 
   const menu =
     document.createElement("div");
@@ -4319,84 +4346,191 @@ document.addEventListener("click", (event) => {
     "journey-agent-menu";
 
   menu.innerHTML = `
-  <button data-menu-profile>
-    <span class="journey-menu-icon">◉</span>
-    <span>View Details</span>
-  </button>
 
-  <button data-menu-edit>
-    <span class="journey-menu-icon">✎</span>
-    <span>Edit Agent</span>
-  </button>
+    <button
+      type="button"
+      data-menu-profile
+    >
+      <span class="journey-menu-icon">
+        &#9673;
+      </span>
 
-  ${
-    agent.stage !== "Not Placed"
-      ? `
-        <button data-menu-back>
-          <span class="journey-menu-icon">↶</span>
-          <span>Move Back</span>
-        </button>
-      `
-      : ""
+      <span>
+        View Details
+      </span>
+    </button>
+
+
+    <button
+      type="button"
+      data-menu-edit
+    >
+      <span class="journey-menu-icon">
+        &#9998;
+      </span>
+
+      <span>
+        Edit Agent
+      </span>
+    </button>
+
+
+    ${
+      agent.stage !== "Not Placed"
+        ? `
+          <button
+            type="button"
+            data-menu-back
+          >
+            <span class="journey-menu-icon">
+              &#8630;
+            </span>
+
+            <span>
+              Move Back
+            </span>
+          </button>
+        `
+        : ""
+    }
+
+
+    <button
+      type="button"
+      class="danger"
+      data-menu-delete
+    >
+      <span class="journey-menu-icon">
+        &#128465;
+      </span>
+
+      <span>
+        Remove Agent
+      </span>
+    </button>
+
+  `;
+
+
+  // ========================================================
+  // IMPORTANT:
+  // Put menu on BODY instead of inside Journey card.
+  // This prevents all clipping.
+  // ========================================================
+
+  document.body.appendChild(menu);
+
+
+  // --------------------------------------------------------
+  // POSITION MENU BESIDE BUTTON
+  // --------------------------------------------------------
+
+  const rect =
+    menuButton.getBoundingClientRect();
+
+  const menuWidth = 210;
+
+  let left =
+    rect.right - menuWidth;
+
+  let top =
+    rect.bottom + 8;
+
+
+  // Keep menu on screen
+  if (left < 10) {
+    left = 10;
   }
 
-  <button
-    class="danger"
-    data-menu-delete
-  >
-    <span class="journey-menu-icon">⌫</span>
-    <span>Remove Agent</span>
-  </button>
-`;
-
-  menuButton
-    .closest(".journey-card-actions")
-    ?.appendChild(menu);
+  if (
+    left + menuWidth >
+    window.innerWidth - 10
+  ) {
+    left =
+      window.innerWidth -
+      menuWidth -
+      10;
+  }
 
 
-  // OPEN PROFILE
+  menu.style.position = "fixed";
+  menu.style.left = `${left}px`;
+  menu.style.top = `${top}px`;
+  menu.style.width = `${menuWidth}px`;
+  menu.style.zIndex = "999999";
+
+
+  // --------------------------------------------------------
+  // VIEW DETAILS
+  // --------------------------------------------------------
+
   menu
     .querySelector("[data-menu-profile]")
-    ?.addEventListener("click", () => {
+    ?.addEventListener(
+      "click",
+      (clickEvent) => {
 
-      selectedAgent = agent;
+        clickEvent.stopPropagation();
 
-      showPage("Agents");
+        selectedAgent = agent;
 
-      document
-        .querySelectorAll(".nav-btn")
-        .forEach((btn) =>
-          btn.classList.toggle(
-            "active",
-            btn.textContent.trim() === "Agents"
-          )
-        );
+        menu.remove();
 
-      renderAgentsPage();
+        showPage("Agents");
 
-      showAgentProfile(agent);
-    });
+        document
+          .querySelectorAll(".nav-btn")
+          .forEach((nav) => {
+
+            nav.classList.toggle(
+              "active",
+              nav.textContent
+                .trim() === "Agents"
+            );
+
+          });
+
+        renderAgentsPage();
+
+        showAgentProfile(agent);
+      }
+    );
 
 
-  // EDIT
+  // --------------------------------------------------------
+  // EDIT AGENT
+  // --------------------------------------------------------
+
   menu
     .querySelector("[data-menu-edit]")
-    ?.addEventListener("click", () => {
+    ?.addEventListener(
+      "click",
+      (clickEvent) => {
 
-      selectedAgent = agent;
+        clickEvent.stopPropagation();
 
-      document
-        .querySelector(".edit-agent-btn")
-        ?.click();
-    });
+        selectedAgent = agent;
+
+        menu.remove();
+
+        document
+          .querySelector(".edit-agent-btn")
+          ?.click();
+      }
+    );
 
 
+  // --------------------------------------------------------
   // MOVE BACK
+  // --------------------------------------------------------
+
   menu
     .querySelector("[data-menu-back]")
     ?.addEventListener(
       "click",
-      async () => {
+      async (clickEvent) => {
+
+        clickEvent.stopPropagation();
 
         const stages = [
           "Not Placed",
@@ -4412,6 +4546,8 @@ document.addEventListener("click", (event) => {
 
         if (index <= 0) return;
 
+        menu.remove();
+
         await updateJourneyStage(
           agent,
           stages[index - 1]
@@ -4420,22 +4556,30 @@ document.addEventListener("click", (event) => {
     );
 
 
-  // DELETE FROM SUPABASE
+  // --------------------------------------------------------
+  // REMOVE AGENT FROM SUPABASE
+  // --------------------------------------------------------
+
   menu
     .querySelector("[data-menu-delete]")
     ?.addEventListener(
       "click",
-      async () => {
+      async (clickEvent) => {
 
-        if (
-          !confirm(
-            `Delete ${agent.name} from FORGE?`
-          )
-        ) {
+        clickEvent.stopPropagation();
+
+        const confirmed =
+          confirm(
+            `Remove ${agent.name} from FORGE?`
+          );
+
+        if (!confirmed) {
           return;
         }
 
-        const { error } =
+        const {
+          error
+        } =
           await forgeSupabase
             .from("agents")
             .delete()
@@ -4448,33 +4592,33 @@ document.addEventListener("click", (event) => {
               agent.id
             );
 
+
         if (error) {
+
           console.error(
-            "DELETE AGENT ERROR:",
+            "FORGE DELETE AGENT ERROR:",
             error
           );
 
           alert(
-            "FORGE could not delete this agent."
+            "FORGE could not remove this agent."
           );
 
           return;
         }
 
-        await loadCurrentUserProfile();
 
-await loadPlatformAdminStatus();
+        menu.remove();
 
-await loadAvailableOrganizations();
+        await loadCSV();
 
-setInitialOrganization();
-
-await loadCSV();
+        alert(
+          `${agent.name} was removed from FORGE.`
+        );
       }
     );
 
 });
-
 function renderLoggedInUser() {
   if (!currentUserProfile) return;
 
