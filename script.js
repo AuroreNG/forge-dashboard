@@ -10997,11 +10997,90 @@ function getTeamMapMembers() {
 // CHILDREN
 // ----------------------------------------------------------
 
+function normalizeTeamMapName(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+}
+
+
+function findTeamMapParent(member) {
+
+  if (!member) return null;
+
+
+  // 1. Best match: Agent Code
+  if (member.uplineCode) {
+
+    const byCode =
+      teamMapMembers.find(
+        (person) =>
+          person.code ===
+          member.uplineCode
+      );
+
+    if (byCode) {
+      return byCode;
+    }
+  }
+
+
+  // 2. Fallback: Upline Name
+  if (member.uplineName) {
+
+    const targetName =
+      normalizeTeamMapName(
+        member.uplineName
+      );
+
+
+    const byName =
+      teamMapMembers.find(
+        (person) =>
+          normalizeTeamMapName(
+            person.name
+          ) === targetName
+      );
+
+
+    if (byName) {
+      return byName;
+    }
+  }
+
+
+  return null;
+}
+
+
 function teamMapChildren(code) {
 
+  const parent =
+    teamMapMembers.find(
+      (person) =>
+        person.code === code
+    );
+
+  if (!parent) {
+    return [];
+  }
+
+
   return teamMapMembers.filter(
-    (member) =>
-      member.uplineCode === code
+    (member) => {
+
+      const resolvedParent =
+        findTeamMapParent(
+          member
+        );
+
+      return (
+        resolvedParent?.code ===
+        parent.code
+      );
+
+    }
   );
 }
 
@@ -11016,25 +11095,33 @@ function findTeamMapRoot() {
     return null;
   }
 
-  const codes =
-    new Set(
-      teamMapMembers.map(
-        (member) => member.code
-      )
+
+  // A root is someone whose upline
+  // is NOT another person inside this organization.
+  const roots =
+    teamMapMembers.filter(
+      (member) =>
+        !findTeamMapParent(member)
     );
 
 
-  return (
-    teamMapMembers.find(
-      (member) =>
-        !member.uplineCode ||
-        !codes.has(member.uplineCode)
-    ) ||
-    teamMapMembers[0]
-  );
+  if (!roots.length) {
+    return teamMapMembers[0];
+  }
+
+
+  // If there is more than one possible root,
+  // choose the person with the largest organization.
+  return roots.sort(
+    (a, b) =>
+      teamMapDescendantCount(
+        b.code
+      ) -
+      teamMapDescendantCount(
+        a.code
+      )
+  )[0];
 }
-
-
 // ----------------------------------------------------------
 // DESCENDANT COUNT
 // ----------------------------------------------------------
