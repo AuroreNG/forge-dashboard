@@ -5037,28 +5037,79 @@ document.addEventListener("click", (e) => {
 });
 
 //  PAGE NAVIGATION 
-
 function showPage(pageName) {
-  document.querySelector(".dashboard").style.display  = pageName === "Home" ? "grid" : "none";
-  document.querySelector(".lower").style.display      = pageName === "Home" ? "grid" : "none";
 
-  document.getElementById("journeyPage")?.classList.toggle("hidden", pageName !== "Journey");
-  document.getElementById("agentsPage")?.classList.toggle("hidden",  pageName !== "Agents");
-  document.getElementById("commandPage")?.classList.toggle("hidden", pageName !== "Command");
-  document.getElementById("growthPage")?.classList.toggle("hidden",  pageName !== "Growth");
+  document.querySelector(".dashboard").style.display =
+    pageName === "Home"
+      ? "grid"
+      : "none";
 
-  if (pageName === "Growth")  renderGrowthPage();
-  if (pageName === "Command") renderCommandCenter();
-  if (pageName === "Journey") renderJourneyPage();
-  if (pageName === "Agents")  renderAgentsPage();
+  document.querySelector(".lower").style.display =
+    pageName === "Home"
+      ? "grid"
+      : "none";
+
+
+  document
+    .getElementById("journeyPage")
+    ?.classList.toggle(
+      "hidden",
+      pageName !== "Journey"
+    );
+
+
+  document
+    .getElementById("agentsPage")
+    ?.classList.toggle(
+      "hidden",
+      pageName !== "Agents"
+    );
+
+
+  document
+    .getElementById("teamMapPage")
+    ?.classList.toggle(
+      "hidden",
+      pageName !== "Team Map"
+    );
+
+
+  document
+    .getElementById("commandPage")
+    ?.classList.toggle(
+      "hidden",
+      pageName !== "Command"
+    );
+
+
+  document
+    .getElementById("growthPage")
+    ?.classList.toggle(
+      "hidden",
+      pageName !== "Growth"
+    );
+
+
+  if (pageName === "Growth") {
+    renderGrowthPage();
+  }
+
+  if (pageName === "Command") {
+    renderCommandCenter();
+  }
+
+  if (pageName === "Journey") {
+    renderJourneyPage();
+  }
+
+  if (pageName === "Agents") {
+    renderAgentsPage();
+  }
+
+  if (pageName === "Team Map") {
+    renderTeamMap();
+  }
 }
-
-document.querySelector(".view-btn")?.addEventListener("click", () => {
-  showPage("Journey");
-  document.querySelectorAll(".nav-btn").forEach((item) => item.classList.remove("active"));
-  document.querySelectorAll(".nav-btn")[1]?.classList.add("active");
-  renderJourneyPage();
-});
 
 //  DRAG AND DROP 
 
@@ -10858,3 +10909,924 @@ document
     );
 
   });
+
+// ==========================================================
+// FORGE TEAM MAP
+// Organization-aware team hierarchy
+// ==========================================================
+
+let teamMapMembers = [];
+let teamMapRootCode = "";
+let teamMapFocusCode = "";
+let teamMapCollapsed = new Set();
+
+
+// ----------------------------------------------------------
+// NORMALIZE FORGE AGENTS FOR TEAM MAP
+// ----------------------------------------------------------
+
+function getTeamMapMembers() {
+
+  return (allAgents || [])
+    .map((agent) => ({
+
+      id:
+        agent.id,
+
+      code:
+        String(
+          agent.code ||
+          agent.agent_code ||
+          ""
+        )
+          .trim()
+          .toUpperCase(),
+
+      name:
+        agent.name ||
+        agent.full_name ||
+        "Unnamed",
+
+      email:
+        agent.email ||
+        "",
+
+      phone:
+        agent.phone ||
+        "",
+
+      uplineCode:
+        String(
+          agent.uplineCode ||
+          agent.upline_code ||
+          ""
+        )
+          .trim()
+          .toUpperCase(),
+
+      uplineName:
+        agent.upline ||
+        agent.uplineName ||
+        agent.upline_name ||
+        "",
+
+      recruitDate:
+        agent.recruitDate ||
+        agent.recruit_date ||
+        "",
+
+      status:
+        agent.teamStatus ||
+        agent.team_status ||
+        "",
+
+      stage:
+        agent.stage ||
+        agent.pipelineStage ||
+        ""
+
+    }))
+    .filter(
+      (member) =>
+        member.code
+    );
+}
+
+
+// ----------------------------------------------------------
+// CHILDREN
+// ----------------------------------------------------------
+
+function teamMapChildren(code) {
+
+  return teamMapMembers.filter(
+    (member) =>
+      member.uplineCode === code
+  );
+}
+
+
+// ----------------------------------------------------------
+// ROOT
+// ----------------------------------------------------------
+
+function findTeamMapRoot() {
+
+  if (!teamMapMembers.length) {
+    return null;
+  }
+
+  const codes =
+    new Set(
+      teamMapMembers.map(
+        (member) => member.code
+      )
+    );
+
+
+  return (
+    teamMapMembers.find(
+      (member) =>
+        !member.uplineCode ||
+        !codes.has(member.uplineCode)
+    ) ||
+    teamMapMembers[0]
+  );
+}
+
+
+// ----------------------------------------------------------
+// DESCENDANT COUNT
+// ----------------------------------------------------------
+
+function teamMapDescendantCount(
+  code,
+  visited = new Set()
+) {
+
+  if (visited.has(code)) {
+    return 0;
+  }
+
+  visited.add(code);
+
+  return teamMapChildren(code)
+    .reduce(
+      (total, child) =>
+        total +
+        1 +
+        teamMapDescendantCount(
+          child.code,
+          visited
+        ),
+      0
+    );
+}
+
+
+// ----------------------------------------------------------
+// DEPTH
+// ----------------------------------------------------------
+
+function teamMapDepth(
+  code,
+  visited = new Set()
+) {
+
+  if (visited.has(code)) {
+    return 0;
+  }
+
+  visited.add(code);
+
+  const children =
+    teamMapChildren(code);
+
+  if (!children.length) {
+    return 1;
+  }
+
+  return (
+    1 +
+    Math.max(
+      ...children.map(
+        (child) =>
+          teamMapDepth(
+            child.code,
+            new Set(visited)
+          )
+      )
+    )
+  );
+}
+
+
+// ----------------------------------------------------------
+// LEADERS
+// ----------------------------------------------------------
+
+function getTeamMapLeaders() {
+
+  return teamMapMembers
+    .filter(
+      (member) =>
+        teamMapChildren(
+          member.code
+        ).length > 0
+    )
+    .sort(
+      (a, b) =>
+        teamMapDescendantCount(
+          b.code
+        ) -
+        teamMapDescendantCount(
+          a.code
+        )
+    );
+}
+
+
+// ----------------------------------------------------------
+// INITIALS
+// ----------------------------------------------------------
+
+function teamMapInitials(name) {
+
+  return String(name || "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(
+      (part) =>
+        part.charAt(0).toUpperCase()
+    )
+    .join("");
+}
+
+
+// ----------------------------------------------------------
+// ESCAPE HTML
+// ----------------------------------------------------------
+
+function teamMapEscape(value) {
+
+  return String(value ?? "")
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+}
+
+
+// ----------------------------------------------------------
+// NODE
+// ----------------------------------------------------------
+
+function buildTeamMapNode(
+  member,
+  visited = new Set()
+) {
+
+  if (!member) {
+    return "";
+  }
+
+  if (
+    visited.has(
+      member.code
+    )
+  ) {
+    return "";
+  }
+
+  const nextVisited =
+    new Set(visited);
+
+  nextVisited.add(
+    member.code
+  );
+
+
+  const children =
+    teamMapChildren(
+      member.code
+    );
+
+
+  const descendants =
+    teamMapDescendantCount(
+      member.code
+    );
+
+
+  const collapsed =
+    teamMapCollapsed.has(
+      member.code
+    );
+
+
+  const hasChildren =
+    children.length > 0;
+
+
+  return `
+
+    <div
+      class="team-map-branch"
+      data-team-map-code="${teamMapEscape(
+        member.code
+      )}"
+    >
+
+      <div class="team-map-node-wrap">
+
+        <button
+          type="button"
+          class="team-map-node"
+          data-team-member-code="${teamMapEscape(
+            member.code
+          )}"
+        >
+
+          <div class="team-map-avatar">
+            ${teamMapInitials(
+              member.name
+            )}
+          </div>
+
+
+          <div class="team-map-node-copy">
+
+            <strong>
+              ${teamMapEscape(
+                member.name
+              )}
+            </strong>
+
+            <span>
+              ${teamMapEscape(
+                member.code
+              )}
+            </span>
+
+          </div>
+
+
+          ${
+            hasChildren
+              ? `
+                <div class="team-map-node-count">
+                  ${descendants}
+                  <small>
+                    downline
+                  </small>
+                </div>
+              `
+              : `
+                <div class="team-map-node-end">
+                  Member
+                </div>
+              `
+          }
+
+        </button>
+
+
+        ${
+          hasChildren
+            ? `
+              <button
+                type="button"
+                class="team-map-collapse"
+                data-team-collapse-code="${teamMapEscape(
+                  member.code
+                )}"
+                aria-label="Toggle downline"
+              >
+                ${
+                  collapsed
+                    ? "+"
+                    : "−"
+                }
+              </button>
+            `
+            : ""
+        }
+
+      </div>
+
+
+      ${
+        hasChildren &&
+        !collapsed
+          ? `
+
+            <div class="team-map-children">
+
+              ${children
+                .sort(
+                  (a, b) =>
+                    a.name.localeCompare(
+                      b.name
+                    )
+                )
+                .map(
+                  (child) =>
+                    buildTeamMapNode(
+                      child,
+                      nextVisited
+                    )
+                )
+                .join("")}
+
+            </div>
+
+          `
+          : ""
+      }
+
+    </div>
+
+  `;
+}
+
+
+// ----------------------------------------------------------
+// LEADER SELECT
+// ----------------------------------------------------------
+
+function renderTeamMapLeaderSelect() {
+
+  const select =
+    document.getElementById(
+      "teamMapLeaderSelect"
+    );
+
+  if (!select) {
+    return;
+  }
+
+
+  const leaders =
+    getTeamMapLeaders();
+
+
+  select.innerHTML = `
+
+    <option value="">
+      Entire Organization
+    </option>
+
+    ${leaders
+      .map(
+        (leader) => `
+
+          <option
+            value="${teamMapEscape(
+              leader.code
+            )}"
+          >
+            ${teamMapEscape(
+              leader.name
+            )}
+            (${teamMapDescendantCount(
+              leader.code
+            )})
+          </option>
+
+        `
+      )
+      .join("")}
+
+  `;
+
+
+  select.value =
+    teamMapFocusCode ===
+    teamMapRootCode
+      ? ""
+      : teamMapFocusCode;
+}
+
+
+// ----------------------------------------------------------
+// STATS
+// ----------------------------------------------------------
+
+function updateTeamMapStats() {
+
+  const root =
+    teamMapMembers.find(
+      (member) =>
+        member.code ===
+        teamMapRootCode
+    );
+
+
+  const leaders =
+    getTeamMapLeaders();
+
+
+  const direct =
+    root
+      ? teamMapChildren(
+          root.code
+        ).length
+      : 0;
+
+
+  const levels =
+    root
+      ? teamMapDepth(
+          root.code
+        )
+      : 0;
+
+
+  const setText =
+    (id, value) => {
+
+      const element =
+        document.getElementById(id);
+
+      if (element) {
+        element.textContent =
+          value;
+      }
+    };
+
+
+  setText(
+    "teamMapTotal",
+    teamMapMembers.length
+  );
+
+  setText(
+    "teamMapLeaders",
+    leaders.length
+  );
+
+  setText(
+    "teamMapDirect",
+    direct
+  );
+
+  setText(
+    "teamMapLevels",
+    levels
+  );
+
+  setText(
+    "teamMapMemberCount",
+    `${teamMapMembers.length} team member${
+      teamMapMembers.length === 1
+        ? ""
+        : "s"
+    }`
+  );
+
+
+  setText(
+    "teamMapOrgName",
+    currentOrganization?.name ||
+    "Your Organization"
+  );
+}
+
+
+// ----------------------------------------------------------
+// DRAW MAP
+// ----------------------------------------------------------
+
+function drawTeamMap() {
+
+  const tree =
+    document.getElementById(
+      "teamMapTree"
+    );
+
+  if (!tree) {
+    return;
+  }
+
+
+  if (!teamMapMembers.length) {
+
+    tree.innerHTML = `
+
+      <div class="team-map-empty">
+
+        <div class="team-map-empty-icon">
+          ◇
+        </div>
+
+        <h3>
+          No team members yet
+        </h3>
+
+        <p>
+          Import your Tevah Team CSV to build this organization's Team Map.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  const member =
+    teamMapMembers.find(
+      (person) =>
+        person.code ===
+        teamMapFocusCode
+    ) ||
+    teamMapMembers.find(
+      (person) =>
+        person.code ===
+        teamMapRootCode
+    );
+
+
+  if (!member) {
+    return;
+  }
+
+
+  tree.innerHTML =
+    buildTeamMapNode(
+      member
+    );
+
+
+  const currentView =
+    document.getElementById(
+      "teamMapCurrentView"
+    );
+
+  if (currentView) {
+
+    currentView.textContent =
+      member.code ===
+      teamMapRootCode
+        ? "Entire Organization"
+        : `${member.name}'s Team`;
+  }
+
+
+  const updated =
+    document.getElementById(
+      "teamMapUpdated"
+    );
+
+  if (updated) {
+
+    updated.textContent =
+      "Updated " +
+      new Date().toLocaleTimeString(
+        [],
+        {
+          hour: "numeric",
+          minute: "2-digit"
+        }
+      );
+  }
+}
+
+
+// ----------------------------------------------------------
+// MAIN TEAM MAP RENDER
+// ----------------------------------------------------------
+
+function renderTeamMap() {
+
+  teamMapMembers =
+    getTeamMapMembers();
+
+
+  teamMapMembers.sort(
+    (a, b) =>
+      a.name.localeCompare(
+        b.name
+      )
+  );
+
+
+  const root =
+    findTeamMapRoot();
+
+
+  if (!root) {
+
+    teamMapRootCode = "";
+    teamMapFocusCode = "";
+
+    updateTeamMapStats();
+    drawTeamMap();
+
+    return;
+  }
+
+
+  teamMapRootCode =
+    root.code;
+
+
+  if (
+    !teamMapFocusCode ||
+    !teamMapMembers.some(
+      (member) =>
+        member.code ===
+        teamMapFocusCode
+    )
+  ) {
+
+    teamMapFocusCode =
+      teamMapRootCode;
+  }
+
+
+  updateTeamMapStats();
+
+  renderTeamMapLeaderSelect();
+
+  drawTeamMap();
+}
+
+
+// ----------------------------------------------------------
+// TEAM MAP CLICK EVENTS
+// ----------------------------------------------------------
+
+document.addEventListener(
+  "click",
+  (event) => {
+
+    const collapseButton =
+      event.target.closest(
+        "[data-team-collapse-code]"
+      );
+
+
+    if (collapseButton) {
+
+      event.stopPropagation();
+
+      const code =
+        collapseButton.dataset
+          .teamCollapseCode;
+
+
+      if (
+        teamMapCollapsed.has(
+          code
+        )
+      ) {
+
+        teamMapCollapsed.delete(
+          code
+        );
+
+      } else {
+
+        teamMapCollapsed.add(
+          code
+        );
+      }
+
+
+      drawTeamMap();
+
+      return;
+    }
+
+
+    const memberButton =
+      event.target.closest(
+        "[data-team-member-code]"
+      );
+
+
+    if (memberButton) {
+
+      const code =
+        memberButton.dataset
+          .teamMemberCode;
+
+
+      teamMapFocusCode =
+        code;
+
+
+      renderTeamMapLeaderSelect();
+
+      drawTeamMap();
+    }
+
+  }
+);
+
+
+// ----------------------------------------------------------
+// LEADER SELECT
+// ----------------------------------------------------------
+
+document
+  .getElementById(
+    "teamMapLeaderSelect"
+  )
+  ?.addEventListener(
+    "change",
+    (event) => {
+
+      teamMapFocusCode =
+        event.target.value ||
+        teamMapRootCode;
+
+      drawTeamMap();
+
+    }
+  );
+
+
+// ----------------------------------------------------------
+// TOP LEADER
+// ----------------------------------------------------------
+
+document
+  .getElementById(
+    "teamMapResetBtn"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      teamMapFocusCode =
+        teamMapRootCode;
+
+      teamMapCollapsed.clear();
+
+      renderTeamMapLeaderSelect();
+
+      drawTeamMap();
+
+    }
+  );
+
+
+// ----------------------------------------------------------
+// SEARCH
+// ----------------------------------------------------------
+
+document
+  .getElementById(
+    "teamMapSearch"
+  )
+  ?.addEventListener(
+    "input",
+    (event) => {
+
+      const value =
+        String(
+          event.target.value ||
+          ""
+        )
+          .trim()
+          .toLowerCase();
+
+
+      if (!value) {
+        return;
+      }
+
+
+      const match =
+        teamMapMembers.find(
+          (member) =>
+
+            member.name
+              .toLowerCase()
+              .includes(value) ||
+
+            member.code
+              .toLowerCase()
+              .includes(value) ||
+
+            member.email
+              .toLowerCase()
+              .includes(value)
+        );
+
+
+      if (!match) {
+        return;
+      }
+
+
+      teamMapFocusCode =
+        match.code;
+
+
+      renderTeamMapLeaderSelect();
+
+      drawTeamMap();
+
+    }
+  );
