@@ -1983,25 +1983,125 @@ JavaScript opens these when an import button is clicked.
 
   <div class="team-map-surface">
 
-    <div class="team-map-surface-header">
+  <div class="team-map-surface-header">
 
-      <div>
-        <span>TEAM STRUCTURE</span>
-        <strong id="teamMapCurrentView">
-          Entire Organization
-        </strong>
-      </div>
+    <div>
+      <span>TEAM STRUCTURE</span>
+      <strong id="teamMapCurrentView">
+        Entire Organization
+      </strong>
+    </div>
 
-      <span id="teamMapUpdated">
-        —
-      </span>
+    <div class="team-map-update">
+      <span id="teamMapUpdated">—</span>
+
+      <button
+        type="button"
+        id="teamMapRefreshBtn"
+        class="team-map-refresh"
+        title="Refresh Team Map"
+      >
+        ↻
+      </button>
+    </div>
+
+  </div>
+
+
+  <div class="team-map-canvas-toolbar">
+
+    <div class="team-map-view-switcher">
+
+      <button
+        type="button"
+        class="team-map-view-btn active"
+        data-team-map-view="tree"
+      >
+        <span>♧</span>
+        Tree View
+      </button>
+
+      <button
+        type="button"
+        class="team-map-view-btn"
+        data-team-map-view="compact"
+      >
+        <span>☰</span>
+        Compact
+      </button>
+
+      <button
+        type="button"
+        class="team-map-view-btn"
+        data-team-map-view="list"
+      >
+        <span>☷</span>
+        List View
+      </button>
 
     </div>
 
 
+    <div class="team-map-zoom-tools">
+
+      <button
+        type="button"
+        id="teamMapZoomOut"
+        class="team-map-tool-btn"
+      >
+        <span>⊖</span>
+        Zoom Out
+      </button>
+
+      <button
+        type="button"
+        id="teamMapZoomIn"
+        class="team-map-tool-btn"
+      >
+        <span>⊕</span>
+        Zoom In
+      </button>
+
+      <button
+        type="button"
+        id="teamMapFit"
+        class="team-map-tool-btn"
+      >
+        <span>◎</span>
+        Fit to Screen
+      </button>
+
+      <button
+        type="button"
+        id="teamMapFullscreen"
+        class="team-map-tool-btn"
+      >
+        <span>⛶</span>
+        Fullscreen
+      </button>
+
+      <button
+        type="button"
+        id="teamMapExitFullscreen"
+        class="team-map-tool-btn hidden"
+      >
+        <span>×</span>
+        Exit Fullscreen
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="teamMapViewport"
+    class="team-map-viewport"
+  >
+
     <div
-      id="teamMapViewport"
-      class="team-map-viewport"
+      id="teamMapZoomLayer"
+      class="team-map-zoom-layer"
     >
 
       <div
@@ -2016,6 +2116,48 @@ JavaScript opens these when an import button is clicked.
     </div>
 
   </div>
+
+
+  <div class="team-map-legend">
+
+    <div class="team-map-legend-items">
+
+      <span>
+        <i class="legend-crown">♛</i>
+        Top Leader
+      </span>
+
+      <span>
+        <i class="legend-dot purple"></i>
+        Direct Leader
+      </span>
+
+      <span>
+        <i class="legend-dot blue"></i>
+        Direct Member
+      </span>
+
+      <span>
+        <i class="legend-dot green"></i>
+        Team Member
+      </span>
+
+      <span>
+        <i class="legend-line"></i>
+        Reporting Line
+      </span>
+
+    </div>
+
+    <div class="team-map-tip">
+      <span>💡</span>
+      <strong>Tip:</strong>
+      Click any member card to focus and view their team
+    </div>
+
+  </div>
+
+</div>
 
 </section>
 <section id="commandPage" class="command-page hidden">
