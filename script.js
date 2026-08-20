@@ -246,11 +246,14 @@ async function loadAvailableOrganizations() {
   let query = forgeSupabase
     .from("organizations")
     .select(`
-      id,
-      name,
-      slug,
-      status
-    `)
+  id,
+  name,
+  slug,
+  status,
+  top_leader_name,
+  top_leader_email,
+  top_leader_agent_code
+`)
     .eq("status", "active")
     .order("name");
 
@@ -10927,7 +10930,7 @@ let teamMapCollapsed = new Set();
 
 function getTeamMapMembers() {
 
-  return (allAgents || [])
+  const people = (allAgents || [])
     .map((agent) => ({
 
       id:
@@ -10983,21 +10986,148 @@ function getTeamMapMembers() {
       stage:
         agent.stage ||
         agent.pipelineStage ||
-        ""
+        "",
+
+      isOrganizationRoot: false
 
     }))
     .filter(
-      (member) =>
-        member.code
+      member => member.code
     );
-}
 
+
+  // ======================================================
+  // ORGANIZATION TOP LEADER
+  // ======================================================
+
+  const topLeaderName =
+    String(
+      currentOrganization
+        ?.top_leader_name ||
+      ""
+    ).trim();
+
+
+  const topLeaderCode =
+    String(
+      currentOrganization
+        ?.top_leader_agent_code ||
+      ""
+    )
+      .trim()
+      .toUpperCase();
+
+
+  const topLeaderEmail =
+    String(
+      currentOrganization
+        ?.top_leader_email ||
+      ""
+    ).trim();
+
+
+  if (topLeaderName) {
+
+    // Is this leader already present
+    // inside the imported FORGE agents?
+    let existingLeader = null;
+
+
+    if (topLeaderCode) {
+
+      existingLeader =
+        people.find(
+          member =>
+            normalizeTeamMapCode(
+              member.code
+            ) ===
+            normalizeTeamMapCode(
+              topLeaderCode
+            )
+        );
+    }
+
+
+    if (!existingLeader) {
+
+      existingLeader =
+        people.find(
+          member =>
+            normalizeTeamMapName(
+              member.name
+            ) ===
+            normalizeTeamMapName(
+              topLeaderName
+            )
+        );
+    }
+
+
+    // If Tevah did NOT include the leader
+    // create a virtual organization-root node.
+    if (!existingLeader) {
+
+      people.push({
+
+        id:
+          `ORG_ROOT_${
+            currentOrganization?.id ||
+            "UNKNOWN"
+          }`,
+
+        code:
+          topLeaderCode ||
+          `ORGROOT-${
+            currentOrganization?.id ||
+            "ROOT"
+          }`,
+
+        name:
+          topLeaderName,
+
+        email:
+          topLeaderEmail,
+
+        phone:
+          "",
+
+        uplineCode:
+          "",
+
+        uplineName:
+          "",
+
+        recruitDate:
+          "",
+
+        status:
+          "Organization Leader",
+
+        stage:
+          "",
+
+        isOrganizationRoot:
+          true
+
+      });
+
+    } else {
+
+      existingLeader
+        .isOrganizationRoot = true;
+    }
+  }
+
+
+  return people;
+}
 
 // ----------------------------------------------------------
 // CHILDREN
 // ----------------------------------------------------------
 
 function normalizeTeamMapCode(value) {
+
   return String(value || "")
     .trim()
     .toUpperCase()
@@ -11006,44 +11136,55 @@ function normalizeTeamMapCode(value) {
 
 
 function normalizeTeamMapName(value) {
+
   return String(value || "")
     .trim()
     .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]/g, "");
+
+    // Normalize punctuation
+    .replace(/['’]/g, "")
+    .replace(/-/g, " ")
+
+    // Normalize multiple spaces
+    .replace(/\s+/g, " ")
+
+    .trim();
 }
 
 
 function findTeamMapParent(member) {
 
-  if (!member) return null;
+  if (!member) {
+    return null;
+  }
 
 
-  const childUplineCode =
+  if (member.isOrganizationRoot) {
+    return null;
+  }
+
+
+  // ======================================================
+  // 1. MATCH UPLINE CODE
+  // ======================================================
+
+  const uplineCode =
     normalizeTeamMapCode(
       member.uplineCode
     );
 
 
-  const childUplineName =
-    normalizeTeamMapName(
-      member.uplineName
-    );
-
-
-  // ============================================
-  // 1. EXACT AGENT CODE MATCH
-  // ============================================
-
-  if (childUplineCode) {
+  if (uplineCode) {
 
     const byCode =
       teamMapMembers.find(
-        (person) =>
+        person =>
           normalizeTeamMapCode(
             person.code
-          ) === childUplineCode
+          ) ===
+          uplineCode
       );
+
 
     if (byCode) {
       return byCode;
@@ -11051,19 +11192,27 @@ function findTeamMapParent(member) {
   }
 
 
-  // ============================================
-  // 2. EXACT NORMALIZED NAME MATCH
-  // ============================================
+  // ======================================================
+  // 2. MATCH UPLINE NAME
+  // ======================================================
 
-  if (childUplineName) {
+  const uplineName =
+    normalizeTeamMapName(
+      member.uplineName
+    );
+
+
+  if (uplineName) {
 
     const byName =
       teamMapMembers.find(
-        (person) =>
+        person =>
           normalizeTeamMapName(
             person.name
-          ) === childUplineName
+          ) ===
+          uplineName
       );
+
 
     if (byName) {
       return byName;
@@ -11071,54 +11220,8 @@ function findTeamMapParent(member) {
   }
 
 
-  // ============================================
-  // 3. SAFE PARTIAL NAME MATCH
-  //
-  // Handles things such as:
-  // "Rhonda Middleton-Robinson"
-  // vs
-  // "Rhonda Middleton Robinson"
-  // ============================================
-
-  if (
-    childUplineName &&
-    childUplineName.length >= 8
-  ) {
-
-    const partialMatches =
-      teamMapMembers.filter(
-        (person) => {
-
-          const personName =
-            normalizeTeamMapName(
-              person.name
-            );
-
-          return (
-            personName.includes(
-              childUplineName
-            ) ||
-            childUplineName.includes(
-              personName
-            )
-          );
-        }
-      );
-
-
-    // Only use partial matching
-    // when exactly ONE person matches.
-    if (
-      partialMatches.length === 1
-    ) {
-      return partialMatches[0];
-    }
-  }
-
-
   return null;
 }
-
 
 function teamMapChildren(code) {
 
@@ -11156,69 +11259,48 @@ function findTeamMapRoot() {
     return null;
   }
 
-  const orgName =
-    String(
-      currentOrganization?.name || ""
-    )
-      .trim()
-      .toLowerCase();
+
+  // ======================================================
+  // ORGANIZATION'S DESIGNATED TOP LEADER
+  // ======================================================
+
+  const designatedRoot =
+    teamMapMembers.find(
+      member =>
+        member.isOrganizationRoot
+    );
 
 
-  // ==========================================
-  // APEX WEALTH BUILDING
-  // TOP LEADER = TEKO
-  // ==========================================
-
-  if (
-    orgName ===
-    "apex wealth building"
-  ) {
-
-    const teko =
-      teamMapMembers.find(
-        (member) =>
-          normalizeTeamMapName(
-            member.name
-          ).includes("teko")
-      );
-
-    if (teko) {
-      return teko;
-    }
+  if (designatedRoot) {
+    return designatedRoot;
   }
 
 
-  // ==========================================
-  // FALLBACK
-  // ==========================================
+  // ======================================================
+  // FALLBACK FOR OLD ORGANIZATIONS
+  // ======================================================
 
-  const trueRoots =
+  const possibleRoots =
     teamMapMembers.filter(
-      (member) =>
+      member =>
         !findTeamMapParent(member)
     );
 
 
-  if (trueRoots.length === 1) {
-    return trueRoots[0];
+  if (!possibleRoots.length) {
+    return null;
   }
 
 
-  if (trueRoots.length > 1) {
-
-    return trueRoots.sort(
-      (a, b) =>
-        teamMapDescendantCount(
-          b.code
-        ) -
-        teamMapDescendantCount(
-          a.code
-        )
-    )[0];
-  }
-
-
-  return null;
+  return possibleRoots.sort(
+    (a, b) =>
+      teamMapDescendantCount(
+        b.code
+      ) -
+      teamMapDescendantCount(
+        a.code
+      )
+  )[0];
 }
 // ----------------------------------------------------------
 // DESCENDANT COUNT
