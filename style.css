@@ -23435,3 +23435,1367 @@ body.forge-drawer-open {
   }
 
 }
+
+/* =========================================================
+   FORGE TEAM MAP — PREMIUM LIGHT UI
+========================================================= */
+
+.team-map-page {
+  padding: 32px 36px 40px;
+
+  min-height:
+    calc(100vh - 80px);
+
+  background:
+    radial-gradient(
+      circle at 15% 5%,
+      rgba(35, 99, 255, .07),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      #f7faff 0%,
+      #fbfdff 50%,
+      #f8fbff 100%
+    );
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.team-map-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  margin-bottom: 24px;
+}
+
+
+.team-map-eyebrow {
+  margin-bottom: 7px;
+
+  color: #1769ff;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: .13em;
+}
+
+
+.team-map-header h1 {
+  margin: 0;
+
+  color: #071b43;
+
+  font-size: 36px;
+  font-weight: 800;
+
+  letter-spacing: -.045em;
+}
+
+
+.team-map-header p {
+  margin: 8px 0 0;
+
+  color: #61718e;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   VIEWING ORGANIZATION
+========================================================= */
+
+.team-map-org-card {
+  min-width: 260px;
+
+  padding: 18px 20px;
+
+  border:
+    1px solid #d8e4f5;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1475ff,
+      #365aff
+    );
+
+  color: white;
+
+  box-shadow:
+    0 14px 35px
+    rgba(
+      36,
+      90,
+      255,
+      .18
+    );
+}
+
+
+.team-map-org-card span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      .78
+    );
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: .12em;
+}
+
+
+.team-map-org-card strong {
+  display: block;
+
+  color: white;
+
+  font-size: 17px;
+}
+
+
+.team-map-org-card small {
+  display: block;
+
+  margin-top: 4px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      .85
+    );
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.team-map-toolbar {
+  display: grid;
+
+  grid-template-columns:
+    minmax(320px, 1fr)
+    250px
+    160px;
+
+  gap: 14px;
+
+  margin-bottom: 18px;
+}
+
+
+.team-map-search-wrap {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  height: 50px;
+
+  padding: 0 17px;
+
+  border:
+    1px solid #d7e2f1;
+
+  border-radius: 15px;
+
+  background: #fff;
+
+  box-shadow:
+    0 5px 18px
+    rgba(
+      24,
+      52,
+      100,
+      .035
+    );
+}
+
+
+.team-map-search-wrap span {
+  color: #43628f;
+
+  font-size: 19px;
+}
+
+
+.team-map-search-wrap input {
+  width: 100%;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #102447;
+
+  font-size: 14px;
+}
+
+
+.team-map-search-wrap input::placeholder {
+  color: #8797af;
+}
+
+
+.team-map-leader-select {
+  height: 50px;
+
+  padding: 0 15px;
+
+  border:
+    1px solid #d7e2f1;
+
+  border-radius: 15px;
+
+  background: white;
+
+  color: #102447;
+
+  font-weight: 600;
+
+  outline: none;
+}
+
+
+.team-map-reset-btn {
+  height: 50px;
+
+  padding: 0 20px;
+
+  border: 0;
+
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #126fff,
+      #2355f5
+    );
+
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 9px 22px
+    rgba(
+      20,
+      94,
+      255,
+      .20
+    );
+}
+
+
+.team-map-reset-btn::before {
+  content: "♛";
+
+  margin-right: 8px;
+}
+
+
+/* =========================================================
+   KPI CARDS
+========================================================= */
+
+.team-map-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+
+  gap: 14px;
+
+  margin-bottom: 18px;
+}
+
+
+.team-map-stat {
+  position: relative;
+
+  min-height: 93px;
+
+  padding:
+    20px
+    20px
+    18px
+    94px;
+
+  overflow: hidden;
+
+  border:
+    1px solid #dce6f3;
+
+  border-radius: 18px;
+
+  background: #fff;
+
+  box-shadow:
+    0 8px 26px
+    rgba(
+      25,
+      50,
+      90,
+      .045
+    );
+}
+
+
+.team-map-stat::before {
+  position: absolute;
+
+  left: 19px;
+  top: 20px;
+
+  width: 54px;
+  height: 54px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 15px;
+
+  font-size: 25px;
+  font-weight: 700;
+}
+
+
+.team-map-stat:nth-child(1)::before {
+  content: "♙";
+
+  color: #0d61ff;
+
+  background:
+    linear-gradient(
+      145deg,
+      #edf4ff,
+      #dfeaff
+    );
+}
+
+
+.team-map-stat:nth-child(2)::before {
+  content: "♧";
+
+  color: #17ac4c;
+
+  background:
+    linear-gradient(
+      145deg,
+      #effcf3,
+      #daf4e2
+    );
+}
+
+
+.team-map-stat:nth-child(3)::before {
+  content: "◉";
+
+  color: #7728e9;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f7f1ff,
+      #eadcff
+    );
+}
+
+
+.team-map-stat:nth-child(4)::before {
+  content: "◇";
+
+  color: #f47b12;
+
+  background:
+    linear-gradient(
+      145deg,
+      #fff6ec,
+      #ffe7cd
+    );
+}
+
+
+.team-map-stat span {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #3f5373;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+.team-map-stat strong {
+  display: block;
+
+  color: #0b2045;
+
+  font-size: 27px;
+  font-weight: 800;
+
+  line-height: 1.1;
+}
+
+
+.team-map-stat small {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #71819b;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   MAP SURFACE
+========================================================= */
+
+.team-map-surface {
+  position: relative;
+
+  overflow: hidden;
+
+  border:
+    1px solid #d9e4f3;
+
+  border-radius: 20px;
+
+  background: #fff;
+
+  box-shadow:
+    0 14px 40px
+    rgba(
+      25,
+      51,
+      92,
+      .06
+    );
+}
+
+
+.team-map-surface:fullscreen {
+  width: 100vw;
+  height: 100vh;
+
+  border-radius: 0;
+
+  background: #f8fbff;
+}
+
+
+.team-map-surface-header {
+  min-height: 66px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 22px;
+
+  border-bottom:
+    1px solid #e2eaf5;
+}
+
+
+.team-map-surface-header > div:first-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+
+.team-map-surface-header span {
+  color: #1769ff;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: .11em;
+}
+
+
+.team-map-surface-header strong {
+  color: #102447;
+
+  font-size: 14px;
+}
+
+
+.team-map-update {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+.team-map-update #teamMapUpdated {
+  color: #637896;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  letter-spacing: 0;
+}
+
+
+.team-map-refresh {
+  width: 32px;
+  height: 32px;
+
+  border: 0;
+
+  border-radius: 9px;
+
+  background: transparent;
+
+  color: #315786;
+
+  font-size: 20px;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   CANVAS CONTROL BAR
+========================================================= */
+
+.team-map-canvas-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 16px 20px 4px;
+}
+
+
+.team-map-view-switcher,
+.team-map-zoom-tools {
+  display: flex;
+  align-items: stretch;
+}
+
+
+.team-map-view-switcher {
+  border:
+    1px solid #dbe5f3;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  background: #fff;
+
+  box-shadow:
+    0 4px 15px
+    rgba(
+      26,
+      49,
+      89,
+      .05
+    );
+}
+
+
+.team-map-view-btn {
+  min-width: 86px;
+
+  padding: 10px 13px;
+
+  border: 0;
+  border-right:
+    1px solid #e0e8f2;
+
+  background: white;
+
+  color: #283d5d;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+.team-map-view-btn:last-child {
+  border-right: 0;
+}
+
+
+.team-map-view-btn span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  font-size: 18px;
+}
+
+
+.team-map-view-btn.active {
+  color: #0d61ff;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f2f7ff,
+      #eaf2ff
+    );
+}
+
+
+.team-map-zoom-tools {
+  gap: 8px;
+}
+
+
+.team-map-tool-btn {
+  min-width: 75px;
+
+  padding:
+    9px
+    12px;
+
+  border:
+    1px solid #dbe5f3;
+
+  border-radius: 11px;
+
+  background: white;
+
+  color: #213b60;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 14px
+    rgba(
+      25,
+      49,
+      85,
+      .04
+    );
+}
+
+
+.team-map-tool-btn span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #163c76;
+
+  font-size: 18px;
+}
+
+
+.team-map-tool-btn:hover {
+  border-color: #aac6f0;
+
+  background: #f7faff;
+}
+
+
+/* =========================================================
+   VIEWPORT
+========================================================= */
+
+.team-map-viewport {
+  position: relative;
+
+  min-height: 540px;
+
+  overflow: auto;
+
+  padding:
+    26px
+    30px
+    54px;
+
+  background:
+    radial-gradient(
+      circle,
+      #dce7f5 1px,
+      transparent 1.2px
+    );
+
+  background-size:
+    18px 18px;
+}
+
+
+.team-map-zoom-layer {
+  width: max-content;
+
+  min-width: 100%;
+
+  transition:
+    transform .18s ease;
+}
+
+
+.team-map-tree {
+  width: max-content;
+
+  min-width: 100%;
+
+  display: flex;
+  justify-content: center;
+}
+
+
+/* =========================================================
+   PERSON CARD
+========================================================= */
+
+.team-map-node {
+  min-width: 218px;
+  min-height: 82px;
+
+  display: grid;
+
+  grid-template-columns:
+    46px
+    minmax(100px, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 13px;
+
+  border:
+    1.5px solid #cadcf4;
+
+  border-radius: 15px;
+
+  background: #fff;
+
+  color: inherit;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 22px
+    rgba(
+      35,
+      61,
+      101,
+      .065
+    );
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    border-color .18s ease;
+}
+
+
+.team-map-node:hover {
+  transform:
+    translateY(-3px);
+
+  border-color: #6da4ff;
+
+  box-shadow:
+    0 13px 30px
+    rgba(
+      32,
+      91,
+      190,
+      .13
+    );
+}
+
+
+.team-map-branch:first-child >
+.team-map-node-wrap >
+.team-map-node {
+  min-width: 300px;
+
+  border:
+    2px solid #2464ff;
+
+  box-shadow:
+    0 10px 27px
+    rgba(
+      33,
+      94,
+      255,
+      .13
+    );
+}
+
+
+.team-map-avatar {
+  width: 46px;
+  height: 46px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      145deg,
+      #edf4ff,
+      #dce9ff
+    );
+
+  color: #174dcc;
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+
+.team-map-node-copy {
+  min-width: 0;
+}
+
+
+.team-map-node-copy strong {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  max-width: 175px;
+
+  overflow: hidden;
+
+  color: #112647;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+
+.team-map-node-copy span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #617594;
+
+  font-size: 10px;
+}
+
+
+.team-map-top-badge {
+  display: inline-flex !important;
+
+  flex-shrink: 0;
+
+  padding:
+    3px 7px;
+
+  margin-top: 0 !important;
+
+  border-radius: 999px;
+
+  background: #0b64ff;
+
+  color: white !important;
+
+  font-size: 7px !important;
+  font-weight: 800 !important;
+
+  letter-spacing: .02em;
+}
+
+
+.team-map-node-count {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  color: #104bc6;
+
+  font-size: 17px;
+  font-weight: 800;
+}
+
+
+.team-map-node-count small {
+  margin-top: 2px;
+
+  color: #7a8ba4;
+
+  font-size: 7px;
+}
+
+
+.team-map-node-end {
+  padding:
+    3px 7px;
+
+  border-radius: 999px;
+
+  background: #edf4ff;
+
+  color: #195ed0;
+
+  font-size: 8px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   CONNECTIONS
+========================================================= */
+
+.team-map-collapse {
+  position: absolute;
+
+  left: 50%;
+  bottom: -13px;
+
+  z-index: 5;
+
+  width: 28px;
+  height: 28px;
+
+  transform:
+    translateX(-50%);
+
+  border:
+    1px solid #3f79e5;
+
+  border-radius: 50%;
+
+  background: white;
+
+  color: #1769ff;
+
+  font-size: 17px;
+
+  cursor: pointer;
+}
+
+
+.team-map-children {
+  position: relative;
+
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 16px;
+
+  padding-top: 52px;
+}
+
+
+.team-map-children::before {
+  content: "";
+
+  position: absolute;
+
+  top: 13px;
+  left: 50%;
+
+  width: 1px;
+  height: 39px;
+
+  background: #2f6eea;
+}
+
+
+.team-map-children >
+.team-map-branch::before {
+  content: "";
+
+  position: absolute;
+
+  top: -39px;
+  left: 50%;
+
+  width: 1px;
+  height: 39px;
+
+  background: #2f6eea;
+}
+
+
+.team-map-children >
+.team-map-branch:not(:only-child)::after {
+  content: "";
+
+  position: absolute;
+
+  top: -39px;
+
+  border-top:
+    1px solid #2f6eea;
+
+  z-index: 0;
+}
+
+
+.team-map-children >
+.team-map-branch:first-child::after {
+  left: 50%;
+
+  width:
+    calc(
+      50% +
+      8px
+    );
+}
+
+
+.team-map-children >
+.team-map-branch:last-child::after {
+  right: 50%;
+
+  width:
+    calc(
+      50% +
+      8px
+    );
+}
+
+
+.team-map-children >
+.team-map-branch:not(:first-child):not(:last-child)::after {
+  left: -8px;
+
+  width:
+    calc(
+      100% +
+      16px
+    );
+}
+
+
+/* =========================================================
+   LEGEND
+========================================================= */
+
+.team-map-legend {
+  min-height: 58px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 0 22px;
+
+  border-top:
+    1px solid #e2eaf4;
+
+  background:
+    #fff;
+}
+
+
+.team-map-legend-items {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 23px;
+}
+
+
+.team-map-legend-items span {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color: #29405f;
+
+  font-size: 10px;
+}
+
+
+.legend-crown {
+  color: #0b64ff;
+
+  font-size: 16px;
+
+  font-style: normal;
+}
+
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+}
+
+
+.legend-dot.purple {
+  background: #7b2df4;
+}
+
+
+.legend-dot.blue {
+  background: #1565f7;
+}
+
+
+.legend-dot.green {
+  background: #33bd64;
+}
+
+
+.legend-line {
+  width: 22px;
+
+  border-top:
+    1px dashed #4c74ae;
+}
+
+
+.team-map-tip {
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  color: #506581;
+
+  font-size: 10px;
+}
+
+
+.team-map-tip strong {
+  color: #173a6a;
+}
+
+
+/* =========================================================
+   LIST VIEW
+========================================================= */
+
+.team-map-view-list
+.team-map-tree {
+  width: 100%;
+
+  display: block;
+}
+
+
+.team-map-list {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+.team-map-list-row {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    50px
+    minmax(180px, 1fr)
+    minmax(180px, 1fr)
+    90px;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 12px 15px;
+
+  border:
+    1px solid #dde7f3;
+
+  border-radius: 13px;
+
+  background: white;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+
+.team-map-list-name,
+.team-map-list-upline,
+.team-map-list-team {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+
+.team-map-list-row strong {
+  color: #13294b;
+
+  font-size: 12px;
+}
+
+
+.team-map-list-row span {
+  color: #788aa4;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.team-map-empty {
+  width: 100%;
+
+  padding:
+    100px 30px;
+
+  text-align: center;
+
+  color: #7285a0;
+}
+
+
+.team-map-empty h3 {
+  margin:
+    0 0 8px;
+
+  color: #193356;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (
+  max-width: 1000px
+) {
+
+  .team-map-toolbar {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .team-map-stats {
+    grid-template-columns:
+      repeat(
+        2,
+        1fr
+      );
+  }
+
+
+  .team-map-canvas-toolbar {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+
+  .team-map-zoom-tools {
+    flex-wrap: wrap;
+  }
+
+
+  .team-map-legend {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+
+    padding:
+      16px 20px;
+  }
+
+}
+
+
+@media (
+  max-width: 650px
+) {
+
+  .team-map-page {
+    padding:
+      22px
+      14px;
+  }
+
+
+  .team-map-header {
+    flex-direction:
+      column;
+  }
+
+
+  .team-map-org-card {
+    width: 100%;
+  }
+
+
+  .team-map-stats {
+    grid-template-columns:
+      1fr;
+  }
+
+}
