@@ -22784,3 +22784,93 @@ body.forge-drawer-open {
 .journey-menu-icon {
   color: #dc2626;
 }
+
+/* =========================================================
+   FORGE FLOATING AGENT MENU
+========================================================= */
+
+.forge-floating-agent-menu {
+  position: fixed !important;
+
+  width: 210px;
+
+  background: #ffffff;
+
+  border: 1px solid #dbe4f0;
+
+  border-radius: 14px;
+
+  padding: 7px;
+
+  box-shadow:
+    0 20px 50px rgba(15, 35, 75, 0.18),
+    0 5px 15px rgba(15, 35, 75, 0.08);
+
+  z-index: 2147483647 !important;
+}
+
+
+.forge-floating-agent-menu button {
+  width: 100%;
+
+  border: 0;
+
+  background: transparent;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 11px 12px;
+
+  border-radius: 9px;
+
+  color: #172b4d;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+
+.forge-floating-agent-menu button span {
+  width: 20px;
+
+  display: inline-flex;
+
+  justify-content: center;
+
+  color: #64748b;
+}
+
+
+.forge-floating-agent-menu button:hover {
+  background: #f4f7fc;
+}
+
+
+.forge-floating-agent-menu .danger {
+  color: #dc2626;
+
+  border-top: 1px solid #edf1f7;
+
+  margin-top: 5px;
+
+  padding-top: 12px;
+}
+
+
+.forge-floating-agent-menu .danger span {
+  color: #dc2626;
+}
+
+
+.forge-floating-agent-menu .danger:hover {
+  background: #fff1f2;
+}
