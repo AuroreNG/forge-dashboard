@@ -25570,3 +25570,334 @@ body.forge-drawer-open {
 
   margin-top: 0;
 }
+
+/* =========================================================
+   FORGE COLOR REFINEMENT
+   Deep Navy / Black / White
+========================================================= */
+
+:root {
+  --forge-ink: #071a33;
+  --forge-navy: #0b2d5c;
+  --forge-navy-2: #103d78;
+  --forge-navy-hover: #123f7a;
+  --forge-soft: #edf3fb;
+  --forge-border: #d9e3ef;
+  --forge-muted: #6f8097;
+}
+
+
+/* ---------------------------------------------------------
+   VIEWING TEAM CARD
+--------------------------------------------------------- */
+
+.team-map-org-card {
+  background:
+    linear-gradient(
+      135deg,
+      #071d3c 0%,
+      #0b2f62 58%,
+      #123f78 100%
+    ) !important;
+
+  border:
+    1px solid
+    rgba(12, 46, 93, .35) !important;
+
+  box-shadow:
+    0 12px 28px
+    rgba(7, 29, 60, .16) !important;
+}
+
+
+.team-map-org-card span {
+  color:
+    rgba(255,255,255,.68) !important;
+}
+
+
+.team-map-org-card strong {
+  color: #fff !important;
+}
+
+
+.team-map-org-card small {
+  color:
+    rgba(255,255,255,.76) !important;
+}
+
+
+/* ---------------------------------------------------------
+   TOP LEADER BUTTON
+--------------------------------------------------------- */
+
+.team-map-reset-btn {
+  background:
+    linear-gradient(
+      135deg,
+      #071d3c,
+      #0c3266
+    ) !important;
+
+  color: white !important;
+
+  box-shadow:
+    0 8px 18px
+    rgba(7, 29, 60, .14) !important;
+}
+
+
+.team-map-reset-btn:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #09264e,
+      #12417e
+    ) !important;
+}
+
+
+/* ---------------------------------------------------------
+   SELECT
+--------------------------------------------------------- */
+
+.team-map-leader-select {
+  border-color:
+    #d9e3ef !important;
+
+  color:
+    #0a1c36 !important;
+
+  background:
+    #fff !important;
+}
+
+
+/* ---------------------------------------------------------
+   SECTION EYEBROWS
+--------------------------------------------------------- */
+
+.team-map-eyebrow,
+.team-map-surface-header > div:first-child > span,
+.tm-drawer-section-heading span,
+.tm-agent-drawer-title span {
+  color:
+    #164b8f !important;
+}
+
+
+/* ---------------------------------------------------------
+   TREE VIEW ACTIVE BUTTON
+--------------------------------------------------------- */
+
+.team-map-view-btn.active {
+  color:
+    #0b3267 !important;
+
+  background:
+    #edf3fb !important;
+
+  box-shadow:
+    inset 0 0 0 1px
+    rgba(13, 52, 105, .08);
+}
+
+
+/* ---------------------------------------------------------
+   TOOL BUTTONS
+--------------------------------------------------------- */
+
+.team-map-tool-btn {
+  color:
+    #112d54 !important;
+}
+
+
+.team-map-tool-btn span {
+  color:
+    #0c3266 !important;
+}
+
+
+.team-map-tool-btn:hover {
+  color:
+    #061b37 !important;
+
+  border-color:
+    #9eb4ce !important;
+
+  background:
+    #f4f7fb !important;
+}
+
+
+/* ---------------------------------------------------------
+   TOP LEADER CARD
+--------------------------------------------------------- */
+
+.team-map-branch:first-child
+> .team-map-node-wrap
+> .team-map-node {
+  border:
+    2px solid
+    #0b3267 !important;
+
+  box-shadow:
+    0 10px 25px
+    rgba(7, 36, 78, .13) !important;
+}
+
+
+.team-map-top-badge {
+  background:
+    #0b3267 !important;
+
+  color:
+    #fff !important;
+}
+
+
+/* ---------------------------------------------------------
+   NODE TEXT
+--------------------------------------------------------- */
+
+.team-map-node-copy strong {
+  color:
+    #071a33 !important;
+}
+
+
+.team-map-node-copy span {
+  color:
+    #6b7d94 !important;
+}
+
+
+.team-map-node-count {
+  color:
+    #0b3267 !important;
+}
+
+
+/* ---------------------------------------------------------
+   TREE LINES
+--------------------------------------------------------- */
+
+.team-map-children::before,
+.team-map-children >
+.team-map-branch::before {
+  background:
+    #718aa8 !important;
+}
+
+
+.team-map-children >
+.team-map-branch:not(:only-child)::after {
+  border-top-color:
+    #718aa8 !important;
+}
+
+
+/* ---------------------------------------------------------
+   COLLAPSE BUTTON
+--------------------------------------------------------- */
+
+.team-map-collapse {
+  border-color:
+    #8da6c3 !important;
+
+  color:
+    #0b3267 !important;
+
+  background:
+    #fff !important;
+}
+
+
+/* ---------------------------------------------------------
+   REFRESH
+--------------------------------------------------------- */
+
+.team-map-refresh {
+  color:
+    #0b3267 !important;
+}
+
+
+/* ---------------------------------------------------------
+   AGENT DRAWER
+--------------------------------------------------------- */
+
+.tm-agent-drawer-accent {
+  background:
+    linear-gradient(
+      90deg,
+      #061a35,
+      #0b3267,
+      #184f91
+    ) !important;
+}
+
+
+.tm-agent-profile {
+  background:
+    linear-gradient(
+      135deg,
+      #061a35,
+      #0c3265
+    ) !important;
+
+  box-shadow:
+    0 12px 30px
+    rgba(5, 27, 57, .18) !important;
+}
+
+
+.tm-drawer-primary {
+  background:
+    linear-gradient(
+      135deg,
+      #071d3c,
+      #0c3266
+    ) !important;
+}
+
+
+.tm-agent-action span {
+  color:
+    #0b3267 !important;
+}
+
+
+.tm-agent-action {
+  color:
+    #081e3c !important;
+}
+
+
+.tm-agent-action:hover {
+  border-color:
+    #a8bdd5 !important;
+
+  background:
+    #f1f5fa !important;
+}
+
+
+/* ---------------------------------------------------------
+   REMOVE ELECTRIC BLUE FEEL FROM MAP
+--------------------------------------------------------- */
+
+.team-map-page {
+  background:
+    radial-gradient(
+      circle at 20% 0%,
+      rgba(19, 57, 107, .05),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #f7f9fc,
+      #fbfcfe
+    ) !important;
+}
