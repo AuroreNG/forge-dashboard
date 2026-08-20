@@ -4215,12 +4215,16 @@ const filteredAgents =
       }
 
       <button
-        class="journey-more-btn"
-        data-agent-menu="${agent.id}"
-        aria-label="Agent options"
-      >
-        ---
-      </button>
+  type="button"
+  class="journey-more-btn"
+  data-agent-menu="${agent.id}"
+  aria-label="Agent options"
+  title="More options"
+>
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
 
     </div>
   `;
