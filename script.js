@@ -10933,7 +10933,7 @@ let teamMapCollapsed = new Set();
 // NORMALIZE FORGE AGENTS FOR TEAM MAP
 // ----------------------------------------------------------
 
-function normalizeAgentsForTeamMap() {
+function getTeamMapMembers() {
 
   const people = allAgents.map((agent) => ({
     id: agent.id || agent.code || agent.email || agent.name,
