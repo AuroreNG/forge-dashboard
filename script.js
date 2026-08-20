@@ -7894,8 +7894,7 @@ document.addEventListener("click", (event) => {
       ?.classList.add("hidden");
   }
 });
-return "unknown";
-}
+
 // ==========================================================
 // TEAM CSV IMPORT
 // Smart Import -> Team CSV -> Supabase
