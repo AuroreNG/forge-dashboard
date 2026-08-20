@@ -4976,52 +4976,247 @@ document.getElementById("cancelAddAgent")?.addEventListener("click", () => {
 });
 
 // FIX 1: broken upline read + crash when selectedAgent is null
-document.getElementById("saveAddAgent")?.addEventListener("click", () => {
-  const name        = document.getElementById("newAgentName").value.trim();
-  const email       = document.getElementById("newAgentEmail").value.trim();
-  const phone       = document.getElementById("newAgentPhone").value.trim();
-  const code        = document.getElementById("newAgentCode").value.trim();
-  const coordinator = document.getElementById("newAgentCoordinator").value;
-  // FIX: read the upline field value properly (was using assignment `=` instead of just reading)
-  const upline      = document.getElementById("newAgentUpline")?.value || (selectedAgent?.upline || "");
-  const stage       = document.getElementById("newAgentStage").value;
+document
+  .getElementById("saveAddAgent")
+  ?.addEventListener("click", async () => {
 
-  if (!name)        { alert("Please enter the agent name.");                      return; }
-  if (!coordinator) { alert("Please select the coordinator responsible.");        return; }
-  if (!stage)       { alert("Please select the pipeline stage.");                 return; }
+    const name =
+      document
+        .getElementById("newAgentName")
+        ?.value.trim();
 
-  const existingAgent =
-    selectedAgent ||
-    allAgents.find((agent) =>
-      (code  && agent.code  === code)  ||
-      (email && agent.email === email) ||
-      (phone && agent.phone === phone) ||
-      agent.name.toLowerCase() === name.toLowerCase()
-    );
+    const email =
+      document
+        .getElementById("newAgentEmail")
+        ?.value.trim()
+        .toLowerCase();
 
-  if (existingAgent) {
-    existingAgent.name        = name;
-    existingAgent.email       = email;
-    existingAgent.phone       = phone;
-    existingAgent.code        = code;
-    existingAgent.coordinator = coordinator;
-    existingAgent.upline      = upline;
-    existingAgent.stage       = stage;
-    existingAgent.pipelineStage = stage;
-    selectedAgent = existingAgent;
-  } else {
-    selectedAgent = { name, email, phone, code, coordinator, upline, teamStatus: "", stage, pipelineStage: stage };
-    allAgents.push(selectedAgent);
-  }
+    const phone =
+      document
+        .getElementById("newAgentPhone")
+        ?.value.trim();
 
-  saveAgentsToLocalStorage();
-  document.getElementById("addAgentModal").classList.add("hidden");
-  clearAgentForm();
-  renderDashboard("all");
-  renderJourneyPage();
-  renderAgentsPage();
-  showAgentProfile(selectedAgent);
-});
+    let code =
+      document
+        .getElementById("newAgentCode")
+        ?.value.trim()
+        .toUpperCase();
+
+    const coordinator =
+      document
+        .getElementById("newAgentCoordinator")
+        ?.value || "";
+
+    const upline =
+      document
+        .getElementById("newAgentUpline")
+        ?.value.trim() || "";
+
+    const stage =
+      document
+        .getElementById("newAgentStage")
+        ?.value || "Not Placed";
+
+
+    if (!name) {
+      alert("Please enter the agent name.");
+      return;
+    }
+
+
+    const organizationId =
+      getActiveOrganizationId();
+
+
+    if (!organizationId) {
+      alert(
+        "FORGE does not have an active organization."
+      );
+      return;
+    }
+
+
+    // ======================================================
+    // MANUAL RECORDS STILL NEED A UNIQUE AGENT CODE
+    // ======================================================
+
+    if (!code) {
+
+      const cleanName =
+        normalizeMatchName(name)
+          .toUpperCase();
+
+      code =
+        `MANUAL-${cleanName}-${Date.now()
+          .toString()
+          .slice(-6)}`;
+    }
+
+
+    const saveButton =
+      document.getElementById(
+        "saveAddAgent"
+      );
+
+    if (saveButton) {
+      saveButton.disabled = true;
+      saveButton.textContent = "Saving...";
+    }
+
+
+    try {
+
+      // ====================================================
+      // EDIT EXISTING REAL DATABASE AGENT
+      // ====================================================
+
+      if (selectedAgent?.id) {
+
+        const updates = {
+          name,
+          email: email || null,
+          phone: phone || null,
+          agent_code: code,
+          upline_name: upline || null,
+          stage,
+          import_source:
+            selectedAgent.importSource ||
+            "Manual"
+        };
+
+
+        const { error } =
+          await forgeSupabase
+            .from("agents")
+            .update(updates)
+            .eq(
+              "organization_id",
+              organizationId
+            )
+            .eq(
+              "id",
+              selectedAgent.id
+            );
+
+
+        if (error) {
+          throw error;
+        }
+
+      }
+
+      // ====================================================
+      // CREATE NEW AGENT
+      // ====================================================
+
+      else {
+
+        const newAgent = {
+
+          organization_id:
+            organizationId,
+
+          agent_code:
+            code,
+
+          name,
+
+          email:
+            email || null,
+
+          phone:
+            phone || null,
+
+          upline_name:
+            upline || null,
+
+          stage,
+
+          team_status:
+            null,
+
+          import_source:
+            "Manual"
+        };
+
+
+        const {
+          data,
+          error
+        } =
+          await forgeSupabase
+            .from("agents")
+            .insert(newAgent)
+            .select()
+            .single();
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        console.log(
+          "Manual FORGE agent created:",
+          data
+        );
+      }
+
+
+      // ====================================================
+      // RELOAD ACTIVE ORGANIZATION FROM DATABASE
+      // ====================================================
+
+      await loadCSV();
+
+
+      document
+        .getElementById("addAgentModal")
+        ?.classList.add("hidden");
+
+
+      clearAgentForm();
+
+      selectedAgent = null;
+
+
+      renderAllPages();
+
+
+      alert(
+        `${name} saved to ${
+          currentOrganization?.name ||
+          "this organization"
+        }.`
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "FORGE MANUAL AGENT SAVE ERROR:",
+        error
+      );
+
+
+      alert(
+        "FORGE could not save this agent: " +
+        (
+          error?.message ||
+          String(error)
+        )
+      );
+
+    } finally {
+
+      if (saveButton) {
+        saveButton.disabled = false;
+        saveButton.textContent =
+          "Save Agent";
+      }
+    }
+
+  });
 
 // Pre-fill edit modal
 document.addEventListener("click", (e) => {
