@@ -22679,3 +22679,108 @@ body.forge-drawer-open {
 .journey-agent-menu button.danger:hover {
   background: #fff1f2;
 }
+
+/* =========================================================
+   FORGE JOURNEY FLOATING AGENT MENU
+========================================================= */
+
+.journey-agent-menu {
+  position: fixed !important;
+
+  width: 210px;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    rgba(207, 218, 235, 0.95);
+
+  border-radius: 14px;
+
+  padding: 7px;
+
+  box-shadow:
+    0 22px 55px rgba(15, 35, 75, 0.18),
+    0 6px 18px rgba(15, 35, 75, 0.08);
+
+  z-index: 999999 !important;
+}
+
+
+.journey-agent-menu button {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 11px 12px;
+
+  border: none;
+
+  border-radius: 9px;
+
+  background: transparent;
+
+  color: #183153;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+
+.journey-agent-menu button:hover {
+  background: #f3f7fd;
+}
+
+
+.journey-menu-icon {
+  width: 20px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #667894;
+
+  font-size: 16px;
+}
+
+
+.journey-agent-menu .danger {
+  color: #dc2626;
+
+  border-top: 1px solid #edf1f7;
+
+  border-radius: 0 0 9px 9px;
+
+  margin-top: 5px;
+
+  padding-top: 12px;
+}
+
+
+.journey-agent-menu .danger:hover {
+  background: #fff1f2;
+
+  color: #b91c1c;
+}
+
+
+.journey-agent-menu .danger
+.journey-menu-icon {
+  color: #dc2626;
+}
