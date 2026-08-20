@@ -10929,195 +10929,130 @@ let teamMapCollapsed = new Set();
 // NORMALIZE FORGE AGENTS FOR TEAM MAP
 // ----------------------------------------------------------
 
-function getTeamMapMembers() {
+let existingLeader = null;
 
-  const people = (allAgents || [])
-    .map((agent) => ({
 
-      id:
-        agent.id,
+// =============================================
+// 1. MATCH BY ACTUAL AGENT CODE
+// =============================================
 
-      code:
-        String(
-          agent.code ||
-          agent.agent_code ||
-          ""
+if (topLeaderCode) {
+
+  existingLeader =
+    people.find(
+      member =>
+        normalizeTeamMapCode(
+          member.code
+        ) ===
+        normalizeTeamMapCode(
+          topLeaderCode
         )
-          .trim()
-          .toUpperCase(),
-
-      name:
-        agent.name ||
-        agent.full_name ||
-        "Unnamed",
-
-      email:
-        agent.email ||
-        "",
-
-      phone:
-        agent.phone ||
-        "",
-
-      uplineCode:
-        String(
-          agent.uplineCode ||
-          agent.upline_code ||
-          ""
-        )
-          .trim()
-          .toUpperCase(),
-
-      uplineName:
-        agent.upline ||
-        agent.uplineName ||
-        agent.upline_name ||
-        "",
-
-      recruitDate:
-        agent.recruitDate ||
-        agent.recruit_date ||
-        "",
-
-      status:
-        agent.teamStatus ||
-        agent.team_status ||
-        "",
-
-      stage:
-        agent.stage ||
-        agent.pipelineStage ||
-        "",
-
-      isOrganizationRoot: false
-
-    }))
-    .filter(
-      member => member.code
     );
+}
 
 
-  // ======================================================
-  // ORGANIZATION TOP LEADER
-  // ======================================================
+// =============================================
+// 2. MATCH BY EMAIL
+// Best fallback because email is unique.
+// =============================================
 
-  const topLeaderName =
-    String(
-      currentOrganization
-        ?.top_leader_name ||
-      ""
-    ).trim();
+if (
+  !existingLeader &&
+  topLeaderEmail
+) {
 
-
-  const topLeaderCode =
-    String(
-      currentOrganization
-        ?.top_leader_agent_code ||
-      ""
-    )
-      .trim()
-      .toUpperCase();
-
-
-  const topLeaderEmail =
-    String(
-      currentOrganization
-        ?.top_leader_email ||
-      ""
-    ).trim();
+  existingLeader =
+    people.find(
+      member =>
+        String(member.email || "")
+          .trim()
+          .toLowerCase() ===
+        String(topLeaderEmail)
+          .trim()
+          .toLowerCase()
+    );
+}
 
 
-  if (topLeaderName) {
+// =============================================
+// 3. MATCH BY NORMALIZED NAME
+// =============================================
 
-    // Is this leader already present
-    // inside the imported FORGE agents?
-    let existingLeader = null;
+if (
+  !existingLeader &&
+  topLeaderName
+) {
 
-
-    if (topLeaderCode) {
-
-      existingLeader =
-        people.find(
-          member =>
-            normalizeTeamMapCode(
-              member.code
-            ) ===
-            normalizeTeamMapCode(
-              topLeaderCode
-            )
-        );
-    }
-
-
-    if (!existingLeader) {
-
-      existingLeader =
-        people.find(
-          member =>
-            normalizeTeamMapName(
-              member.name
-            ) ===
-            normalizeTeamMapName(
-              topLeaderName
-            )
-        );
-    }
+  existingLeader =
+    people.find(
+      member =>
+        normalizeTeamMapName(
+          member.name
+        ) ===
+        normalizeTeamMapName(
+          topLeaderName
+        )
+    );
+}
 
 
-    // If Tevah did NOT include the leader
-    // create a virtual organization-root node.
-    if (!existingLeader) {
+// =============================================
+// FOUND THE REAL FORGE AGENT
+// =============================================
 
-      people.push({
+if (existingLeader) {
 
-        id:
-          `ORG_ROOT_${
-            currentOrganization?.id ||
-            "UNKNOWN"
-          }`,
+  existingLeader.isOrganizationRoot =
+    true;
 
-        code:
-          topLeaderCode ||
-          `ORGROOT-${
-            currentOrganization?.id ||
-            "ROOT"
-          }`,
+}
 
-        name:
-          topLeaderName,
 
-        email:
-          topLeaderEmail,
+// =============================================
+// NO REAL RECORD — ONLY THEN CREATE VIRTUAL ROOT
+// =============================================
 
-        phone:
-          "",
+else if (topLeaderName) {
 
-        uplineCode:
-          "",
+  people.push({
 
-        uplineName:
-          "",
+    id:
+      `ORG_ROOT_${
+        currentOrganization?.id ||
+        "UNKNOWN"
+      }`,
 
-        recruitDate:
-          "",
+    code:
+      topLeaderCode ||
+      `ORGROOT-${
+        currentOrganization?.id ||
+        "ROOT"
+      }`,
 
-        status:
-          "Organization Leader",
+    name:
+      topLeaderName,
 
-        stage:
-          "",
+    email:
+      topLeaderEmail,
 
-        isOrganizationRoot:
-          true
+    phone: "",
 
-      });
+    uplineCode: "",
+    uplineName: "",
 
-    } else {
+    recruitDate: "",
 
-      existingLeader
-        .isOrganizationRoot = true;
-    }
-  }
+    status:
+      "Organization Leader",
+
+    stage: "",
+
+    isOrganizationRoot:
+      true
+
+  });
+
+}
 
 
   return people;
@@ -11137,19 +11072,10 @@ function normalizeTeamMapCode(value) {
 
 
 function normalizeTeamMapName(value) {
-
   return String(value || "")
     .trim()
     .toLowerCase()
-
-    // Normalize punctuation
-    .replace(/['’]/g, "")
-    .replace(/-/g, " ")
-
-    // Normalize multiple spaces
-    .replace(/\s+/g, " ")
-
-    .trim();
+    .replace(/[^a-z0-9]/g, "");
 }
 
 
@@ -12645,37 +12571,70 @@ function getForgeAgentFromTeamMapMember(member) {
 
   if (!member) return null;
 
-  // Virtual organization root may not exist
-  // in the agents table.
-  if (
-    String(member.id || "")
-      .startsWith("ORG_ROOT_")
-  ) {
-    return null;
+
+  // 1. Database ID
+  let agent =
+    allAgents.find(
+      item =>
+        String(item.id) ===
+        String(member.id)
+    );
+
+
+  if (agent) return agent;
+
+
+  // 2. Agent Code
+  if (member.code) {
+
+    agent =
+      allAgents.find(
+        item =>
+          normalizeTeamMapCode(
+            item.code
+          ) ===
+          normalizeTeamMapCode(
+            member.code
+          )
+      );
+
+    if (agent) return agent;
   }
 
 
-  return (
-    allAgents.find(
-      agent =>
-        String(agent.id) ===
-        String(member.id)
-    ) ||
+  // 3. Email
+  if (member.email) {
 
+    agent =
+      allAgents.find(
+        item =>
+          String(item.email || "")
+            .trim()
+            .toLowerCase() ===
+          String(member.email)
+            .trim()
+            .toLowerCase()
+      );
+
+    if (agent) return agent;
+  }
+
+
+  // 4. Name fallback
+  agent =
     allAgents.find(
-      agent =>
-        normalizeTeamMapCode(
-          agent.code
+      item =>
+        normalizeTeamMapName(
+          item.name
         ) ===
-        normalizeTeamMapCode(
-          member.code
+        normalizeTeamMapName(
+          member.name
         )
-    ) ||
+    );
 
-    null
-  );
+
+  return agent || null;
 }
-
 
 // ----------------------------------------------------------
 // DRAWER ACTIVITY
