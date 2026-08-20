@@ -10298,3 +10298,396 @@ function openActivateStageFromHome(stage) {
 
   }, 100);
 }
+
+// ==========================================================
+// FORGE JOURNEY MENU - FINAL OVERRIDE
+// Paste at VERY BOTTOM of script.js
+// ==========================================================
+
+document.addEventListener(
+  "click",
+  async (event) => {
+
+    const menuButton =
+      event.target.closest("[data-agent-menu]");
+
+    // ======================================================
+    // CLICK OUTSIDE -> CLOSE MENU
+    // ======================================================
+
+    if (!menuButton) {
+
+      if (
+        !event.target.closest(
+          ".forge-floating-agent-menu"
+        )
+      ) {
+        document
+          .querySelectorAll(
+            ".forge-floating-agent-menu"
+          )
+          .forEach((menu) =>
+            menu.remove()
+          );
+      }
+
+      return;
+    }
+
+
+    // ======================================================
+    // THIS IS A THREE-DOT CLICK
+    // Stop older Journey handlers from interfering
+    // ======================================================
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+
+    const agentId =
+      menuButton.dataset.agentMenu;
+
+    console.log(
+      "FORGE MENU CLICK:",
+      agentId
+    );
+
+
+    const agent =
+      allAgents.find(
+        (item) =>
+          String(item.id) ===
+          String(agentId)
+      );
+
+
+    if (!agent) {
+
+      console.error(
+        "FORGE MENU: Agent not found:",
+        agentId
+      );
+
+      return;
+    }
+
+
+    // Close any existing menu
+    document
+      .querySelectorAll(
+        ".forge-floating-agent-menu"
+      )
+      .forEach((menu) =>
+        menu.remove()
+      );
+
+
+    // ======================================================
+    // CREATE FLOATING MENU
+    // ======================================================
+
+    const menu =
+      document.createElement("div");
+
+    menu.className =
+      "forge-floating-agent-menu";
+
+
+    menu.innerHTML = `
+
+      <button
+        type="button"
+        data-forge-view-agent
+      >
+        <span>◉</span>
+        View Details
+      </button>
+
+
+      <button
+        type="button"
+        data-forge-edit-agent
+      >
+        <span>✎</span>
+        Edit Agent
+      </button>
+
+
+      ${
+        agent.stage !== "Not Placed"
+          ? `
+            <button
+              type="button"
+              data-forge-move-back
+            >
+              <span>↶</span>
+              Move Back
+            </button>
+          `
+          : ""
+      }
+
+
+      <button
+        type="button"
+        class="danger"
+        data-forge-remove-agent
+      >
+        <span>⌫</span>
+        Remove Agent
+      </button>
+
+    `;
+
+
+    document.body.appendChild(menu);
+
+
+    // ======================================================
+    // POSITION NEXT TO THREE-DOT BUTTON
+    // ======================================================
+
+    const rect =
+      menuButton.getBoundingClientRect();
+
+    const menuWidth = 210;
+
+
+    let left =
+      rect.right -
+      menuWidth;
+
+
+    let top =
+      rect.bottom + 8;
+
+
+    // Prevent going off right edge
+    if (
+      left + menuWidth >
+      window.innerWidth - 12
+    ) {
+      left =
+        window.innerWidth -
+        menuWidth -
+        12;
+    }
+
+
+    // Prevent going off left edge
+    if (left < 12) {
+      left = 12;
+    }
+
+
+    menu.style.left =
+      `${left}px`;
+
+    menu.style.top =
+      `${top}px`;
+
+
+    console.log(
+      "FORGE MENU OPENED:",
+      agent.name
+    );
+
+
+    // ======================================================
+    // VIEW DETAILS
+    // ======================================================
+
+    menu
+      .querySelector(
+        "[data-forge-view-agent]"
+      )
+      ?.addEventListener(
+        "click",
+        (clickEvent) => {
+
+          clickEvent.stopPropagation();
+
+          selectedAgent = agent;
+
+          menu.remove();
+
+          showPage("Agents");
+
+          document
+            .querySelectorAll(
+              ".nav-btn"
+            )
+            .forEach((nav) => {
+
+              nav.classList.toggle(
+                "active",
+                nav.textContent
+                  .trim() ===
+                  "Agents"
+              );
+
+            });
+
+
+          renderAgentsPage();
+
+          showAgentProfile(agent);
+
+        }
+      );
+
+
+    // ======================================================
+    // EDIT
+    // ======================================================
+
+    menu
+      .querySelector(
+        "[data-forge-edit-agent]"
+      )
+      ?.addEventListener(
+        "click",
+        (clickEvent) => {
+
+          clickEvent.stopPropagation();
+
+          selectedAgent = agent;
+
+          menu.remove();
+
+          document
+            .querySelector(
+              ".edit-agent-btn"
+            )
+            ?.click();
+
+        }
+      );
+
+
+    // ======================================================
+    // MOVE BACK
+    // ======================================================
+
+    menu
+      .querySelector(
+        "[data-forge-move-back]"
+      )
+      ?.addEventListener(
+        "click",
+        async (clickEvent) => {
+
+          clickEvent.stopPropagation();
+
+
+          const stages = [
+            "Not Placed",
+            "Quiz Sent",
+            "XCEL Completed",
+            "Exam Passed",
+            "Licensed",
+            "Contracted"
+          ];
+
+
+          const index =
+            stages.indexOf(
+              agent.stage
+            );
+
+
+          if (index <= 0) {
+            return;
+          }
+
+
+          menu.remove();
+
+
+          await updateJourneyStage(
+            agent,
+            stages[index - 1]
+          );
+
+        }
+      );
+
+
+    // ======================================================
+    // REMOVE FROM CURRENT ORGANIZATION
+    // ======================================================
+
+    menu
+      .querySelector(
+        "[data-forge-remove-agent]"
+      )
+      ?.addEventListener(
+        "click",
+        async (clickEvent) => {
+
+          clickEvent.stopPropagation();
+
+
+          const confirmed =
+            confirm(
+              `Remove ${agent.name} from FORGE?`
+            );
+
+
+          if (!confirmed) {
+            return;
+          }
+
+
+          const {
+            error
+          } =
+            await forgeSupabase
+              .from("agents")
+              .delete()
+              .eq(
+                "organization_id",
+                getActiveOrganizationId()
+              )
+              .eq(
+                "id",
+                agent.id
+              );
+
+
+          if (error) {
+
+            console.error(
+              "FORGE REMOVE AGENT ERROR:",
+              error
+            );
+
+            alert(
+              "FORGE could not remove this agent."
+            );
+
+            return;
+          }
+
+
+          menu.remove();
+
+
+          await loadCSV();
+
+
+          alert(
+            `${agent.name} was removed from FORGE.`
+          );
+
+        }
+      );
+
+  },
+
+  // IMPORTANT:
+  // Capture phase lets this handler run BEFORE
+  // the older Journey menu listeners.
+  true
+);
