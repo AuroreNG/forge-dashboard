@@ -10997,10 +10997,19 @@ function getTeamMapMembers() {
 // CHILDREN
 // ----------------------------------------------------------
 
+function normalizeTeamMapCode(value) {
+  return String(value || "")
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, "");
+}
+
+
 function normalizeTeamMapName(value) {
   return String(value || "")
     .trim()
     .toLowerCase()
+    .replace(/&/g, "and")
     .replace(/[^a-z0-9]/g, "");
 }
 
@@ -11010,14 +11019,30 @@ function findTeamMapParent(member) {
   if (!member) return null;
 
 
-  // 1. Best match: Agent Code
-  if (member.uplineCode) {
+  const childUplineCode =
+    normalizeTeamMapCode(
+      member.uplineCode
+    );
+
+
+  const childUplineName =
+    normalizeTeamMapName(
+      member.uplineName
+    );
+
+
+  // ============================================
+  // 1. EXACT AGENT CODE MATCH
+  // ============================================
+
+  if (childUplineCode) {
 
     const byCode =
       teamMapMembers.find(
         (person) =>
-          person.code ===
-          member.uplineCode
+          normalizeTeamMapCode(
+            person.code
+          ) === childUplineCode
       );
 
     if (byCode) {
@@ -11026,26 +11051,67 @@ function findTeamMapParent(member) {
   }
 
 
-  // 2. Fallback: Upline Name
-  if (member.uplineName) {
+  // ============================================
+  // 2. EXACT NORMALIZED NAME MATCH
+  // ============================================
 
-    const targetName =
-      normalizeTeamMapName(
-        member.uplineName
-      );
-
+  if (childUplineName) {
 
     const byName =
       teamMapMembers.find(
         (person) =>
           normalizeTeamMapName(
             person.name
-          ) === targetName
+          ) === childUplineName
       );
-
 
     if (byName) {
       return byName;
+    }
+  }
+
+
+  // ============================================
+  // 3. SAFE PARTIAL NAME MATCH
+  //
+  // Handles things such as:
+  // "Rhonda Middleton-Robinson"
+  // vs
+  // "Rhonda Middleton Robinson"
+  // ============================================
+
+  if (
+    childUplineName &&
+    childUplineName.length >= 8
+  ) {
+
+    const partialMatches =
+      teamMapMembers.filter(
+        (person) => {
+
+          const personName =
+            normalizeTeamMapName(
+              person.name
+            );
+
+          return (
+            personName.includes(
+              childUplineName
+            ) ||
+            childUplineName.includes(
+              personName
+            )
+          );
+        }
+      );
+
+
+    // Only use partial matching
+    // when exactly ONE person matches.
+    if (
+      partialMatches.length === 1
+    ) {
+      return partialMatches[0];
     }
   }
 
@@ -11056,30 +11122,25 @@ function findTeamMapParent(member) {
 
 function teamMapChildren(code) {
 
-  const parent =
-    teamMapMembers.find(
-      (person) =>
-        person.code === code
-    );
-
-  if (!parent) {
-    return [];
-  }
+  const normalizedCode =
+    normalizeTeamMapCode(code);
 
 
   return teamMapMembers.filter(
     (member) => {
 
-      const resolvedParent =
-        findTeamMapParent(
-          member
-        );
+      const parent =
+        findTeamMapParent(member);
+
+      if (!parent) {
+        return false;
+      }
 
       return (
-        resolvedParent?.code ===
-        parent.code
+        normalizeTeamMapCode(
+          parent.code
+        ) === normalizedCode
       );
-
     }
   );
 }
@@ -11096,31 +11157,75 @@ function findTeamMapRoot() {
   }
 
 
-  // A root is someone whose upline
-  // is NOT another person inside this organization.
-  const roots =
+  const trueRoots =
     teamMapMembers.filter(
-      (member) =>
-        !findTeamMapParent(member)
+      (member) => {
+
+        // Someone with NO upline information
+        // is a legitimate root candidate.
+        const hasUplineCode =
+          normalizeTeamMapCode(
+            member.uplineCode
+          );
+
+        const hasUplineName =
+          normalizeTeamMapName(
+            member.uplineName
+          );
+
+
+        if (
+          !hasUplineCode &&
+          !hasUplineName
+        ) {
+          return true;
+        }
+
+
+        return false;
+      }
     );
 
 
-  if (!roots.length) {
-    return teamMapMembers[0];
+  // ============================================
+  // REAL ROOT FOUND
+  // ============================================
+
+  if (trueRoots.length) {
+
+    return trueRoots.sort(
+      (a, b) =>
+        teamMapDescendantCount(
+          b.code
+        ) -
+        teamMapDescendantCount(
+          a.code
+        )
+    )[0];
   }
 
 
-  // If there is more than one possible root,
-  // choose the person with the largest organization.
-  return roots.sort(
-    (a, b) =>
-      teamMapDescendantCount(
-        b.code
-      ) -
-      teamMapDescendantCount(
-        a.code
-      )
-  )[0];
+  // ============================================
+  // DO NOT PROMOTE AN ORPHAN TO TOP LEADER
+  // ============================================
+
+  console.warn(
+    "TEAM MAP: No true root found.",
+    teamMapMembers.map(
+      member => ({
+        name: member.name,
+        code: member.code,
+        uplineName: member.uplineName,
+        uplineCode: member.uplineCode,
+        parentResolved:
+          findTeamMapParent(member)?.name ||
+          "NOT FOUND"
+      })
+    )
+  );
+
+
+  return null;
 }
 // ----------------------------------------------------------
 // DESCENDANT COUNT
@@ -11702,14 +11807,37 @@ function renderTeamMap() {
 
   if (!root) {
 
-    teamMapRootCode = "";
-    teamMapFocusCode = "";
+  teamMapRootCode = "";
+  teamMapFocusCode = "";
 
-    updateTeamMapStats();
-    drawTeamMap();
+  updateTeamMapStats();
 
-    return;
+  const tree =
+    document.getElementById(
+      "teamMapTree"
+    );
+
+  if (tree) {
+    tree.innerHTML = `
+      <div class="team-map-empty">
+        <div class="team-map-empty-icon">
+          !
+        </div>
+
+        <h3>
+          Team hierarchy needs attention
+        </h3>
+
+        <p>
+          FORGE found team members, but could not identify
+          the organization's true top leader.
+        </p>
+      </div>
+    `;
   }
+
+  return;
+}
 
 
   teamMapRootCode =
