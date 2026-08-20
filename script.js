@@ -7894,35 +7894,7 @@ document.addEventListener("click", (event) => {
       ?.classList.add("hidden");
   }
 });
-function detectTevahFileType(rows) {
-  if (!rows?.length) return "unknown";
-
-  const headers = Object.keys(rows[0]).map((h) => h.trim());
-
-  if (
-    headers.includes("Agent Code") &&
-    headers.includes("Full name") &&
-    headers.includes("Team Status")
-  ) {
-    return "team";
-  }
-
-  if (
-    headers.includes("AGENT NAME") &&
-    headers.includes("CODE") &&
-    headers.includes("RESI. LICENSE")
-  ) {
-    return "compliance";
-  }
-
-  if (
-    headers.includes("RECRUIT NAME") &&
-    headers.includes("RECRUIT CODE")
-  ) {
-    return "recruit";
-  }
-
-  return "unknown";
+return "unknown";
 }
 // ==========================================================
 // TEAM CSV IMPORT
