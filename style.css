@@ -22874,3 +22874,564 @@ body.forge-drawer-open {
 .forge-floating-agent-menu .danger:hover {
   background: #fff1f2;
 }
+
+/* =========================================================
+   FORGE TEAM MAP
+========================================================= */
+
+.team-map-page {
+  padding: 34px;
+  min-height: calc(100vh - 82px);
+  background:
+    radial-gradient(
+      circle at 12% 0%,
+      rgba(42, 108, 255, 0.08),
+      transparent 28%
+    ),
+    #f7f9fc;
+}
+
+
+.team-map-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+
+.team-map-eyebrow {
+  margin-bottom: 7px;
+  color: #4972a8;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+
+.team-map-header h1 {
+  margin: 0;
+  color: #132238;
+  font-size: 32px;
+  letter-spacing: -0.04em;
+}
+
+
+.team-map-header p {
+  margin: 8px 0 0;
+  color: #708096;
+  font-size: 14px;
+}
+
+
+.team-map-org-card {
+  min-width: 230px;
+  padding: 15px 18px;
+  border: 1px solid #dce5f1;
+  border-radius: 16px;
+  background: rgba(255,255,255,.86);
+  box-shadow: 0 10px 30px rgba(33, 54, 88, .06);
+}
+
+
+.team-map-org-card span {
+  display: block;
+  margin-bottom: 5px;
+  color: #8390a3;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+
+.team-map-org-card strong {
+  display: block;
+  color: #17263a;
+  font-size: 15px;
+}
+
+
+.team-map-org-card small {
+  display: block;
+  margin-top: 4px;
+  color: #8090a4;
+}
+
+
+/* TOOLBAR */
+
+.team-map-toolbar {
+  display: grid;
+  grid-template-columns:
+    minmax(240px, 1fr)
+    250px
+    auto;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+
+.team-map-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 15px;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: white;
+}
+
+
+.team-map-search-wrap span {
+  color: #718096;
+  font-size: 19px;
+}
+
+
+.team-map-search-wrap input {
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #223249;
+  font: inherit;
+}
+
+
+.team-map-leader-select {
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: white;
+  color: #24354d;
+  outline: none;
+}
+
+
+.team-map-reset-btn {
+  height: 46px;
+  padding: 0 19px;
+  border: 0;
+  border-radius: 14px;
+  background: #172b4d;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+
+/* STATS */
+
+.team-map-stats {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 13px;
+  margin-bottom: 18px;
+}
+
+
+.team-map-stat {
+  padding: 17px 18px;
+  border: 1px solid #dfe7f1;
+  border-radius: 17px;
+  background: rgba(255,255,255,.88);
+}
+
+
+.team-map-stat span {
+  display: block;
+  margin-bottom: 6px;
+  color: #738399;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+.team-map-stat strong {
+  display: block;
+  color: #13253c;
+  font-size: 27px;
+  letter-spacing: -.04em;
+}
+
+
+.team-map-stat small {
+  display: block;
+  margin-top: 4px;
+  color: #94a0b1;
+}
+
+
+/* MAP SURFACE */
+
+.team-map-surface {
+  overflow: hidden;
+  border: 1px solid #dce5ef;
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      rgba(231,238,247,.45) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(231,238,247,.45) 1px,
+      transparent 1px
+    ),
+    #ffffff;
+  background-size: 28px 28px;
+  box-shadow:
+    0 18px 50px rgba(39, 61, 94, .07);
+}
+
+
+.team-map-surface-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px 20px;
+  border-bottom: 1px solid #e7edf4;
+  background: rgba(255,255,255,.92);
+}
+
+
+.team-map-surface-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+
+.team-map-surface-header span {
+  color: #8997aa;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+
+
+.team-map-surface-header strong {
+  color: #203149;
+  font-size: 14px;
+}
+
+
+#teamMapUpdated {
+  font-weight: 500;
+  letter-spacing: normal;
+}
+
+
+/* VIEWPORT */
+
+.team-map-viewport {
+  min-height: 560px;
+  padding: 46px 34px 70px;
+  overflow: auto;
+}
+
+
+.team-map-tree {
+  min-width: max-content;
+  display: flex;
+  justify-content: center;
+}
+
+
+/* TREE */
+
+.team-map-branch {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.team-map-node-wrap {
+  position: relative;
+  z-index: 2;
+}
+
+
+.team-map-node {
+  min-width: 235px;
+  min-height: 77px;
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  align-items: center;
+  gap: 11px;
+
+  padding: 12px 14px;
+
+  border: 1px solid #d7e2ee;
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.99),
+      rgba(247,250,254,.97)
+    );
+
+  box-shadow:
+    0 8px 25px rgba(42, 62, 91, .075);
+
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    transform .2s ease;
+}
+
+
+.team-map-node:hover {
+  transform: translateY(-2px);
+  border-color: #a9c6ef;
+
+  box-shadow:
+    0 13px 30px rgba(42, 76, 124, .12);
+}
+
+
+.team-map-avatar {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: #edf4ff;
+  color: #315f9f;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+.team-map-node-copy {
+  min-width: 0;
+}
+
+
+.team-map-node-copy strong {
+  display: block;
+  max-width: 150px;
+  overflow: hidden;
+  color: #1d2d43;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.team-map-node-copy span {
+  display: block;
+  margin-top: 4px;
+  color: #8997aa;
+  font-size: 10px;
+}
+
+
+.team-map-node-count {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: #295d9c;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+
+.team-map-node-count small {
+  margin-top: 2px;
+  color: #98a5b5;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+
+.team-map-node-end {
+  color: #9aa6b5;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+
+.team-map-collapse {
+  position: absolute;
+  left: 50%;
+  bottom: -13px;
+  z-index: 4;
+
+  width: 27px;
+  height: 27px;
+
+  transform: translateX(-50%);
+
+  border: 1px solid #cfdeed;
+  border-radius: 50%;
+
+  background: white;
+  color: #3b6ba8;
+
+  font-size: 17px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* CHILDREN */
+
+.team-map-children {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 28px;
+
+  padding-top: 55px;
+}
+
+
+.team-map-children::before {
+  content: "";
+
+  position: absolute;
+
+  top: 13px;
+  left: 50%;
+
+  width: 1px;
+  height: 42px;
+
+  background: #cad8e8;
+}
+
+
+.team-map-children >
+.team-map-branch::before {
+
+  content: "";
+
+  position: absolute;
+
+  top: -42px;
+  left: 50%;
+
+  width: 1px;
+  height: 42px;
+
+  background: #cad8e8;
+}
+
+
+.team-map-children >
+.team-map-branch:not(:only-child)::after {
+
+  content: "";
+
+  position: absolute;
+
+  top: -42px;
+
+  width:
+    calc(100% + 28px);
+
+  border-top:
+    1px solid #cad8e8;
+
+  z-index: 0;
+}
+
+
+.team-map-children >
+.team-map-branch:first-child::after {
+  left: 50%;
+  width: calc(50% + 14px);
+}
+
+
+.team-map-children >
+.team-map-branch:last-child::after {
+  right: 50%;
+  width: calc(50% + 14px);
+}
+
+
+.team-map-children >
+.team-map-branch:not(:first-child):not(:last-child)::after {
+  left: -14px;
+}
+
+
+/* EMPTY */
+
+.team-map-empty {
+  width: 100%;
+  min-width: 400px;
+  padding: 110px 30px;
+  text-align: center;
+  color: #75859a;
+}
+
+
+.team-map-empty-icon {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 14px;
+  border-radius: 17px;
+  background: #eef4fb;
+  color: #5d7da5;
+  font-size: 24px;
+}
+
+
+.team-map-empty h3 {
+  margin: 0 0 7px;
+  color: #28394f;
+}
+
+
+.team-map-empty p {
+  margin: 0;
+  font-size: 13px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
+  .team-map-page {
+    padding: 22px 16px;
+  }
+
+  .team-map-header {
+    flex-direction: column;
+  }
+
+  .team-map-org-card {
+    width: 100%;
+  }
+
+  .team-map-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .team-map-stats {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
