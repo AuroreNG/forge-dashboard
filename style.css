@@ -22597,3 +22597,85 @@ body.forge-drawer-open {
 .journey-list {
   overflow: visible;
 }
+/* =========================================================
+   FIX JOURNEY 3-DOT MENU CLIPPING
+========================================================= */
+
+.journey-board,
+.journey-column,
+.drop-zone,
+.pipeline-agent-card,
+.journey-agent-card,
+.journey-card-actions {
+  overflow: visible !important;
+}
+
+.journey-column {
+  position: relative;
+}
+
+.pipeline-agent-card,
+.journey-agent-card {
+  position: relative;
+}
+
+.journey-card-actions {
+  position: relative;
+  z-index: 20;
+}
+
+.journey-agent-menu {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+
+  width: 210px;
+  min-width: 210px;
+
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+
+  padding: 7px;
+
+  box-shadow:
+    0 18px 45px rgba(15, 23, 42, 0.16),
+    0 4px 12px rgba(15, 23, 42, 0.08);
+
+  z-index: 99999 !important;
+}
+
+.journey-agent-menu button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+
+  padding: 11px 12px;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: #172b4d;
+
+  text-align: left;
+  cursor: pointer;
+}
+
+.journey-agent-menu button:hover {
+  background: #f5f7fb;
+}
+
+.journey-agent-menu button.danger {
+  color: #dc2626;
+  border-top: 1px solid #edf1f7;
+  margin-top: 5px;
+  padding-top: 12px;
+}
+
+.journey-agent-menu button.danger:hover {
+  background: #fff1f2;
+}
