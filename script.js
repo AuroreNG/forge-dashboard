@@ -10929,135 +10929,222 @@ let teamMapCollapsed = new Set();
 // NORMALIZE FORGE AGENTS FOR TEAM MAP
 // ----------------------------------------------------------
 
-let existingLeader = null;
+// ----------------------------------------------------------
+// NORMALIZE FORGE AGENTS FOR TEAM MAP
+// ----------------------------------------------------------
 
+function normalizeAgentsForTeamMap() {
 
-// =============================================
-// 1. MATCH BY ACTUAL AGENT CODE
-// =============================================
-
-if (topLeaderCode) {
-
-  existingLeader =
-    people.find(
-      member =>
-        normalizeTeamMapCode(
-          member.code
-        ) ===
-        normalizeTeamMapCode(
-          topLeaderCode
-        )
-    );
-}
-
-
-// =============================================
-// 2. MATCH BY EMAIL
-// Best fallback because email is unique.
-// =============================================
-
-if (
-  !existingLeader &&
-  topLeaderEmail
-) {
-
-  existingLeader =
-    people.find(
-      member =>
-        String(member.email || "")
-          .trim()
-          .toLowerCase() ===
-        String(topLeaderEmail)
-          .trim()
-          .toLowerCase()
-    );
-}
-
-
-// =============================================
-// 3. MATCH BY NORMALIZED NAME
-// =============================================
-
-if (
-  !existingLeader &&
-  topLeaderName
-) {
-
-  existingLeader =
-    people.find(
-      member =>
-        normalizeTeamMapName(
-          member.name
-        ) ===
-        normalizeTeamMapName(
-          topLeaderName
-        )
-    );
-}
-
-
-// =============================================
-// FOUND THE REAL FORGE AGENT
-// =============================================
-
-if (existingLeader) {
-
-  existingLeader.isOrganizationRoot =
-    true;
-
-}
-
-
-// =============================================
-// NO REAL RECORD — ONLY THEN CREATE VIRTUAL ROOT
-// =============================================
-
-else if (topLeaderName) {
-
-  people.push({
-
-    id:
-      `ORG_ROOT_${
-        currentOrganization?.id ||
-        "UNKNOWN"
-      }`,
+  const people = allAgents.map((agent) => ({
+    id: agent.id || agent.code || agent.email || agent.name,
 
     code:
-      topLeaderCode ||
-      `ORGROOT-${
-        currentOrganization?.id ||
-        "ROOT"
-      }`,
+      String(
+        agent.code ||
+        agent.agent_code ||
+        ""
+      ).trim(),
 
     name:
-      topLeaderName,
+      String(
+        agent.name ||
+        agent.full_name ||
+        ""
+      ).trim(),
 
     email:
-      topLeaderEmail,
+      String(
+        agent.email ||
+        ""
+      ).trim().toLowerCase(),
 
-    phone: "",
+    phone:
+      String(
+        agent.phone ||
+        ""
+      ).trim(),
 
-    uplineCode: "",
-    uplineName: "",
+    uplineCode:
+      String(
+        agent.uplineCode ||
+        agent.upline_code ||
+        ""
+      ).trim(),
 
-    recruitDate: "",
+    uplineName:
+      String(
+        agent.upline ||
+        agent.uplineName ||
+        agent.upline_name ||
+        ""
+      ).trim(),
+
+    recruitDate:
+      agent.recruitDate ||
+      agent.recruit_date ||
+      "",
 
     status:
-      "Organization Leader",
+      agent.teamStatus ||
+      agent.team_status ||
+      "",
 
-    stage: "",
+    stage:
+      agent.stage ||
+      "Not Placed",
 
-    isOrganizationRoot:
-      true
+    isOrganizationRoot: false
+  }));
 
-  });
 
-}
+  // ========================================================
+  // ORGANIZATION TOP LEADER
+  // ========================================================
+
+  const topLeaderName =
+    String(
+      currentOrganization?.top_leader_name ||
+      ""
+    ).trim();
+
+  const topLeaderEmail =
+    String(
+      currentOrganization?.top_leader_email ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
+
+  const topLeaderCode =
+    String(
+      currentOrganization?.top_leader_agent_code ||
+      ""
+    ).trim();
+
+
+  let existingLeader = null;
+
+
+  // ========================================================
+  // 1. MATCH BY ACTUAL AGENT CODE
+  // ========================================================
+
+  if (topLeaderCode) {
+
+    existingLeader =
+      people.find(
+        member =>
+          normalizeTeamMapCode(
+            member.code
+          ) ===
+          normalizeTeamMapCode(
+            topLeaderCode
+          )
+      );
+  }
+
+
+  // ========================================================
+  // 2. MATCH BY EMAIL
+  // ========================================================
+
+  if (
+    !existingLeader &&
+    topLeaderEmail
+  ) {
+
+    existingLeader =
+      people.find(
+        member =>
+          String(member.email || "")
+            .trim()
+            .toLowerCase() ===
+          topLeaderEmail
+      );
+  }
+
+
+  // ========================================================
+  // 3. MATCH BY NORMALIZED NAME
+  // ========================================================
+
+  if (
+    !existingLeader &&
+    topLeaderName
+  ) {
+
+    existingLeader =
+      people.find(
+        member =>
+          normalizeTeamMapName(
+            member.name
+          ) ===
+          normalizeTeamMapName(
+            topLeaderName
+          )
+      );
+  }
+
+
+  // ========================================================
+  // REAL FORGE AGENT FOUND
+  // ========================================================
+
+  if (existingLeader) {
+
+    existingLeader.isOrganizationRoot =
+      true;
+
+  }
+
+
+  // ========================================================
+  // NO AGENT RECORD — CREATE VIRTUAL ROOT
+  // ========================================================
+
+  else if (topLeaderName) {
+
+    people.push({
+
+      id:
+        `ORG_ROOT_${
+          currentOrganization?.id ||
+          "UNKNOWN"
+        }`,
+
+      code:
+        topLeaderCode ||
+        `ORGROOT-${
+          currentOrganization?.id ||
+          "ROOT"
+        }`,
+
+      name:
+        topLeaderName,
+
+      email:
+        topLeaderEmail,
+
+      phone: "",
+
+      uplineCode: "",
+      uplineName: "",
+
+      recruitDate: "",
+
+      status:
+        "Organization Leader",
+
+      stage: "",
+
+      isOrganizationRoot:
+        true
+    });
+  }
 
 
   return people;
 }
-
 // ----------------------------------------------------------
 // CHILDREN
 // ----------------------------------------------------------
@@ -12567,41 +12654,36 @@ let teamMapDrawerAgent = null;
 // FIND REAL FORGE AGENT
 // ----------------------------------------------------------
 
+// ==========================================================
+// FIND REAL FORGE AGENT
+// ==========================================================
+
 function getForgeAgentFromTeamMapMember(member) {
 
   if (!member) {
     return null;
   }
 
-
-  // 1. Match database ID
-  let agent =
-    allAgents.find(
-      (item) =>
-        String(item.id) ===
-        String(member.id)
-    );
-
+  // 1. MATCH DATABASE ID
+  let agent = allAgents.find(
+    (item) =>
+      String(item.id) ===
+      String(member.id)
+  );
 
   if (agent) {
     return agent;
   }
 
 
-  // 2. Match Agent Code
+  // 2. MATCH AGENT CODE
   if (member.code) {
 
-    agent =
-      allAgents.find(
-        (item) =>
-          normalizeTeamMapCode(
-            item.code
-          ) ===
-          normalizeTeamMapCode(
-            member.code
-          )
-      );
-
+    agent = allAgents.find(
+      (item) =>
+        normalizeTeamMapCode(item.code) ===
+        normalizeTeamMapCode(member.code)
+    );
 
     if (agent) {
       return agent;
@@ -12609,7 +12691,7 @@ function getForgeAgentFromTeamMapMember(member) {
   }
 
 
-  // 3. Match email
+  // 3. MATCH EMAIL
   if (member.email) {
 
     const memberEmail =
@@ -12617,16 +12699,13 @@ function getForgeAgentFromTeamMapMember(member) {
         .trim()
         .toLowerCase();
 
-
-    agent =
-      allAgents.find(
-        (item) =>
-          String(item.email || "")
-            .trim()
-            .toLowerCase() ===
-          memberEmail
-      );
-
+    agent = allAgents.find(
+      (item) =>
+        String(item.email || "")
+          .trim()
+          .toLowerCase() ===
+        memberEmail
+    );
 
     if (agent) {
       return agent;
@@ -12634,24 +12713,20 @@ function getForgeAgentFromTeamMapMember(member) {
   }
 
 
-  // 4. Match normalized name
-  const memberName =
-    normalizeTeamMapName(
-      member.name
-    );
+  // 4. MATCH NORMALIZED NAME
+  if (member.name) {
 
-
-  if (memberName) {
-
-    agent =
-      allAgents.find(
-        (item) =>
-          normalizeTeamMapName(
-            item.name
-          ) ===
-          memberName
+    const memberName =
+      normalizeTeamMapName(
+        member.name
       );
 
+    agent = allAgents.find(
+      (item) =>
+        normalizeTeamMapName(
+          item.name
+        ) === memberName
+    );
 
     if (agent) {
       return agent;
@@ -12661,12 +12736,13 @@ function getForgeAgentFromTeamMapMember(member) {
 
   return null;
 }
-// ----------------------------------------------------------
+
+
+// ==========================================================
 // DRAWER ACTIVITY
-// ----------------------------------------------------------
+// ==========================================================
 
 function renderTeamMapDrawerActivity(agent) {
-
   const timeline =
     document.getElementById(
       "tmDrawerActivityTimeline"
