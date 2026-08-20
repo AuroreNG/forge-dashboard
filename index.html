@@ -1909,6 +1909,285 @@ JavaScript opens these when an import button is clicked.
     </div>
 
   </div>
+  <!-- =========================================================
+     TEAM MAP AGENT QUICK PANEL
+========================================================= -->
+
+<div
+  id="teamMapAgentOverlay"
+  class="team-map-agent-overlay hidden"
+></div>
+
+<aside
+  id="teamMapAgentDrawer"
+  class="team-map-agent-drawer"
+  aria-hidden="true"
+>
+
+  <div class="tm-agent-drawer-accent"></div>
+
+  <div class="tm-agent-drawer-header">
+
+    <div class="tm-agent-drawer-title">
+      <span>AGENT QUICK VIEW</span>
+      <strong>FORGE</strong>
+    </div>
+
+    <button
+      type="button"
+      id="closeTeamMapAgentDrawer"
+      class="tm-agent-close"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+  </div>
+
+
+  <!-- PROFILE -->
+
+  <div class="tm-agent-profile">
+
+    <div
+      id="tmDrawerAvatar"
+      class="tm-agent-avatar"
+    >
+      --
+    </div>
+
+    <div class="tm-agent-identity">
+
+      <h2 id="tmDrawerName">
+        Agent
+      </h2>
+
+      <p id="tmDrawerCode">
+        —
+      </p>
+
+      <span
+        id="tmDrawerStageBadge"
+        class="tm-agent-stage-badge"
+      >
+        Stage
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- CONTACT -->
+
+  <div class="tm-agent-contact-card">
+
+    <div>
+      <span>Email</span>
+      <strong id="tmDrawerEmail">—</strong>
+    </div>
+
+    <div>
+      <span>Phone</span>
+      <strong id="tmDrawerPhone">—</strong>
+    </div>
+
+    <div>
+      <span>Upline</span>
+      <strong id="tmDrawerUpline">—</strong>
+    </div>
+
+  </div>
+
+
+  <!-- QUICK CONTACT -->
+
+  <section class="tm-drawer-section">
+
+    <div class="tm-drawer-section-heading">
+      <span>CONNECT</span>
+      <strong>Reach Out</strong>
+    </div>
+
+
+    <div class="tm-agent-action-grid">
+
+      <button
+        type="button"
+        class="tm-agent-action"
+        data-tm-action="Call"
+      >
+        <span>☎</span>
+        <strong>Call</strong>
+      </button>
+
+      <button
+        type="button"
+        class="tm-agent-action"
+        data-tm-action="Text"
+      >
+        <span>▣</span>
+        <strong>Text</strong>
+      </button>
+
+      <button
+        type="button"
+        class="tm-agent-action"
+        data-tm-action="Email"
+      >
+        <span>✉</span>
+        <strong>Email</strong>
+      </button>
+
+      <button
+        type="button"
+        class="tm-agent-action"
+        data-tm-action="WhatsApp"
+      >
+        <span>◉</span>
+        <strong>WhatsApp</strong>
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- STAGE -->
+
+  <section class="tm-drawer-section">
+
+    <div class="tm-drawer-section-heading">
+      <span>LICENSING JOURNEY</span>
+      <strong>Current Stage</strong>
+    </div>
+
+
+    <select
+      id="tmDrawerStageSelect"
+      class="tm-drawer-stage-select"
+    >
+      <option value="Not Placed">
+        Not Placed
+      </option>
+
+      <option value="Quiz Sent">
+        Quiz Sent
+      </option>
+
+      <option value="Quiz Passed">
+        Quiz Passed
+      </option>
+
+      <option value="XCEL Completed">
+        XCEL Completed
+      </option>
+
+      <option value="Simulation Exams">
+        Simulation Exams
+      </option>
+
+      <option value="Exam Scheduled">
+        Exam Scheduled
+      </option>
+
+      <option value="Exam Passed">
+        Exam Passed
+      </option>
+
+      <option value="Fingerprints">
+        Fingerprints
+      </option>
+
+      <option value="Applied For License">
+        Applied For License
+      </option>
+
+      <option value="Licensed">
+        Licensed
+      </option>
+
+      <option value="Contracted">
+        Contracted
+      </option>
+    </select>
+
+
+    <button
+      type="button"
+      id="tmDrawerMoveStage"
+      class="tm-drawer-primary"
+    >
+      Move to Selected Stage
+    </button>
+
+  </section>
+
+
+  <!-- ACTIVITY -->
+
+  <section class="tm-drawer-section">
+
+    <div class="tm-drawer-section-heading">
+      <span>ACTIVITY</span>
+      <strong>Log Activity</strong>
+    </div>
+
+    <textarea
+      id="tmDrawerActivityNote"
+      class="tm-drawer-note"
+      placeholder="Add a note, follow-up, meeting result, or update..."
+    ></textarea>
+
+
+    <button
+      type="button"
+      id="tmDrawerLogActivity"
+      class="tm-drawer-secondary"
+    >
+      + Log Activity
+    </button>
+
+
+    <div
+      id="tmDrawerActivityTimeline"
+      class="tm-drawer-timeline"
+    ></div>
+
+  </section>
+
+
+  <!-- FOOTER -->
+
+  <div class="tm-agent-drawer-footer">
+
+    <button
+      type="button"
+      id="tmDrawerViewTeam"
+      class="tm-drawer-outline"
+    >
+      View Their Team
+    </button>
+
+    <button
+      type="button"
+      id="tmDrawerEditAgent"
+      class="tm-drawer-outline"
+    >
+      Edit Info
+    </button>
+
+    <button
+      type="button"
+      id="tmDrawerFullProfile"
+      class="tm-drawer-primary"
+    >
+      Full Profile →
+    </button>
+
+  </div>
+
+</aside>
 
 
   <!-- CONTROLS -->
