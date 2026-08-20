@@ -15,12 +15,13 @@
       </div>
 
       <nav>
-        <button class="nav-btn active">Home</button>
-        <button class="nav-btn">Journey</button>
-        <button class="nav-btn">Agents</button>
-        <button class="nav-btn">Command</button>
-        <button class="nav-btn">Growth</button>
-      </nav>
+  <button class="nav-btn active">Home</button>
+  <button class="nav-btn">Journey</button>
+  <button class="nav-btn">Agents</button>
+  <button class="nav-btn">Team Map</button>
+  <button class="nav-btn">Command</button>
+  <button class="nav-btn">Growth</button>
+</nav>
 
    <div class="user-menu-wrap">
 
@@ -1870,6 +1871,149 @@ JavaScript opens these when an import button is clicked.
       </div>
 
     </section>
+
+  </div>
+
+</section>
+
+    <!-- =========================================================
+     TEAM MAP
+========================================================= -->
+
+<section id="teamMapPage" class="team-map-page hidden">
+
+  <div class="team-map-header">
+
+    <div>
+      <div class="team-map-eyebrow">
+        ORGANIZATION STRUCTURE
+      </div>
+
+      <h1>Team Map</h1>
+
+      <p>
+        View leaders, direct recruits, and complete team structure.
+      </p>
+    </div>
+
+    <div class="team-map-org-card">
+      <span>VIEWING TEAM</span>
+
+      <strong id="teamMapOrgName">
+        Organization
+      </strong>
+
+      <small id="teamMapMemberCount">
+        0 team members
+      </small>
+    </div>
+
+  </div>
+
+
+  <!-- CONTROLS -->
+
+  <div class="team-map-toolbar">
+
+    <div class="team-map-search-wrap">
+      <span>⌕</span>
+
+      <input
+        id="teamMapSearch"
+        type="search"
+        placeholder="Search team member..."
+      />
+    </div>
+
+
+    <select
+      id="teamMapLeaderSelect"
+      class="team-map-leader-select"
+      aria-label="Select team leader"
+    >
+      <option value="">
+        Entire Organization
+      </option>
+    </select>
+
+
+    <button
+      type="button"
+      id="teamMapResetBtn"
+      class="team-map-reset-btn"
+    >
+      Top Leader
+    </button>
+
+  </div>
+
+
+  <!-- STATS -->
+
+  <div class="team-map-stats">
+
+    <div class="team-map-stat">
+      <span>Total Team</span>
+      <strong id="teamMapTotal">0</strong>
+      <small>People in this organization</small>
+    </div>
+
+    <div class="team-map-stat">
+      <span>Team Leaders</span>
+      <strong id="teamMapLeaders">0</strong>
+      <small>Members with a downline</small>
+    </div>
+
+    <div class="team-map-stat">
+      <span>Direct</span>
+      <strong id="teamMapDirect">0</strong>
+      <small>Direct to top leader</small>
+    </div>
+
+    <div class="team-map-stat">
+      <span>Levels</span>
+      <strong id="teamMapLevels">0</strong>
+      <small>Organization depth</small>
+    </div>
+
+  </div>
+
+
+  <!-- MAP -->
+
+  <div class="team-map-surface">
+
+    <div class="team-map-surface-header">
+
+      <div>
+        <span>TEAM STRUCTURE</span>
+        <strong id="teamMapCurrentView">
+          Entire Organization
+        </strong>
+      </div>
+
+      <span id="teamMapUpdated">
+        —
+      </span>
+
+    </div>
+
+
+    <div
+      id="teamMapViewport"
+      class="team-map-viewport"
+    >
+
+      <div
+        id="teamMapTree"
+        class="team-map-tree"
+      >
+        <div class="team-map-empty">
+          Loading team structure...
+        </div>
+      </div>
+
+    </div>
 
   </div>
 
