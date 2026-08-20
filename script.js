@@ -10691,3 +10691,170 @@ document.addEventListener(
   // the older Journey menu listeners.
   true
 );
+
+// ==========================================================
+// FORGE EXPORT CURRENT ORGANIZATION TO CSV
+// ==========================================================
+
+document
+  .getElementById("exportForgeBtn")
+  ?.addEventListener("click", () => {
+
+    const organizationName =
+      currentOrganization?.name ||
+      "FORGE Organization";
+
+    if (!allAgents.length) {
+      alert("There are no agents to export.");
+      return;
+    }
+
+    // -------------------------------------------------------
+    // CSV HEADERS
+    // -------------------------------------------------------
+
+    const headers = [
+      "Agent Code",
+      "Full Name",
+      "Email",
+      "Phone",
+      "Recruit Date",
+      "Upline Name",
+      "Upline Code",
+      "Team Status",
+      "Journey Stage",
+      "Resident State",
+      "Resident License",
+      "E&O",
+      "AML",
+      "Tevah Platform Fee",
+      "NPN",
+      "Import Source"
+    ];
+
+
+    // -------------------------------------------------------
+    // SAFE CSV VALUE
+    // Handles commas, quotes and line breaks correctly
+    // -------------------------------------------------------
+
+    function csvValue(value) {
+
+      const text =
+        String(value ?? "");
+
+      return `"${text.replace(/"/g, '""')}"`;
+    }
+
+
+    // -------------------------------------------------------
+    // BUILD ROWS
+    // -------------------------------------------------------
+
+    const rows =
+      allAgents.map((agent) => [
+
+        agent.code || "",
+        agent.name || "",
+        agent.email || "",
+        agent.phone || "",
+        agent.recruitDate || "",
+
+        agent.upline || "",
+        agent.uplineCode || "",
+
+        agent.teamStatus || "",
+        agent.stage || "",
+
+        agent.residentState || "",
+        agent.residentLicense || "",
+
+        agent.eoStatus || "",
+        agent.amlStatus || "",
+        agent.tevahPlatformFee || "",
+
+        agent.npn || "",
+        agent.importSource || ""
+
+      ]);
+
+
+    // -------------------------------------------------------
+    // CREATE CSV CONTENT
+    // -------------------------------------------------------
+
+    const csv =
+      [
+        headers.map(csvValue).join(","),
+        ...rows.map(
+          (row) =>
+            row.map(csvValue).join(",")
+        )
+      ].join("\r\n");
+
+
+    // -------------------------------------------------------
+    // UTF-8 BOM
+    // Makes Excel display names/symbols correctly
+    // -------------------------------------------------------
+
+    const blob =
+      new Blob(
+        ["\uFEFF" + csv],
+        {
+          type:
+            "text/csv;charset=utf-8;"
+        }
+      );
+
+
+    // -------------------------------------------------------
+    // CREATE FILE NAME
+    // Example:
+    // Apex-Wealth-Building-FORGE-2026-08-20.csv
+    // -------------------------------------------------------
+
+    const safeOrganizationName =
+      organizationName
+        .replace(/[^a-z0-9]+/gi, "-")
+        .replace(/^-|-$/g, "");
+
+    const today =
+      new Date()
+        .toISOString()
+        .slice(0, 10);
+
+    const fileName =
+      `${safeOrganizationName}-FORGE-${today}.csv`;
+
+
+    // -------------------------------------------------------
+    // DOWNLOAD
+    // -------------------------------------------------------
+
+    const url =
+      URL.createObjectURL(blob);
+
+    const link =
+      document.createElement("a");
+
+    link.href = url;
+    link.download = fileName;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    URL.revokeObjectURL(url);
+
+
+    console.log(
+      "FORGE export complete:",
+      fileName,
+      allAgents.length,
+      "agents"
+    );
+
+  });
