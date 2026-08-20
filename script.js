@@ -11521,10 +11521,18 @@ function buildTeamMapNode(
           <div class="team-map-node-copy">
 
             <strong>
-              ${teamMapEscape(
-                member.name
-              )}
-            </strong>
+  ${teamMapEscape(member.name)}
+
+  ${
+    member.isOrganizationRoot
+      ? `
+        <span class="team-map-top-badge">
+          TOP LEADER
+        </span>
+      `
+      : ""
+  }
+</strong>
 
             <span>
               ${teamMapEscape(
