@@ -12569,27 +12569,31 @@ let teamMapDrawerAgent = null;
 
 function getForgeAgentFromTeamMapMember(member) {
 
-  if (!member) return null;
+  if (!member) {
+    return null;
+  }
 
 
-  // 1. Database ID
+  // 1. Match database ID
   let agent =
     allAgents.find(
-      item =>
+      (item) =>
         String(item.id) ===
         String(member.id)
     );
 
 
-  if (agent) return agent;
+  if (agent) {
+    return agent;
+  }
 
 
-  // 2. Agent Code
+  // 2. Match Agent Code
   if (member.code) {
 
     agent =
       allAgents.find(
-        item =>
+        (item) =>
           normalizeTeamMapCode(
             item.code
           ) ===
@@ -12598,44 +12602,65 @@ function getForgeAgentFromTeamMapMember(member) {
           )
       );
 
-    if (agent) return agent;
+
+    if (agent) {
+      return agent;
+    }
   }
 
 
-  // 3. Email
+  // 3. Match email
   if (member.email) {
+
+    const memberEmail =
+      String(member.email)
+        .trim()
+        .toLowerCase();
+
 
     agent =
       allAgents.find(
-        item =>
+        (item) =>
           String(item.email || "")
             .trim()
             .toLowerCase() ===
-          String(member.email)
-            .trim()
-            .toLowerCase()
+          memberEmail
       );
 
-    if (agent) return agent;
+
+    if (agent) {
+      return agent;
+    }
   }
 
 
-  // 4. Name fallback
-  agent =
-    allAgents.find(
-      item =>
-        normalizeTeamMapName(
-          item.name
-        ) ===
-        normalizeTeamMapName(
-          member.name
-        )
+  // 4. Match normalized name
+  const memberName =
+    normalizeTeamMapName(
+      member.name
     );
 
 
-  return agent || null;
-}
+  if (memberName) {
 
+    agent =
+      allAgents.find(
+        (item) =>
+          normalizeTeamMapName(
+            item.name
+          ) ===
+          memberName
+      );
+
+
+    if (agent) {
+      return agent;
+    }
+  }
+
+
+  return null;
+}
 // ----------------------------------------------------------
 // DRAWER ACTIVITY
 // ----------------------------------------------------------
