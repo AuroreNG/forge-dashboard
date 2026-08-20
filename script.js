@@ -11156,42 +11156,55 @@ function findTeamMapRoot() {
     return null;
   }
 
+  const orgName =
+    String(
+      currentOrganization?.name || ""
+    )
+      .trim()
+      .toLowerCase();
+
+
+  // ==========================================
+  // APEX WEALTH BUILDING
+  // TOP LEADER = TEKO
+  // ==========================================
+
+  if (
+    orgName ===
+    "apex wealth building"
+  ) {
+
+    const teko =
+      teamMapMembers.find(
+        (member) =>
+          normalizeTeamMapName(
+            member.name
+          ).includes("teko")
+      );
+
+    if (teko) {
+      return teko;
+    }
+  }
+
+
+  // ==========================================
+  // FALLBACK
+  // ==========================================
 
   const trueRoots =
     teamMapMembers.filter(
-      (member) => {
-
-        // Someone with NO upline information
-        // is a legitimate root candidate.
-        const hasUplineCode =
-          normalizeTeamMapCode(
-            member.uplineCode
-          );
-
-        const hasUplineName =
-          normalizeTeamMapName(
-            member.uplineName
-          );
-
-
-        if (
-          !hasUplineCode &&
-          !hasUplineName
-        ) {
-          return true;
-        }
-
-
-        return false;
-      }
+      (member) =>
+        !findTeamMapParent(member)
     );
 
 
-  // ============================================
-  // REAL ROOT FOUND
-  // ============================================
+  if (trueRoots.length === 1) {
+    return trueRoots[0];
+  }
 
-  if (trueRoots.length) {
+
+  if (trueRoots.length > 1) {
 
     return trueRoots.sort(
       (a, b) =>
@@ -11203,26 +11216,6 @@ function findTeamMapRoot() {
         )
     )[0];
   }
-
-
-  // ============================================
-  // DO NOT PROMOTE AN ORPHAN TO TOP LEADER
-  // ============================================
-
-  console.warn(
-    "TEAM MAP: No true root found.",
-    teamMapMembers.map(
-      member => ({
-        name: member.name,
-        code: member.code,
-        uplineName: member.uplineName,
-        uplineCode: member.uplineCode,
-        parentResolved:
-          findTeamMapParent(member)?.name ||
-          "NOT FOUND"
-      })
-    )
-  );
 
 
   return null;
