@@ -12002,23 +12002,6 @@ document.addEventListener(
         "[data-team-member-code]"
       );
 
-
-    if (memberButton) {
-
-      const code =
-        memberButton.dataset
-          .teamMemberCode;
-
-
-      teamMapFocusCode =
-        code;
-
-
-      renderTeamMapLeaderSelect();
-
-      drawTeamMap();
-    }
-
   }
 );
 
@@ -12646,3 +12629,663 @@ function renderTeamMapList() {
   `;
 
 }
+
+// ==========================================================
+// TEAM MAP AGENT QUICK PANEL
+// ==========================================================
+
+let teamMapDrawerAgent = null;
+
+
+// ----------------------------------------------------------
+// FIND REAL FORGE AGENT
+// ----------------------------------------------------------
+
+function getForgeAgentFromTeamMapMember(member) {
+
+  if (!member) return null;
+
+  // Virtual organization root may not exist
+  // in the agents table.
+  if (
+    String(member.id || "")
+      .startsWith("ORG_ROOT_")
+  ) {
+    return null;
+  }
+
+
+  return (
+    allAgents.find(
+      agent =>
+        String(agent.id) ===
+        String(member.id)
+    ) ||
+
+    allAgents.find(
+      agent =>
+        normalizeTeamMapCode(
+          agent.code
+        ) ===
+        normalizeTeamMapCode(
+          member.code
+        )
+    ) ||
+
+    null
+  );
+}
+
+
+// ----------------------------------------------------------
+// DRAWER ACTIVITY
+// ----------------------------------------------------------
+
+function renderTeamMapDrawerActivity(agent) {
+
+  const timeline =
+    document.getElementById(
+      "tmDrawerActivityTimeline"
+    );
+
+  if (!timeline || !agent) return;
+
+
+  const key =
+    agent.code ||
+    agent.email ||
+    agent.name;
+
+
+  const entries =
+    activityLog?.[key] || [];
+
+
+  if (!entries.length) {
+
+    timeline.innerHTML = `
+      <div class="tm-drawer-no-activity">
+        No activity logged yet.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  timeline.innerHTML =
+    entries
+      .slice(0, 5)
+      .map(
+        entry => `
+
+          <div class="tm-drawer-activity">
+
+            <div class="tm-drawer-activity-dot"></div>
+
+            <div>
+
+              <strong>
+                ${teamMapEscape(
+                  entry.method || "Activity"
+                )}
+              </strong>
+
+              <p>
+                ${teamMapEscape(
+                  entry.message || ""
+                )}
+              </p>
+
+              <small>
+                ${teamMapEscape(
+                  entry.date || ""
+                )}
+              </small>
+
+            </div>
+
+          </div>
+
+        `
+      )
+      .join("");
+}
+
+
+// ----------------------------------------------------------
+// OPEN
+// ----------------------------------------------------------
+
+function openTeamMapAgentDrawer(member) {
+
+  const agent =
+    getForgeAgentFromTeamMapMember(
+      member
+    );
+
+
+  // Organization root can still
+  // be viewed as team hierarchy,
+  // but not edited if it is virtual.
+  if (!agent) {
+
+    alert(
+      `${member.name} is the organization root and does not have a regular FORGE agent record yet.`
+    );
+
+    return;
+  }
+
+
+  teamMapDrawerAgent =
+    agent;
+
+  selectedAgent =
+    agent;
+
+
+  const drawer =
+    document.getElementById(
+      "teamMapAgentDrawer"
+    );
+
+  const overlay =
+    document.getElementById(
+      "teamMapAgentOverlay"
+    );
+
+
+  if (!drawer) return;
+
+
+  document.getElementById(
+    "tmDrawerAvatar"
+  ).textContent =
+    teamMapInitials(
+      agent.name
+    );
+
+
+  document.getElementById(
+    "tmDrawerName"
+  ).textContent =
+    agent.name ||
+    "Unnamed Agent";
+
+
+  document.getElementById(
+    "tmDrawerCode"
+  ).textContent =
+    agent.code ||
+    "No agent code";
+
+
+  document.getElementById(
+    "tmDrawerEmail"
+  ).textContent =
+    agent.email ||
+    "Not available";
+
+
+  document.getElementById(
+    "tmDrawerPhone"
+  ).textContent =
+    agent.phone ||
+    "Not available";
+
+
+  document.getElementById(
+    "tmDrawerUpline"
+  ).textContent =
+    agent.upline ||
+    "Top Level";
+
+
+  const badge =
+    document.getElementById(
+      "tmDrawerStageBadge"
+    );
+
+
+  if (badge) {
+
+    badge.textContent =
+      agent.stage ||
+      "Not Placed";
+
+    badge.dataset.stage =
+      agent.stage ||
+      "Not Placed";
+  }
+
+
+  const stageSelect =
+    document.getElementById(
+      "tmDrawerStageSelect"
+    );
+
+
+  if (stageSelect) {
+
+    stageSelect.value =
+      agent.stage ||
+      "Not Placed";
+  }
+
+
+  document.getElementById(
+    "tmDrawerActivityNote"
+  ).value = "";
+
+
+  renderTeamMapDrawerActivity(
+    agent
+  );
+
+
+  drawer.classList.add(
+    "open"
+  );
+
+  drawer.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  overlay?.classList.remove(
+    "hidden"
+  );
+}
+
+
+// ----------------------------------------------------------
+// CLOSE
+// ----------------------------------------------------------
+
+function closeTeamMapAgentDrawer() {
+
+  document
+    .getElementById(
+      "teamMapAgentDrawer"
+    )
+    ?.classList.remove(
+      "open"
+    );
+
+
+  document
+    .getElementById(
+      "teamMapAgentDrawer"
+    )
+    ?.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+
+  document
+    .getElementById(
+      "teamMapAgentOverlay"
+    )
+    ?.classList.add(
+      "hidden"
+    );
+
+
+  teamMapDrawerAgent =
+    null;
+}
+
+
+document
+  .getElementById(
+    "closeTeamMapAgentDrawer"
+  )
+  ?.addEventListener(
+    "click",
+    closeTeamMapAgentDrawer
+  );
+
+
+document
+  .getElementById(
+    "teamMapAgentOverlay"
+  )
+  ?.addEventListener(
+    "click",
+    closeTeamMapAgentDrawer
+  );
+
+
+// ----------------------------------------------------------
+// CARD CLICK
+// ----------------------------------------------------------
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const card =
+      event.target.closest(
+        "[data-team-member-code]"
+      );
+
+    if (!card) return;
+
+
+    // Ignore collapse button.
+    if (
+      event.target.closest(
+        "[data-team-collapse-code]"
+      )
+    ) {
+      return;
+    }
+
+
+    const code =
+      card.dataset
+        .teamMemberCode;
+
+
+    const member =
+      teamMapMembers.find(
+        person =>
+          person.code ===
+          code
+      );
+
+
+    if (!member) return;
+
+
+    openTeamMapAgentDrawer(
+      member
+    );
+  }
+);
+
+
+// ----------------------------------------------------------
+// CONNECT BUTTONS
+// Uses your existing FORGE composer
+// ----------------------------------------------------------
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const button =
+      event.target.closest(
+        "[data-tm-action]"
+      );
+
+    if (!button) return;
+
+    if (!teamMapDrawerAgent) {
+      return;
+    }
+
+
+    selectedAgent =
+      teamMapDrawerAgent;
+
+
+    const method =
+      button.dataset.tmAction;
+
+
+    openSmartComposer(
+      method
+    );
+  }
+);
+
+
+// ----------------------------------------------------------
+// MOVE STAGE
+// ----------------------------------------------------------
+
+document
+  .getElementById(
+    "tmDrawerMoveStage"
+  )
+  ?.addEventListener(
+    "click",
+    async () => {
+
+      if (!teamMapDrawerAgent) {
+        return;
+      }
+
+
+      const newStage =
+        document
+          .getElementById(
+            "tmDrawerStageSelect"
+          )
+          ?.value;
+
+
+      if (!newStage) return;
+
+
+      await updateJourneyStage(
+        teamMapDrawerAgent,
+        newStage
+      );
+
+
+      const badge =
+        document.getElementById(
+          "tmDrawerStageBadge"
+        );
+
+
+      if (badge) {
+
+        badge.textContent =
+          newStage;
+
+        badge.dataset.stage =
+          newStage;
+      }
+
+
+      // Refresh Team Map
+      await loadCSV();
+
+      renderTeamMap();
+
+
+      // Reconnect drawer agent
+      teamMapDrawerAgent =
+        allAgents.find(
+          agent =>
+            String(agent.id) ===
+            String(
+              teamMapDrawerAgent.id
+            )
+        ) ||
+        teamMapDrawerAgent;
+
+
+      selectedAgent =
+        teamMapDrawerAgent;
+    }
+  );
+
+
+// ----------------------------------------------------------
+// LOG NOTE / ACTIVITY
+// ----------------------------------------------------------
+
+document
+  .getElementById(
+    "tmDrawerLogActivity"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      if (!teamMapDrawerAgent) {
+        return;
+      }
+
+
+      const input =
+        document.getElementById(
+          "tmDrawerActivityNote"
+        );
+
+
+      const note =
+        String(
+          input?.value ||
+          ""
+        ).trim();
+
+
+      if (!note) {
+        return;
+      }
+
+
+      logCoordinatorActivity(
+        teamMapDrawerAgent,
+        "Note",
+        note
+      );
+
+
+      if (input) {
+        input.value = "";
+      }
+
+
+      renderTeamMapDrawerActivity(
+        teamMapDrawerAgent
+      );
+    }
+  );
+
+
+// ----------------------------------------------------------
+// EDIT INFO
+// Reuse existing FORGE edit modal
+// ----------------------------------------------------------
+
+document
+  .getElementById(
+    "tmDrawerEditAgent"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      if (!teamMapDrawerAgent) {
+        return;
+      }
+
+
+      selectedAgent =
+        teamMapDrawerAgent;
+
+
+      document
+        .querySelector(
+          ".edit-agent-btn"
+        )
+        ?.click();
+    }
+  );
+
+
+// ----------------------------------------------------------
+// FULL PROFILE
+// ----------------------------------------------------------
+
+document
+  .getElementById(
+    "tmDrawerFullProfile"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      if (!teamMapDrawerAgent) {
+        return;
+      }
+
+
+      selectedAgent =
+        teamMapDrawerAgent;
+
+
+      closeTeamMapAgentDrawer();
+
+
+      showPage(
+        "Agents"
+      );
+
+
+      setActiveForgeNav?.(
+        "Agents"
+      );
+
+
+      renderAgentsPage?.();
+
+
+      showAgentProfile?.(
+        selectedAgent
+      );
+    }
+  );
+
+
+// ----------------------------------------------------------
+// VIEW THIS PERSON'S TEAM
+// ----------------------------------------------------------
+
+document
+  .getElementById(
+    "tmDrawerViewTeam"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      if (!teamMapDrawerAgent) {
+        return;
+      }
+
+
+      teamMapFocusCode =
+        normalizeTeamMapCode(
+          teamMapDrawerAgent.code
+        );
+
+
+      closeTeamMapAgentDrawer();
+
+
+      renderTeamMapLeaderSelect();
+
+      drawTeamMap();
+
+
+      document
+        .getElementById(
+          "teamMapViewport"
+        )
+        ?.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "smooth"
+        });
+    }
+  );
