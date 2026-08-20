@@ -4315,31 +4315,35 @@ document.addEventListener("click", (event) => {
     "journey-agent-menu";
 
   menu.innerHTML = `
-    <button data-menu-profile>
-      Open profile
-    </button>
+  <button data-menu-profile>
+    <span class="journey-menu-icon">◉</span>
+    <span>View Details</span>
+  </button>
 
-    <button data-menu-edit>
-      Edit agent
-    </button>
+  <button data-menu-edit>
+    <span class="journey-menu-icon">✎</span>
+    <span>Edit Agent</span>
+  </button>
 
-    ${
-      agent.stage !== "Not Placed"
-        ? `
-          <button data-menu-back>
-            Move back
-          </button>
-        `
-        : ""
-    }
+  ${
+    agent.stage !== "Not Placed"
+      ? `
+        <button data-menu-back>
+          <span class="journey-menu-icon">↶</span>
+          <span>Move Back</span>
+        </button>
+      `
+      : ""
+  }
 
-    <button
-      class="danger"
-      data-menu-delete
-    >
-      Delete
-    </button>
-  `;
+  <button
+    class="danger"
+    data-menu-delete
+  >
+    <span class="journey-menu-icon">⌫</span>
+    <span>Remove Agent</span>
+  </button>
+`;
 
   menuButton
     .closest(".journey-card-actions")
@@ -4575,135 +4579,7 @@ journeySearch?.addEventListener(
 );
 
 
-document.addEventListener("click", (event) => {
 
-  const btn =
-    event.target.closest(
-      "[data-agent-menu]"
-    );
-
-  if (!btn) return;
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  const agent =
-    allAgents.find(
-      (item) =>
-        String(item.id) ===
-        String(btn.dataset.agentMenu)
-    );
-
-  if (!agent) return;
-
-  document
-    .querySelectorAll(".journey-agent-menu")
-    .forEach((menu) =>
-      menu.remove()
-    );
-
-  const menu =
-    document.createElement("div");
-
-  menu.className =
-    "journey-agent-menu";
-
-  menu.innerHTML = `
-    <button data-menu-open>
-      Open profile
-    </button>
-
-    <button data-menu-edit>
-      Edit agent
-    </button>
-
-    ${
-      agent.stage !== "Not Placed"
-        ? `
-          <button data-menu-back>
-            Move back one stage
-          </button>
-        `
-        : ""
-    }
-
-    <button
-      class="danger"
-      data-menu-delete
-    >
-      Delete agent
-    </button>
-  `;
-
-  btn.closest(".journey-card-actions")
-    ?.appendChild(menu);
-
-  menu
-    .querySelector("[data-menu-open]")
-    ?.addEventListener("click", () => {
-
-      showPage("Agents");
-      showAgentProfile(agent);
-
-      document
-        .querySelectorAll(".nav-btn")
-        .forEach((nav) =>
-          nav.classList.toggle(
-            "active",
-            nav.textContent.trim() === "Agents"
-          )
-        );
-
-    });
-
-  menu
-    .querySelector("[data-menu-edit]")
-    ?.addEventListener("click", () => {
-
-      selectedAgent = agent;
-
-      document
-        .querySelector(".edit-agent-btn")
-        ?.click();
-
-    });
-
-  menu
-    .querySelector("[data-menu-back]")
-    ?.addEventListener("click", async () => {
-
-      const stageOrder = [
-        "Not Placed",
-        "Quiz Sent",
-        "XCEL Completed",
-        "Exam Passed",
-        "Licensed",
-        "Contracted"
-      ];
-
-      const currentIndex =
-        stageOrder.indexOf(agent.stage);
-
-      if (currentIndex <= 0) return;
-
-      await updateJourneyStage(
-        agent,
-        stageOrder[currentIndex - 1]
-      );
-
-    });
-
-  menu
-    .querySelector("[data-menu-delete]")
-    ?.addEventListener("click", () => {
-
-      alert(
-        "Use your database delete action here."
-      );
-
-    });
-
-});
 document.addEventListener("click", (event) => {
 
   const btn =
