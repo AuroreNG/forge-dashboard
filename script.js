@@ -5114,6 +5114,7 @@ function showPage(pageName) {
   }
 }
 
+
 //  DRAG AND DROP 
 
 let draggedAgentId = null;
@@ -12128,3 +12129,520 @@ document
 
     }
   );
+
+// ==========================================================
+// TEAM MAP VIEW CONTROLS
+// ==========================================================
+
+let teamMapZoom = 1;
+
+const TEAM_MAP_MIN_ZOOM = 0.45;
+const TEAM_MAP_MAX_ZOOM = 1.6;
+const TEAM_MAP_ZOOM_STEP = 0.1;
+
+
+function applyTeamMapZoom() {
+
+  const layer =
+    document.getElementById(
+      "teamMapZoomLayer"
+    );
+
+  if (!layer) return;
+
+  layer.style.transform =
+    `scale(${teamMapZoom})`;
+
+  layer.style.transformOrigin =
+    "top center";
+}
+
+
+function setTeamMapZoom(value) {
+
+  teamMapZoom =
+    Math.min(
+      TEAM_MAP_MAX_ZOOM,
+      Math.max(
+        TEAM_MAP_MIN_ZOOM,
+        value
+      )
+    );
+
+  applyTeamMapZoom();
+}
+
+
+document
+  .getElementById("teamMapZoomIn")
+  ?.addEventListener(
+    "click",
+    () => {
+
+      setTeamMapZoom(
+        teamMapZoom +
+        TEAM_MAP_ZOOM_STEP
+      );
+
+    }
+  );
+
+
+document
+  .getElementById("teamMapZoomOut")
+  ?.addEventListener(
+    "click",
+    () => {
+
+      setTeamMapZoom(
+        teamMapZoom -
+        TEAM_MAP_ZOOM_STEP
+      );
+
+    }
+  );
+
+
+// ==========================================================
+// FIT TO SCREEN
+// ==========================================================
+
+function fitTeamMapToScreen() {
+
+  const viewport =
+    document.getElementById(
+      "teamMapViewport"
+    );
+
+  const tree =
+    document.getElementById(
+      "teamMapTree"
+    );
+
+  if (!viewport || !tree) {
+    return;
+  }
+
+
+  // Reset before measuring
+  teamMapZoom = 1;
+  applyTeamMapZoom();
+
+
+  requestAnimationFrame(() => {
+
+    const availableWidth =
+      viewport.clientWidth - 60;
+
+    const treeWidth =
+      tree.scrollWidth;
+
+
+    if (
+      treeWidth >
+      availableWidth
+    ) {
+
+      const calculatedZoom =
+        availableWidth /
+        treeWidth;
+
+      setTeamMapZoom(
+        Math.max(
+          TEAM_MAP_MIN_ZOOM,
+          Math.min(
+            1,
+            calculatedZoom
+          )
+        )
+      );
+
+    } else {
+
+      setTeamMapZoom(1);
+
+    }
+
+
+    viewport.scrollTo({
+      left:
+        Math.max(
+          0,
+          (
+            viewport.scrollWidth -
+            viewport.clientWidth
+          ) / 2
+        ),
+
+      top: 0,
+
+      behavior: "smooth"
+    });
+
+  });
+}
+
+
+document
+  .getElementById("teamMapFit")
+  ?.addEventListener(
+    "click",
+    fitTeamMapToScreen
+  );
+
+
+// ==========================================================
+// FULLSCREEN
+// ==========================================================
+
+async function openTeamMapFullscreen() {
+
+  const surface =
+    document.querySelector(
+      ".team-map-surface"
+    );
+
+  if (!surface) return;
+
+
+  try {
+
+    if (
+      surface.requestFullscreen
+    ) {
+
+      await surface
+        .requestFullscreen();
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Could not enter fullscreen:",
+      error
+    );
+  }
+}
+
+
+async function closeTeamMapFullscreen() {
+
+  try {
+
+    if (
+      document.fullscreenElement
+    ) {
+
+      await document
+        .exitFullscreen();
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Could not exit fullscreen:",
+      error
+    );
+  }
+}
+
+
+document
+  .getElementById(
+    "teamMapFullscreen"
+  )
+  ?.addEventListener(
+    "click",
+    openTeamMapFullscreen
+  );
+
+
+document
+  .getElementById(
+    "teamMapExitFullscreen"
+  )
+  ?.addEventListener(
+    "click",
+    closeTeamMapFullscreen
+  );
+
+
+document.addEventListener(
+  "fullscreenchange",
+  () => {
+
+    const isFullscreen =
+      !!document.fullscreenElement;
+
+
+    document
+      .getElementById(
+        "teamMapFullscreen"
+      )
+      ?.classList.toggle(
+        "hidden",
+        isFullscreen
+      );
+
+
+    document
+      .getElementById(
+        "teamMapExitFullscreen"
+      )
+      ?.classList.toggle(
+        "hidden",
+        !isFullscreen
+      );
+
+
+    if (isFullscreen) {
+
+      setTimeout(
+        fitTeamMapToScreen,
+        150
+      );
+
+    }
+
+  }
+);
+
+
+// ==========================================================
+// REFRESH
+// ==========================================================
+
+document
+  .getElementById(
+    "teamMapRefreshBtn"
+  )
+  ?.addEventListener(
+    "click",
+    async () => {
+
+      await loadCSV();
+
+      teamMapCollapsed.clear();
+
+      renderTeamMap();
+
+      setTimeout(
+        fitTeamMapToScreen,
+        100
+      );
+
+    }
+  );
+
+
+// ==========================================================
+// TREE / COMPACT / LIST MODES
+// ==========================================================
+
+document.addEventListener(
+  "click",
+  (event) => {
+
+    const button =
+      event.target.closest(
+        ".team-map-view-btn"
+      );
+
+    if (!button) return;
+
+
+    document
+      .querySelectorAll(
+        ".team-map-view-btn"
+      )
+      .forEach(
+        item =>
+          item.classList.remove(
+            "active"
+          )
+      );
+
+
+    button.classList.add(
+      "active"
+    );
+
+
+    const view =
+      button.dataset.teamMapView;
+
+
+    const viewport =
+      document.getElementById(
+        "teamMapViewport"
+      );
+
+
+    viewport?.classList.remove(
+      "team-map-view-tree",
+      "team-map-view-compact",
+      "team-map-view-list"
+    );
+
+
+    viewport?.classList.add(
+      `team-map-view-${view}`
+    );
+
+
+    if (view === "tree") {
+
+      setTeamMapZoom(1);
+
+      drawTeamMap();
+
+    }
+
+
+    if (view === "compact") {
+
+      teamMapCollapsed.clear();
+
+      drawTeamMap();
+
+      setTimeout(
+        () =>
+          setTeamMapZoom(
+            0.75
+          ),
+        30
+      );
+
+    }
+
+
+    if (view === "list") {
+
+      renderTeamMapList();
+
+    }
+
+  }
+);
+
+
+// ==========================================================
+// LIST VIEW
+// ==========================================================
+
+function renderTeamMapList() {
+
+  const tree =
+    document.getElementById(
+      "teamMapTree"
+    );
+
+  if (!tree) return;
+
+
+  const sorted =
+    [...teamMapMembers]
+      .sort(
+        (a, b) =>
+          a.name.localeCompare(
+            b.name
+          )
+      );
+
+
+  tree.innerHTML = `
+
+    <div class="team-map-list">
+
+      ${sorted
+        .map(
+          member => {
+
+            const parent =
+              findTeamMapParent(
+                member
+              );
+
+
+            return `
+
+              <button
+                type="button"
+                class="team-map-list-row"
+                data-team-member-code="${teamMapEscape(
+                  member.code
+                )}"
+              >
+
+                <div class="team-map-avatar">
+                  ${teamMapInitials(
+                    member.name
+                  )}
+                </div>
+
+
+                <div class="team-map-list-name">
+
+                  <strong>
+                    ${teamMapEscape(
+                      member.name
+                    )}
+                  </strong>
+
+                  <span>
+                    ${teamMapEscape(
+                      member.code
+                    )}
+                  </span>
+
+                </div>
+
+
+                <div class="team-map-list-upline">
+
+                  <span>Reports to</span>
+
+                  <strong>
+                    ${
+                      member.isOrganizationRoot
+                        ? "Top Leader"
+                        : teamMapEscape(
+                            parent?.name ||
+                            member.uplineName ||
+                            "—"
+                          )
+                    }
+                  </strong>
+
+                </div>
+
+
+                <div class="team-map-list-team">
+
+                  <strong>
+                    ${teamMapDescendantCount(
+                      member.code
+                    )}
+                  </strong>
+
+                  <span>
+                    downline
+                  </span>
+
+                </div>
+
+              </button>
+
+            `;
+
+          }
+        )
+        .join("")}
+
+    </div>
+
+  `;
+
+}
