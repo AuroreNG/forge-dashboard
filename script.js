@@ -1757,24 +1757,47 @@ function normalizeAgent(row) {
 function normalizeRecruitAgent(row) {
   return {
     name: cleanAgentName(
-      row["RECRUIT NAME"] || ""
+      row["RECRUIT NAME"] ||
+      row["Full name"] ||
+      row["AGENT NAME"] ||
+      ""
     ),
 
     code: String(
-      row["RECRUIT CODE"] || ""
+      row["RECRUIT CODE"] ||
+      row["AGENT CODE"] ||
+      row["Agent Code"] ||
+      row["CODE"] ||
+      ""
     ).trim(),
 
     phone: String(
-      row["PHONE"] || ""
+      row["PHONE"] ||
+      row["Phone"] ||
+      ""
     ).trim(),
 
     email: String(
-      row["EMAIL"] || ""
-    ).trim().toLowerCase(),
+      row["EMAIL"] ||
+      row["Email"] ||
+      ""
+    )
+      .trim()
+      .toLowerCase(),
 
     recruitDate: String(
-      row["RECRUIT DATE"] || ""
-    ).trim()
+      row["RECRUIT DATE"] ||
+      row["Recruit Date"] ||
+      row["Recruit Date ( CST )"] ||
+      ""
+    ).trim(),
+
+    upline: cleanAgentName(
+      row["UPLINE"] ||
+      row["Upline Name"] ||
+      row["UPLINE AGENT"] ||
+      ""
+    )
   };
 }
 //For every Compliance record, find the matching Team member:
@@ -1906,11 +1929,15 @@ if (!recruiter) {
       recruit_date:
         recruit.recruitDate || null,
 
-      upline_name:
-        cleanAgentName(recruiter.name),
+     upline_name:
+  cleanAgentName(
+    recruit.upline ||
+    recruiter?.name ||
+    ""
+  ) || null,
 
-      upline_code:
-        recruiter.code || null,
+upline_code:
+  recruiter?.code || null,
 
       // Preserve existing Journey stage
       // otherwise brand-new recruits begin here.
@@ -2060,15 +2087,27 @@ function normalizeComplianceAgent(row) {
 function detectTevahFileType(rows) {
   if (!rows?.length) return "unknown";
 
-  const headers = Object.keys(rows[0]);
+  const headers = Object.keys(rows[0]).map((h) =>
+    String(h || "").trim().toUpperCase()
+  );
+
+  console.log("FORGE CSV HEADERS:", headers);
+
+  // ========================================================
+  // TEAM EXPORT
+  // ========================================================
 
   if (
-    headers.includes("Agent Code") &&
-    headers.includes("Full name") &&
-    headers.includes("Team Status")
+    headers.includes("AGENT CODE") &&
+    headers.includes("FULL NAME") &&
+    headers.includes("TEAM STATUS")
   ) {
     return "team";
   }
+
+  // ========================================================
+  // COMPLIANCE EXPORT
+  // ========================================================
 
   if (
     headers.includes("AGENT NAME") &&
@@ -2078,16 +2117,30 @@ function detectTevahFileType(rows) {
     return "compliance";
   }
 
+  // ========================================================
+  // RECRUIT / PROGRESSION EXPORT
+  //
+  // Supports:
+  // RECRUIT CODE
+  // AGENT CODE
+  //
+  // This includes the Apex Recruit and Agent Tracker CSV.
+  // ========================================================
+
   if (
     headers.includes("RECRUIT NAME") &&
-    headers.includes("RECRUIT CODE")
+    (
+      headers.includes("RECRUIT CODE") ||
+      headers.includes("AGENT CODE") ||
+      headers.includes("EMAIL") ||
+      headers.includes("PHONE")
+    )
   ) {
     return "recruit";
   }
 
   return "unknown";
 }
-
 function getMetrics(list) {
   const totalTeam = list.length;
 
