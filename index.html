@@ -2056,58 +2056,6 @@ JavaScript opens these when an import button is clicked.
      FORGE TEAM MAP FULLSCREEN STAGE
 ========================================================= -->
 
-<div
-  id="teamMapStage"
-  class="team-map-stage"
-  aria-hidden="true"
->
-
-  <div class="team-map-stage-header">
-
-    <div>
-      <span>FORGE ORGANIZATION VIEW</span>
-
-      <strong id="teamMapStageTitle">
-        Team Map
-      </strong>
-    </div>
-
-
-    <div class="team-map-stage-actions">
-
-      <button
-        type="button"
-        id="teamMapStageFit"
-      >
-        Fit
-      </button>
-
-      <button
-        type="button"
-        id="teamMapStageZoomOut"
-      >
-        −
-      </button>
-
-      <button
-        type="button"
-        id="teamMapStageZoomIn"
-      >
-        +
-      </button>
-
-      <button
-        type="button"
-        id="teamMapStageExit"
-        class="exit"
-      >
-        ✕ Exit
-      </button>
-
-    </div>
-
-  </div>
-
 
   <div
     id="teamMapStageViewport"
@@ -2394,49 +2342,45 @@ JavaScript opens these when an import button is clicked.
     </div>
 
 
-    <div class="team-map-zoom-tools">
+   <div class="team-map-zoom-tools">
 
-      <button
-        type="button"
-        id="teamMapZoomOut"
-        class="team-map-tool-btn"
-      >
-        <span>⊖</span>
-        Zoom Out
-      </button>
+  <button
+    type="button"
+    id="teamMapZoomOut"
+    class="team-map-tool-btn"
+  >
+    <span>⊖</span>
+    Zoom Out
+  </button>
 
-      <button
-        type="button"
-        id="teamMapZoomIn"
-        class="team-map-tool-btn"
-      >
-        <span>⊕</span>
-        Zoom In
-      </button>
+  <button
+    type="button"
+    id="teamMapZoomIn"
+    class="team-map-tool-btn"
+  >
+    <span>⊕</span>
+    Zoom In
+  </button>
 
-      <button
-        type="button"
-        id="teamMapFit"
-        class="team-map-tool-btn"
-      >
-        <span>◎</span>
-        Fit
-      </button>
+  <button
+    type="button"
+    id="teamMapFit"
+    class="team-map-tool-btn"
+  >
+    <span>◎</span>
+    Fit
+  </button>
 
-      <button
-  type="button"
-  id="teamMapOpenStage"
-  class="team-map-tool-btn"
->
-  <span>⛶</span>
-  Fullscreen
-</button>
-      
-        <span>×</span>
-       Exit
-      </button>
+  <button
+    type="button"
+    id="teamMapOpenStage"
+    class="team-map-tool-btn"
+  >
+    <span>⛶</span>
+    Fullscreen
+  </button>
 
-    </div>
+</div>
 
   </div>
 
@@ -2505,7 +2449,70 @@ JavaScript opens these when an import button is clicked.
   </div>
 
 </div>
+  <div
+  id="teamMapStage"
+  class="team-map-stage"
+  aria-hidden="true"
+>
 
+  <div class="team-map-stage-header">
+
+    <div>
+      <span>FORGE ORGANIZATION VIEW</span>
+
+      <strong id="teamMapStageTitle">
+        Team Map
+      </strong>
+    </div>
+
+    <div class="team-map-stage-actions">
+
+      <button
+        type="button"
+        id="teamMapStageFit"
+      >
+        Fit
+      </button>
+
+      <button
+        type="button"
+        id="teamMapStageZoomOut"
+      >
+        −
+      </button>
+
+      <button
+        type="button"
+        id="teamMapStageZoomIn"
+      >
+        +
+      </button>
+
+      <button
+        type="button"
+        id="teamMapStageExit"
+        class="exit"
+      >
+        ✕ Exit
+      </button>
+
+    </div>
+
+  </div>
+
+  <div
+    id="teamMapStageViewport"
+    class="team-map-stage-viewport"
+  >
+
+    <div
+      id="teamMapStageCanvas"
+      class="team-map-stage-canvas"
+    ></div>
+
+  </div>
+
+</div>
 </section>
 <section id="commandPage" class="command-page hidden">
 
