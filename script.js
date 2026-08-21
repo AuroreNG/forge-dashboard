@@ -3526,6 +3526,7 @@ document.querySelectorAll(".filter").forEach((button) => {
 
 // Pipeline Overview -> Journey
 [
+  
   "openJourneyBtn",
   "viewFullJourneyBtn"
 ].forEach((id) => {
@@ -5236,6 +5237,28 @@ document.addEventListener("click", (e) => {
 
 //  PAGE NAVIGATION 
 function showPage(pageName) {
+
+  // ========================================================
+  // TEAM MAP SAFETY RESET
+  // ========================================================
+
+  if (pageName !== "Team Map") {
+
+    document
+      .getElementById("teamMapStage")
+      ?.classList.remove("active");
+
+    document
+      .getElementById("teamMapAgentDrawer")
+      ?.classList.remove("open");
+
+    document
+      .getElementById("teamMapAgentOverlay")
+      ?.classList.add("hidden");
+
+    document.body.style.overflow = "";
+  }
+
 
   document.querySelector(".dashboard").style.display =
     pageName === "Home"
