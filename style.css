@@ -25901,3 +25901,298 @@ body.forge-drawer-open {
       #fbfcfe
     ) !important;
 }
+
+/* =========================================================
+   FORGE TEAM MAP — REFINED PERSON CARDS
+========================================================= */
+
+.team-map-node {
+  position: relative;
+
+  width: 210px;
+  min-width: 210px;
+
+  min-height: 92px;
+
+  display: grid;
+
+  grid-template-columns:
+    48px
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 11px;
+
+  padding:
+    14px 15px;
+
+  border:
+    1px solid
+    #d1dfef;
+
+  border-radius:
+    17px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      #fbfcfe
+    );
+
+  color:
+    #10243f;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px
+    rgba(7,27,58,.055);
+
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease,
+    border-color .16s ease;
+}
+
+
+.team-map-node:hover {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    #8fa9c6;
+
+  box-shadow:
+    0 13px 28px
+    rgba(7,27,58,.10);
+}
+
+
+/* ROOT / TOP LEADER */
+
+.team-map-branch:first-child
+>
+.team-map-node-wrap
+>
+.team-map-node {
+
+  width: 265px;
+
+  min-width: 265px;
+
+  min-height: 104px;
+
+  border:
+    2px solid #071b3a;
+
+  background:
+    linear-gradient(
+      135deg,
+      #071b3a,
+      #143b67
+    );
+
+  color: white;
+
+  box-shadow:
+    0 13px 30px
+    rgba(7,27,58,.17);
+}
+
+
+/* AVATAR */
+
+.team-map-avatar {
+  width: 48px;
+  height: 48px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 14px;
+
+  background:
+    #edf3fa;
+
+  color:
+    #143b67;
+
+  font-size: 14px;
+  font-weight: 900;
+}
+
+
+.team-map-branch:first-child
+>
+.team-map-node-wrap
+>
+.team-map-node
+.team-map-avatar {
+
+  background:
+    rgba(255,255,255,.13);
+
+  color: white;
+}
+
+
+/* TEXT */
+
+.team-map-node-copy {
+  min-width: 0;
+}
+
+
+.team-map-node-copy strong {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  overflow: hidden;
+
+  color:
+    #0d223e;
+
+  font-size: 12px;
+  font-weight: 850;
+
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+.team-map-branch:first-child
+>
+.team-map-node-wrap
+>
+.team-map-node
+.team-map-node-copy strong {
+
+  color: white;
+}
+
+
+.team-map-node-copy span {
+  display: block;
+
+  margin-top: 5px;
+
+  color:
+    #718198;
+
+  font-size: 9px;
+  font-weight: 650;
+}
+
+
+.team-map-branch:first-child
+>
+.team-map-node-wrap
+>
+.team-map-node
+.team-map-node-copy span {
+
+  color:
+    rgba(255,255,255,.67);
+}
+
+
+/* DOWNLINE */
+
+.team-map-node-count {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  min-width: 38px;
+
+  color:
+    #143b67;
+
+  font-size: 16px;
+  font-weight: 900;
+}
+
+
+.team-map-node-count small {
+  margin-top: 2px;
+
+  color:
+    #8390a3;
+
+  font-size: 7px;
+  font-weight: 700;
+}
+
+
+.team-map-branch:first-child
+>
+.team-map-node-wrap
+>
+.team-map-node
+.team-map-node-count {
+
+  color: white;
+}
+
+
+.team-map-branch:first-child
+>
+.team-map-node-wrap
+>
+.team-map-node
+.team-map-node-count small {
+
+  color:
+    rgba(255,255,255,.58);
+}
+
+
+/* TOP LEADER BADGE */
+
+.team-map-top-badge {
+  flex-shrink: 0;
+
+  display:
+    inline-flex !important;
+
+  align-items: center;
+
+  margin: 0 !important;
+
+  padding:
+    3px 7px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.18);
+
+  border-radius: 999px;
+
+  background:
+    rgba(255,255,255,.12) !important;
+
+  color:
+    white !important;
+
+  font-size:
+    6px !important;
+
+  font-weight:
+    900 !important;
+
+  letter-spacing:
+    .05em;
+}
