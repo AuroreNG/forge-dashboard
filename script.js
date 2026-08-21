@@ -14971,3 +14971,23 @@ document.addEventListener(
 
   }
 );
+
+/* =========================================================
+   STRICT PAGE VISIBILITY
+========================================================= */
+
+#teamMapPage.hidden {
+  display: none !important;
+}
+
+#teamMapPage:not(.hidden) {
+  display: block;
+}
+
+#teamMapStage {
+  display: none !important;
+}
+
+#teamMapStage.active {
+  display: flex !important;
+}
