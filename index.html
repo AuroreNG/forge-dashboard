@@ -2225,86 +2225,69 @@ JavaScript opens these when an import button is clicked.
   </div>
 
 
-  <!-- =====================================================
-       TEAM INTELLIGENCE
-  ====================================================== -->
+<!-- =========================================================
+     FORGE TEAM INTELLIGENCE
+========================================================= -->
 
-  <section
-    id="teamMapIntelligence"
-    class="team-intelligence"
+<section
+  id="teamMapIntelligence"
+  class="team-intelligence"
+>
+
+  <div class="team-intelligence-header">
+
+    <div>
+      <span class="team-intelligence-eyebrow">
+        FORGE ORGANIZATION INTELLIGENCE
+      </span>
+
+      <h2>Top Teams</h2>
+
+      <p>
+        Select a leader to open their organization in Team Map.
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- TOP TEAMS -->
+
+  <div
+    id="teamIntelTopGrid"
+    class="team-intel-top-grid"
+  ></div>
+
+
+  <!-- MORE LEADERS -->
+
+  <div
+    id="teamIntelMoreWrap"
+    class="team-intel-more-wrap"
   >
 
-    <div class="team-intelligence-header">
+    <div class="team-intel-more-head">
 
       <div>
-        <span class="team-intelligence-eyebrow">
-          FORGE ORGANIZATION INTELLIGENCE
-        </span>
-
-        <h2>Team Intelligence</h2>
-
-        <p>
-          Explore and rank leadership teams using live organization hierarchy.
-        </p>
+        <span>MORE TEAMS</span>
+        <strong>Organization Leaders</strong>
       </div>
 
-      <button
-        type="button"
-        id="teamIntelCloseFocus"
-        class="team-intel-back hidden"
-      >
-        ← All Teams
-      </button>
+      <span id="teamIntelMoreCount">
+        0 more
+      </span>
 
     </div>
 
-    <div class="team-intel-toolbar">
-
-      <div class="team-intel-tabs">
-
-        <button
-          type="button"
-          class="team-intel-tab active"
-          data-team-intel-sort="downline"
-        >
-          Largest Teams
-        </button>
-
-        <button
-          type="button"
-          class="team-intel-tab"
-          data-team-intel-sort="direct"
-        >
-          Most Direct
-        </button>
-
-        <button
-          type="button"
-          class="team-intel-tab"
-          data-team-intel-sort="depth"
-        >
-          Deepest Teams
-        </button>
-
-      </div>
-
-      <div class="team-intel-note">
-        Live hierarchy data
-      </div>
-
-    </div>
 
     <div
-      id="teamIntelGrid"
-      class="team-intel-grid"
+      id="teamIntelMoreBar"
+      class="team-intel-more-bar"
     ></div>
 
-    <div
-      id="teamIntelFocused"
-      class="team-intel-focused hidden"
-    ></div>
+  </div>
 
-  </section>
+</section>
 
 
   <!-- =====================================================
