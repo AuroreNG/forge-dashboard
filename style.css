@@ -29865,3 +29865,491 @@ body.forge-drawer-open {
   transform-origin:
     top center;
 }
+
+/* =========================================================
+   FORGE TOP TEAMS — CLEAN EXECUTIVE VIEW
+========================================================= */
+
+.team-intelligence {
+  margin-top: 18px;
+
+  padding: 24px;
+
+  border: 1px solid #dce7f3;
+
+  border-radius: 26px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.98),
+      rgba(248,251,255,.96)
+    );
+
+  box-shadow:
+    0 16px 38px
+    rgba(7,27,58,.06);
+}
+
+
+/* HEADER */
+
+.team-intelligence-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  margin-bottom: 20px;
+}
+
+
+.team-intelligence-eyebrow {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #1a5fb4;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: .11em;
+}
+
+
+.team-intelligence-header h2 {
+  margin: 0;
+
+  color: #0b294d;
+
+  font-size: 25px;
+
+  font-weight: 900;
+
+  letter-spacing: -.025em;
+}
+
+
+.team-intelligence-header p {
+  margin: 5px 0 0;
+
+  color: #6d7f94;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   TOP 8
+========================================================= */
+
+.team-intel-top-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 14px;
+}
+
+
+.team-intel-card {
+  position: relative;
+
+  min-height: 145px;
+
+  padding: 17px;
+
+  border: 1px solid #d8e4f1;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  transition:
+    transform .17s ease,
+    box-shadow .17s ease,
+    border-color .17s ease;
+}
+
+
+.team-intel-card::after {
+  content: "";
+
+  position: absolute;
+
+  width: 110px;
+  height: 110px;
+
+  right: -45px;
+  top: -48px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(22,75,130,.045);
+
+  pointer-events: none;
+}
+
+
+.team-intel-card:hover {
+  transform: translateY(-3px);
+
+  border-color: #9ebbd8;
+
+  box-shadow:
+    0 16px 32px
+    rgba(7,27,58,.09);
+}
+
+
+/* TOP ROW */
+
+.team-intel-card-top {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  gap: 12px;
+}
+
+
+.team-intel-rank {
+  width: 35px;
+  height: 35px;
+
+  flex: 0 0 35px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 11px;
+
+  background: #0b315c;
+
+  color: white;
+
+  font-size: 11px;
+
+  font-weight: 900;
+}
+
+
+.team-intel-downline {
+  text-align: right;
+}
+
+
+.team-intel-downline strong {
+  display: block;
+
+  color: #0b315c;
+
+  font-size: 22px;
+
+  line-height: 1;
+
+  font-weight: 900;
+}
+
+
+.team-intel-downline span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #8391a2;
+
+  font-size: 7px;
+
+  font-weight: 900;
+
+  letter-spacing: .08em;
+}
+
+
+/* NAME */
+
+.team-intel-name {
+  position: relative;
+
+  z-index: 2;
+
+  margin-top: 14px;
+}
+
+
+.team-intel-name strong {
+  display: block;
+
+  color: #102b4b;
+
+  font-size: 15px;
+
+  line-height: 1.2;
+
+  font-weight: 900;
+}
+
+
+.team-intel-name span {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #718298;
+
+  font-size: 9px;
+
+  font-weight: 750;
+}
+
+
+/* FOOTER */
+
+.team-intel-card-footer {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 17px;
+
+  padding-top: 12px;
+
+  border-top: 1px solid #edf2f7;
+}
+
+
+.team-intel-direct {
+  color: #61758d;
+
+  font-size: 10px;
+
+  font-weight: 800;
+}
+
+
+.team-intel-open {
+  color: #0b315c;
+
+  font-size: 10px;
+
+  font-weight: 900;
+}
+
+
+/* =========================================================
+   MORE TEAMS BAR
+========================================================= */
+
+.team-intel-more-wrap {
+  margin-top: 18px;
+
+  padding: 15px 16px 16px;
+
+  border: 1px solid #dce7f3;
+
+  border-radius: 19px;
+
+  background:
+    rgba(247,250,254,.9);
+}
+
+
+.team-intel-more-head {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 11px;
+}
+
+
+.team-intel-more-head div span {
+  display: block;
+
+  color: #74879d;
+
+  font-size: 8px;
+
+  font-weight: 900;
+
+  letter-spacing: .1em;
+}
+
+
+.team-intel-more-head div strong {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #16385f;
+
+  font-size: 13px;
+
+  font-weight: 900;
+}
+
+
+#teamIntelMoreCount {
+  color: #73859a;
+
+  font-size: 10px;
+
+  font-weight: 800;
+}
+
+
+/* SCROLLABLE BAR */
+
+.team-intel-more-bar {
+  display: flex;
+
+  gap: 9px;
+
+  overflow-x: auto;
+
+  padding: 2px 1px 6px;
+
+  scrollbar-width: thin;
+}
+
+
+.team-intel-more-item {
+  flex: 0 0 auto;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  min-width: 165px;
+
+  padding: 10px 12px;
+
+  border: 1px solid #d9e5f1;
+
+  border-radius: 14px;
+
+  background: white;
+
+  cursor: pointer;
+
+  transition: .16s ease;
+}
+
+
+.team-intel-more-item:hover {
+  transform: translateY(-2px);
+
+  border-color: #9dbbd9;
+
+  box-shadow:
+    0 8px 18px
+    rgba(7,27,58,.07);
+}
+
+
+.team-intel-more-avatar {
+  width: 29px;
+  height: 29px;
+
+  flex: 0 0 29px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 9px;
+
+  background: #eaf2fb;
+
+  color: #143b67;
+
+  font-size: 9px;
+
+  font-weight: 900;
+}
+
+
+.team-intel-more-copy {
+  min-width: 0;
+}
+
+
+.team-intel-more-copy strong {
+  display: block;
+
+  overflow: hidden;
+
+  color: #153453;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+}
+
+
+.team-intel-more-copy span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #7b8b9d;
+
+  font-size: 8px;
+
+  font-weight: 750;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+
+  .team-intel-top-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .team-intel-top-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+}
