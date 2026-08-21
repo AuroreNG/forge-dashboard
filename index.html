@@ -1909,6 +1909,8 @@ JavaScript opens these when an import button is clicked.
     </div>
 
   </div>
+
+  
   <!-- =========================================================
      TEAM MAP AGENT QUICK PANEL
 ========================================================= -->
@@ -2049,6 +2051,77 @@ JavaScript opens these when an import button is clicked.
       </button>
 
     </div>
+
+    <!-- =========================================================
+     FORGE TEAM MAP FULLSCREEN STAGE
+========================================================= -->
+
+<div
+  id="teamMapStage"
+  class="team-map-stage"
+  aria-hidden="true"
+>
+
+  <div class="team-map-stage-header">
+
+    <div>
+      <span>FORGE ORGANIZATION VIEW</span>
+
+      <strong id="teamMapStageTitle">
+        Team Map
+      </strong>
+    </div>
+
+
+    <div class="team-map-stage-actions">
+
+      <button
+        type="button"
+        id="teamMapStageFit"
+      >
+        Fit
+      </button>
+
+      <button
+        type="button"
+        id="teamMapStageZoomOut"
+      >
+        −
+      </button>
+
+      <button
+        type="button"
+        id="teamMapStageZoomIn"
+      >
+        +
+      </button>
+
+      <button
+        type="button"
+        id="teamMapStageExit"
+        class="exit"
+      >
+        ✕ Exit
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="teamMapStageViewport"
+    class="team-map-stage-viewport"
+  >
+
+    <div
+      id="teamMapStageCanvas"
+      class="team-map-stage-canvas"
+    ></div>
+
+  </div>
+
+</div>
 
   </section>
 
@@ -2358,12 +2431,9 @@ JavaScript opens these when an import button is clicked.
   <span>⛶</span>
   Fullscreen
 </button>
-        <span>⛶</span>
-        Fullscreen
-      </button>
       
         <span>×</span>
-       ✕ Exit
+       Exit
       </button>
 
     </div>
