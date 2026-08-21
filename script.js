@@ -12773,8 +12773,6 @@ document
 // TEAM MAP VIEW CONTROLS
 // ==========================================================
 
-let teamMapZoom = 1;
-
 const TEAM_MAP_MIN_ZOOM = 0.65;
 const TEAM_MAP_MAX_ZOOM = 1.6;
 const TEAM_MAP_ZOOM_STEP = 0.1;
