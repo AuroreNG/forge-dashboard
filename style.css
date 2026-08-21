@@ -29065,3 +29065,803 @@ body.forge-drawer-open {
     0 6px 14px
     rgba(7,27,58,.13) !important;
 }
+
+/* =========================================================
+   FORGE TEAM MAP — EXECUTIVE TREE FINAL OVERRIDE
+========================================================= */
+
+
+/* ---------------------------------------------------------
+   MAIN CANVAS
+--------------------------------------------------------- */
+
+.team-map-viewport {
+  min-height: 680px !important;
+
+  overflow: auto !important;
+
+  background:
+    radial-gradient(
+      circle at 12% 8%,
+      rgba(30,115,232,.045),
+      transparent 24%
+    ),
+    linear-gradient(
+      rgba(0,74,173,.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0,74,173,.025) 1px,
+      transparent 1px
+    ),
+    #ffffff !important;
+
+  background-size:
+    auto,
+    36px 36px,
+    36px 36px !important;
+}
+
+
+.team-map-tree {
+  padding:
+    90px 70px 140px !important;
+
+  min-width:
+    max-content !important;
+}
+
+
+/* ---------------------------------------------------------
+   TREE STRUCTURE
+--------------------------------------------------------- */
+
+.team-map-branch {
+  position:
+    relative !important;
+
+  display:
+    flex !important;
+
+  flex-direction:
+    column !important;
+
+  align-items:
+    center !important;
+
+  min-width:
+    max-content !important;
+}
+
+
+.team-map-children {
+  position:
+    relative !important;
+
+  display:
+    flex !important;
+
+  justify-content:
+    center !important;
+
+  align-items:
+    flex-start !important;
+
+  gap:
+    30px !important;
+
+  padding-top:
+    78px !important;
+
+  min-width:
+    max-content !important;
+}
+
+
+/* horizontal branch line */
+
+.team-map-children::before {
+  content: "";
+
+  position:
+    absolute;
+
+  top:
+    38px;
+
+  left:
+    50px;
+
+  right:
+    50px;
+
+  height:
+    2px;
+
+  background:
+    #bdd2e8;
+}
+
+
+/* root downward line */
+
+.team-map-children::after {
+  content: "";
+
+  position:
+    absolute;
+
+  top:
+    0;
+
+  left:
+    50%;
+
+  width:
+    2px;
+
+  height:
+    39px;
+
+  transform:
+    translateX(-50%);
+
+  background:
+    #bdd2e8;
+}
+
+
+/* individual child line */
+
+.team-map-children >
+.team-map-branch::before {
+  content: "";
+
+  position:
+    absolute;
+
+  top:
+    -40px;
+
+  left:
+    50%;
+
+  width:
+    2px;
+
+  height:
+    40px;
+
+  transform:
+    translateX(-50%);
+
+  background:
+    #bdd2e8;
+}
+
+
+/* ---------------------------------------------------------
+   PERSON CARD
+--------------------------------------------------------- */
+
+.team-map-node {
+  position:
+    relative !important;
+
+  width:
+    178px !important;
+
+  min-width:
+    178px !important;
+
+  min-height:
+    132px !important;
+
+  display:
+    flex !important;
+
+  flex-direction:
+    column !important;
+
+  justify-content:
+    center !important;
+
+  align-items:
+    center !important;
+
+  gap:
+    7px !important;
+
+  padding:
+    21px 14px 17px !important;
+
+  border-radius:
+    25px !important;
+
+  text-align:
+    center !important;
+
+  box-shadow:
+    0 15px 34px
+    rgba(7,27,58,.075) !important;
+
+  transition:
+    .18s ease !important;
+}
+
+
+.team-map-node:hover {
+  transform:
+    translateY(-3px)
+    scale(1.01);
+
+  box-shadow:
+    0 22px 44px
+    rgba(7,27,58,.12) !important;
+}
+
+
+/* Remove old horizontal card avatar */
+
+.team-map-node .team-map-avatar {
+  display:
+    none !important;
+}
+
+
+/* ---------------------------------------------------------
+   ROOT
+--------------------------------------------------------- */
+
+.team-map-node.is-root,
+.team-map-node.tm-level-root {
+
+  width:
+    205px !important;
+
+  min-width:
+    205px !important;
+
+  min-height:
+    155px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      #071b3a,
+      #10345f
+    ) !important;
+
+  border:
+    2px solid
+    #071b3a !important;
+
+  color:
+    white !important;
+
+  box-shadow:
+    0 20px 46px
+    rgba(7,27,58,.20) !important;
+}
+
+
+/* ---------------------------------------------------------
+   HIERARCHY COLORS
+--------------------------------------------------------- */
+
+/* Direct recruits */
+
+.team-map-node.tm-level-1 {
+
+  background:
+    #eaf3ff !important;
+
+  border:
+    2px solid
+    #1e73e8 !important;
+
+  color:
+    #123b66 !important;
+}
+
+
+/* Second hierarchy */
+
+.team-map-node.tm-level-2 {
+
+  background:
+    #eaf7f3 !important;
+
+  border:
+    2px solid
+    #2a8d72 !important;
+
+  color:
+    #155e4c !important;
+}
+
+
+/* Third hierarchy */
+
+.team-map-node.tm-level-3 {
+
+  background:
+    #f3eeff !important;
+
+  border:
+    2px solid
+    #7c5ccb !important;
+
+  color:
+    #48327f !important;
+}
+
+
+/* Fourth */
+
+.team-map-node.tm-level-4 {
+
+  background:
+    #fff4e6 !important;
+
+  border:
+    2px solid
+    #c8842e !important;
+
+  color:
+    #704a16 !important;
+}
+
+
+/* Fifth */
+
+.team-map-node.tm-level-5 {
+
+  background:
+    #f4f6f8 !important;
+
+  border:
+    2px solid
+    #7b8da4 !important;
+
+  color:
+    #34465d !important;
+}
+
+
+/* Sixth */
+
+.team-map-node.tm-level-6 {
+
+  background:
+    #eef7ff !important;
+
+  border:
+    2px solid
+    #5d8fc2 !important;
+
+  color:
+    #244b72 !important;
+}
+
+
+/* ---------------------------------------------------------
+   NAME
+--------------------------------------------------------- */
+
+.team-map-node-copy {
+  width:
+    100% !important;
+
+  text-align:
+    center !important;
+}
+
+
+.team-map-node-copy strong {
+
+  color:
+    inherit !important;
+
+  font-size:
+    14px !important;
+
+  line-height:
+    1.18 !important;
+
+  font-weight:
+    900 !important;
+
+  white-space:
+    normal !important;
+
+  overflow:
+    visible !important;
+
+  text-overflow:
+    initial !important;
+}
+
+
+.team-map-node-copy span {
+
+  display:
+    block !important;
+
+  margin-top:
+    7px !important;
+
+  color:
+    inherit !important;
+
+  opacity:
+    .74;
+
+  font-size:
+    10px !important;
+
+  font-weight:
+    750 !important;
+}
+
+
+/* Direct count */
+
+.team-map-node-count {
+
+  color:
+    inherit !important;
+
+  font-size:
+    12px !important;
+
+  font-weight:
+    850 !important;
+}
+
+
+.team-map-node-count small {
+
+  display:
+    inline !important;
+
+  font-size:
+    10px !important;
+
+  color:
+    inherit !important;
+
+  opacity:
+    .84;
+}
+
+
+.team-map-member-label {
+  display:
+    none !important;
+}
+
+
+/* ---------------------------------------------------------
+   + BUTTON / LEAF DOT
+--------------------------------------------------------- */
+
+.team-map-branch-dot {
+
+  position:
+    absolute !important;
+
+  top:
+    -19px !important;
+
+  left:
+    50% !important;
+
+  z-index:
+    20 !important;
+
+  transform:
+    translateX(-50%) !important;
+}
+
+
+/* Person HAS DIRECTS */
+
+.team-map-branch-dot.expandable {
+
+  width:
+    34px !important;
+
+  height:
+    34px !important;
+
+  display:
+    grid !important;
+
+  place-items:
+    center !important;
+
+  border-radius:
+    50% !important;
+
+  background:
+    #ffffff !important;
+
+  color:
+    #143b67 !important;
+
+  border:
+    2px solid
+    #d6e2ef !important;
+
+  font-size:
+    19px !important;
+
+  font-weight:
+    950 !important;
+
+  cursor:
+    pointer !important;
+
+  box-shadow:
+    0 7px 16px
+    rgba(7,27,58,.11) !important;
+}
+
+
+/* Person has NO directs */
+
+.team-map-branch-dot.terminal {
+
+  width:
+    14px !important;
+
+  height:
+    14px !important;
+
+  border:
+    0 !important;
+
+  border-radius:
+    50% !important;
+
+  background:
+    #284e76 !important;
+
+  box-shadow:
+    0 0 0 5px white,
+    0 6px 14px
+    rgba(7,27,58,.14) !important;
+}
+
+
+/* ---------------------------------------------------------
+   DIRECT BUTTON
+--------------------------------------------------------- */
+
+#teamMapDirectOnly.active {
+
+  background:
+    #071b3a !important;
+
+  border-color:
+    #071b3a !important;
+
+  color:
+    white !important;
+}
+
+
+/* =========================================================
+   FULLSCREEN STAGE
+========================================================= */
+
+#teamMapStage {
+
+  position:
+    fixed !important;
+
+  inset:
+    0 !important;
+
+  z-index:
+    999999 !important;
+
+  display:
+    none;
+
+  flex-direction:
+    column;
+
+  padding:
+    18px;
+
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(30,115,232,.08),
+      transparent 28%
+    ),
+    #f5f8fc;
+}
+
+
+#teamMapStage.active {
+  display:
+    flex !important;
+}
+
+
+.team-map-stage-header {
+
+  min-height:
+    78px;
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    20px;
+
+  padding:
+    15px 22px;
+
+  border-radius:
+    24px;
+
+  background:
+    #071b3a !important;
+
+  color:
+    white;
+
+  box-shadow:
+    0 18px 42px
+    rgba(7,27,58,.22);
+}
+
+
+.team-map-stage-header span {
+
+  display:
+    block;
+
+  margin-bottom:
+    4px;
+
+  color:
+    #aac6e7;
+
+  font-size:
+    10px;
+
+  font-weight:
+    900;
+
+  letter-spacing:
+    .09em;
+}
+
+
+.team-map-stage-header strong {
+
+  font-size:
+    23px;
+
+  font-weight:
+    900;
+}
+
+
+.team-map-stage-actions {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    8px;
+}
+
+
+.team-map-stage-actions button {
+
+  height:
+    42px;
+
+  padding:
+    0 15px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.20);
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(255,255,255,.10);
+
+  color:
+    white;
+
+  font-weight:
+    850;
+
+  cursor:
+    pointer;
+}
+
+
+.team-map-stage-actions .exit {
+
+  background:
+    white;
+
+  color:
+    #071b3a;
+
+  border-color:
+    white;
+}
+
+
+.team-map-stage-viewport {
+
+  flex:
+    1;
+
+  overflow:
+    auto;
+
+  margin-top:
+    14px;
+
+  padding:
+    70px;
+
+  border:
+    1px solid
+    #d7e5f5;
+
+  border-radius:
+    28px;
+
+  background:
+    linear-gradient(
+      rgba(0,74,173,.027) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0,74,173,.027) 1px,
+      transparent 1px
+    ),
+    #ffffff;
+
+  background-size:
+    38px 38px;
+
+  box-shadow:
+    0 18px 45px
+    rgba(7,27,58,.09);
+}
+
+
+.team-map-stage-canvas {
+
+  min-width:
+    max-content;
+
+  transform-origin:
+    top center;
+}
