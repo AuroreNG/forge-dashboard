@@ -23354,13 +23354,6 @@ body.forge-drawer-open {
 
 
 .team-map-children >
-.team-map-branch:first-child::after {
-  left: 50%;
-  width: calc(50% + 14px);
-}
-
-
-.team-map-children >
 .team-map-branch:last-child::after {
   right: 50%;
   width: calc(50% + 14px);
@@ -24250,26 +24243,6 @@ body.forge-drawer-open {
     );
 }
 
-
-.team-map-branch:first-child >
-.team-map-node-wrap >
-.team-map-node {
-  min-width: 300px;
-
-  border:
-    2px solid #2464ff;
-
-  box-shadow:
-    0 10px 27px
-    rgba(
-      33,
-      94,
-      255,
-      .13
-    );
-}
-
-
 .team-map-avatar {
   width: 46px;
   height: 46px;
@@ -24292,29 +24265,6 @@ body.forge-drawer-open {
   font-weight: 800;
 }
 
-
-.team-map-node-copy {
-  min-width: 0;
-}
-
-
-.team-map-node-copy strong {
-  display: flex;
-  align-items: center;
-
-  gap: 6px;
-
-  max-width: 175px;
-
-  overflow: hidden;
-
-  color: #112647;
-
-  font-size: 12px;
-  font-weight: 800;
-
-  white-space: nowrap;
-}
 
 
 .team-map-node-copy span {
@@ -24348,18 +24298,6 @@ body.forge-drawer-open {
   font-weight: 800 !important;
 
   letter-spacing: .02em;
-}
-
-
-.team-map-node-count {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-
-  color: #104bc6;
-
-  font-size: 17px;
-  font-weight: 800;
 }
 
 
@@ -24478,19 +24416,6 @@ body.forge-drawer-open {
 
   z-index: 0;
 }
-
-
-.team-map-children >
-.team-map-branch:first-child::after {
-  left: 50%;
-
-  width:
-    calc(
-      50% +
-      8px
-    );
-}
-
 
 .team-map-children >
 .team-map-branch:last-child::after {
@@ -26504,4 +26429,394 @@ body.forge-drawer-open {
   transform:
     translateX(-50%)
     scale(1.08);
+}
+
+/* =========================================================
+   FORGE TEAM MAP — FINAL CLEAN HIERARCHY
+========================================================= */
+
+
+/* ---------------------------------------------------------
+   BASE CARD
+--------------------------------------------------------- */
+
+.team-map-node {
+  width: 205px !important;
+  min-width: 205px !important;
+  min-height: 82px !important;
+
+  padding: 13px 14px !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    43px
+    minmax(0,1fr)
+    auto !important;
+
+  align-items: center !important;
+
+  gap: 10px !important;
+
+  border-radius: 15px !important;
+
+  background: #ffffff;
+
+  border:
+    1.25px solid
+    #d5e0eb;
+
+  box-shadow:
+    0 6px 16px
+    rgba(7,27,58,.055) !important;
+
+  transition:
+    transform .15s ease,
+    border-color .15s ease,
+    box-shadow .15s ease;
+}
+
+
+.team-map-node:hover {
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 10px 24px
+    rgba(7,27,58,.09) !important;
+}
+
+
+/* ---------------------------------------------------------
+   TOP LEADER ONLY
+--------------------------------------------------------- */
+
+.team-map-node.level-0 {
+  width: 240px !important;
+  min-width: 240px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #071b3a,
+      #123b68
+    ) !important;
+
+  border:
+    1px solid
+    #071b3a !important;
+
+  color:
+    #ffffff !important;
+
+  box-shadow:
+    0 10px 26px
+    rgba(7,27,58,.17) !important;
+}
+
+
+.team-map-node.level-0
+.team-map-node-copy strong {
+  color:
+    #ffffff !important;
+}
+
+
+.team-map-node.level-0
+.team-map-node-copy span {
+  color:
+    rgba(255,255,255,.67) !important;
+}
+
+
+.team-map-node.level-0
+.team-map-node-count {
+  color:
+    #ffffff !important;
+}
+
+
+.team-map-node.level-0
+.team-map-node-count small {
+  color:
+    rgba(255,255,255,.60) !important;
+}
+
+
+.team-map-node.level-0
+.team-map-avatar {
+  background:
+    rgba(255,255,255,.13) !important;
+
+  color:
+    #ffffff !important;
+}
+
+
+/* ---------------------------------------------------------
+   LEVEL 1 — FORGE BLUE
+--------------------------------------------------------- */
+
+.team-map-node.level-1 {
+  background:
+    #f5f8fc !important;
+
+  border-color:
+    #688ab1 !important;
+
+  color:
+    #173d67 !important;
+}
+
+
+.team-map-node.level-1
+.team-map-avatar {
+  background:
+    #e7eef7 !important;
+
+  color:
+    #315f91 !important;
+}
+
+
+/* ---------------------------------------------------------
+   LEVEL 2 — MUTED TEAL
+--------------------------------------------------------- */
+
+.team-map-node.level-2 {
+  background:
+    #f4faf8 !important;
+
+  border-color:
+    #79aa9d !important;
+
+  color:
+    #315f55 !important;
+}
+
+
+.team-map-node.level-2
+.team-map-avatar {
+  background:
+    #e3f1ed !important;
+
+  color:
+    #477d70 !important;
+}
+
+
+/* ---------------------------------------------------------
+   LEVEL 3 — MUTED VIOLET
+--------------------------------------------------------- */
+
+.team-map-node.level-3 {
+  background:
+    #faf8fd !important;
+
+  border-color:
+    #9d8abe !important;
+
+  color:
+    #594874 !important;
+}
+
+
+.team-map-node.level-3
+.team-map-avatar {
+  background:
+    #eee8f6 !important;
+
+  color:
+    #70589a !important;
+}
+
+
+/* ---------------------------------------------------------
+   LEVEL 4 — WARM SAND
+--------------------------------------------------------- */
+
+.team-map-node.level-4 {
+  background:
+    #fcf9f5 !important;
+
+  border-color:
+    #c7a57d !important;
+
+  color:
+    #6d5539 !important;
+}
+
+
+.team-map-node.level-4
+.team-map-avatar {
+  background:
+    #f5eadf !important;
+
+  color:
+    #8c6940 !important;
+}
+
+
+/* ---------------------------------------------------------
+   LEVEL 5+
+--------------------------------------------------------- */
+
+.team-map-node.level-5,
+.team-map-node.level-6,
+.team-map-node.level-7 {
+  background:
+    #f7f9fb !important;
+
+  border-color:
+    #9aaabd !important;
+
+  color:
+    #44586f !important;
+}
+
+
+.team-map-node.level-5 .team-map-avatar,
+.team-map-node.level-6 .team-map-avatar,
+.team-map-node.level-7 .team-map-avatar {
+  background:
+    #e9eef3 !important;
+
+  color:
+    #526b84 !important;
+}
+
+
+/* ---------------------------------------------------------
+   FORCE NORMAL TEXT TO FOLLOW CARD COLOR
+--------------------------------------------------------- */
+
+.team-map-node:not(.level-0)
+.team-map-node-copy strong {
+  color:
+    inherit !important;
+}
+
+
+.team-map-node:not(.level-0)
+.team-map-node-copy span {
+  color:
+    #748399 !important;
+}
+
+
+/* ---------------------------------------------------------
+   AVATAR
+--------------------------------------------------------- */
+
+.team-map-avatar {
+  width: 42px !important;
+  height: 42px !important;
+
+  border-radius:
+    12px !important;
+
+  font-size:
+    11px !important;
+
+  font-weight:
+    900 !important;
+}
+
+
+/* ---------------------------------------------------------
+   NAMES
+--------------------------------------------------------- */
+
+.team-map-node-copy strong {
+  max-width:
+    125px !important;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  text-overflow:
+    ellipsis;
+
+  font-size:
+    11px !important;
+
+  font-weight:
+    850 !important;
+}
+
+
+.team-map-node-copy span {
+  margin-top:
+    4px !important;
+
+  font-size:
+    8px !important;
+}
+
+
+/* ---------------------------------------------------------
+   DOWNLINE COUNT
+--------------------------------------------------------- */
+
+.team-map-node-count {
+  font-size:
+    14px !important;
+
+  font-weight:
+    900 !important;
+}
+
+
+/* ---------------------------------------------------------
+   LINES
+--------------------------------------------------------- */
+
+.team-map-children::before,
+.team-map-children
+> .team-map-branch::before {
+  background:
+    #b8cadc !important;
+}
+
+
+.team-map-children
+> .team-map-branch:not(:only-child)::after {
+  border-top-color:
+    #b8cadc !important;
+}
+
+
+/* ---------------------------------------------------------
+   EXPAND / COLLAPSE
+--------------------------------------------------------- */
+
+.team-map-collapse {
+  width: 24px !important;
+  height: 24px !important;
+
+  bottom:
+    -13px !important;
+
+  border:
+    3px solid #ffffff !important;
+
+  border-radius:
+    50% !important;
+
+  background:
+    #173f6e !important;
+
+  color:
+    #ffffff !important;
+
+  font-size:
+    13px !important;
+
+  font-weight:
+    900 !important;
+
+  box-shadow:
+    0 3px 8px
+    rgba(7,27,58,.16) !important;
 }
