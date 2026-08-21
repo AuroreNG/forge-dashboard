@@ -12891,11 +12891,15 @@ document
   );
 
 // ==========================================================
-// FORGE TEAM MAP — FULL CHART VIEW
+// FORGE PREMIUM TEAM MAP FULLSCREEN
 // ==========================================================
 
 let teamMapStageZoom = 1;
 
+
+// ----------------------------------------------------------
+// COPY CURRENT MAP INTO FULLSCREEN
+// ----------------------------------------------------------
 
 function renderTeamMapStage() {
 
@@ -12909,12 +12913,8 @@ function renderTeamMapStage() {
       "teamMapStageCanvas"
     );
 
-
-  if (
-    !source ||
-    !canvas
-  ) {
-    return;
+  if (!source || !canvas) {
+    return false;
   }
 
 
@@ -12924,104 +12924,14 @@ function renderTeamMapStage() {
 
   canvas.style.transform =
     `scale(${teamMapStageZoom})`;
+
+  return true;
 }
 
 
-function applyTeamMapStageZoom() {
-
-  const canvas =
-    document.getElementById(
-      "teamMapStageCanvas"
-    );
-
-
-  if (!canvas) return;
-
-
-  canvas.style.transform =
-    `scale(${teamMapStageZoom})`;
-}
-
-
-function fitTeamMapStage() {
-
-  const viewport =
-    document.getElementById(
-      "teamMapStageViewport"
-    );
-
-
-  const canvas =
-    document.getElementById(
-      "teamMapStageCanvas"
-    );
-
-
-  if (
-    !viewport ||
-    !canvas
-  ) {
-    return;
-  }
-
-
-  // Reset before measuring.
-  teamMapStageZoom = 1;
-
-  applyTeamMapStageZoom();
-
-
-  requestAnimationFrame(
-    () => {
-
-      const naturalWidth =
-        canvas.scrollWidth ||
-        canvas.offsetWidth ||
-        1200;
-
-
-      const available =
-        viewport.clientWidth -
-        90;
-
-
-      teamMapStageZoom =
-        Math.max(
-          .45,
-          Math.min(
-            1.1,
-            available /
-            naturalWidth
-          )
-        );
-
-
-      applyTeamMapStageZoom();
-
-
-      setTimeout(
-        () => {
-
-          viewport.scrollLeft =
-            Math.max(
-              0,
-              (
-                viewport.scrollWidth -
-                viewport.clientWidth
-              ) / 2
-            );
-
-
-          viewport.scrollTop = 0;
-
-        },
-        30
-      );
-
-    }
-  );
-}
-
+// ----------------------------------------------------------
+// OPEN FULLSCREEN
+// ----------------------------------------------------------
 
 function openTeamMapStage() {
 
@@ -13030,14 +12940,28 @@ function openTeamMapStage() {
       "teamMapStage"
     );
 
-
   if (!stage) return;
 
 
   teamMapStageZoom = 1;
 
 
-  renderTeamMapStage();
+  if (!renderTeamMapStage()) {
+    return;
+  }
+
+
+  const currentRoot =
+    teamMapMembers.find(
+      member =>
+        normalizeTeamMapCode(
+          member.code
+        ) ===
+        normalizeTeamMapCode(
+          teamMapFocusCode ||
+          teamMapRootCode
+        )
+    );
 
 
   const title =
@@ -13049,23 +12973,15 @@ function openTeamMapStage() {
   if (title) {
 
     title.textContent =
-      document
-        .getElementById(
-          "teamMapCurrentView"
-        )
-        ?.textContent
-        ?.trim() ||
-
-      currentOrganization?.name ||
-
+      currentRoot?.name ||
       "Team Map";
+
   }
 
 
   stage.classList.add(
     "active"
   );
-
 
   stage.setAttribute(
     "aria-hidden",
@@ -13077,12 +12993,17 @@ function openTeamMapStage() {
     "hidden";
 
 
-  setTimeout(
-    fitTeamMapStage,
-    100
-  );
+  setTimeout(() => {
+
+    centerTeamMapStage();
+
+  }, 80);
 }
 
+
+// ----------------------------------------------------------
+// CLOSE
+// ----------------------------------------------------------
 
 function closeTeamMapStage() {
 
@@ -13091,27 +13012,119 @@ function closeTeamMapStage() {
       "teamMapStage"
     );
 
-
   stage?.classList.remove(
     "active"
   );
-
 
   stage?.setAttribute(
     "aria-hidden",
     "true"
   );
 
-
   document.body.style.overflow =
     "";
 }
 
 
-// Main fullscreen button
+// ----------------------------------------------------------
+// CENTER
+// ----------------------------------------------------------
+
+function centerTeamMapStage() {
+
+  const viewport =
+    document.getElementById(
+      "teamMapStageViewport"
+    );
+
+  if (!viewport) return;
+
+
+  viewport.scrollLeft =
+    Math.max(
+      0,
+      (
+        viewport.scrollWidth -
+        viewport.clientWidth
+      ) / 2
+    );
+
+
+  viewport.scrollTop = 0;
+}
+
+
+// ----------------------------------------------------------
+// FIT
+// ----------------------------------------------------------
+
+function fitTeamMapStage() {
+
+  const viewport =
+    document.getElementById(
+      "teamMapStageViewport"
+    );
+
+  const tree =
+    document.querySelector(
+      "#teamMapStageCanvas .team-map-tree"
+    );
+
+
+  if (!viewport || !tree) return;
+
+
+  // IMPORTANT:
+  // Never make cards microscopic.
+  const available =
+    viewport.clientWidth - 120;
+
+
+  const naturalWidth =
+    tree.scrollWidth ||
+    tree.offsetWidth ||
+    1200;
+
+
+  teamMapStageZoom =
+    Math.max(
+      0.62,
+      Math.min(
+        1,
+        available /
+        naturalWidth
+      )
+    );
+
+
+  const canvas =
+    document.getElementById(
+      "teamMapStageCanvas"
+    );
+
+
+  if (canvas) {
+
+    canvas.style.transform =
+      `scale(${teamMapStageZoom})`;
+
+  }
+
+
+  setTimeout(
+    centerTeamMapStage,
+    30
+  );
+}
+
+
+// ----------------------------------------------------------
+// EVENTS
+// ----------------------------------------------------------
+
 document
   .getElementById(
-    "teamMapFullscreen"
+    "teamMapOpenStage"
   )
   ?.addEventListener(
     "click",
@@ -13119,7 +13132,6 @@ document
   );
 
 
-// Exit
 document
   .getElementById(
     "teamMapStageExit"
@@ -13130,17 +13142,88 @@ document
   );
 
 
-// ESC
+document
+  .getElementById(
+    "teamMapStageFit"
+  )
+  ?.addEventListener(
+    "click",
+    fitTeamMapStage
+  );
+
+
+document
+  .getElementById(
+    "teamMapStageZoomIn"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      teamMapStageZoom =
+        Math.min(
+          1.6,
+          teamMapStageZoom + 0.1
+        );
+
+
+      const canvas =
+        document.getElementById(
+          "teamMapStageCanvas"
+        );
+
+
+      if (canvas) {
+
+        canvas.style.transform =
+          `scale(${teamMapStageZoom})`;
+
+      }
+
+    }
+  );
+
+
+document
+  .getElementById(
+    "teamMapStageZoomOut"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      teamMapStageZoom =
+        Math.max(
+          0.5,
+          teamMapStageZoom - 0.1
+        );
+
+
+      const canvas =
+        document.getElementById(
+          "teamMapStageCanvas"
+        );
+
+
+      if (canvas) {
+
+        canvas.style.transform =
+          `scale(${teamMapStageZoom})`;
+
+      }
+
+    }
+  );
+
+
 document.addEventListener(
   "keydown",
   event => {
 
-    if (
-      event.key === "Escape"
-    ) {
-
+    if (event.key === "Escape") {
       closeTeamMapStage();
     }
+
   }
 );
 
@@ -15283,4 +15366,31 @@ document.addEventListener(
   }
 );
 
+// ==========================================================
+// DIRECT ONLY BUTTON
+// ==========================================================
 
+document
+  .getElementById("teamMapDirectOnly")
+  ?.addEventListener("click", () => {
+
+    teamMapDirectOnlyMode =
+      !teamMapDirectOnlyMode;
+
+    const button =
+      document.getElementById(
+        "teamMapDirectOnly"
+      );
+
+    button?.classList.toggle(
+      "active",
+      teamMapDirectOnlyMode
+    );
+
+    drawTeamMap();
+
+    // Reset to natural readable size.
+    teamMapZoom = 1;
+    applyTeamMapZoom();
+
+  });
