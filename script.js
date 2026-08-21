@@ -11227,6 +11227,13 @@ let teamMapMembers = [];
 let teamMapRootCode = "";
 let teamMapFocusCode = "";
 let teamMapCollapsed = new Set();
+// ==========================================================
+// TEAM MAP FOCUS MODE
+// ==========================================================
+
+let teamMapDirectOnlyMode = false;
+
+let teamMapFocusedLevel = 0;
 
 
 // ----------------------------------------------------------
@@ -11565,7 +11572,86 @@ function teamMapChildren(code) {
     }
   );
 }
+// ==========================================================
+// TEAM MAP SMART SORT
+// Leaders first -> members second
+// ==========================================================
 
+function sortTeamMapMembersForDisplay(members = []) {
+
+  return [...members].sort((a, b) => {
+
+    const aDirect =
+      teamMapChildren(a.code).length;
+
+    const bDirect =
+      teamMapChildren(b.code).length;
+
+
+    const aLeader =
+      aDirect > 0;
+
+    const bLeader =
+      bDirect > 0;
+
+
+    // Leaders always go left.
+    if (aLeader !== bLeader) {
+
+      return aLeader
+        ? -1
+        : 1;
+    }
+
+
+    // Bigger leaders first.
+    if (aLeader && bLeader) {
+
+      if (bDirect !== aDirect) {
+
+        return bDirect - aDirect;
+      }
+
+
+      const aDownline =
+        teamMapDescendantCount(a.code);
+
+      const bDownline =
+        teamMapDescendantCount(b.code);
+
+
+      if (bDownline !== aDownline) {
+
+        return bDownline - aDownline;
+      }
+
+    }
+
+
+    return String(a.name || "")
+      .localeCompare(
+        String(b.name || "")
+      );
+
+  });
+
+}
+
+// ==========================================================
+// HIERARCHY COLOR
+// ==========================================================
+
+function getTeamMapHierarchyClass(level = 0) {
+
+  if (level <= 0) {
+    return "tm-level-root";
+  }
+
+  const normalizedLevel =
+    ((level - 1) % 6) + 1;
+
+  return `tm-level-${normalizedLevel}`;
+}
 
 // ----------------------------------------------------------
 // ROOT
@@ -11763,263 +11849,221 @@ function teamMapEscape(value) {
 // NODE
 // ----------------------------------------------------------
 
+// ==========================================================
+// BUILD TEAM MAP NODE
+// ==========================================================
+
 function buildTeamMapNode(
   member,
   level = 0,
   visited = new Set()
 ) {
 
-  if (!member) {
+  if (!member) return "";
+
+
+  const normalizedCode =
+    normalizeTeamMapCode(
+      member.code
+    );
+
+
+  if (
+    !normalizedCode ||
+    visited.has(normalizedCode)
+  ) {
+
     return "";
   }
 
-  if (
-    visited.has(
-      member.code
-    )
-  ) {
-    return "";
-  }
 
   const nextVisited =
     new Set(visited);
 
   nextVisited.add(
-    member.code
+    normalizedCode
   );
 
 
-  const children =
+  const rawChildren =
     teamMapChildren(
       member.code
     );
 
 
-  const descendants =
+  const children =
+    sortTeamMapMembersForDisplay(
+      rawChildren
+    );
+
+
+  const directCount =
+    children.length;
+
+
+  const downlineCount =
     teamMapDescendantCount(
       member.code
     );
 
 
-  const collapsed =
-    teamMapCollapsed.has(
-      member.code
+  const hasDirects =
+    directCount > 0;
+
+
+  const initials =
+    String(member.name || "?")
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map(word =>
+        word.charAt(0)
+      )
+      .join("")
+      .toUpperCase();
+
+
+  const hierarchyClass =
+    getTeamMapHierarchyClass(
+      level
     );
 
 
-  const hasChildren =
-    children.length > 0;
+  const isRoot =
+    level === 0;
+
+
+  // ========================================================
+  // DIRECT ONLY MODE
+  //
+  // Root gets children.
+  // Those children DO NOT automatically render deeper levels.
+  // User clicks + to open that person's own direct team.
+  // ========================================================
+
+  const shouldRenderChildren =
+    hasDirects &&
+    (
+      !teamMapDirectOnlyMode ||
+      level === 0
+    );
 
 
   return `
 
     <div
-      class="team-map-branch"
-      data-team-map-code="${teamMapEscape(
+      class="team-map-branch ${hierarchyClass}"
+      data-team-map-branch-code="${teamMapEscape(
         member.code
       )}"
     >
 
-      <div class="team-map-node-wrap">
+      <article
+        class="
+          team-map-node
+          ${hierarchyClass}
+          ${isRoot ? "is-root" : ""}
+          ${hasDirects ? "has-directs" : "no-directs"}
+        "
+        data-team-map-code="${teamMapEscape(
+          member.code
+        )}"
+      >
 
-        <button
-          type="button"
-          class="
-  team-map-node
-  level-${Math.min(level, 7)}
-  ${member.isOrganizationRoot ? "level-0" : ""}
-"
-          data-team-member-code="${teamMapEscape(
-            member.code
-          )}"
-        >
+        <div class="team-map-avatar">
+          ${teamMapEscape(
+            initials
+          )}
+        </div>
 
-          <div class="team-map-avatar">
-            ${teamMapInitials(
-              member.name
+
+        <div class="team-map-node-copy">
+
+          <strong>
+            ${teamMapEscape(
+              member.name || "Unknown"
             )}
-          </div>
+          </strong>
 
+          <span>
+            ${teamMapEscape(
+              member.code || "—"
+            )}
+          </span>
 
-          <div class="team-map-node-copy">
-
-            <strong>
-  ${teamMapEscape(member.name)}
-
-  ${
-    member.isOrganizationRoot
-      ? `
-        <span class="team-map-top-badge">
-          TOP LEADER
-        </span>
-      `
-      : ""
-  }
-</strong>
-
-            <span>
-              ${teamMapEscape(
-                member.code
-              )}
-            </span>
-
-          </div>
-
-
-          ${
-            hasChildren
-              ? `
-                <div class="team-map-node-count">
-                  ${descendants}
-                  <small>
-                    downline
-                  </small>
-                </div>
-              `
-              : `
-                <div class="team-map-node-end">
-                  Member
-                </div>
-              `
-          }
-
-        </button>
+        </div>
 
 
         ${
-          hasChildren
+          hasDirects
             ? `
-              <button
-                type="button"
-                class="team-map-collapse"
-                data-team-collapse-code="${teamMapEscape(
-                  member.code
-                )}"
-                aria-label="Toggle downline"
-              >
-                ${
-                  collapsed
-                    ? "+"
-                    : "−"
-                }
-              </button>
+              <div class="team-map-node-count">
+                ${directCount}
+
+                <small>
+                  direct
+                </small>
+              </div>
             `
-            : ""
+            : `
+              <span class="team-map-member-label">
+                Member
+              </span>
+            `
         }
 
-      </div>
+      </article>
 
 
       ${
-        hasChildren &&
-        !collapsed
+        !isRoot
+          ? `
+            <button
+              type="button"
+              class="
+                team-map-branch-dot
+                ${hasDirects ? "expandable" : "terminal"}
+              "
+              data-team-map-focus="${teamMapEscape(
+                member.code
+              )}"
+              ${hasDirects ? "" : "disabled"}
+              aria-label="${
+                hasDirects
+                  ? `View ${teamMapEscape(
+                      member.name
+                    )}'s direct team`
+                  : "No direct recruits"
+              }"
+            >
+              ${hasDirects ? "+" : ""}
+            </button>
+          `
+          : ""
+      }
+
+
+      ${
+        shouldRenderChildren
           ? `
 
-            <div class="team-map-children">
+            <div
+              class="
+                team-map-children
+                team-map-level-${level + 1}
+              "
+            >
 
-            ${children
-  .sort((a, b) => {
-
-    const aDirect =
-      teamMapChildren(
-        a.code
-      ).length;
-
-    const bDirect =
-      teamMapChildren(
-        b.code
-      ).length;
-
-
-    const aHasTeam =
-      aDirect > 0;
-
-    const bHasTeam =
-      bDirect > 0;
-
-
-    // ==========================================
-    // 1. ANYONE WITH DIRECTS GOES LEFT
-    // ==========================================
-
-    if (
-      aHasTeam !==
-      bHasTeam
-    ) {
-
-      return bHasTeam
-        ? 1
-        : -1;
-    }
-
-
-    // ==========================================
-    // 2. AMONG LEADERS:
-    // MOST DIRECTS FIRST
-    // ==========================================
-
-    if (
-      aHasTeam &&
-      bHasTeam
-    ) {
-
-      if (
-        bDirect !==
-        aDirect
-      ) {
-
-        return (
-          bDirect -
-          aDirect
-        );
-      }
-
-
-      // Bigger overall organization
-      // breaks a tie.
-      const aDownline =
-        teamMapDescendantCount(
-          a.code
-        );
-
-      const bDownline =
-        teamMapDescendantCount(
-          b.code
-        );
-
-
-      if (
-        bDownline !==
-        aDownline
-      ) {
-
-        return (
-          bDownline -
-          aDownline
-        );
-      }
-    }
-
-
-    // ==========================================
-    // 3. MEMBERS WITH NO DIRECTS:
-    // ALPHABETICAL ON THE RIGHT
-    // ==========================================
-
-    return a.name.localeCompare(
-      b.name
-    );
-
-  })
-  .map(
-    (child) =>
-      buildTeamMapNode(
-        child,
-        level + 1,
-        nextVisited
-      )
-  )
-  .join("")}
+              ${children
+                .map(
+                  child =>
+                    buildTeamMapNode(
+                      child,
+                      level + 1,
+                      nextVisited
+                    )
+                )
+                .join("")}
 
             </div>
 
@@ -12031,8 +12075,79 @@ function buildTeamMapNode(
 
   `;
 }
+// ==========================================================
+// OPEN MEMBER DIRECT TEAM
+// ==========================================================
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const focusButton =
+      event.target.closest(
+        "[data-team-map-focus]"
+      );
 
 
+    if (!focusButton) return;
+
+
+    event.preventDefault();
+    event.stopPropagation();
+
+
+    const code =
+      focusButton.dataset
+        .teamMapFocus;
+
+
+    if (!code) return;
+
+
+    const children =
+      teamMapChildren(code);
+
+
+    if (!children.length) {
+      return;
+    }
+
+
+    teamMapFocusCode =
+      code;
+
+
+    teamMapDirectOnlyMode =
+      true;
+
+
+    const selector =
+      document.getElementById(
+        "teamMapLeaderSelect"
+      );
+
+
+    if (selector) {
+
+      selector.value =
+        code;
+    }
+
+
+    drawTeamMap();
+
+
+    setTimeout(
+      () => {
+
+        fitTeamMapToScreen();
+
+      },
+      80
+    );
+
+  }
+);
 // ----------------------------------------------------------
 // LEADER SELECT
 // ----------------------------------------------------------
@@ -12236,44 +12351,61 @@ function drawTeamMap() {
   }
 
 
-  tree.innerHTML =
-    buildTeamMapNode(
-      member
-    );
+ tree.innerHTML =
+  buildTeamMapNode(
+    member,
+    0,
+    new Set()
+  );
 
 
-  const currentView =
-    document.getElementById(
-      "teamMapCurrentView"
-    );
+const currentView =
+  document.getElementById(
+    "teamMapCurrentView"
+  );
 
-  if (currentView) {
 
-    currentView.textContent =
-      member.code ===
+if (currentView) {
+
+  const isTopLeader =
+    normalizeTeamMapCode(
+      member.code
+    ) ===
+    normalizeTeamMapCode(
       teamMapRootCode
-        ? "Entire Organization"
-        : `${member.name}'s Team`;
-  }
-
-
-  const updated =
-    document.getElementById(
-      "teamMapUpdated"
     );
 
-  if (updated) {
 
-    updated.textContent =
-      "Updated " +
-      new Date().toLocaleTimeString(
-        [],
-        {
-          hour: "numeric",
-          minute: "2-digit"
-        }
-      );
-  }
+  currentView.textContent =
+    teamMapDirectOnlyMode
+      ? `${member.name} · Direct Team`
+      : (
+          isTopLeader
+            ? "Entire Organization"
+            : `${member.name}'s Team`
+        );
+}
+
+
+const updated =
+  document.getElementById(
+    "teamMapUpdated"
+  );
+
+
+if (updated) {
+
+  updated.textContent =
+    "Updated " +
+    new Date().toLocaleTimeString(
+      [],
+      {
+        hour: "numeric",
+        minute: "2-digit"
+      }
+    );
+}
+
 }
 
 
