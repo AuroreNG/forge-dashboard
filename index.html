@@ -1876,15 +1876,23 @@ JavaScript opens these when an import button is clicked.
 
 </section>
 
-    <!-- =========================================================
-     TEAM MAP
+<!-- =========================================================
+     TEAM MAP PAGE
 ========================================================= -->
 
-<section id="teamMapPage" class="team-map-page hidden">
+<section
+  id="teamMapPage"
+  class="team-map-page hidden"
+>
+
+  <!-- =====================================================
+       PAGE HEADER
+  ====================================================== -->
 
   <div class="team-map-header">
 
     <div>
+
       <div class="team-map-eyebrow">
         ORGANIZATION STRUCTURE
       </div>
@@ -1894,9 +1902,12 @@ JavaScript opens these when an import button is clicked.
       <p>
         View leaders, direct recruits, and complete team structure.
       </p>
+
     </div>
 
+
     <div class="team-map-org-card">
+
       <span>VIEWING TEAM</span>
 
       <strong id="teamMapOrgName">
@@ -1906,172 +1917,889 @@ JavaScript opens these when an import button is clicked.
       <small id="teamMapMemberCount">
         0 team members
       </small>
+
     </div>
 
   </div>
 
-  
-  <!-- =========================================================
-     TEAM MAP AGENT QUICK PANEL
-========================================================= -->
 
-<div
-  id="teamMapAgentOverlay"
-  class="team-map-agent-overlay hidden"
-></div>
 
-<aside
-  id="teamMapAgentDrawer"
-  class="team-map-agent-drawer"
-  aria-hidden="true"
->
+  <!-- =====================================================
+       AGENT QUICK VIEW OVERLAY
+  ====================================================== -->
 
-  <div class="tm-agent-drawer-accent"></div>
+  <div
+    id="teamMapAgentOverlay"
+    class="team-map-agent-overlay hidden"
+  ></div>
 
-  <div class="tm-agent-drawer-header">
 
-    <div class="tm-agent-drawer-title">
-      <span>AGENT QUICK VIEW</span>
-      <strong>FORGE</strong>
+
+  <!-- =====================================================
+       AGENT QUICK VIEW DRAWER
+  ====================================================== -->
+
+  <aside
+    id="teamMapAgentDrawer"
+    class="team-map-agent-drawer"
+    aria-hidden="true"
+  >
+
+    <div class="tm-agent-drawer-accent"></div>
+
+
+    <!-- DRAWER HEADER -->
+
+    <div class="tm-agent-drawer-header">
+
+      <div class="tm-agent-drawer-title">
+
+        <span>
+          AGENT QUICK VIEW
+        </span>
+
+        <strong>
+          FORGE
+        </strong>
+
+      </div>
+
+
+      <button
+        type="button"
+        id="closeTeamMapAgentDrawer"
+        class="tm-agent-close"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
     </div>
+
+
+
+    <!-- PROFILE -->
+
+    <div class="tm-agent-profile">
+
+      <div
+        id="tmDrawerAvatar"
+        class="tm-agent-avatar"
+      >
+        --
+      </div>
+
+
+      <div class="tm-agent-identity">
+
+        <h2 id="tmDrawerName">
+          Agent
+        </h2>
+
+        <p id="tmDrawerCode">
+          —
+        </p>
+
+        <span
+          id="tmDrawerStageBadge"
+          class="tm-agent-stage-badge"
+        >
+          Stage
+        </span>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- CONTACT -->
+
+    <div class="tm-agent-contact-card">
+
+      <div>
+        <span>Email</span>
+        <strong id="tmDrawerEmail">—</strong>
+      </div>
+
+      <div>
+        <span>Phone</span>
+        <strong id="tmDrawerPhone">—</strong>
+      </div>
+
+      <div>
+        <span>Upline</span>
+        <strong id="tmDrawerUpline">—</strong>
+      </div>
+
+    </div>
+
+
+
+    <!-- CONNECT -->
+
+    <section class="tm-drawer-section">
+
+      <div class="tm-drawer-section-heading">
+
+        <span>CONNECT</span>
+
+        <strong>
+          Reach Out
+        </strong>
+
+      </div>
+
+
+      <div class="tm-agent-action-grid">
+
+        <button
+          type="button"
+          class="tm-agent-action"
+          data-tm-action="Call"
+        >
+          <span>☎</span>
+          <strong>Call</strong>
+        </button>
+
+
+        <button
+          type="button"
+          class="tm-agent-action"
+          data-tm-action="Text"
+        >
+          <span>▣</span>
+          <strong>Text</strong>
+        </button>
+
+
+        <button
+          type="button"
+          class="tm-agent-action"
+          data-tm-action="Email"
+        >
+          <span>✉</span>
+          <strong>Email</strong>
+        </button>
+
+
+        <button
+          type="button"
+          class="tm-agent-action"
+          data-tm-action="WhatsApp"
+        >
+          <span>◉</span>
+          <strong>WhatsApp</strong>
+        </button>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         LICENSING JOURNEY
+    ====================================================== -->
+
+    <section class="tm-drawer-section">
+
+      <div class="tm-drawer-section-heading">
+
+        <span>
+          LICENSING JOURNEY
+        </span>
+
+        <strong>
+          Current Stage
+        </strong>
+
+      </div>
+
+
+      <select
+        id="tmDrawerStageSelect"
+        class="tm-drawer-stage-select"
+      >
+
+        <option value="Not Placed">
+          Not Placed
+        </option>
+
+        <option value="Quiz Sent">
+          Quiz Sent
+        </option>
+
+        <option value="Quiz Passed">
+          Quiz Passed
+        </option>
+
+        <option value="XCEL Completed">
+          XCEL Completed
+        </option>
+
+        <option value="Simulation Exams">
+          Simulation Exams
+        </option>
+
+        <option value="Exam Scheduled">
+          Exam Scheduled
+        </option>
+
+        <option value="Exam Passed">
+          Exam Passed
+        </option>
+
+        <option value="Fingerprints">
+          Fingerprints
+        </option>
+
+        <option value="Applied For License">
+          Applied For License
+        </option>
+
+        <option value="Licensed">
+          Licensed
+        </option>
+
+        <option value="Contracted">
+          Contracted
+        </option>
+
+      </select>
+
+
+      <button
+        type="button"
+        id="tmDrawerMoveStage"
+        class="tm-drawer-primary"
+      >
+        Move to Selected Stage
+      </button>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ACTIVITY
+    ====================================================== -->
+
+    <section class="tm-drawer-section">
+
+      <div class="tm-drawer-section-heading">
+
+        <span>
+          ACTIVITY
+        </span>
+
+        <strong>
+          Log Activity
+        </strong>
+
+      </div>
+
+
+      <textarea
+        id="tmDrawerActivityNote"
+        class="tm-drawer-note"
+        placeholder="Add a note, follow-up, meeting result, or update..."
+      ></textarea>
+
+
+      <button
+        type="button"
+        id="tmDrawerLogActivity"
+        class="tm-drawer-secondary"
+      >
+        + Log Activity
+      </button>
+
+
+      <div
+        id="tmDrawerActivityTimeline"
+        class="tm-drawer-timeline"
+      ></div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         DRAWER FOOTER
+    ====================================================== -->
+
+    <div class="tm-agent-drawer-footer">
+
+      <button
+        type="button"
+        id="tmDrawerViewTeam"
+        class="tm-drawer-outline"
+      >
+        View Their Team
+      </button>
+
+
+      <button
+        type="button"
+        id="tmDrawerEditAgent"
+        class="tm-drawer-outline"
+      >
+        Edit Info
+      </button>
+
+
+      <button
+        type="button"
+        id="tmDrawerFullProfile"
+        class="tm-drawer-primary"
+      >
+        Full Profile →
+      </button>
+
+    </div>
+
+  </aside>
+
+
+
+  <!-- =====================================================
+       SEARCH + TEAM CONTROLS
+  ====================================================== -->
+
+  <div class="team-map-toolbar">
+
+    <div class="team-map-search-wrap">
+
+      <span>⌕</span>
+
+      <input
+        id="teamMapSearch"
+        type="search"
+        placeholder="Search team member..."
+      />
+
+    </div>
+
+
+    <select
+      id="teamMapLeaderSelect"
+      class="team-map-leader-select"
+      aria-label="Select team leader"
+    >
+
+      <option value="">
+        Entire Organization
+      </option>
+
+    </select>
+
 
     <button
       type="button"
-      id="closeTeamMapAgentDrawer"
-      class="tm-agent-close"
-      aria-label="Close"
+      id="teamMapResetBtn"
+      class="team-map-reset-btn"
     >
-      ×
+      ♛ Top Leader
     </button>
 
   </div>
 
 
-  <!-- PROFILE -->
 
-  <div class="tm-agent-profile">
+  <!-- =====================================================
+       TEAM STATS
+  ====================================================== -->
 
-    <div
-      id="tmDrawerAvatar"
-      class="tm-agent-avatar"
-    >
-      --
-    </div>
+  <div class="team-map-stats">
 
-    <div class="tm-agent-identity">
+    <div class="team-map-stat">
 
-      <h2 id="tmDrawerName">
-        Agent
-      </h2>
-
-      <p id="tmDrawerCode">
-        —
-      </p>
-
-      <span
-        id="tmDrawerStageBadge"
-        class="tm-agent-stage-badge"
-      >
-        Stage
+      <span>
+        Total Team
       </span>
 
+      <strong id="teamMapTotal">
+        0
+      </strong>
+
+      <small>
+        People in this organization
+      </small>
+
+    </div>
+
+
+    <div class="team-map-stat">
+
+      <span>
+        Team Leaders
+      </span>
+
+      <strong id="teamMapLeaders">
+        0
+      </strong>
+
+      <small>
+        Members with a downline
+      </small>
+
+    </div>
+
+
+    <div class="team-map-stat">
+
+      <span>
+        Direct
+      </span>
+
+      <strong id="teamMapDirect">
+        0
+      </strong>
+
+      <small>
+        Direct to top leader
+      </small>
+
+    </div>
+
+
+    <div class="team-map-stat">
+
+      <span>
+        Levels
+      </span>
+
+      <strong id="teamMapLevels">
+        0
+      </strong>
+
+      <small>
+        Organization depth
+      </small>
+
     </div>
 
   </div>
 
 
-  <!-- CONTACT -->
 
-  <div class="tm-agent-contact-card">
+  <!-- =====================================================
+       FORGE TEAM INTELLIGENCE
+  ====================================================== -->
 
-    <div>
-      <span>Email</span>
-      <strong id="tmDrawerEmail">—</strong>
-    </div>
-
-    <div>
-      <span>Phone</span>
-      <strong id="tmDrawerPhone">—</strong>
-    </div>
-
-    <div>
-      <span>Upline</span>
-      <strong id="tmDrawerUpline">—</strong>
-    </div>
-
-  </div>
-
-
-  <!-- QUICK CONTACT -->
-
-  <section class="tm-drawer-section">
-
-    <div class="tm-drawer-section-heading">
-      <span>CONNECT</span>
-      <strong>Reach Out</strong>
-    </div>
-
-
-    <div class="tm-agent-action-grid">
-
-      <button
-        type="button"
-        class="tm-agent-action"
-        data-tm-action="Call"
-      >
-        <span>☎</span>
-        <strong>Call</strong>
-      </button>
-
-      <button
-        type="button"
-        class="tm-agent-action"
-        data-tm-action="Text"
-      >
-        <span>▣</span>
-        <strong>Text</strong>
-      </button>
-
-      <button
-        type="button"
-        class="tm-agent-action"
-        data-tm-action="Email"
-      >
-        <span>✉</span>
-        <strong>Email</strong>
-      </button>
-
-      <button
-        type="button"
-        class="tm-agent-action"
-        data-tm-action="WhatsApp"
-      >
-        <span>◉</span>
-        <strong>WhatsApp</strong>
-      </button>
-
-    </div>
-
-    <!-- =========================================================
-     FORGE TEAM MAP FULLSCREEN STAGE
-========================================================= -->
-
-
-  <div
-    id="teamMapStageViewport"
-    class="team-map-stage-viewport"
+  <section
+    id="teamMapIntelligence"
+    class="team-intelligence"
   >
 
+    <div class="team-intelligence-header">
+
+      <div>
+
+        <span class="team-intelligence-eyebrow">
+          FORGE ORGANIZATION INTELLIGENCE
+        </span>
+
+        <h2>
+          Team Intelligence
+        </h2>
+
+        <p>
+          Explore and rank leadership teams using live
+          organization hierarchy.
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        id="teamIntelCloseFocus"
+        class="team-intel-back hidden"
+      >
+        ← All Teams
+      </button>
+
+    </div>
+
+
+
+    <div class="team-intel-toolbar">
+
+      <div class="team-intel-tabs">
+
+        <button
+          type="button"
+          class="team-intel-tab active"
+          data-team-intel-sort="downline"
+        >
+          Largest Teams
+        </button>
+
+
+        <button
+          type="button"
+          class="team-intel-tab"
+          data-team-intel-sort="direct"
+        >
+          Most Direct
+        </button>
+
+
+        <button
+          type="button"
+          class="team-intel-tab"
+          data-team-intel-sort="depth"
+        >
+          Deepest Teams
+        </button>
+
+      </div>
+
+
+      <div class="team-intel-note">
+        Live hierarchy data
+      </div>
+
+    </div>
+
+
+
     <div
-      id="teamMapStageCanvas"
-      class="team-map-stage-canvas"
+      id="teamIntelGrid"
+      class="team-intel-grid"
     ></div>
+
+
+    <div
+      id="teamIntelFocused"
+      class="team-intel-focused hidden"
+    ></div>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       TEAM MAP SURFACE
+  ====================================================== -->
+
+  <div class="team-map-surface">
+
+
+    <!-- SURFACE HEADER -->
+
+    <div class="team-map-surface-header">
+
+      <div>
+
+        <span>
+          TEAM STRUCTURE
+        </span>
+
+        <strong id="teamMapCurrentView">
+          Entire Organization
+        </strong>
+
+      </div>
+
+
+      <div class="team-map-update">
+
+        <span id="teamMapUpdated">
+          —
+        </span>
+
+
+        <button
+          type="button"
+          id="teamMapRefreshBtn"
+          class="team-map-refresh"
+          title="Refresh Team Map"
+        >
+          ↻
+        </button>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ===================================================
+         MAP TOOLBAR
+    ==================================================== -->
+
+    <div class="team-map-canvas-toolbar">
+
+
+      <!-- VIEW SWITCHER -->
+
+      <div class="team-map-view-switcher">
+
+        <button
+          type="button"
+          class="team-map-view-btn active"
+          data-team-map-view="tree"
+        >
+          <span>♧</span>
+          Tree View
+        </button>
+
+
+        <button
+          type="button"
+          class="team-map-view-btn"
+          data-team-map-view="compact"
+        >
+          <span>☰</span>
+          Compact
+        </button>
+
+
+        <button
+          type="button"
+          class="team-map-view-btn"
+          data-team-map-view="list"
+        >
+          <span>☷</span>
+          List View
+        </button>
+
+      </div>
+
+
+
+      <!-- ZOOM CONTROLS -->
+
+      <div class="team-map-zoom-tools">
+
+        <button
+          type="button"
+          id="teamMapZoomOut"
+          class="team-map-tool-btn"
+        >
+          <span>⊖</span>
+          Zoom Out
+        </button>
+
+
+        <button
+          type="button"
+          id="teamMapZoomIn"
+          class="team-map-tool-btn"
+        >
+          <span>⊕</span>
+          Zoom In
+        </button>
+
+
+        <button
+          type="button"
+          id="teamMapFit"
+          class="team-map-tool-btn"
+        >
+          <span>◎</span>
+          Fit
+        </button>
+
+
+        <button
+          type="button"
+          id="teamMapOpenStage"
+          class="team-map-tool-btn"
+        >
+          <span>⛶</span>
+          Fullscreen
+        </button>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ===================================================
+         MAP VIEWPORT
+    ==================================================== -->
+
+    <div
+      id="teamMapViewport"
+      class="team-map-viewport"
+    >
+
+      <div
+        id="teamMapZoomLayer"
+        class="team-map-zoom-layer"
+      >
+
+        <div
+          id="teamMapTree"
+          class="team-map-tree"
+        >
+
+          <div class="team-map-empty">
+            Loading team structure...
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ===================================================
+         LEGEND
+    ==================================================== -->
+
+    <div class="team-map-legend">
+
+      <div class="team-map-legend-items">
+
+        <span>
+          <i class="legend-crown">♛</i>
+          Top Leader
+        </span>
+
+
+        <span>
+          <i class="legend-dot purple"></i>
+          Direct Leader
+        </span>
+
+
+        <span>
+          <i class="legend-dot blue"></i>
+          Direct Member
+        </span>
+
+
+        <span>
+          <i class="legend-dot green"></i>
+          Team Member
+        </span>
+
+
+        <span>
+          <i class="legend-line"></i>
+          Reporting Line
+        </span>
+
+      </div>
+
+
+      <div class="team-map-tip">
+
+        <span>💡</span>
+
+        <strong>
+          Tip:
+        </strong>
+
+        Click any member card to focus and view their team
+
+      </div>
+
+    </div>
 
   </div>
 
-</div>
 
-  </section>
+
+  <!-- =====================================================
+       FULLSCREEN TEAM MAP STAGE
+       IMPORTANT:
+       THIS IS OUTSIDE THE DRAWER AND OUTSIDE THE MAP SURFACE.
+  ====================================================== -->
+
+  <div
+    id="teamMapStage"
+    class="team-map-stage"
+    aria-hidden="true"
+  >
+
+    <!-- FULLSCREEN HEADER -->
+
+    <div class="team-map-stage-header">
+
+      <div>
+
+        <span>
+          FORGE ORGANIZATION VIEW
+        </span>
+
+        <strong id="teamMapStageTitle">
+          Team Map
+        </strong>
+
+      </div>
+
+
+      <div class="team-map-stage-actions">
+
+        <button
+          type="button"
+          id="teamMapStageFit"
+        >
+          Fit
+        </button>
+
+
+        <button
+          type="button"
+          id="teamMapStageZoomOut"
+        >
+          −
+        </button>
+
+
+        <button
+          type="button"
+          id="teamMapStageZoomIn"
+        >
+          +
+        </button>
+
+
+        <button
+          type="button"
+          id="teamMapStageExit"
+          class="exit"
+        >
+          ✕ Exit
+        </button>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- FULLSCREEN VIEWPORT -->
+
+    <div
+      id="teamMapStageViewport"
+      class="team-map-stage-viewport"
+    >
+
+      <div
+        id="teamMapStageCanvas"
+        class="team-map-stage-canvas"
+      ></div>
+
+    </div>
+
+  </div>
+
+
+</section>
+
+<!-- =========================================================
+     END TEAM MAP PAGE
+========================================================= -->
 
 
   <!-- STAGE -->
@@ -2277,7 +3005,100 @@ JavaScript opens these when an import button is clicked.
     </div>
 
   </div>
+<!-- =========================================================
+     FORGE TEAM INTELLIGENCE
+========================================================= -->
 
+<section
+  id="teamMapIntelligence"
+  class="team-intelligence"
+>
+
+  <div class="team-intelligence-header">
+
+    <div>
+      <span class="team-intelligence-eyebrow">
+        FORGE ORGANIZATION INTELLIGENCE
+      </span>
+
+      <h2>
+        Team Intelligence
+      </h2>
+
+      <p>
+        Explore and rank leadership teams using live
+        organization hierarchy.
+      </p>
+    </div>
+
+
+    <button
+      type="button"
+      id="teamIntelCloseFocus"
+      class="team-intel-back hidden"
+    >
+      ← All Teams
+    </button>
+
+  </div>
+
+
+  <!-- FILTERS -->
+
+  <div class="team-intel-toolbar">
+
+    <div class="team-intel-tabs">
+
+      <button
+        type="button"
+        class="team-intel-tab active"
+        data-team-intel-sort="downline"
+      >
+        Largest Teams
+      </button>
+
+      <button
+        type="button"
+        class="team-intel-tab"
+        data-team-intel-sort="direct"
+      >
+        Most Direct
+      </button>
+
+      <button
+        type="button"
+        class="team-intel-tab"
+        data-team-intel-sort="depth"
+      >
+        Deepest Teams
+      </button>
+
+    </div>
+
+
+    <div class="team-intel-note">
+      Live hierarchy data
+    </div>
+
+  </div>
+
+
+  <!-- RANKING -->
+
+  <div
+    id="teamIntelGrid"
+    class="team-intel-grid"
+  ></div>
+
+
+  <!-- SELECTED TEAM -->
+
+  <div
+    id="teamIntelFocused"
+    class="team-intel-focused hidden"
+  ></div>
+
+</section>
 
   <!-- MAP -->
 
