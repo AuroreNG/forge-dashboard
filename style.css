@@ -26196,3 +26196,72 @@ body.forge-drawer-open {
   letter-spacing:
     .05em;
 }
+
+.team-map-viewport {
+  position: relative;
+
+  min-height: 570px;
+
+  overflow: auto;
+
+  padding:
+    38px
+    45px
+    80px;
+
+  background:
+    linear-gradient(
+      rgba(20,59,103,.025)
+      1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(20,59,103,.025)
+      1px,
+      transparent 1px
+    ),
+    #ffffff;
+
+  background-size:
+    34px 34px;
+
+  cursor: grab;
+
+  scroll-behavior: smooth;
+}
+
+
+.team-map-viewport:active {
+  cursor: grabbing;
+}
+
+
+.team-map-zoom-layer {
+  min-width:
+    max-content;
+
+  transform-origin:
+    top center;
+
+  transition:
+    transform .12s ease;
+}
+
+.team-map-children::before,
+.team-map-children
+>
+.team-map-branch::before {
+
+  background:
+    #a9bfd7 !important;
+}
+
+
+.team-map-children
+>
+.team-map-branch:not(:only-child)::after {
+
+  border-top-color:
+    #a9bfd7 !important;
+}
