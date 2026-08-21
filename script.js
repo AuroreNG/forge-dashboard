@@ -12501,7 +12501,7 @@ document
 
 let teamMapZoom = 1;
 
-const TEAM_MAP_MIN_ZOOM = 0.45;
+const TEAM_MAP_MIN_ZOOM = 0.65;
 const TEAM_MAP_MAX_ZOOM = 1.6;
 const TEAM_MAP_ZOOM_STEP = 0.1;
 
@@ -12597,7 +12597,7 @@ function fitTeamMapToScreen() {
   requestAnimationFrame(() => {
 
     const availableWidth =
-      viewport.clientWidth - 60;
+      viewport.clientWidth - 30;
 
     const treeWidth =
       tree.scrollWidth;
@@ -12616,7 +12616,7 @@ function fitTeamMapToScreen() {
         Math.max(
           TEAM_MAP_MIN_ZOOM,
           Math.min(
-            1,
+            1.05,
             calculatedZoom
           )
         )
