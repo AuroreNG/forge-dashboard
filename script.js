@@ -13570,7 +13570,298 @@ document
     }
   );
 
+// ==========================================================
+// FORGE TEAM MAP — CLEAN FULLSCREEN STAGE
+// ==========================================================
 
+let forgeStageZoom = 1;
+
+
+function renderForgeStage() {
+
+  const source =
+    document.getElementById(
+      "teamMapTree"
+    );
+
+  const canvas =
+    document.getElementById(
+      "teamMapStageCanvas"
+    );
+
+
+  if (!source || !canvas) {
+    return;
+  }
+
+
+  canvas.innerHTML =
+    source.innerHTML;
+
+
+  canvas.style.transform =
+    `scale(${forgeStageZoom})`;
+
+  canvas.style.transformOrigin =
+    "top center";
+}
+
+
+function applyForgeStageZoom() {
+
+  const canvas =
+    document.getElementById(
+      "teamMapStageCanvas"
+    );
+
+
+  if (!canvas) return;
+
+
+  canvas.style.transform =
+    `scale(${forgeStageZoom})`;
+}
+
+
+function fitForgeStage() {
+
+  const viewport =
+    document.getElementById(
+      "teamMapStageViewport"
+    );
+
+  const canvas =
+    document.getElementById(
+      "teamMapStageCanvas"
+    );
+
+
+  if (
+    !viewport ||
+    !canvas
+  ) {
+    return;
+  }
+
+
+  forgeStageZoom = 1;
+
+  applyForgeStageZoom();
+
+
+  requestAnimationFrame(() => {
+
+    const naturalWidth =
+      canvas.scrollWidth ||
+      canvas.offsetWidth ||
+      1200;
+
+
+    const availableWidth =
+      viewport.clientWidth -
+      100;
+
+
+    forgeStageZoom =
+      Math.max(
+        .5,
+        Math.min(
+          1.15,
+          availableWidth /
+          naturalWidth
+        )
+      );
+
+
+    applyForgeStageZoom();
+
+
+    setTimeout(() => {
+
+      viewport.scrollLeft =
+        Math.max(
+          0,
+          (
+            viewport.scrollWidth -
+            viewport.clientWidth
+          ) / 2
+        );
+
+      viewport.scrollTop =
+        0;
+
+    }, 30);
+
+  });
+}
+
+
+function openForgeStage() {
+
+  const stage =
+    document.getElementById(
+      "teamMapStage"
+    );
+
+
+  if (!stage) {
+
+    console.error(
+      "teamMapStage HTML not found."
+    );
+
+    return;
+  }
+
+
+  forgeStageZoom = 1;
+
+
+  renderForgeStage();
+
+
+  const title =
+    document.getElementById(
+      "teamMapStageTitle"
+    );
+
+
+  if (title) {
+
+    title.textContent =
+      document
+        .getElementById(
+          "teamMapCurrentView"
+        )
+        ?.textContent
+        ?.trim() ||
+
+      currentOrganization?.name ||
+
+      "Team Map";
+  }
+
+
+  stage.classList.add(
+    "active"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
+
+  setTimeout(
+    fitForgeStage,
+    80
+  );
+}
+
+
+function closeForgeStage() {
+
+  document
+    .getElementById(
+      "teamMapStage"
+    )
+    ?.classList.remove(
+      "active"
+    );
+
+
+  document.body.style.overflow =
+    "";
+}
+
+
+document
+  .getElementById(
+    "teamMapOpenStage"
+  )
+  ?.addEventListener(
+    "click",
+    openForgeStage
+  );
+
+
+document
+  .getElementById(
+    "teamMapStageExit"
+  )
+  ?.addEventListener(
+    "click",
+    closeForgeStage
+  );
+
+
+document
+  .getElementById(
+    "teamMapStageFit"
+  )
+  ?.addEventListener(
+    "click",
+    fitForgeStage
+  );
+
+
+document
+  .getElementById(
+    "teamMapStageZoomIn"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      forgeStageZoom =
+        Math.min(
+          1.8,
+          forgeStageZoom + .1
+        );
+
+      applyForgeStageZoom();
+    }
+  );
+
+
+document
+  .getElementById(
+    "teamMapStageZoomOut"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      forgeStageZoom =
+        Math.max(
+          .4,
+          forgeStageZoom - .1
+        );
+
+      applyForgeStageZoom();
+    }
+  );
+
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "Escape" &&
+      document
+        .getElementById(
+          "teamMapStage"
+        )
+        ?.classList.contains(
+          "active"
+        )
+    ) {
+
+      closeForgeStage();
+    }
+
+  }
+);
 // ----------------------------------------------------------
 // LOG NOTE / ACTIVITY
 // ----------------------------------------------------------
