@@ -28524,3 +28524,544 @@ body.forge-drawer-open {
     1px solid
     rgba(172,190,208,.18);
 }
+
+
+/* =========================================================
+   FORGE TEAM MAP — PREMIUM BIZZALL TREE
+========================================================= */
+
+.team-map-viewport {
+  min-height: 650px !important;
+
+  overflow: auto !important;
+
+  background:
+    radial-gradient(
+      circle at 18% 12%,
+      rgba(30,115,232,.045),
+      transparent 25%
+    ),
+    linear-gradient(
+      rgba(0,74,173,.027) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0,74,173,.027) 1px,
+      transparent 1px
+    ),
+    #ffffff !important;
+
+  background-size:
+    auto,
+    36px 36px,
+    36px 36px !important;
+}
+
+
+.team-map-tree {
+  min-width: max-content !important;
+
+  padding:
+    74px 55px 130px !important;
+}
+
+
+/* =========================================================
+   STRUCTURE
+========================================================= */
+
+.team-map-branch {
+  position: relative;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  min-width: max-content;
+}
+
+
+.team-map-children {
+  position: relative;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: flex-start;
+
+  gap: 26px !important;
+
+  min-width: max-content;
+
+  padding-top: 72px !important;
+}
+
+
+/* Horizontal connector */
+
+.team-map-children::before {
+  content: "";
+
+  position: absolute;
+
+  top: 35px;
+
+  left: 50px;
+
+  right: 50px;
+
+  height: 2px;
+
+  background:
+    #bdd2e8;
+}
+
+
+/* Parent vertical connector */
+
+.team-map-children::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+
+  left: 50%;
+
+  width: 2px;
+
+  height: 36px;
+
+  background:
+    #bdd2e8;
+
+  transform:
+    translateX(-50%);
+}
+
+
+/* Individual child connector */
+
+.team-map-children >
+.team-map-branch::before {
+  content: "";
+
+  position: absolute;
+
+  top: -37px;
+
+  left: 50%;
+
+  width: 2px;
+
+  height: 37px;
+
+  background:
+    #bdd2e8;
+
+  transform:
+    translateX(-50%);
+}
+
+
+/* =========================================================
+   PERSON CARD
+========================================================= */
+
+.team-map-node {
+  position: relative;
+
+  width: 184px !important;
+
+  min-width: 184px !important;
+
+  min-height: 142px !important;
+
+  display: flex !important;
+
+  flex-direction: column !important;
+
+  justify-content: center !important;
+
+  align-items: center !important;
+
+  gap: 7px !important;
+
+  padding:
+    22px 15px 17px !important;
+
+  border-radius:
+    26px !important;
+
+  text-align: center;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 16px 34px rgba(7,27,58,.075) !important;
+
+  transition:
+    transform .17s ease,
+    box-shadow .17s ease !important;
+}
+
+
+.team-map-node:hover {
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 22px 44px
+    rgba(7,27,58,.12) !important;
+}
+
+
+/* Hide old horizontal FORGE avatar */
+
+.team-map-node .team-map-avatar {
+  display: none !important;
+}
+
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+.team-map-node.tm-level-root,
+.team-map-node.is-root {
+  width: 198px !important;
+
+  min-width: 198px !important;
+
+  min-height: 160px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      #071b3a,
+      #10345f
+    ) !important;
+
+  border:
+    2px solid
+    #071b3a !important;
+
+  color:
+    #ffffff !important;
+
+  box-shadow:
+    0 20px 46px
+    rgba(7,27,58,.20) !important;
+}
+
+
+/* =========================================================
+   LEVEL 1 — BLUE
+========================================================= */
+
+.team-map-node.tm-level-1 {
+  background:
+    linear-gradient(
+      180deg,
+      #eaf3ff,
+      #f7fbff
+    ) !important;
+
+  border:
+    2px solid
+    #1e73e8 !important;
+
+  color:
+    #123b66 !important;
+}
+
+
+/* =========================================================
+   LEVEL 2 — GREEN
+========================================================= */
+
+.team-map-node.tm-level-2 {
+  background:
+    linear-gradient(
+      180deg,
+      #eaf7f3,
+      #f9fdfb
+    ) !important;
+
+  border:
+    2px solid
+    #2a8d72 !important;
+
+  color:
+    #155e4c !important;
+}
+
+
+/* =========================================================
+   LEVEL 3 — PURPLE
+========================================================= */
+
+.team-map-node.tm-level-3 {
+  background:
+    linear-gradient(
+      180deg,
+      #f3eeff,
+      #fcfaff
+    ) !important;
+
+  border:
+    2px solid
+    #7c5ccb !important;
+
+  color:
+    #48327f !important;
+}
+
+
+/* =========================================================
+   LEVEL 4 — CHAMPAGNE
+========================================================= */
+
+.team-map-node.tm-level-4 {
+  background:
+    linear-gradient(
+      180deg,
+      #fff4e6,
+      #fffaf4
+    ) !important;
+
+  border:
+    2px solid
+    #c8842e !important;
+
+  color:
+    #704a16 !important;
+}
+
+
+/* =========================================================
+   LEVEL 5 — STEEL
+========================================================= */
+
+.team-map-node.tm-level-5 {
+  background:
+    linear-gradient(
+      180deg,
+      #f3f6f9,
+      #fbfcfd
+    ) !important;
+
+  border:
+    2px solid
+    #7b8da4 !important;
+
+  color:
+    #34465d !important;
+}
+
+
+/* =========================================================
+   LEVEL 6 — SOFT BLUE
+========================================================= */
+
+.team-map-node.tm-level-6 {
+  background:
+    linear-gradient(
+      180deg,
+      #eef7ff,
+      #fbfdff
+    ) !important;
+
+  border:
+    2px solid
+    #5d8fc2 !important;
+
+  color:
+    #244b72 !important;
+}
+
+
+/* =========================================================
+   NAME + CODE
+========================================================= */
+
+.team-map-node-copy {
+  width: 100%;
+
+  text-align: center;
+}
+
+
+.team-map-node-copy strong {
+  display: block;
+
+  white-space: normal !important;
+
+  overflow: visible !important;
+
+  text-overflow: unset !important;
+
+  color: inherit !important;
+
+  font-size:
+    15px !important;
+
+  line-height:
+    1.16 !important;
+
+  font-weight:
+    900 !important;
+}
+
+
+.team-map-node-copy span {
+  display: block;
+
+  margin-top:
+    8px !important;
+
+  color: inherit !important;
+
+  opacity:
+    .76;
+
+  font-size:
+    11px !important;
+
+  font-weight:
+    750 !important;
+}
+
+
+/* Direct count */
+
+.team-map-node-count {
+  margin-top:
+    4px;
+
+  color:
+    inherit !important;
+
+  font-size:
+    13px !important;
+
+  font-weight:
+    850 !important;
+}
+
+
+.team-map-node-count small {
+  display:
+    inline !important;
+
+  color:
+    inherit !important;
+
+  font-size:
+    11px !important;
+
+  opacity:
+    .86;
+}
+
+
+/* Don't show 'Member' pill */
+
+.team-map-member-label {
+  display:
+    none !important;
+}
+
+
+/* =========================================================
+   WHITE + / DARK DOT
+========================================================= */
+
+.team-map-branch-dot {
+  position:
+    absolute !important;
+
+  top:
+    -20px !important;
+
+  left:
+    50% !important;
+
+  transform:
+    translateX(-50%) !important;
+
+  z-index:
+    10 !important;
+}
+
+
+/* HAS DIRECTS */
+
+.team-map-branch-dot.expandable {
+  width:
+    38px !important;
+
+  height:
+    38px !important;
+
+  display:
+    grid !important;
+
+  place-items:
+    center !important;
+
+  border-radius:
+    50% !important;
+
+  background:
+    #ffffff !important;
+
+  border:
+    2px solid
+    #d4e1ef !important;
+
+  color:
+    #143b67 !important;
+
+  font-size:
+    20px !important;
+
+  font-weight:
+    950 !important;
+
+  box-shadow:
+    0 7px 18px
+    rgba(7,27,58,.12) !important;
+
+  cursor:
+    pointer;
+}
+
+
+/* NO DIRECTS */
+
+.team-map-branch-dot.terminal {
+  width:
+    15px !important;
+
+  height:
+    15px !important;
+
+  border:
+    0 !important;
+
+  border-radius:
+    50% !important;
+
+  background:
+    #284e76 !important;
+
+  box-shadow:
+    0 0 0 6px #ffffff,
+    0 6px 14px
+    rgba(7,27,58,.13) !important;
+}
