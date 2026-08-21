@@ -11808,13 +11808,100 @@ function buildTeamMapNode(
 
             <div class="team-map-children">
 
-              ${children
-  .sort(
-    (a, b) =>
-      a.name.localeCompare(
-        b.name
-      )
-  )
+            ${children
+  .sort((a, b) => {
+
+    const aDirect =
+      teamMapChildren(
+        a.code
+      ).length;
+
+    const bDirect =
+      teamMapChildren(
+        b.code
+      ).length;
+
+
+    const aHasTeam =
+      aDirect > 0;
+
+    const bHasTeam =
+      bDirect > 0;
+
+
+    // ==========================================
+    // 1. ANYONE WITH DIRECTS GOES LEFT
+    // ==========================================
+
+    if (
+      aHasTeam !==
+      bHasTeam
+    ) {
+
+      return bHasTeam
+        ? 1
+        : -1;
+    }
+
+
+    // ==========================================
+    // 2. AMONG LEADERS:
+    // MOST DIRECTS FIRST
+    // ==========================================
+
+    if (
+      aHasTeam &&
+      bHasTeam
+    ) {
+
+      if (
+        bDirect !==
+        aDirect
+      ) {
+
+        return (
+          bDirect -
+          aDirect
+        );
+      }
+
+
+      // Bigger overall organization
+      // breaks a tie.
+      const aDownline =
+        teamMapDescendantCount(
+          a.code
+        );
+
+      const bDownline =
+        teamMapDescendantCount(
+          b.code
+        );
+
+
+      if (
+        bDownline !==
+        aDownline
+      ) {
+
+        return (
+          bDownline -
+          aDownline
+        );
+      }
+    }
+
+
+    // ==========================================
+    // 3. MEMBERS WITH NO DIRECTS:
+    // ALPHABETICAL ON THE RIGHT
+    // ==========================================
+
+    return a.name.localeCompare(
+      b.name
+    );
+
+  })
   .map(
     (child) =>
       buildTeamMapNode(
@@ -12232,12 +12319,93 @@ document
     "change",
     (event) => {
 
+      const selectedCode =
+        event.target.value;
+
+
+      // ENTIRE ORGANIZATION
+      if (!selectedCode) {
+
+        teamMapFocusCode =
+          teamMapRootCode;
+
+        teamMapCollapsed.clear();
+
+        drawTeamMap();
+
+        return;
+      }
+
+
+      // ==========================================
+      // SELECTED TEAM ONLY
+      // ==========================================
+
       teamMapFocusCode =
-        event.target.value ||
-        teamMapRootCode;
+        selectedCode;
+
+
+      // Start the selected team clean.
+      teamMapCollapsed.clear();
+
+
+      // Collapse deeper leaders initially,
+      // but keep the selected leader open.
+      teamMapMembers
+        .forEach(
+          (member) => {
+
+            if (
+              member.code ===
+              selectedCode
+            ) {
+              return;
+            }
+
+
+            if (
+              teamMapChildren(
+                member.code
+              ).length > 0
+            ) {
+
+              teamMapCollapsed.add(
+                member.code
+              );
+            }
+
+          }
+        );
+
 
       drawTeamMap();
 
+
+      setTimeout(
+        () => {
+
+          const viewport =
+            document.getElementById(
+              "teamMapViewport"
+            );
+
+
+          viewport?.scrollTo({
+            top: 0,
+            left:
+              Math.max(
+                0,
+                (
+                  viewport.scrollWidth -
+                  viewport.clientWidth
+                ) / 2
+              ),
+            behavior: "smooth"
+          });
+
+        },
+        50
+      );
     }
   );
 
