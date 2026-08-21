@@ -12088,63 +12088,28 @@ document.addEventListener(
         "[data-team-map-focus]"
       );
 
-
     if (!focusButton) return;
-
 
     event.preventDefault();
     event.stopPropagation();
-
 
     const code =
       focusButton.dataset
         .teamMapFocus;
 
-
     if (!code) return;
-
 
     const children =
       teamMapChildren(code);
 
-
+    // Dark dot / no directs = do nothing.
     if (!children.length) {
       return;
     }
 
-
-    teamMapFocusCode =
-      code;
-
-
-    teamMapDirectOnlyMode =
-      true;
-
-
-    const selector =
-      document.getElementById(
-        "teamMapLeaderSelect"
-      );
-
-
-    if (selector) {
-
-      selector.value =
-        code;
-    }
-
-
-    drawTeamMap();
-
-
-    setTimeout(
-      () => {
-
-        fitTeamMapToScreen();
-
-      },
-      80
-    );
+    // Use the exact same clean focused-team behavior
+    // as clicking a leader from Team Intelligence.
+    openLeaderInTeamMap(code);
 
   }
 );
@@ -15082,34 +15047,115 @@ function openTeamIntelFocus(
 // OPEN LEADER IN TEAM MAP
 // ==========================================================
 
+// ==========================================================
+// OPEN SELECTED LEADER IN REAL FORGE TEAM MAP
+// ==========================================================
+
 function openLeaderInTeamMap(code) {
 
   if (!code) return;
 
-  teamMapFocusCode = code;
-  teamMapDirectOnlyMode = true;
 
+  const leader =
+    teamMapMembers.find(
+      member =>
+        normalizeTeamMapCode(member.code) ===
+        normalizeTeamMapCode(code)
+    );
+
+
+  if (!leader) return;
+
+
+  // Selected leader becomes root.
+  teamMapFocusCode =
+    leader.code;
+
+
+  // Show only this person's directs initially.
+  teamMapDirectOnlyMode =
+    true;
+
+
+  // IMPORTANT:
+  // Always return to TREE view.
+  teamMapViewMode =
+    "tree";
+
+
+  document
+    .querySelectorAll(
+      ".team-map-view-btn"
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.teamMapView === "tree"
+      );
+
+    });
+
+
+  // Sync dropdown.
   const selector =
     document.getElementById(
       "teamMapLeaderSelect"
     );
 
   if (selector) {
-    selector.value = code;
+    selector.value =
+      leader.code;
   }
 
+
+  // Draw the real FORGE map.
   drawTeamMap();
 
-  document
-    .querySelector(".team-map-surface")
-    ?.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
 
+  // Move directly to map.
+  const surface =
+    document.querySelector(
+      ".team-map-surface"
+    );
+
+  surface?.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+
+  // DO NOT automatically shrink it
+  // into microscopic cards.
+  teamMapZoom =
+    1;
+
+
+  applyTeamMapZoom();
+
+
+  // Center root.
   setTimeout(() => {
-    fitTeamMapToScreen();
-  }, 120);
+
+    const viewport =
+      document.getElementById(
+        "teamMapViewport"
+      );
+
+    if (!viewport) return;
+
+    viewport.scrollLeft =
+      Math.max(
+        0,
+        (
+          viewport.scrollWidth -
+          viewport.clientWidth
+        ) / 2
+      );
+
+    viewport.scrollTop = 0;
+
+  }, 80);
 }
 // ==========================================================
 // TEAM INTELLIGENCE EVENTS
@@ -15125,16 +15171,16 @@ document.addEventListener(
       );
 
 
-    if (teamCard) {
+   if (teamCard) {
 
-      openTeamIntelFocus(
-        teamCard.dataset
-          .teamIntelCode
-      );
+  const code =
+    teamCard.dataset
+      .teamIntelCode;
 
-      return;
-    }
+  openLeaderInTeamMap(code);
 
+  return;
+}
 
     const openMap =
       event.target.closest(
