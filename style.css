@@ -27843,3 +27843,39 @@ body.forge-drawer-open {
 #teamMapStage.active {
   display: flex !important;
 }
+/* =========================================================
+   FORGE PAGE VISIBILITY — FINAL SAFETY
+========================================================= */
+
+.hidden {
+  display: none !important;
+}
+
+
+#teamMapPage.hidden {
+  display: none !important;
+}
+
+
+#teamMapStage {
+  display: none;
+}
+
+
+#teamMapStage.active {
+  display: flex !important;
+}
+
+
+/* Drawer should only appear when opened */
+
+#teamMapAgentDrawer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+
+#teamMapAgentDrawer.open {
+  visibility: visible;
+  pointer-events: auto;
+}
