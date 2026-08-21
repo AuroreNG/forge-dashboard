@@ -27812,3 +27812,23 @@ body.forge-drawer-open {
 .team-map-agent-overlay.hidden {
   display: none !important;
 }
+
+/* =========================================================
+   STRICT PAGE VISIBILITY
+========================================================= */
+
+#teamMapPage.hidden {
+  display: none !important;
+}
+
+#teamMapPage:not(.hidden) {
+  display: block;
+}
+
+#teamMapStage {
+  display: none !important;
+}
+
+#teamMapStage.active {
+  display: flex !important;
+}
