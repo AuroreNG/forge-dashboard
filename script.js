@@ -12148,6 +12148,7 @@ document.addEventListener(
 
   }
 );
+
 // ----------------------------------------------------------
 // LEADER SELECT
 // ----------------------------------------------------------
@@ -12409,6 +12410,7 @@ if (updated) {
 }
 
 
+
 // ----------------------------------------------------------
 // MAIN TEAM MAP RENDER
 // ----------------------------------------------------------
@@ -12667,11 +12669,37 @@ document
       teamMapFocusCode =
         teamMapRootCode;
 
+
+      teamMapDirectOnlyMode =
+        false;
+
+
       teamMapCollapsed.clear();
 
-      renderTeamMapLeaderSelect();
+
+      const selector =
+        document.getElementById(
+          "teamMapLeaderSelect"
+        );
+
+
+      if (selector) {
+
+        selector.value = "";
+      }
+
 
       drawTeamMap();
+
+
+      setTimeout(
+        () => {
+
+          fitTeamMapToScreen();
+
+        },
+        80
+      );
 
     }
   );
@@ -13451,11 +13479,6 @@ function renderTeamMapList() {
 // ==========================================================
 
 let teamMapDrawerAgent = null;
-
-
-// ----------------------------------------------------------
-// FIND REAL FORGE AGENT
-// ----------------------------------------------------------
 
 // ==========================================================
 // FIND REAL FORGE AGENT
@@ -15055,7 +15078,39 @@ function openTeamIntelFocus(
 
   `;
 }
+// ==========================================================
+// OPEN LEADER IN TEAM MAP
+// ==========================================================
 
+function openLeaderInTeamMap(code) {
+
+  if (!code) return;
+
+  teamMapFocusCode = code;
+  teamMapDirectOnlyMode = true;
+
+  const selector =
+    document.getElementById(
+      "teamMapLeaderSelect"
+    );
+
+  if (selector) {
+    selector.value = code;
+  }
+
+  drawTeamMap();
+
+  document
+    .querySelector(".team-map-surface")
+    ?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  setTimeout(() => {
+    fitTeamMapToScreen();
+  }, 120);
+}
 // ==========================================================
 // TEAM INTELLIGENCE EVENTS
 // ==========================================================
@@ -15089,48 +15144,17 @@ document.addEventListener(
 
     if (openMap) {
 
-      const code =
-        openMap.dataset
-          .teamIntelOpenMap;
+  const code =
+    openMap.dataset
+      .teamIntelOpenMap;
 
+  openLeaderInTeamMap(code);
 
-      teamMapFocusCode =
-        code;
-
-
-      const selector =
-        document.getElementById(
-          "teamMapLeaderSelect"
-        );
-
-
-      if (selector) {
-
-        selector.value =
-          code;
-      }
-
-
-      drawTeamMap();
-
-
-      document
-        .querySelector(
-          ".team-map-surface"
-        )
-        ?.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-
-
-      return;
-    }
+  return;
+}
 
   }
 );
-
-
 // BACK TO RANKINGS
 
 document
