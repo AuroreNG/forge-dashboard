@@ -11223,23 +11223,27 @@ document
 // Organization-aware team hierarchy
 // ==========================================================
 
+// ==========================================================
+// TEAM MAP STATE
+// ==========================================================
+
 let teamMapMembers = [];
+
 let teamMapRootCode = "";
+
 let teamMapFocusCode = "";
-let teamMapCollapsed = new Set();
-// ==========================================================
-// TEAM MAP FOCUS MODE
-// ==========================================================
 
-let teamMapDirectOnlyMode = false;
+let teamMapCollapsed =
+  new Set();
 
-let teamMapFocusedLevel = 0;
+let teamMapDirectOnlyMode =
+  false;
 
+let teamMapViewMode =
+  "tree";
 
-let teamMapCollapsed = new Set();
-
-let teamMapDirectOnlyMode = false;
-
+let teamMapZoom =
+  1;
 // ----------------------------------------------------------
 // NORMALIZE FORGE AGENTS FOR TEAM MAP
 // ----------------------------------------------------------
