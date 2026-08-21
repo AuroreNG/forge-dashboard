@@ -27832,3 +27832,14 @@ body.forge-drawer-open {
 #teamMapStage.active {
   display: flex !important;
 }
+#teamMapPage.hidden {
+  display: none !important;
+}
+
+#teamMapStage {
+  display: none !important;
+}
+
+#teamMapStage.active {
+  display: flex !important;
+}
