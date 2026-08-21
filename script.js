@@ -11854,7 +11854,8 @@ function teamMapEscape(value) {
 // ----------------------------------------------------------
 
 // ==========================================================
-// BUILD TEAM MAP NODE
+// BUILD FORGE TEAM MAP NODE
+// Click card = expand / collapse branch
 // ==========================================================
 
 function buildTeamMapNode(
@@ -11892,8 +11893,12 @@ function buildTeamMapNode(
     );
 
 
+  const directCount =
+    children.length;
+
+
   const hasDirects =
-    children.length > 0;
+    directCount > 0;
 
 
   const isCollapsed =
@@ -11905,7 +11910,9 @@ function buildTeamMapNode(
 
 
   const hierarchyClass =
-    getTeamMapHierarchyClass(level);
+    getTeamMapHierarchyClass(
+      level
+    );
 
 
   const initials =
@@ -11913,7 +11920,9 @@ function buildTeamMapNode(
       .split(/\s+/)
       .filter(Boolean)
       .slice(0, 2)
-      .map(word => word[0])
+      .map(word =>
+        word.charAt(0)
+      )
       .join("")
       .toUpperCase();
 
@@ -11921,8 +11930,13 @@ function buildTeamMapNode(
   return `
 
     <div
-      class="team-map-branch ${hierarchyClass}"
-      data-team-map-branch-code="${teamMapEscape(member.code)}"
+      class="
+        team-map-branch
+        ${hierarchyClass}
+      "
+      data-team-map-branch-code="${teamMapEscape(
+        member.code
+      )}"
     >
 
       <article
@@ -11931,23 +11945,47 @@ function buildTeamMapNode(
           ${hierarchyClass}
           ${isRoot ? "is-root" : ""}
           ${hasDirects ? "has-directs" : "no-directs"}
+          ${isCollapsed ? "is-collapsed" : "is-expanded"}
         "
-        data-team-map-code="${teamMapEscape(member.code)}"
+
+        data-team-map-code="${teamMapEscape(
+          member.code
+        )}"
+
+        ${
+          hasDirects
+            ? `data-team-map-toggle="${teamMapEscape(
+                member.code
+              )}"`
+            : ""
+        }
+
+        ${
+          hasDirects
+            ? `role="button" tabindex="0"`
+            : ""
+        }
       >
 
         <div class="team-map-avatar">
-          ${teamMapEscape(initials)}
+          ${teamMapEscape(
+            initials
+          )}
         </div>
 
 
         <div class="team-map-node-copy">
 
           <strong>
-            ${teamMapEscape(member.name || "Unknown")}
+            ${teamMapEscape(
+              member.name || "Unknown"
+            )}
           </strong>
 
           <span>
-            ${teamMapEscape(member.code || "—")}
+            ${teamMapEscape(
+              member.code || "—"
+            )}
           </span>
 
         </div>
@@ -11957,41 +11995,45 @@ function buildTeamMapNode(
           hasDirects
             ? `
               <div class="team-map-node-count">
-                ${children.length}
-                <small>direct</small>
+
+                ${directCount}
+
+                <small>
+                  direct
+                </small>
+
               </div>
             `
             : ""
         }
 
+
+        ${
+          !isRoot
+            ? `
+              <span
+                class="
+                  team-map-branch-dot
+                  ${hasDirects ? "expandable" : "terminal"}
+                "
+              >
+
+                ${
+                  hasDirects
+                    ? (
+                        isCollapsed
+                          ? "+"
+                          : "−"
+                      )
+                    : ""
+                }
+
+              </span>
+            `
+            : ""
+        }
+
       </article>
-
-
-      ${
-        !isRoot
-          ? `
-            <button
-              type="button"
-              class="
-                team-map-branch-dot
-                ${hasDirects ? "expandable" : "terminal"}
-              "
-              data-team-map-toggle="${teamMapEscape(member.code)}"
-              ${hasDirects ? "" : "disabled"}
-            >
-              ${
-                hasDirects
-                  ? (
-                      isCollapsed
-                        ? "+"
-                        : "−"
-                    )
-                  : ""
-              }
-            </button>
-          `
-          : ""
-      }
 
 
       ${
@@ -12030,9 +12072,36 @@ function buildTeamMapNode(
   `;
 }
 // ==========================================================
-// OPEN MEMBER DIRECT TEAM
+// KEYBOARD SUPPORT
 // ==========================================================
 
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key !== "Enter" &&
+      event.key !== " "
+    ) {
+      return;
+    }
+
+
+    const card =
+      event.target.closest(
+        ".team-map-node[data-team-map-toggle]"
+      );
+
+
+    if (!card) return;
+
+
+    event.preventDefault();
+
+    card.click();
+
+  }
+);
 // ==========================================================
 // EXPAND / COLLAPSE TEAM BRANCH
 // ==========================================================
@@ -15168,18 +15237,26 @@ function openTeamIntelFocus(
 // ==========================================================
 
 // ==========================================================
-// OPEN SELECTED LEADER IN REAL FORGE TEAM MAP
+// OPEN SELECTED LEADER
+// Starts with DIRECTS ONLY
 // ==========================================================
+
 function openLeaderInTeamMap(code) {
 
   if (!code) return;
 
+
   const leader =
     teamMapMembers.find(
       member =>
-        normalizeTeamMapCode(member.code) ===
-        normalizeTeamMapCode(code)
+        normalizeTeamMapCode(
+          member.code
+        ) ===
+        normalizeTeamMapCode(
+          code
+        )
     );
+
 
   if (!leader) return;
 
@@ -15188,27 +15265,30 @@ function openLeaderInTeamMap(code) {
     leader.code;
 
 
-  // Start with ONLY this leader's direct recruits visible.
   teamMapDirectOnlyMode =
     true;
 
 
-  // Collapse every person who has children.
+  // Collapse every leader first.
   teamMapCollapsed =
     new Set(
       teamMapMembers
         .filter(
           member =>
-            teamMapChildren(member.code).length > 0
+            teamMapChildren(
+              member.code
+            ).length > 0
         )
         .map(
           member =>
-            normalizeTeamMapCode(member.code)
+            normalizeTeamMapCode(
+              member.code
+            )
         )
     );
 
 
-  // But selected leader must remain open.
+  // But selected leader/root stays open.
   teamMapCollapsed.delete(
     normalizeTeamMapCode(
       leader.code
@@ -15224,14 +15304,17 @@ function openLeaderInTeamMap(code) {
     .querySelectorAll(
       ".team-map-view-btn"
     )
-    .forEach(button => {
+    .forEach(
+      button => {
 
-      button.classList.toggle(
-        "active",
-        button.dataset.teamMapView === "tree"
-      );
+        button.classList.toggle(
+          "active",
+          button.dataset.teamMapView ===
+            "tree"
+        );
 
-    });
+      }
+    );
 
 
   const selector =
@@ -15239,8 +15322,10 @@ function openLeaderInTeamMap(code) {
       "teamMapLeaderSelect"
     );
 
+
   if (selector) {
-    selector.value = leader.code;
+    selector.value =
+      leader.code;
   }
 
 
@@ -15248,6 +15333,7 @@ function openLeaderInTeamMap(code) {
 
 
   teamMapZoom = 1;
+
   applyTeamMapZoom();
 
 
@@ -15261,6 +15347,79 @@ function openLeaderInTeamMap(code) {
     });
 
 }
+// ==========================================================
+// DIRECT ONLY
+// ==========================================================
+
+document
+  .getElementById(
+    "teamMapDirectOnly"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      const rootCode =
+        normalizeTeamMapCode(
+          teamMapFocusCode ||
+          teamMapRootCode
+        );
+
+
+      teamMapCollapsed =
+        new Set(
+          teamMapMembers
+            .filter(
+              member =>
+                teamMapChildren(
+                  member.code
+                ).length > 0
+            )
+            .map(
+              member =>
+                normalizeTeamMapCode(
+                  member.code
+                )
+            )
+        );
+
+
+      // Root stays open.
+      teamMapCollapsed.delete(
+        rootCode
+      );
+
+
+      teamMapDirectOnlyMode =
+        true;
+
+
+      drawTeamMap();
+
+    }
+  );
+
+// ==========================================================
+// FULL TREE
+// ==========================================================
+
+document
+  .getElementById(
+    "teamMapFullTree"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      teamMapCollapsed.clear();
+
+      teamMapDirectOnlyMode =
+        false;
+
+      drawTeamMap();
+
+    }
+  );
 // ==========================================================
 // TEAM INTELLIGENCE EVENTS
 // ==========================================================
