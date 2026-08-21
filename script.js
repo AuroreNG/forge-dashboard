@@ -15574,3 +15574,164 @@ document
     applyTeamMapZoom();
 
   });
+
+// ==========================================================
+// FORGE ENTERPRISE VIEW -> TEAM TREE INTEGRATION
+// ==========================================================
+
+function renderForgeEnterpriseView() {
+  const topGrid = document.getElementById("forgeEnterpriseTopGrid");
+  const leadersList = document.getElementById("forgeEnterpriseLeaders");
+  if (!topGrid || !leadersList) return;
+
+  const leaders = teamMapMembers
+    .filter(member => member?.code && teamMapChildren(member.code).length > 0)
+    .map(member => ({
+      member,
+      direct: teamMapChildren(member.code).length,
+      downline: teamMapDescendantCount(member.code)
+    }));
+
+  // Top 12 = strongest total organizations.
+  const top12 = [...leaders]
+    .sort((a, b) =>
+      b.downline - a.downline ||
+      b.direct - a.direct ||
+      String(a.member.name || "").localeCompare(String(b.member.name || ""))
+    )
+    .slice(0, 12);
+
+  // Sidebar = every person with at least one direct; strongest direct builders first.
+  const organization = [...leaders]
+    .sort((a, b) =>
+      b.direct - a.direct ||
+      b.downline - a.downline ||
+      String(a.member.name || "").localeCompare(String(b.member.name || ""))
+    );
+
+  topGrid.innerHTML = top12.length
+    ? top12.map((team) => `
+      <button type="button" class="forge-enterprise-card" data-forge-open-team="${teamMapEscape(team.member.code)}">
+        <div class="forge-enterprise-card-top">
+          <div>
+            <strong>${teamMapEscape(team.member.name || "Unknown")}</strong>
+            <small>${teamMapEscape(team.member.code || "—")} · ${team.direct} direct</small>
+          </div>
+          <div class="forge-enterprise-score">
+            <b>${team.downline}</b>
+            <span>DOWNLINE</span>
+          </div>
+        </div>
+        <div class="forge-enterprise-card-footer">
+          <span>${team.direct} direct recruit${team.direct === 1 ? "" : "s"}</span>
+          <b>Open Team →</b>
+        </div>
+      </button>
+    `).join("")
+    : `<div class="team-map-empty">No leaders with direct recruits found.</div>`;
+
+  leadersList.innerHTML = organization.length
+    ? organization.map((team) => `
+      <button type="button" class="forge-enterprise-leader" data-forge-open-team="${teamMapEscape(team.member.code)}">
+        <span>
+          <strong>${teamMapEscape(team.member.name || "Unknown")}</strong>
+          <span>${team.direct} direct · ${team.downline} downline</span>
+        </span>
+        <b>→</b>
+      </button>
+    `).join("")
+    : `<div class="team-map-empty">No organization leaders found.</div>`;
+}
+
+function showForgeEnterpriseView() {
+  document.getElementById("teamMapEnterpriseView")?.classList.remove("hidden");
+  document.getElementById("teamMapTreeView")?.classList.add("hidden");
+  renderForgeEnterpriseView();
+}
+
+function showForgeTeamTree(code) {
+  if (!code) return;
+  document.getElementById("teamMapEnterpriseView")?.classList.add("hidden");
+  document.getElementById("teamMapTreeView")?.classList.remove("hidden");
+  openLeaderInTeamMap(code);
+}
+
+document.addEventListener("click", (event) => {
+  const team = event.target.closest("[data-forge-open-team]");
+  if (!team) return;
+  showForgeTeamTree(team.dataset.forgeOpenTeam);
+});
+
+document.getElementById("teamMapBackToEnterprise")?.addEventListener("click", showForgeEnterpriseView);
+document.getElementById("forgeEnterpriseTopTeams")?.addEventListener("click", showForgeEnterpriseView);
+
+document.getElementById("forgeEnterpriseSearchBtn")?.addEventListener("click", () => {
+  const input = document.getElementById("forgeEnterpriseSearch");
+  const query = String(input?.value || "").trim().toLowerCase();
+  if (!query) return;
+  const match = teamMapMembers.find(member =>
+    String(member.name || "").toLowerCase().includes(query) ||
+    String(member.code || "").toLowerCase().includes(query)
+  );
+  if (match) showForgeTeamTree(match.code);
+});
+
+document.getElementById("forgeEnterpriseSearch")?.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") document.getElementById("forgeEnterpriseSearchBtn")?.click();
+});
+
+document.getElementById("forgeEnterpriseFit")?.addEventListener("click", () => {
+  if (document.getElementById("teamMapTreeView")?.classList.contains("hidden")) {
+    showForgeTeamTree(teamMapFocusCode || teamMapRootCode);
+  }
+  setTimeout(fitTeamMapToScreen, 50);
+});
+
+document.getElementById("forgeEnterpriseZoomIn")?.addEventListener("click", () => {
+  if (document.getElementById("teamMapTreeView")?.classList.contains("hidden")) {
+    showForgeTeamTree(teamMapFocusCode || teamMapRootCode);
+  }
+  document.getElementById("teamMapZoomIn")?.click();
+});
+
+document.getElementById("forgeEnterpriseZoomOut")?.addEventListener("click", () => {
+  if (document.getElementById("teamMapTreeView")?.classList.contains("hidden")) {
+    showForgeTeamTree(teamMapFocusCode || teamMapRootCode);
+  }
+  document.getElementById("teamMapZoomOut")?.click();
+});
+
+document.getElementById("forgeEnterpriseFullscreen")?.addEventListener("click", () => {
+  if (document.getElementById("teamMapTreeView")?.classList.contains("hidden")) {
+    showForgeTeamTree(teamMapFocusCode || teamMapRootCode);
+  }
+  setTimeout(() => document.getElementById("teamMapOpenStage")?.click(), 80);
+});
+
+// Enhance the existing Team Map render without replacing its data logic.
+const forgeOriginalRenderTeamMap = renderTeamMap;
+renderTeamMap = function() {
+  forgeOriginalRenderTeamMap();
+  window.teamMapMembers = teamMapMembers;
+  renderForgeEnterpriseView();
+  // Opening the Team Map page always begins on the enterprise selector.
+  if (!document.getElementById("teamMapPage")?.classList.contains("hidden")) {
+    const treeView = document.getElementById("teamMapTreeView");
+    const enterpriseView = document.getElementById("teamMapEnterpriseView");
+    if (treeView && enterpriseView && !enterpriseView.dataset.userOpenedTree) {
+      enterpriseView.classList.remove("hidden");
+      treeView.classList.add("hidden");
+    }
+  }
+};
+
+// Keep tree open after a deliberate selection until user goes back.
+const forgeOriginalOpenLeaderInTeamMap = openLeaderInTeamMap;
+openLeaderInTeamMap = function(code) {
+  document.getElementById("teamMapEnterpriseView")?.setAttribute("data-user-opened-tree", "1");
+  forgeOriginalOpenLeaderInTeamMap(code);
+};
+
+document.getElementById("teamMapBackToEnterprise")?.addEventListener("click", () => {
+  document.getElementById("teamMapEnterpriseView")?.removeAttribute("data-user-opened-tree");
+});

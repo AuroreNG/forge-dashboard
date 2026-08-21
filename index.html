@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FORGE Dashboard</title>
-  <link rel="stylesheet" href="style.css?v=14" />
+  <link rel="stylesheet" href="style.css?v=15" />
 </head>
 <body>
   <div class="app">
@@ -2226,75 +2226,53 @@ JavaScript opens these when an import button is clicked.
 
 
 <!-- =========================================================
-     FORGE TEAM INTELLIGENCE
+     FORGE ENTERPRISE TEAM VIEW
 ========================================================= -->
 
-<section
-  id="teamMapIntelligence"
-  class="team-intelligence"
->
+<section id="teamMapEnterpriseView" class="forge-enterprise-view">
 
-  <div class="team-intelligence-header">
-
-    <div>
-      <span class="team-intelligence-eyebrow">
-        FORGE ORGANIZATION INTELLIGENCE
-      </span>
-
-      <h2>Top Teams</h2>
-
-      <p>
-        Select a leader to open their organization in Team Map.
-      </p>
+  <div class="forge-enterprise-toolbar">
+    <div class="forge-enterprise-search">
+      <input id="forgeEnterpriseSearch" type="search" placeholder="Search by name or agent code" />
+      <button type="button" id="forgeEnterpriseSearchBtn">Search</button>
     </div>
 
+    <button type="button" id="forgeEnterpriseTopTeams">Top Teams</button>
+    <button type="button" id="forgeEnterpriseFit">Fit</button>
+    <button type="button" id="forgeEnterpriseFullscreen" class="primary">⛶ Full Screen Chart</button>
+    <button type="button" id="forgeEnterpriseZoomOut" class="icon">−</button>
+    <button type="button" id="forgeEnterpriseZoomIn" class="icon">+</button>
   </div>
 
+  <div class="forge-enterprise-layout">
 
-  <!-- TOP TEAMS -->
-
-  <div
-    id="teamIntelTopGrid"
-    class="team-intel-top-grid"
-  ></div>
-
-
-  <!-- MORE LEADERS -->
-
-  <div
-    id="teamIntelMoreWrap"
-    class="team-intel-more-wrap"
-  >
-
-    <div class="team-intel-more-head">
-
-      <div>
-        <span>MORE TEAMS</span>
-        <strong>Organization Leaders</strong>
+    <aside class="forge-enterprise-sidebar">
+      <div class="forge-enterprise-sidehead">
+        <span>ORGANIZATION</span>
+        <h3>Leaders</h3>
+        <p>Select anyone with at least one direct recruit.</p>
       </div>
+      <div id="forgeEnterpriseLeaders" class="forge-enterprise-leaders"></div>
+    </aside>
 
-      <span id="teamIntelMoreCount">
-        0 more
-      </span>
-
-    </div>
-
-
-    <div
-      id="teamIntelMoreBar"
-      class="team-intel-more-bar"
-    ></div>
+    <main class="forge-enterprise-main">
+      <div class="forge-enterprise-heading">
+        <span>ENTERPRISE VIEW</span>
+        <h2>Select a Leader</h2>
+        <p>Top 12 teams by total downline. Select any leader to open the team tree.</p>
+      </div>
+      <div id="forgeEnterpriseTopGrid" class="forge-enterprise-top-grid"></div>
+    </main>
 
   </div>
 
 </section>
 
-
   <!-- =====================================================
        ACTUAL TEAM TREE
   ====================================================== -->
 
-  <div class="team-map-surface">
+  <div id="teamMapTreeView" class="team-map-surface hidden">
 
     <div class="team-map-surface-header">
 
@@ -2307,6 +2285,8 @@ JavaScript opens these when an import button is clicked.
       </div>
 
       <div class="team-map-update">
+
+        <button type="button" id="teamMapBackToEnterprise" class="team-map-back-enterprise">← Top Teams</button>
 
         <span id="teamMapUpdated">
           —
@@ -3483,6 +3463,6 @@ TEAM INTELLIGENCE DRAWER
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./supabase-config.js?v=2"></script>
-<script src="script.js?v=22"></script>
+<script src="script.js?v=6"></script>
 </body>
 </html>
