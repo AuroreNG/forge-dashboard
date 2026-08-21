@@ -5239,99 +5239,185 @@ document.addEventListener("click", (e) => {
 function showPage(pageName) {
 
   // ========================================================
-  // TEAM MAP SAFETY RESET
+  // 1. RESET TEAM MAP OVERLAYS / DRAWERS
   // ========================================================
 
   if (pageName !== "Team Map") {
 
-    document
-      .getElementById("teamMapStage")
-      ?.classList.remove("active");
+    const stage =
+      document.getElementById("teamMapStage");
 
-    document
-      .getElementById("teamMapAgentDrawer")
-      ?.classList.remove("open");
+    const drawer =
+      document.getElementById("teamMapAgentDrawer");
 
-    document
-      .getElementById("teamMapAgentOverlay")
-      ?.classList.add("hidden");
+    const overlay =
+      document.getElementById("teamMapAgentOverlay");
+
+
+    stage?.classList.remove("active");
+
+    if (stage) {
+      stage.style.display = "none";
+      stage.setAttribute("aria-hidden", "true");
+    }
+
+
+    drawer?.classList.remove("open");
+
+    if (drawer) {
+      drawer.setAttribute("aria-hidden", "true");
+    }
+
+
+    overlay?.classList.add("hidden");
+
 
     document.body.style.overflow = "";
   }
 
 
-  document.querySelector(".dashboard").style.display =
-    pageName === "Home"
-      ? "grid"
-      : "none";
+  // ========================================================
+  // 2. HOME
+  // ========================================================
 
-  document.querySelector(".lower").style.display =
-    pageName === "Home"
-      ? "grid"
-      : "none";
+  const dashboard =
+    document.querySelector(".dashboard");
+
+  const lower =
+    document.querySelector(".lower");
 
 
-  document
-    .getElementById("journeyPage")
-    ?.classList.toggle(
-      "hidden",
-      pageName !== "Journey"
+  if (dashboard) {
+    dashboard.style.display =
+      pageName === "Home"
+        ? "grid"
+        : "none";
+  }
+
+
+  if (lower) {
+    lower.style.display =
+      pageName === "Home"
+        ? "grid"
+        : "none";
+  }
+
+
+  // ========================================================
+  // 3. ALL APP PAGES
+  // ========================================================
+
+  const pages = {
+
+    Journey:
+      document.getElementById(
+        "journeyPage"
+      ),
+
+    Agents:
+      document.getElementById(
+        "agentsPage"
+      ),
+
+    "Team Map":
+      document.getElementById(
+        "teamMapPage"
+      ),
+
+    Command:
+      document.getElementById(
+        "commandPage"
+      ),
+
+    Growth:
+      document.getElementById(
+        "growthPage"
+      )
+
+  };
+
+
+  Object.entries(pages)
+    .forEach(
+      ([name, page]) => {
+
+        if (!page) return;
+
+
+        const shouldShow =
+          pageName === name;
+
+
+        page.classList.toggle(
+          "hidden",
+          !shouldShow
+        );
+
+
+        // IMPORTANT:
+        // Direct display prevents CSS conflicts.
+        page.style.display =
+          shouldShow
+            ? ""
+            : "none";
+
+      }
     );
 
 
-  document
-    .getElementById("agentsPage")
-    ?.classList.toggle(
-      "hidden",
-      pageName !== "Agents"
-    );
-
-
-  document
-    .getElementById("teamMapPage")
-    ?.classList.toggle(
-      "hidden",
-      pageName !== "Team Map"
-    );
-
-
-  document
-    .getElementById("commandPage")
-    ?.classList.toggle(
-      "hidden",
-      pageName !== "Command"
-    );
-
-
-  document
-    .getElementById("growthPage")
-    ?.classList.toggle(
-      "hidden",
-      pageName !== "Growth"
-    );
-
+  // ========================================================
+  // 4. RENDER ONLY ACTIVE PAGE
+  // ========================================================
 
   if (pageName === "Growth") {
+
     renderGrowthPage();
+
   }
+
 
   if (pageName === "Command") {
+
     renderCommandCenter();
+
   }
+
 
   if (pageName === "Journey") {
+
     renderJourneyPage();
+
   }
+
 
   if (pageName === "Agents") {
+
     renderAgentsPage();
+
   }
+
 
   if (pageName === "Team Map") {
-    renderTeamMap();
-  }
-}
 
+    const teamMapPage =
+      document.getElementById(
+        "teamMapPage"
+      );
+
+
+    if (teamMapPage) {
+
+      teamMapPage.style.display =
+        "block";
+
+    }
+
+
+    renderTeamMap();
+
+  }
+
+}
 
 //  DRAG AND DROP 
 
