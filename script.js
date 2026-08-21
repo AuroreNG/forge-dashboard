@@ -12248,6 +12248,7 @@ function renderTeamMap() {
   renderTeamMapLeaderSelect();
 
   drawTeamMap();
+  renderTeamIntelligence();
 }
 
 
@@ -14201,3 +14202,772 @@ document
         });
     }
   );
+
+// ==========================================================
+// FORGE TEAM INTELLIGENCE
+// ==========================================================
+
+let teamIntelSortMode =
+  "downline";
+
+
+function getTeamIntelLeaders() {
+
+  return teamMapMembers
+    .filter(
+      member =>
+        teamMapChildren(
+          member.code
+        ).length > 0
+    );
+}
+
+
+// ----------------------------------------------------------
+// REAL METRICS
+// ----------------------------------------------------------
+
+function getTeamIntelMetrics(
+  member
+) {
+
+  const direct =
+    teamMapChildren(
+      member.code
+    );
+
+
+  const downline =
+    teamMapDescendantCount(
+      member.code
+    );
+
+
+  const depth =
+    teamMapDepth(
+      member.code
+    );
+
+
+  const directLeaders =
+    direct.filter(
+      person =>
+        teamMapChildren(
+          person.code
+        ).length > 0
+    );
+
+
+  return {
+    direct,
+    downline,
+    depth,
+    directLeaders
+  };
+}
+
+
+// ----------------------------------------------------------
+// SORT
+// ----------------------------------------------------------
+
+function sortTeamIntelLeaders(
+  leaders
+) {
+
+  return [...leaders]
+    .sort(
+      (a, b) => {
+
+        const aMetrics =
+          getTeamIntelMetrics(a);
+
+        const bMetrics =
+          getTeamIntelMetrics(b);
+
+
+        if (
+          teamIntelSortMode ===
+          "direct"
+        ) {
+
+          return (
+            bMetrics.direct.length -
+            aMetrics.direct.length
+          );
+        }
+
+
+        if (
+          teamIntelSortMode ===
+          "depth"
+        ) {
+
+          return (
+            bMetrics.depth -
+            aMetrics.depth
+          );
+        }
+
+
+        return (
+          bMetrics.downline -
+          aMetrics.downline
+        );
+      }
+    );
+}
+
+
+// ----------------------------------------------------------
+// RANK VALUE
+// ----------------------------------------------------------
+
+function getTeamIntelRankValue(
+  metrics
+) {
+
+  if (
+    teamIntelSortMode ===
+    "direct"
+  ) {
+
+    return {
+      value:
+        metrics.direct.length,
+
+      label:
+        "DIRECT"
+    };
+  }
+
+
+  if (
+    teamIntelSortMode ===
+    "depth"
+  ) {
+
+    return {
+      value:
+        metrics.depth,
+
+      label:
+        "LEVELS"
+    };
+  }
+
+
+  return {
+    value:
+      metrics.downline,
+
+    label:
+      "DOWNLINE"
+  };
+}
+
+
+// ----------------------------------------------------------
+// RENDER BOARD
+// ----------------------------------------------------------
+
+function renderTeamIntelligence() {
+
+  const grid =
+    document.getElementById(
+      "teamIntelGrid"
+    );
+
+
+  if (!grid) return;
+
+
+  const leaders =
+    sortTeamIntelLeaders(
+      getTeamIntelLeaders()
+    );
+
+
+  grid.innerHTML =
+    leaders
+      .map(
+        (leader, index) => {
+
+          const metrics =
+            getTeamIntelMetrics(
+              leader
+            );
+
+
+          const ranking =
+            getTeamIntelRankValue(
+              metrics
+            );
+
+
+          const branchPreview =
+            metrics.directLeaders
+              .slice(0, 4);
+
+
+          return `
+
+            <button
+              type="button"
+              class="team-intel-card"
+              data-team-intel-code="${teamMapEscape(
+                leader.code
+              )}"
+            >
+
+              <div class="team-intel-top">
+
+                <div class="team-intel-rank">
+                  #${index + 1}
+                </div>
+
+
+                <div class="team-intel-name">
+
+                  <strong>
+                    ${teamMapEscape(
+                      leader.name
+                    )}
+                  </strong>
+
+                  <span>
+                    ${teamMapEscape(
+                      leader.code
+                    )}
+                  </span>
+
+                </div>
+
+
+                <div class="team-intel-score">
+
+                  <strong>
+                    ${ranking.value}
+                  </strong>
+
+                  <span>
+                    ${ranking.label}
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <div class="team-intel-metrics">
+
+                <div class="team-intel-metric">
+                  <strong>
+                    ${metrics.downline}
+                  </strong>
+                  <span>
+                    DOWNLINE
+                  </span>
+                </div>
+
+
+                <div class="team-intel-metric">
+                  <strong>
+                    ${metrics.direct.length}
+                  </strong>
+                  <span>
+                    DIRECT
+                  </span>
+                </div>
+
+
+                <div class="team-intel-metric">
+                  <strong>
+                    ${metrics.depth}
+                  </strong>
+                  <span>
+                    LEVELS
+                  </span>
+                </div>
+
+              </div>
+
+
+              <div class="team-intel-branches">
+
+                ${
+                  branchPreview.length
+                    ? branchPreview
+                        .map(
+                          child => `
+
+                            <span class="team-intel-branch">
+
+                              ${teamMapEscape(
+                                child.name
+                              )}
+
+                              ·
+
+                              ${teamMapDescendantCount(
+                                child.code
+                              )}
+
+                            </span>
+
+                          `
+                        )
+                        .join("")
+                    : `
+                      <span class="team-intel-branch">
+                        No direct leader branches
+                      </span>
+                    `
+                }
+
+              </div>
+
+
+              <div class="team-intel-open">
+                Explore Team →
+              </div>
+
+            </button>
+
+          `;
+
+        }
+      )
+      .join("");
+}
+
+
+// ----------------------------------------------------------
+// OPEN SELECTED TEAM
+// ----------------------------------------------------------
+
+function openTeamIntelFocus(
+  code
+) {
+
+  const leader =
+    teamMapMembers.find(
+      member =>
+        normalizeTeamMapCode(
+          member.code
+        ) ===
+        normalizeTeamMapCode(
+          code
+        )
+    );
+
+
+  if (!leader) return;
+
+
+  const metrics =
+    getTeamIntelMetrics(
+      leader
+    );
+
+
+  const grid =
+    document.getElementById(
+      "teamIntelGrid"
+    );
+
+
+  const focus =
+    document.getElementById(
+      "teamIntelFocused"
+    );
+
+
+  const back =
+    document.getElementById(
+      "teamIntelCloseFocus"
+    );
+
+
+  grid?.classList.add(
+    "hidden"
+  );
+
+
+  focus?.classList.remove(
+    "hidden"
+  );
+
+
+  back?.classList.remove(
+    "hidden"
+  );
+
+
+  if (!focus) return;
+
+
+  // Leaders first,
+  // normal members after.
+  const direct =
+    [...metrics.direct]
+      .sort(
+        (a, b) => {
+
+          const aChildren =
+            teamMapChildren(
+              a.code
+            ).length;
+
+          const bChildren =
+            teamMapChildren(
+              b.code
+            ).length;
+
+
+          if (
+            aChildren > 0 &&
+            bChildren === 0
+          ) {
+            return -1;
+          }
+
+
+          if (
+            aChildren === 0 &&
+            bChildren > 0
+          ) {
+            return 1;
+          }
+
+
+          if (
+            bChildren !==
+            aChildren
+          ) {
+
+            return (
+              bChildren -
+              aChildren
+            );
+          }
+
+
+          return a.name.localeCompare(
+            b.name
+          );
+        }
+      );
+
+
+  focus.innerHTML = `
+
+    <div class="team-intel-focus-title">
+
+      <div>
+
+        <span class="team-intelligence-eyebrow">
+          SELECTED TEAM
+        </span>
+
+        <h3>
+          ${teamMapEscape(
+            leader.name
+          )}
+        </h3>
+
+        <p>
+          ${teamMapEscape(
+            leader.code
+          )}
+          · Live organization hierarchy
+        </p>
+
+      </div>
+
+
+      <div class="team-intel-focus-stats">
+
+        <div class="team-intel-focus-stat">
+
+          <strong>
+            ${metrics.downline}
+          </strong>
+
+          <span>
+            DOWNLINE
+          </span>
+
+        </div>
+
+
+        <div class="team-intel-focus-stat">
+
+          <strong>
+            ${metrics.direct.length}
+          </strong>
+
+          <span>
+            DIRECT
+          </span>
+
+        </div>
+
+
+        <div class="team-intel-focus-stat">
+
+          <strong>
+            ${metrics.depth}
+          </strong>
+
+          <span>
+            LEVELS
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="team-intel-mini-root">
+      ${teamMapEscape(
+        leader.name
+      )}
+    </div>
+
+
+    ${
+      direct.length
+        ? `
+
+          <div class="team-intel-mini-line"></div>
+
+
+          <div class="team-intel-mini-children">
+
+            ${direct
+              .map(
+                child => {
+
+                  const childDirect =
+                    teamMapChildren(
+                      child.code
+                    ).length;
+
+
+                  return `
+
+                    <button
+                      type="button"
+                      class="team-intel-mini-child"
+                      data-team-intel-open-map="${teamMapEscape(
+                        child.code
+                      )}"
+                    >
+
+                      ${teamMapEscape(
+                        child.name
+                      )}
+
+                      ${
+                        childDirect
+                          ? `
+                            <br>
+                            <small>
+                              ${childDirect}
+                              direct ·
+                              ${teamMapDescendantCount(
+                                child.code
+                              )}
+                              downline
+                            </small>
+                          `
+                          : ""
+                      }
+
+                    </button>
+
+                  `;
+
+                }
+              )
+              .join("")}
+
+          </div>
+
+        `
+        : ""
+    }
+
+
+    <button
+      type="button"
+      class="team-map-reset-btn"
+      data-team-intel-open-map="${teamMapEscape(
+        leader.code
+      )}"
+    >
+      Open Full Team Map →
+    </button>
+
+  `;
+}
+
+// ==========================================================
+// TEAM INTELLIGENCE EVENTS
+// ==========================================================
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const teamCard =
+      event.target.closest(
+        "[data-team-intel-code]"
+      );
+
+
+    if (teamCard) {
+
+      openTeamIntelFocus(
+        teamCard.dataset
+          .teamIntelCode
+      );
+
+      return;
+    }
+
+
+    const openMap =
+      event.target.closest(
+        "[data-team-intel-open-map]"
+      );
+
+
+    if (openMap) {
+
+      const code =
+        openMap.dataset
+          .teamIntelOpenMap;
+
+
+      teamMapFocusCode =
+        code;
+
+
+      const selector =
+        document.getElementById(
+          "teamMapLeaderSelect"
+        );
+
+
+      if (selector) {
+
+        selector.value =
+          code;
+      }
+
+
+      drawTeamMap();
+
+
+      document
+        .querySelector(
+          ".team-map-surface"
+        )
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+
+
+      return;
+    }
+
+  }
+);
+
+
+// BACK TO RANKINGS
+
+document
+  .getElementById(
+    "teamIntelCloseFocus"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      document
+        .getElementById(
+          "teamIntelGrid"
+        )
+        ?.classList.remove(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "teamIntelFocused"
+        )
+        ?.classList.add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "teamIntelCloseFocus"
+        )
+        ?.classList.add(
+          "hidden"
+        );
+
+    }
+  );
+
+
+// SORT TABS
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const tab =
+      event.target.closest(
+        "[data-team-intel-sort]"
+      );
+
+
+    if (!tab) return;
+
+
+    teamIntelSortMode =
+      tab.dataset
+        .teamIntelSort;
+
+
+    document
+      .querySelectorAll(
+        ".team-intel-tab"
+      )
+      .forEach(
+        button =>
+          button.classList.remove(
+            "active"
+          )
+      );
+
+
+    tab.classList.add(
+      "active"
+    );
+
+
+    renderTeamIntelligence();
+
+  }
+);
