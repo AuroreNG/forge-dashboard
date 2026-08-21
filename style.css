@@ -26265,3 +26265,243 @@ body.forge-drawer-open {
   border-top-color:
     #a9bfd7 !important;
 }
+
+/* =========================================================
+   FORGE TEAM MAP — PREMIUM HIERARCHY PALETTE
+========================================================= */
+
+/* -----------------------------------------
+   DEFAULT MEMBER
+----------------------------------------- */
+
+.team-map-node {
+  background: #ffffff !important;
+  border: 1px solid #d7e1ec !important;
+  color: #0b2342 !important;
+
+  box-shadow:
+    0 7px 18px rgba(7, 27, 58, .06) !important;
+}
+
+
+/* -----------------------------------------
+   TOP LEADER
+----------------------------------------- */
+
+.team-map-node.level-0,
+.team-map-root > .team-map-node-wrap > .team-map-node {
+
+  background:
+    linear-gradient(
+      135deg,
+      #071b3a 0%,
+      #123b68 100%
+    ) !important;
+
+  border:
+    1px solid #071b3a !important;
+
+  color:
+    #ffffff !important;
+
+  box-shadow:
+    0 10px 25px
+    rgba(7, 27, 58, .18) !important;
+}
+
+
+/* -----------------------------------------
+   LEVEL 1 — BLUE
+----------------------------------------- */
+
+.team-map-node.level-1 {
+
+  background:
+    #f4f8ff !important;
+
+  border:
+    1.5px solid #5b8def !important;
+
+  color:
+    #123b68 !important;
+}
+
+
+/* -----------------------------------------
+   LEVEL 2 — TEAL
+----------------------------------------- */
+
+.team-map-node.level-2 {
+
+  background:
+    #f2faf8 !important;
+
+  border:
+    1.5px solid #62a99a !important;
+
+  color:
+    #235e54 !important;
+}
+
+
+/* -----------------------------------------
+   LEVEL 3 — VIOLET
+----------------------------------------- */
+
+.team-map-node.level-3 {
+
+  background:
+    #faf7ff !important;
+
+  border:
+    1.5px solid #9a7bd8 !important;
+
+  color:
+    #513d7d !important;
+}
+
+
+/* -----------------------------------------
+   LEVEL 4 — WARM SAND
+----------------------------------------- */
+
+.team-map-node.level-4 {
+
+  background:
+    #fffaf4 !important;
+
+  border:
+    1.5px solid #d8a261 !important;
+
+  color:
+    #765127 !important;
+}
+
+
+/* -----------------------------------------
+   LEVEL 5+
+----------------------------------------- */
+
+.team-map-node.level-5,
+.team-map-node.level-6,
+.team-map-node.level-7 {
+
+  background:
+    #f7f9fc !important;
+
+  border:
+    1.5px solid #8fa3ba !important;
+
+  color:
+    #334b66 !important;
+}
+
+/* =========================================================
+   AVATAR COLORS
+========================================================= */
+
+.team-map-node.level-1 .team-map-avatar {
+  background: #e5efff !important;
+  color: #245eb8 !important;
+}
+
+.team-map-node.level-2 .team-map-avatar {
+  background: #dff3ee !important;
+  color: #287365 !important;
+}
+
+.team-map-node.level-3 .team-map-avatar {
+  background: #eee6fb !important;
+  color: #65449b !important;
+}
+
+.team-map-node.level-4 .team-map-avatar {
+  background: #faead7 !important;
+  color: #9a6229 !important;
+}
+
+.team-map-node.level-5 .team-map-avatar,
+.team-map-node.level-6 .team-map-avatar,
+.team-map-node.level-7 .team-map-avatar {
+  background: #e9eff5 !important;
+  color: #415c78 !important;
+}
+
+
+/* TOP LEADER AVATAR */
+
+.team-map-node.level-0 .team-map-avatar,
+.team-map-root > .team-map-node-wrap > .team-map-node .team-map-avatar {
+
+  background:
+    rgba(255,255,255,.13) !important;
+
+  color:
+    #ffffff !important;
+}
+
+/* =========================================================
+   EXPAND / COLLAPSE CONTROLS
+========================================================= */
+
+.team-map-toggle {
+
+  width: 25px !important;
+  height: 25px !important;
+
+  display: grid !important;
+  place-items: center !important;
+
+  position: absolute;
+
+  left: 50%;
+  bottom: -14px;
+
+  transform: translateX(-50%);
+
+  border:
+    2px solid #ffffff !important;
+
+  border-radius:
+    50% !important;
+
+  background:
+    #123b68 !important;
+
+  color:
+    #ffffff !important;
+
+  font-size:
+    15px !important;
+
+  font-weight:
+    800 !important;
+
+  line-height:
+    1 !important;
+
+  cursor:
+    pointer;
+
+  z-index:
+    20;
+
+  box-shadow:
+    0 3px 8px
+    rgba(7,27,58,.18) !important;
+
+  transition:
+    transform .15s ease,
+    background .15s ease;
+}
+
+
+.team-map-toggle:hover {
+
+  background:
+    #071b3a !important;
+
+  transform:
+    translateX(-50%)
+    scale(1.08);
+}
