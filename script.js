@@ -11656,6 +11656,7 @@ function teamMapEscape(value) {
 
 function buildTeamMapNode(
   member,
+  level = 0,
   visited = new Set()
 ) {
 
@@ -11714,7 +11715,11 @@ function buildTeamMapNode(
 
         <button
           type="button"
-          class="team-map-node"
+          class="
+  team-map-node
+  level-${Math.min(level, 7)}
+  ${member.isOrganizationRoot ? "level-0" : ""}
+"
           data-team-member-code="${teamMapEscape(
             member.code
           )}"
@@ -11804,20 +11809,21 @@ function buildTeamMapNode(
             <div class="team-map-children">
 
               ${children
-                .sort(
-                  (a, b) =>
-                    a.name.localeCompare(
-                      b.name
-                    )
-                )
-                .map(
-                  (child) =>
-                    buildTeamMapNode(
-                      child,
-                      nextVisited
-                    )
-                )
-                .join("")}
+  .sort(
+    (a, b) =>
+      a.name.localeCompare(
+        b.name
+      )
+  )
+  .map(
+    (child) =>
+      buildTeamMapNode(
+        child,
+        level + 1,
+        nextVisited
+      )
+  )
+  .join("")}
 
             </div>
 
@@ -12481,124 +12487,316 @@ document
     fitTeamMapToScreen
   );
 
-
 // ==========================================================
-// FULLSCREEN
+// FORGE TEAM MAP — FULL CHART VIEW
 // ==========================================================
 
-async function openTeamMapFullscreen() {
+let teamMapStageZoom = 1;
 
-  const surface =
-    document.querySelector(
-      ".team-map-surface"
+
+function renderTeamMapStage() {
+
+  const source =
+    document.getElementById(
+      "teamMapTree"
     );
 
-  if (!surface) return;
-
-
-  try {
-
-    if (
-      surface.requestFullscreen
-    ) {
-
-      await surface
-        .requestFullscreen();
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Could not enter fullscreen:",
-      error
+  const canvas =
+    document.getElementById(
+      "teamMapStageCanvas"
     );
+
+
+  if (
+    !source ||
+    !canvas
+  ) {
+    return;
   }
+
+
+  canvas.innerHTML =
+    source.innerHTML;
+
+
+  canvas.style.transform =
+    `scale(${teamMapStageZoom})`;
 }
 
 
-async function closeTeamMapFullscreen() {
+function applyTeamMapStageZoom() {
 
-  try {
-
-    if (
-      document.fullscreenElement
-    ) {
-
-      await document
-        .exitFullscreen();
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Could not exit fullscreen:",
-      error
+  const canvas =
+    document.getElementById(
+      "teamMapStageCanvas"
     );
-  }
+
+
+  if (!canvas) return;
+
+
+  canvas.style.transform =
+    `scale(${teamMapStageZoom})`;
 }
 
 
+function fitTeamMapStage() {
+
+  const viewport =
+    document.getElementById(
+      "teamMapStageViewport"
+    );
+
+
+  const canvas =
+    document.getElementById(
+      "teamMapStageCanvas"
+    );
+
+
+  if (
+    !viewport ||
+    !canvas
+  ) {
+    return;
+  }
+
+
+  // Reset before measuring.
+  teamMapStageZoom = 1;
+
+  applyTeamMapStageZoom();
+
+
+  requestAnimationFrame(
+    () => {
+
+      const naturalWidth =
+        canvas.scrollWidth ||
+        canvas.offsetWidth ||
+        1200;
+
+
+      const available =
+        viewport.clientWidth -
+        90;
+
+
+      teamMapStageZoom =
+        Math.max(
+          .45,
+          Math.min(
+            1.1,
+            available /
+            naturalWidth
+          )
+        );
+
+
+      applyTeamMapStageZoom();
+
+
+      setTimeout(
+        () => {
+
+          viewport.scrollLeft =
+            Math.max(
+              0,
+              (
+                viewport.scrollWidth -
+                viewport.clientWidth
+              ) / 2
+            );
+
+
+          viewport.scrollTop = 0;
+
+        },
+        30
+      );
+
+    }
+  );
+}
+
+
+function openTeamMapStage() {
+
+  const stage =
+    document.getElementById(
+      "teamMapStage"
+    );
+
+
+  if (!stage) return;
+
+
+  teamMapStageZoom = 1;
+
+
+  renderTeamMapStage();
+
+
+  const title =
+    document.getElementById(
+      "teamMapStageTitle"
+    );
+
+
+  if (title) {
+
+    title.textContent =
+      document
+        .getElementById(
+          "teamMapCurrentView"
+        )
+        ?.textContent
+        ?.trim() ||
+
+      currentOrganization?.name ||
+
+      "Team Map";
+  }
+
+
+  stage.classList.add(
+    "active"
+  );
+
+
+  stage.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
+
+  setTimeout(
+    fitTeamMapStage,
+    100
+  );
+}
+
+
+function closeTeamMapStage() {
+
+  const stage =
+    document.getElementById(
+      "teamMapStage"
+    );
+
+
+  stage?.classList.remove(
+    "active"
+  );
+
+
+  stage?.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  document.body.style.overflow =
+    "";
+}
+
+
+// Main fullscreen button
 document
   .getElementById(
     "teamMapFullscreen"
   )
   ?.addEventListener(
     "click",
-    openTeamMapFullscreen
+    openTeamMapStage
   );
 
 
+// Exit
 document
   .getElementById(
-    "teamMapExitFullscreen"
+    "teamMapStageExit"
   )
   ?.addEventListener(
     "click",
-    closeTeamMapFullscreen
+    closeTeamMapStage
   );
 
 
+// ESC
 document.addEventListener(
-  "fullscreenchange",
-  () => {
+  "keydown",
+  event => {
 
-    const isFullscreen =
-      !!document.fullscreenElement;
+    if (
+      event.key === "Escape"
+    ) {
 
-
-    document
-      .getElementById(
-        "teamMapFullscreen"
-      )
-      ?.classList.toggle(
-        "hidden",
-        isFullscreen
-      );
-
-
-    document
-      .getElementById(
-        "teamMapExitFullscreen"
-      )
-      ?.classList.toggle(
-        "hidden",
-        !isFullscreen
-      );
-
-
-    if (isFullscreen) {
-
-      setTimeout(
-        fitTeamMapToScreen,
-        150
-      );
-
+      closeTeamMapStage();
     }
-
   }
 );
+
+
+// Fit
+document
+  .getElementById(
+    "teamMapStageFit"
+  )
+  ?.addEventListener(
+    "click",
+    fitTeamMapStage
+  );
+
+
+// Zoom in
+document
+  .getElementById(
+    "teamMapStageZoomIn"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      teamMapStageZoom =
+        Math.min(
+          1.8,
+          teamMapStageZoom +
+          .1
+        );
+
+
+      applyTeamMapStageZoom();
+    }
+  );
+
+
+// Zoom out
+document
+  .getElementById(
+    "teamMapStageZoomOut"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      teamMapStageZoom =
+        Math.max(
+          .35,
+          teamMapStageZoom -
+          .1
+        );
+
+
+      applyTeamMapStageZoom();
+    }
+  );
+
+
 
 
 // ==========================================================
