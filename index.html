@@ -1140,7 +1140,39 @@
 <div id="importReviewModal" class="modal hidden">
   <div class="modal-card import-review">
 
-    <h3>CSV Import Review</h3>
+    <div class="import-review-header">
+      <div>
+        <h3>Import Review</h3>
+        <p>Select multiple CSV files, review them, then import everything at once.</p>
+      </div>
+
+      <button id="closeImportReview" type="button" class="modal-close">
+        ×
+      </button>
+    </div>
+
+    <div class="import-org-banner">
+      <span>Importing into</span>
+      <strong id="importOrganizationName">Current Organization</strong>
+    </div>
+
+    <div class="import-file-picker">
+      <input
+        type="file"
+        id="importFileInput"
+        accept=".csv"
+        multiple
+        hidden
+      />
+
+      <button id="chooseImportFiles" type="button" class="choose-files-btn">
+        Choose CSV Files
+      </button>
+
+      <span id="selectedFileCount">No files selected</span>
+    </div>
+
+    <div id="importFileList" class="import-file-list"></div>
 
     <div class="import-stats">
 
@@ -1166,9 +1198,18 @@
 
     </div>
 
+    <div id="importProgress" class="import-progress hidden">
+      Preparing import...
+    </div>
+
     <div class="modal-actions">
-      <button id="cancelImport">Cancel</button>
-      <button id="confirmImport">Import Agents</button>
+      <button id="cancelImport" type="button">
+        Cancel
+      </button>
+
+      <button id="confirmImport" type="button" disabled>
+        Import All Files
+      </button>
     </div>
 
   </div>
