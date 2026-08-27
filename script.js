@@ -1984,7 +1984,116 @@ upline_code:
     `Recruit import complete. ${created} new recruits added. ${updated} existing agents updated.`
   );
 }
+let selectedImportFiles = [];
 
+const importFileInput = document.getElementById("importFileInput");
+const chooseImportFiles = document.getElementById("chooseImportFiles");
+const importFileList = document.getElementById("importFileList");
+const selectedFileCount = document.getElementById("selectedFileCount");
+const confirmImport = document.getElementById("confirmImport");
+
+chooseImportFiles?.addEventListener("click", () => {
+  importFileInput?.click();
+});
+
+importFileInput?.addEventListener("change", (event) => {
+  const files = Array.from(event.target.files || []);
+
+  files.forEach((file) => {
+    const alreadyAdded = selectedImportFiles.some(
+      (existing) =>
+        existing.name === file.name &&
+        existing.size === file.size
+    );
+
+    if (!alreadyAdded) {
+      selectedImportFiles.push(file);
+    }
+  });
+
+  renderSelectedImportFiles();
+
+  // lets you select the same file again if you removed it
+  importFileInput.value = "";
+});
+
+function renderSelectedImportFiles() {
+  if (!importFileList) return;
+
+  importFileList.innerHTML = "";
+
+  selectedFileCount.textContent =
+    selectedImportFiles.length === 0
+      ? "No files selected"
+      : `${selectedImportFiles.length} file${
+          selectedImportFiles.length === 1 ? "" : "s"
+        } selected`;
+
+  selectedImportFiles.forEach((file, index) => {
+    const row = document.createElement("div");
+    row.className = "import-file-row";
+
+    row.innerHTML = `
+      <div class="import-file-details">
+        <strong>${escapeImportHtml(file.name)}</strong>
+        <span>${formatImportFileSize(file.size)}</span>
+      </div>
+
+      <button
+        type="button"
+        class="remove-import-file"
+        data-index="${index}"
+        aria-label="Remove ${escapeImportHtml(file.name)}"
+      >
+        ×
+      </button>
+    `;
+
+    importFileList.appendChild(row);
+  });
+
+  importFileList
+    .querySelectorAll(".remove-import-file")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        const index = Number(button.dataset.index);
+
+        selectedImportFiles.splice(index, 1);
+
+        renderSelectedImportFiles();
+      });
+    });
+
+  confirmImport.disabled = selectedImportFiles.length === 0;
+
+  confirmImport.textContent =
+    selectedImportFiles.length === 0
+      ? "Import All Files"
+      : selectedImportFiles.length === 1
+      ? "Import 1 File"
+      : `Import All ${selectedImportFiles.length} Files`;
+}
+
+function formatImportFileSize(bytes) {
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
+
+  if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)} KB`;
+  }
+
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
+function escapeImportHtml(value = "") {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
 function findExistingTeamAgent(complianceAgent) {
   const code =
