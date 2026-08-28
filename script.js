@@ -15968,3 +15968,285 @@ openLeaderInTeamMap = function(code) {
 document.getElementById("teamMapBackToEnterprise")?.addEventListener("click", () => {
   document.getElementById("teamMapEnterpriseView")?.removeAttribute("data-user-opened-tree");
 });
+
+// ==========================================================
+// FORGE FULLSCREEN TEAM MAP — LIVE EXPAND / COLLAPSE
+// ==========================================================
+
+function syncTeamMapStage() {
+
+  const source =
+    document.getElementById("teamMapTree");
+
+  const canvas =
+    document.getElementById("teamMapStageCanvas");
+
+  if (!source || !canvas) return;
+
+  canvas.innerHTML =
+    source.innerHTML;
+
+  if (
+    typeof applyTeamMapStageZoom ===
+    "function"
+  ) {
+    applyTeamMapStageZoom();
+  }
+}
+
+
+// ----------------------------------------------------------
+// COLLAPSE ALL
+// Keeps current root visible.
+// Every leader underneath becomes clickable with +
+// ----------------------------------------------------------
+
+function collapseForgeTeamMap() {
+
+  teamMapDirectOnlyMode = false;
+
+  teamMapCollapsed =
+    new Set(
+      teamMapMembers
+        .filter(
+          member =>
+            member?.code &&
+            teamMapChildren(
+              member.code
+            ).length > 0
+        )
+        .map(
+          member =>
+            normalizeTeamMapCode(
+              member.code
+            )
+        )
+    );
+
+  drawTeamMap();
+
+  requestAnimationFrame(() => {
+    syncTeamMapStage();
+  });
+}
+
+
+// ----------------------------------------------------------
+// EXPAND ALL
+// ----------------------------------------------------------
+
+function expandForgeTeamMap() {
+
+  teamMapDirectOnlyMode = false;
+
+  teamMapCollapsed.clear();
+
+  drawTeamMap();
+
+  requestAnimationFrame(() => {
+    syncTeamMapStage();
+  });
+}
+
+
+// ----------------------------------------------------------
+// OPEN/CLOSE ONE LEADER BRANCH
+// ----------------------------------------------------------
+
+function toggleForgeTeamBranch(rawCode) {
+
+  const code =
+    normalizeTeamMapCode(
+      rawCode
+    );
+
+  if (!code) return;
+
+  const member =
+    teamMapMembers.find(
+      person =>
+        normalizeTeamMapCode(
+          person.code
+        ) === code
+    );
+
+  if (!member) return;
+
+  const children =
+    teamMapChildren(
+      member.code
+    );
+
+  if (!children.length) return;
+
+
+  if (
+    teamMapCollapsed.has(code)
+  ) {
+
+    // Open this leader.
+    teamMapCollapsed.delete(code);
+
+    // Keep the next leaders closed.
+    // This makes the map drill down one level at a time.
+    children.forEach(
+      child => {
+
+        if (
+          teamMapChildren(
+            child.code
+          ).length > 0
+        ) {
+          teamMapCollapsed.add(
+            normalizeTeamMapCode(
+              child.code
+            )
+          );
+        }
+
+      }
+    );
+
+  } else {
+
+    // Close this leader's branch.
+    teamMapCollapsed.add(code);
+
+  }
+
+
+  teamMapDirectOnlyMode = false;
+
+  drawTeamMap();
+
+  requestAnimationFrame(() => {
+    syncTeamMapStage();
+  });
+}
+
+
+// ==========================================================
+// FULLSCREEN CARD CLICK
+// Your real Team Map uses:
+// .team-map-node[data-team-map-toggle]
+// ==========================================================
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const stage =
+      document.getElementById(
+        "teamMapStage"
+      );
+
+    if (
+      !stage ||
+      stage.classList.contains(
+        "hidden"
+      )
+    ) {
+      return;
+    }
+
+
+    const card =
+      event.target.closest(
+        "#teamMapStageCanvas .team-map-node[data-team-map-toggle]"
+      );
+
+    if (!card) return;
+
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+
+    const code =
+      card.dataset
+        .teamMapToggle;
+
+
+    toggleForgeTeamBranch(
+      code
+    );
+
+  },
+  true
+);
+
+
+// ==========================================================
+// FULLSCREEN COLLAPSE ALL BUTTON
+// ==========================================================
+
+document
+  .getElementById(
+    "teamMapStageCollapseAll"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      collapseForgeTeamMap();
+
+      setTimeout(
+        () => {
+
+          if (
+            typeof fitTeamMapStage ===
+            "function"
+          ) {
+            fitTeamMapStage();
+          }
+
+        },
+        100
+      );
+
+    }
+  );
+
+
+// ==========================================================
+// KEEP FULLSCREEN UPDATED WHEN NORMAL MAP REDRAWS
+// ==========================================================
+
+const forgeLiveDrawTeamMap =
+  drawTeamMap;
+
+drawTeamMap = function(
+  ...args
+) {
+
+  const result =
+    forgeLiveDrawTeamMap.apply(
+      this,
+      args
+    );
+
+
+  const stage =
+    document.getElementById(
+      "teamMapStage"
+    );
+
+
+  if (
+    stage &&
+    !stage.classList.contains(
+      "hidden"
+    )
+  ) {
+
+    requestAnimationFrame(
+      () => {
+        syncTeamMapStage();
+      }
+    );
+
+  }
+
+
+  return result;
+};
