@@ -23291,78 +23291,54 @@ body.forge-drawer-open {
 
 .team-map-children {
   position: relative;
-
   display: flex;
   align-items: flex-start;
   justify-content: center;
-
-  gap: 28px;
-
-  padding-top: 55px;
+  gap: 16px;
+  padding-top: 52px;
 }
-
-
 .team-map-children::before {
   content: "";
-
   position: absolute;
-
   top: 13px;
   left: 50%;
-
-  width: 1px;
-  height: 42px;
-
-  background: #cad8e8;
+  width: 2px;
+  height: 39px;
+  background: #2f6eea;
+  transform: translateX(-1px);
+  z-index: 1;
 }
-
-
-.team-map-children >
-.team-map-branch::before {
-
+.team-map-children > .team-map-branch { position: relative; }
+.team-map-children > .team-map-branch::before {
   content: "";
-
   position: absolute;
-
-  top: -42px;
+  top: -39px;
   left: 50%;
-
-  width: 1px;
-  height: 42px;
-
-  background: #cad8e8;
+  width: 2px;
+  height: 39px;
+  background: #2f6eea;
+  transform: translateX(-1px);
+  z-index: 1;
 }
-
-
-.team-map-children >
-.team-map-branch:not(:only-child)::after {
-
+.team-map-children > .team-map-branch:not(:only-child)::after {
   content: "";
-
   position: absolute;
-
-  top: -42px;
-
-  width:
-    calc(100% + 28px);
-
-  border-top:
-    1px solid #cad8e8;
-
-  z-index: 0;
+  top: -39px;
+  height: 2px;
+  background: #2f6eea;
+  z-index: 1;
 }
-
-
-.team-map-children >
-.team-map-branch:last-child::after {
+.team-map-children > .team-map-branch:first-child:not(:only-child)::after {
+  left: 50%;
+  width: calc(50% + 8px);
+}
+.team-map-children > .team-map-branch:not(:first-child):not(:last-child)::after {
+  left: -8px;
+  width: calc(100% + 16px);
+}
+.team-map-children > .team-map-branch:last-child:not(:only-child)::after {
   right: 50%;
-  width: calc(50% + 14px);
-}
-
-
-.team-map-children >
-.team-map-branch:not(:first-child):not(:last-child)::after {
-  left: -14px;
+  width: calc(50% + 8px);
 }
 
 
@@ -24080,54 +24056,36 @@ body.forge-drawer-open {
 
 
 .team-map-tool-btn {
-  min-width: 75px;
-
-  padding:
-    9px
-    12px;
-
-  border:
-    1px solid #dbe5f3;
-
+  min-width: 88px;
+  min-height: 58px;
+  padding: 7px 12px;
+  border: 1px solid #dbe5f3;
   border-radius: 11px;
-
   background: white;
-
   color: #213b60;
-
-  font-size: 9px;
-  font-weight: 600;
-
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.15;
   cursor: pointer;
-
-  box-shadow:
-    0 4px 14px
-    rgba(
-      25,
-      49,
-      85,
-      .04
-    );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+  box-shadow: 0 4px 14px rgba(25, 49, 85, .04);
 }
-
-
 .team-map-tool-btn span {
   display: block;
-
-  margin-bottom: 4px;
-
+  margin: 0 0 4px 0;
   color: #163c76;
-
   font-size: 18px;
+  line-height: 1;
 }
-
-
 .team-map-tool-btn:hover {
   border-color: #aac6f0;
-
   background: #f7faff;
 }
-
 
 /* =========================================================
    VIEWPORT
@@ -24372,6 +24330,7 @@ body.forge-drawer-open {
 }
 
 
+/* Line coming DOWN from the parent */
 .team-map-children::before {
   content: "";
 
@@ -24380,13 +24339,25 @@ body.forge-drawer-open {
   top: 13px;
   left: 50%;
 
-  width: 1px;
+  width: 2px;
   height: 39px;
 
   background: #2f6eea;
+
+  transform: translateX(-1px);
+
+  z-index: 1;
 }
 
 
+/* Every child branch must be a positioning anchor */
+.team-map-children >
+.team-map-branch {
+  position: relative;
+}
+
+
+/* Vertical line entering each child card */
 .team-map-children >
 .team-map-branch::before {
   content: "";
@@ -24396,13 +24367,18 @@ body.forge-drawer-open {
   top: -39px;
   left: 50%;
 
-  width: 1px;
+  width: 2px;
   height: 39px;
 
   background: #2f6eea;
+
+  transform: translateX(-1px);
+
+  z-index: 1;
 }
 
 
+/* Shared horizontal connector */
 .team-map-children >
 .team-map-branch:not(:only-child)::after {
   content: "";
@@ -24411,15 +24387,18 @@ body.forge-drawer-open {
 
   top: -39px;
 
-  border-top:
-    1px solid #2f6eea;
+  height: 2px;
 
-  z-index: 0;
+  background: #2f6eea;
+
+  z-index: 1;
 }
 
+
+/* FIRST person — connect from center toward the right */
 .team-map-children >
-.team-map-branch:last-child::after {
-  right: 50%;
+.team-map-branch:first-child:not(:only-child)::after {
+  left: 50%;
 
   width:
     calc(
@@ -24429,6 +24408,7 @@ body.forge-drawer-open {
 }
 
 
+/* MIDDLE people — line passes completely across */
 .team-map-children >
 .team-map-branch:not(:first-child):not(:last-child)::after {
   left: -8px;
@@ -24440,6 +24420,18 @@ body.forge-drawer-open {
     );
 }
 
+
+/* LAST person — connect from left toward center */
+.team-map-children >
+.team-map-branch:last-child:not(:only-child)::after {
+  right: 50%;
+
+  width:
+    calc(
+      50% +
+      8px
+    );
+}
 
 /* =========================================================
    LEGEND
