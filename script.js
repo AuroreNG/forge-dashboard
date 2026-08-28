@@ -12180,6 +12180,43 @@ function buildTeamMapNode(
 
   `;
 }
+
+// ==========================================================
+// TEAM MAP NODE COLLAPSE / EXPAND
+// ==========================================================
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const card =
+      event.target.closest(
+        ".team-map-node[data-team-map-toggle]"
+      );
+
+    if (!card) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const code =
+      normalizeTeamMapCode(
+        card.dataset.teamMapToggle
+      );
+
+    if (!code) return;
+
+    if (
+      teamMapCollapsed.has(code)
+    ) {
+      teamMapCollapsed.delete(code);
+    } else {
+      teamMapCollapsed.add(code);
+    }
+
+    drawTeamMap();
+  }
+);
 // ==========================================================
 // KEYBOARD SUPPORT
 // ==========================================================
@@ -13016,7 +13053,75 @@ document
 
     }
   );
+// ==========================================================
+// COLLAPSE / EXPAND ENTIRE TEAM MAP
+// ==========================================================
 
+function collapseEntireTeamMap() {
+
+  teamMapCollapsed.clear();
+
+  teamMapMembers.forEach(member => {
+
+    const code =
+      normalizeTeamMapCode(
+        member.code
+      );
+
+    if (!code) return;
+
+    const children =
+      teamMapChildren(
+        member.code
+      );
+
+    if (children.length > 0) {
+      teamMapCollapsed.add(code);
+    }
+
+  });
+
+  drawTeamMap();
+  updateTeamMapCollapseButton();
+
+  setTimeout(
+    fitTeamMapToScreen,
+    50
+  );
+}
+
+
+function expandEntireTeamMap() {
+
+  teamMapCollapsed.clear();
+
+  drawTeamMap();
+  updateTeamMapCollapseButton();
+
+  setTimeout(
+    fitTeamMapToScreen,
+    50
+  );
+}
+
+
+function updateTeamMapCollapseButton() {
+
+  const button =
+    document.getElementById(
+      "teamMapCollapseAll"
+    );
+
+  if (!button) return;
+
+  const hasCollapsed =
+    teamMapCollapsed.size > 0;
+
+  button.textContent =
+    hasCollapsed
+      ? "Expand All"
+      : "Collapse All";
+}
 
 // ==========================================================
 // FIT TO SCREEN
@@ -13103,6 +13208,25 @@ document
   ?.addEventListener(
     "click",
     fitTeamMapToScreen
+  );
+
+document
+  .getElementById(
+    "teamMapCollapseAll"
+  )
+  ?.addEventListener(
+    "click",
+    () => {
+
+      if (
+        teamMapCollapsed.size > 0
+      ) {
+        expandEntireTeamMap();
+      } else {
+        collapseEntireTeamMap();
+      }
+
+    }
   );
 
 // ==========================================================
