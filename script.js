@@ -13061,6 +13061,14 @@ function collapseEntireTeamMap() {
 
   teamMapCollapsed.clear();
 
+
+  const visibleRootCode =
+    normalizeTeamMapCode(
+      teamMapFocusCode ||
+      teamMapRootCode
+    );
+
+
   teamMapMembers.forEach(member => {
 
     const code =
@@ -13070,26 +13078,44 @@ function collapseEntireTeamMap() {
 
     if (!code) return;
 
+
+    // Never collapse the top/root person.
+    // Their direct leaders must remain visible.
+    if (
+      code === visibleRootCode
+    ) {
+      return;
+    }
+
+
     const children =
       teamMapChildren(
         member.code
       );
 
-    if (children.length > 0) {
+
+    // Collapse leaders below the root.
+    // This hides their teams but keeps
+    // the leaders themselves visible.
+    if (
+      children.length > 0
+    ) {
       teamMapCollapsed.add(code);
     }
 
   });
 
+
   drawTeamMap();
+
   updateTeamMapCollapseButton();
+
 
   setTimeout(
     fitTeamMapToScreen,
     50
   );
 }
-
 
 function expandEntireTeamMap() {
 
