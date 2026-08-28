@@ -8369,9 +8369,29 @@ document
       .getElementById("importGuideModal")
       ?.classList.add("hidden");
 
+    selectedImportFiles = [];
+    renderSelectedImportFiles();
+
+    const organizationName =
+      document.getElementById("importOrganizationName");
+
+    if (organizationName) {
+      organizationName.textContent =
+        currentOrganization?.name ||
+        "Current Organization";
+    }
+
+    const report =
+      document.getElementById("importSafetyReport");
+
+    if (report) {
+      report.innerHTML = "";
+      report.classList.add("hidden");
+    }
+
     document
-      .getElementById("smartImportInput")
-      ?.click();
+      .getElementById("importReviewModal")
+      ?.classList.remove("hidden");
 
   });
 
@@ -8627,59 +8647,10 @@ import_source:
   );
 
 }
-document
-  .getElementById("smartImportInput")
-  ?.addEventListener("change", async (event) => {
-
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    try {
-      const text = await file.text();
-
-      const parsedRows = parseCSV(text);
-
-      const fileType = detectTevahFileType(parsedRows);
-
-      console.log(
-        "FORGE detected Tevah file type:",
-        fileType
-      );
-
-      if (fileType === "team") {
-        await importTeamFile(parsedRows, file);
-      }
-
-      else if (fileType === "compliance") {
-        await importComplianceFile(parsedRows, file);
-      }
-
-      else if (fileType === "recruit") {
-        await importRecruitFile(parsedRows, file);
-      }
-
-      else {
-        alert(
-          "FORGE could not recognize this Tevah CSV format."
-        );
-      }
-
-    } catch (error) {
-      console.error(
-        "SMART IMPORT ERROR:",
-        error
-      );
-
-      alert(
-        "Import failed: " +
-        (error?.message || String(error))
-      );
-
-    } finally {
-      event.target.value = "";
-    }
-
-  });
+// ==========================================================
+// LEGACY SINGLE-FILE SMART IMPORT DISABLED
+// Safe Multi-Source Import below is now the only Smart Import path.
+// ==========================================================
 
 // ==========================================================
 // IMPORT TEAM CSV
@@ -16231,3 +16202,1784 @@ drawTeamMap = function(
 
   return result;
 };
+
+// ==========================================================
+// FORGE SAFE MULTI-SOURCE IMPORT ENGINE v1
+// ----------------------------------------------------------
+// SAFETY RULES
+// 1. Agent Code is the strongest identity.
+// 2. Fallback matching: email -> phone -> unique exact cleaned name.
+// 3. Blank CSV cells never erase saved data.
+// 4. Existing Name / Code / Upline are protected. Conflicts are warned.
+// 5. Supplemental files add information; they do not replace identity.
+// 6. Journey stage can only move forward.
+// 7. Ambiguous/conflicting rows are rejected instead of guessed.
+// 8. New people require BOTH Agent Code and Name.
+// 9. Every warning/rejection is shown in the Import Review report.
+// ==========================================================
+
+const FORGE_IMPORT_ALIASES = {
+  name: [
+    "AGENT NAME", "FULL NAME", "FULLNAME", "NAME",
+    "RECRUIT NAME", "ASSOCIATE NAME", "MEMBER NAME"
+  ],
+  code: [
+    "AGENT CODE", "CODE", "RECRUIT CODE",
+    "ASSOCIATE CODE", "MEMBER CODE"
+  ],
+  email: ["EMAIL", "EMAIL ADDRESS", "E-MAIL"],
+  phone: ["PHONE", "PHONE NUMBER", "MOBILE", "MOBILE PHONE"],
+  upline: [
+    "UPLINE NAME", "UPLINE AGENT", "UPLINE",
+    "SPONSOR", "SPONSOR NAME", "RECRUITER", "RECRUITER NAME"
+  ],
+  uplineCode: [
+    "UPLINE CODE", "SPONSOR CODE", "RECRUITER CODE"
+  ],
+  recruitDate: [
+    "RECRUIT DATE", "RECRUIT DATE ( CST )",
+    "JOIN DATE", "START DATE"
+  ],
+  teamStatus: ["TEAM STATUS", "STATUS", "AGENT STATUS"],
+  stage: [
+    "STAGE", "JOURNEY STAGE", "LICENSING STAGE",
+    "PIPELINE STAGE", "PROGRESS STAGE"
+  ],
+  level: ["LEVEL", "AGENT LEVEL", "RANK"],
+  residentState: [
+    "RESI. STATE", "RESIDENT STATE", "RESIDENT STATE LICENSE"
+  ],
+  residentLicense: [
+    "RESI. LICENSE", "RESIDENT LICENSE", "LICENSE STATUS"
+  ],
+  eoStatus: ["E&O", "EO", "E & O", "E&O STATUS", "EO STATUS"],
+  amlStatus: ["AML", "AML STATUS"],
+  tevahPlatformFee: [
+    "TEVAH PLATFORM FEE", "PLATFORM FEE", "TEVAH FEE"
+  ],
+  npn: ["NPN", "NATIONAL PRODUCER NUMBER"],
+  xcelStatus: [
+    "XCEL", "XCEL STATUS", "XCEL COMPLETE", "XCEL COMPLETED",
+    "PRE-LICENSING STATUS", "PRELICENSING STATUS",
+    "COURSE STATUS", "COURSE COMPLETION"
+  ],
+  examStatus: [
+    "EXAM STATUS", "EXAM RESULT", "STATE EXAM",
+    "STATE EXAM STATUS"
+  ]
+};
+
+function forgeImportNormalizeHeader(value) {
+  return String(value || "")
+    .replace(/^\uFEFF/, "")
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, " ");
+}
+
+function forgeImportHeaderMap(row) {
+  const map = new Map();
+
+  Object.keys(row || {}).forEach((header) => {
+    map.set(
+      forgeImportNormalizeHeader(header),
+      row[header]
+    );
+  });
+
+  return map;
+}
+
+function forgeImportPick(map, aliases) {
+  for (const alias of aliases) {
+    const key = forgeImportNormalizeHeader(alias);
+
+    if (!map.has(key)) continue;
+
+    const value = map.get(key);
+
+    if (
+      value !== null &&
+      value !== undefined &&
+      String(value).trim() !== ""
+    ) {
+      return String(value).trim();
+    }
+  }
+
+  return "";
+}
+
+function forgeImportCleanPhone(value) {
+  return String(value || "")
+    .replace(/[^\d+]/g, "")
+    .trim();
+}
+
+function forgeImportCanonicalRow(rawRow) {
+  const map = forgeImportHeaderMap(rawRow);
+
+  return {
+    name: cleanAgentName(
+      forgeImportPick(map, FORGE_IMPORT_ALIASES.name)
+    ),
+
+    code: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.code
+    ).toUpperCase(),
+
+    email: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.email
+    ).toLowerCase(),
+
+    phone: forgeImportCleanPhone(
+      forgeImportPick(
+        map,
+        FORGE_IMPORT_ALIASES.phone
+      )
+    ),
+
+    upline: cleanAgentName(
+      forgeImportPick(
+        map,
+        FORGE_IMPORT_ALIASES.upline
+      )
+    ),
+
+    uplineCode: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.uplineCode
+    ).toUpperCase(),
+
+    recruitDate: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.recruitDate
+    ),
+
+    teamStatus: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.teamStatus
+    ),
+
+    explicitStage: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.stage
+    ),
+
+    level: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.level
+    ),
+
+    residentState: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.residentState
+    ),
+
+    residentLicense: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.residentLicense
+    ),
+
+    eoStatus: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.eoStatus
+    ),
+
+    amlStatus: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.amlStatus
+    ),
+
+    tevahPlatformFee: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.tevahPlatformFee
+    ),
+
+    npn: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.npn
+    ),
+
+    xcelStatus: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.xcelStatus
+    ),
+
+    examStatus: forgeImportPick(
+      map,
+      FORGE_IMPORT_ALIASES.examStatus
+    )
+  };
+}
+
+function forgeDetectCsvProfile(rows, fileName = "") {
+  if (!rows?.length) {
+    return {
+      type: "unknown",
+      confidence: 0,
+      reason: "The file contains no records."
+    };
+  }
+
+  const headers =
+    Object.keys(rows[0] || {})
+      .map(forgeImportNormalizeHeader);
+
+  const has = (name) =>
+    headers.includes(
+      forgeImportNormalizeHeader(name)
+    );
+
+  const any = (names) =>
+    names.some(has);
+
+  if (
+    any(["RESI. LICENSE", "RESIDENT LICENSE"]) ||
+    (
+      any(["AML", "AML STATUS"]) &&
+      any(["E&O", "EO", "E&O STATUS"])
+    )
+  ) {
+    return {
+      type: "compliance",
+      confidence: 100,
+      reason: "Compliance/license columns detected."
+    };
+  }
+
+  if (
+    any([
+      "XCEL", "XCEL STATUS", "XCEL COMPLETE",
+      "XCEL COMPLETED", "PRE-LICENSING STATUS",
+      "PRELICENSING STATUS", "COURSE STATUS",
+      "COURSE COMPLETION"
+    ])
+  ) {
+    return {
+      type: "xcel",
+      confidence: 100,
+      reason: "XCEL/pre-licensing columns detected."
+    };
+  }
+
+  if (
+    has("AGENT CODE") &&
+    any(["FULL NAME", "AGENT NAME"]) &&
+    (
+      has("TEAM STATUS") ||
+      any(["UPLINE NAME", "UPLINE CODE", "UPLINE AGENT"])
+    )
+  ) {
+    return {
+      type: "team",
+      confidence: 100,
+      reason: "Team identity/hierarchy columns detected."
+    };
+  }
+
+  if (
+    has("RECRUIT NAME") ||
+    /byrecruit|recruit/i.test(fileName)
+  ) {
+    return {
+      type: "recruit",
+      confidence: 90,
+      reason: "Recruit/progression columns detected."
+    };
+  }
+
+  const identityHeader =
+    FORGE_IMPORT_ALIASES.code.some(has) ||
+    FORGE_IMPORT_ALIASES.email.some(has) ||
+    FORGE_IMPORT_ALIASES.phone.some(has) ||
+    FORGE_IMPORT_ALIASES.name.some(has);
+
+  let recognized = 0;
+
+  Object.values(FORGE_IMPORT_ALIASES)
+    .flat()
+    .forEach((alias) => {
+      if (has(alias)) recognized++;
+    });
+
+  if (identityHeader && recognized >= 2) {
+    return {
+      type: "generic",
+      confidence: Math.min(85, 50 + recognized * 5),
+      reason:
+        "Compatible identity/progress columns detected."
+    };
+  }
+
+  return {
+    type: "unknown",
+    confidence: 0,
+    reason:
+      "FORGE could not find a safe identity column plus recognized data."
+  };
+}
+
+function forgeImportAgentLabel(row) {
+  return (
+    row.name ||
+    row.code ||
+    row.email ||
+    row.phone ||
+    "Unknown row"
+  );
+}
+
+function forgeImportEqualName(a, b) {
+  const left = normalizeMatchName(a);
+  const right = normalizeMatchName(b);
+
+  return !!left && !!right && left === right;
+}
+
+function forgeImportEqualText(a, b) {
+  return (
+    String(a || "").trim().toLowerCase() ===
+    String(b || "").trim().toLowerCase()
+  );
+}
+
+function forgeImportFindMatches(row) {
+  const code =
+    String(row.code || "")
+      .trim()
+      .toLowerCase();
+
+  const email =
+    String(row.email || "")
+      .trim()
+      .toLowerCase();
+
+  const phone =
+    forgeImportCleanPhone(row.phone);
+
+  const name =
+    normalizeMatchName(row.name);
+
+  const byCode =
+    code
+      ? allAgents.filter((agent) =>
+          String(agent.code || "")
+            .trim()
+            .toLowerCase() === code
+        )
+      : [];
+
+  if (byCode.length === 1) {
+    return {
+      agent: byCode[0],
+      basis: "Agent Code",
+      ambiguous: false
+    };
+  }
+
+  if (byCode.length > 1) {
+    return {
+      agent: null,
+      basis: "Agent Code",
+      ambiguous: true,
+      reason: "Duplicate Agent Code already exists in FORGE."
+    };
+  }
+
+  const byEmail =
+    email
+      ? allAgents.filter((agent) =>
+          String(agent.email || "")
+            .trim()
+            .toLowerCase() === email
+        )
+      : [];
+
+  if (byEmail.length === 1) {
+    return {
+      agent: byEmail[0],
+      basis: "Email",
+      ambiguous: false
+    };
+  }
+
+  if (byEmail.length > 1) {
+    return {
+      agent: null,
+      basis: "Email",
+      ambiguous: true,
+      reason: "Email matches more than one FORGE person."
+    };
+  }
+
+  const byPhone =
+    phone
+      ? allAgents.filter((agent) =>
+          forgeImportCleanPhone(agent.phone) === phone
+        )
+      : [];
+
+  if (byPhone.length === 1) {
+    return {
+      agent: byPhone[0],
+      basis: "Phone",
+      ambiguous: false
+    };
+  }
+
+  if (byPhone.length > 1) {
+    return {
+      agent: null,
+      basis: "Phone",
+      ambiguous: true,
+      reason: "Phone matches more than one FORGE person."
+    };
+  }
+
+  const byName =
+    name
+      ? allAgents.filter((agent) =>
+          normalizeMatchName(agent.name) === name
+        )
+      : [];
+
+  if (byName.length === 1) {
+    return {
+      agent: byName[0],
+      basis: "Exact Name",
+      ambiguous: false
+    };
+  }
+
+  if (byName.length > 1) {
+    return {
+      agent: null,
+      basis: "Exact Name",
+      ambiguous: true,
+      reason:
+        "Name is not unique. Agent Code is required to identify the correct person."
+    };
+  }
+
+  return {
+    agent: null,
+    basis: null,
+    ambiguous: false
+  };
+}
+
+function forgeImportIdentityConflict(existing, incoming, matchBasis) {
+  const conflicts = [];
+
+  if (
+    incoming.code &&
+    existing.code &&
+    !forgeImportEqualText(
+      incoming.code,
+      existing.code
+    )
+  ) {
+    conflicts.push(
+      `Agent Code differs: FORGE=${existing.code}, CSV=${incoming.code}`
+    );
+  }
+
+  if (
+    incoming.name &&
+    existing.name &&
+    !forgeImportEqualName(
+      incoming.name,
+      existing.name
+    )
+  ) {
+    conflicts.push(
+      `Name differs: FORGE="${existing.name}", CSV="${incoming.name}"`
+    );
+  }
+
+  if (
+    matchBasis === "Agent Code" &&
+    incoming.email &&
+    existing.email &&
+    !forgeImportEqualText(
+      incoming.email,
+      existing.email
+    )
+  ) {
+    conflicts.push(
+      `Email differs: FORGE=${existing.email}, CSV=${incoming.email}`
+    );
+  }
+
+  return conflicts;
+}
+
+function forgeImportStageFromText(value) {
+  const text =
+    String(value || "")
+      .trim()
+      .toLowerCase();
+
+  if (!text) return "";
+
+  if (
+    text.includes("contracted") ||
+    text.includes("ready to write")
+  ) {
+    return "Contracted";
+  }
+
+  if (
+    text.includes("licensed") ||
+    text === "active license" ||
+    text.includes("license active")
+  ) {
+    return "Licensed";
+  }
+
+  if (
+    text.includes("exam passed") ||
+    text.includes("passed exam") ||
+    text === "passed"
+  ) {
+    return "Exam Passed";
+  }
+
+  if (
+    text.includes("xcel completed") ||
+    text.includes("xcel complete") ||
+    (
+      text.includes("course") &&
+      text.includes("complete")
+    ) ||
+    (
+      text.includes("pre-licens") &&
+      text.includes("complete")
+    )
+  ) {
+    return "XCEL Completed";
+  }
+
+  if (text.includes("quiz sent")) {
+    return "Quiz Sent";
+  }
+
+  if (
+    text.includes("not placed") ||
+    text.includes("not started")
+  ) {
+    return "Not Placed";
+  }
+
+  return "";
+}
+
+function forgeInferIncomingStage(row, sourceType) {
+  const candidates = [];
+
+  [
+    row.explicitStage,
+    row.teamStatus,
+    row.xcelStatus,
+    row.examStatus
+  ].forEach((value) => {
+    const stage =
+      forgeImportStageFromText(value);
+
+    if (stage) candidates.push(stage);
+  });
+
+  const licenseText =
+    String(row.residentLicense || "")
+      .trim()
+      .toLowerCase();
+
+  if (
+    licenseText === "active" ||
+    licenseText.includes("licensed") ||
+    licenseText.includes("active license")
+  ) {
+    candidates.push("Licensed");
+  }
+
+  if (
+    sourceType === "xcel" &&
+    row.xcelStatus &&
+    /complete|completed|passed|100%/i.test(
+      row.xcelStatus
+    )
+  ) {
+    candidates.push("XCEL Completed");
+  }
+
+  if (
+    row.examStatus &&
+    /pass|passed/i.test(row.examStatus)
+  ) {
+    candidates.push("Exam Passed");
+  }
+
+  if (!candidates.length) return "";
+
+  return candidates.reduce((best, stage) => {
+    const bestRank =
+      STAGE_RANK[best] ?? -1;
+
+    const rank =
+      STAGE_RANK[stage] ?? -1;
+
+    return rank > bestRank
+      ? stage
+      : best;
+  }, "");
+}
+
+function forgeImportForwardStage(currentStage, incomingStage) {
+  if (!incomingStage) {
+    return currentStage || "Not Placed";
+  }
+
+  const current =
+    currentStage || "Not Placed";
+
+  const currentRank =
+    STAGE_RANK[current] ?? 0;
+
+  const incomingRank =
+    STAGE_RANK[incomingStage] ?? 0;
+
+  return incomingRank > currentRank
+    ? incomingStage
+    : current;
+}
+
+function forgeImportAddWarning(report, item) {
+  report.warnings.push(item);
+}
+
+function forgeImportAddRejected(report, item) {
+  report.rejected.push(item);
+}
+
+function forgeImportSourceLabel(type) {
+  const labels = {
+    team: "Tevah Team",
+    compliance: "Compliance",
+    recruit: "Recruit",
+    xcel: "XCEL",
+    generic: "Compatible CSV"
+  };
+
+  return labels[type] || "CSV";
+}
+
+function forgeImportMergeSource(existingSource, incomingSource) {
+  const parts =
+    String(existingSource || "")
+      .split("+")
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+  if (
+    incomingSource &&
+    !parts.some(
+      (part) =>
+        part.toLowerCase() ===
+        incomingSource.toLowerCase()
+    )
+  ) {
+    parts.push(incomingSource);
+  }
+
+  return parts.join(" + ") || incomingSource;
+}
+
+function forgeImportBuildExistingUpdates(
+  existing,
+  incoming,
+  sourceType,
+  reportContext
+) {
+  const updates = {};
+
+  // -----------------------------------------
+  // PROTECTED IDENTITY / HIERARCHY
+  // Fill blanks only. Never silently replace.
+  // -----------------------------------------
+
+  const protectedPairs = [
+    ["name", "name", "Name"],
+    ["email", "email", "Email"],
+    ["phone", "phone", "Phone"],
+    ["upline", "upline_name", "Upline"],
+    ["uplineCode", "upline_code", "Upline Code"],
+    ["recruitDate", "recruit_date", "Recruit Date"]
+  ];
+
+  protectedPairs.forEach(
+    ([agentKey, dbKey, label]) => {
+
+      const incomingValue =
+        incoming[agentKey];
+
+      if (!incomingValue) return;
+
+      const existingValue =
+        existing[agentKey];
+
+      if (!existingValue) {
+        updates[dbKey] = incomingValue;
+        return;
+      }
+
+      const same =
+        agentKey === "name" ||
+        agentKey === "upline"
+          ? forgeImportEqualName(
+              existingValue,
+              incomingValue
+            )
+          : forgeImportEqualText(
+              existingValue,
+              incomingValue
+            );
+
+      if (!same) {
+        forgeImportAddWarning(
+          reportContext.report,
+          {
+            file: reportContext.file,
+            row: reportContext.row,
+            person:
+              existing.name ||
+              incoming.name ||
+              existing.code,
+            message:
+              `${label} conflict. Kept FORGE value "${existingValue}". CSV showed "${incomingValue}".`
+          }
+        );
+      }
+    }
+  );
+
+  // Team Status may be refreshed by the Team file.
+  if (
+    sourceType === "team" &&
+    incoming.teamStatus
+  ) {
+    updates.team_status =
+      incoming.teamStatus;
+  }
+
+  // Supplemental fields: update only when CSV actually supplied a value.
+  const supplemental = [
+    ["level", "agent_level"],
+    ["residentState", "resident_state"],
+    ["residentLicense", "resident_license"],
+    ["eoStatus", "eo_status"],
+    ["amlStatus", "aml_status"],
+    ["tevahPlatformFee", "tevah_platform_fee"],
+    ["npn", "npn"]
+  ];
+
+  supplemental.forEach(
+    ([agentKey, dbKey]) => {
+      if (incoming[agentKey]) {
+        updates[dbKey] =
+          incoming[agentKey];
+      }
+    }
+  );
+
+  const incomingStage =
+    forgeInferIncomingStage(
+      incoming,
+      sourceType
+    );
+
+  const finalStage =
+    forgeImportForwardStage(
+      existing.stage,
+      incomingStage
+    );
+
+  if (
+    finalStage &&
+    finalStage !== existing.stage
+  ) {
+    updates.stage = finalStage;
+  }
+
+  updates.import_source =
+    forgeImportMergeSource(
+      existing.importSource,
+      forgeImportSourceLabel(sourceType)
+    );
+
+  return updates;
+}
+
+function forgeImportBuildNewRow(
+  incoming,
+  sourceType
+) {
+  const stage =
+    forgeImportForwardStage(
+      "Not Placed",
+      forgeInferIncomingStage(
+        incoming,
+        sourceType
+      )
+    );
+
+  return {
+    organization_id:
+      getActiveOrganizationId(),
+
+    agent_code:
+      String(incoming.code)
+        .trim()
+        .toUpperCase(),
+
+    name:
+      cleanAgentName(incoming.name),
+
+    email:
+      incoming.email || null,
+
+    phone:
+      incoming.phone || null,
+
+    recruit_date:
+      incoming.recruitDate || null,
+
+    upline_name:
+      incoming.upline || null,
+
+    upline_code:
+      incoming.uplineCode || null,
+
+    team_status:
+      incoming.teamStatus || null,
+
+    agent_level:
+      incoming.level || null,
+
+    resident_state:
+      incoming.residentState || null,
+
+    resident_license:
+      incoming.residentLicense || null,
+
+    eo_status:
+      incoming.eoStatus || null,
+
+    aml_status:
+      incoming.amlStatus || null,
+
+    tevah_platform_fee:
+      incoming.tevahPlatformFee || null,
+
+    npn:
+      incoming.npn || null,
+
+    stage,
+
+    import_source:
+      forgeImportSourceLabel(sourceType)
+  };
+}
+
+function forgeImportApplyLocalUpdate(
+  agent,
+  updates
+) {
+  const dbToAgent = {
+    name: "name",
+    email: "email",
+    phone: "phone",
+    recruit_date: "recruitDate",
+    upline_name: "upline",
+    upline_code: "uplineCode",
+    team_status: "teamStatus",
+    agent_level: "level",
+    resident_state: "residentState",
+    resident_license: "residentLicense",
+    eo_status: "eoStatus",
+    aml_status: "amlStatus",
+    tevah_platform_fee: "tevahPlatformFee",
+    npn: "npn",
+    stage: "stage",
+    import_source: "importSource"
+  };
+
+  Object.entries(updates)
+    .forEach(([dbKey, value]) => {
+      const agentKey =
+        dbToAgent[dbKey];
+
+      if (agentKey) {
+        agent[agentKey] = value;
+      }
+    });
+}
+
+async function forgeImportProcessRow(
+  incoming,
+  sourceType,
+  context
+) {
+  const report = context.report;
+
+  report.total++;
+
+  if (
+    !incoming.name &&
+    !incoming.code &&
+    !incoming.email &&
+    !incoming.phone
+  ) {
+    report.ignored++;
+    return;
+  }
+
+  const match =
+    forgeImportFindMatches(incoming);
+
+  if (match.ambiguous) {
+    forgeImportAddRejected(
+      report,
+      {
+        file: context.file,
+        row: context.row,
+        person: forgeImportAgentLabel(incoming),
+        message:
+          match.reason ||
+          "FORGE found more than one possible match."
+      }
+    );
+
+    return;
+  }
+
+  if (match.agent) {
+    const identityConflicts =
+      forgeImportIdentityConflict(
+        match.agent,
+        incoming,
+        match.basis
+      );
+
+    // Strong safety stop:
+    // Code matched but the provided Name points somewhere else.
+    if (
+      match.basis === "Agent Code" &&
+      incoming.name &&
+      match.agent.name &&
+      !forgeImportEqualName(
+        incoming.name,
+        match.agent.name
+      )
+    ) {
+      forgeImportAddRejected(
+        report,
+        {
+          file: context.file,
+          row: context.row,
+          person:
+            `${incoming.name} · ${incoming.code}`,
+          message:
+            `Agent Code matched ${match.agent.name}, but the CSV name is ${incoming.name}. Nothing was changed.`
+        }
+      );
+
+      return;
+    }
+
+    // If matching by fallback while CSV also supplied another code,
+    // never attach that code to the wrong person.
+    if (
+      match.basis !== "Agent Code" &&
+      incoming.code &&
+      match.agent.code &&
+      !forgeImportEqualText(
+        incoming.code,
+        match.agent.code
+      )
+    ) {
+      forgeImportAddRejected(
+        report,
+        {
+          file: context.file,
+          row: context.row,
+          person:
+            forgeImportAgentLabel(incoming),
+          message:
+            `Matched by ${match.basis}, but Agent Code conflicts with FORGE. Nothing was changed.`
+        }
+      );
+
+      return;
+    }
+
+    identityConflicts.forEach(
+      (message) => {
+        // Email-only conflicts are warnings when code and name are safe.
+        if (
+          !message.startsWith("Name differs") &&
+          !message.startsWith("Agent Code differs")
+        ) {
+          forgeImportAddWarning(
+            report,
+            {
+              file: context.file,
+              row: context.row,
+              person:
+                match.agent.name ||
+                forgeImportAgentLabel(incoming),
+              message
+            }
+          );
+        }
+      }
+    );
+
+    const updates =
+      forgeImportBuildExistingUpdates(
+        match.agent,
+        incoming,
+        sourceType,
+        {
+          report,
+          file: context.file,
+          row: context.row
+        }
+      );
+
+    const meaningfulKeys =
+      Object.keys(updates)
+        .filter(
+          (key) =>
+            key !== "import_source"
+        );
+
+    if (!meaningfulKeys.length) {
+      report.unchanged++;
+      return;
+    }
+
+    const { error } =
+      await forgeSupabase
+        .from("agents")
+        .update(updates)
+        .eq(
+          "organization_id",
+          getActiveOrganizationId()
+        )
+        .eq(
+          "id",
+          match.agent.id
+        );
+
+    if (error) {
+      forgeImportAddRejected(
+        report,
+        {
+          file: context.file,
+          row: context.row,
+          person:
+            match.agent.name ||
+            forgeImportAgentLabel(incoming),
+          message:
+            `Database update failed: ${error.message}`
+        }
+      );
+
+      return;
+    }
+
+    forgeImportApplyLocalUpdate(
+      match.agent,
+      updates
+    );
+
+    report.updated++;
+    return;
+  }
+
+  // -----------------------------------------
+  // NEW PERSON
+  // Safe creation requires Code + Name.
+  // -----------------------------------------
+
+  if (!incoming.code || !incoming.name) {
+    forgeImportAddRejected(
+      report,
+      {
+        file: context.file,
+        row: context.row,
+        person:
+          forgeImportAgentLabel(incoming),
+        message:
+          "No safe existing match. New people require both Agent Code and Name."
+      }
+    );
+
+    return;
+  }
+
+  const newRow =
+    forgeImportBuildNewRow(
+      incoming,
+      sourceType
+    );
+
+  const { data, error } =
+    await forgeSupabase
+      .from("agents")
+      .insert(newRow)
+      .select()
+      .single();
+
+  if (error) {
+    forgeImportAddRejected(
+      report,
+      {
+        file: context.file,
+        row: context.row,
+        person:
+          `${incoming.name} · ${incoming.code}`,
+        message:
+          `Could not add new person: ${error.message}`
+      }
+    );
+
+    return;
+  }
+
+  const localAgent = {
+    id: data.id,
+    organizationId:
+      data.organization_id,
+
+    name: data.name || "",
+    email: data.email || "",
+    phone: data.phone || "",
+    code: data.agent_code || "",
+
+    upline: data.upline_name || "",
+    uplineCode: data.upline_code || "",
+
+    stage:
+      data.stage || "Not Placed",
+
+    teamStatus:
+      data.team_status || "",
+
+    level:
+      data.agent_level || "",
+
+    residentState:
+      data.resident_state || "",
+
+    residentLicense:
+      data.resident_license || "",
+
+    eoStatus:
+      data.eo_status || "",
+
+    amlStatus:
+      data.aml_status || "",
+
+    tevahPlatformFee:
+      data.tevah_platform_fee || "",
+
+    npn:
+      data.npn || "",
+
+    recruitDate:
+      data.recruit_date || "",
+
+    importSource:
+      data.import_source || ""
+  };
+
+  allAgents.push(localAgent);
+
+  report.created++;
+
+  if (!incoming.upline && !incoming.uplineCode) {
+    forgeImportAddWarning(
+      report,
+      {
+        file: context.file,
+        row: context.row,
+        person:
+          `${incoming.name} · ${incoming.code}`,
+        message:
+          "New person was added, but no Upline Name or Upline Code was supplied. Review their Team Map placement."
+      }
+    );
+  }
+}
+
+async function forgeImportAnalyzeFiles(files) {
+  const analysis = {
+    files: [],
+    totalRows: 0,
+    recognizedFiles: 0,
+    unknownFiles: 0
+  };
+
+  for (const file of files) {
+    try {
+      const text =
+        await file.text();
+
+      const rows =
+        parseCSV(text);
+
+      const profile =
+        forgeDetectCsvProfile(
+          rows,
+          file.name
+        );
+
+      analysis.totalRows +=
+        rows.length;
+
+      analysis.files.push({
+        file,
+        rows,
+        profile
+      });
+
+      if (profile.type === "unknown") {
+        analysis.unknownFiles++;
+      } else {
+        analysis.recognizedFiles++;
+      }
+
+    } catch (error) {
+      analysis.files.push({
+        file,
+        rows: [],
+        profile: {
+          type: "unknown",
+          confidence: 0,
+          reason:
+            error?.message ||
+            "FORGE could not read this file."
+        }
+      });
+
+      analysis.unknownFiles++;
+    }
+  }
+
+  return analysis;
+}
+
+function forgeImportRenderFilePreview(
+  analysis
+) {
+  setText(
+    "importTotal",
+    analysis.totalRows
+  );
+
+  setText(
+    "importNew",
+    "—"
+  );
+
+  setText(
+    "importExisting",
+    "—"
+  );
+
+  setText(
+    "importDuplicates",
+    analysis.unknownFiles
+  );
+
+  setText(
+    "importRejected",
+    "—"
+  );
+
+  const progress =
+    document.getElementById(
+      "importProgress"
+    );
+
+  if (!progress) return;
+
+  progress.classList.remove("hidden");
+
+  progress.innerHTML =
+    analysis.files
+      .map((item) => {
+        const type =
+          item.profile.type === "unknown"
+            ? "Needs review"
+            : forgeImportSourceLabel(
+                item.profile.type
+              );
+
+        return `
+          <div style="margin:4px 0;">
+            <strong>
+              ${escapeImportHtml(
+                item.file.name
+              )}
+            </strong>
+            — ${escapeImportHtml(type)}
+            (${item.rows.length} rows)
+          </div>
+        `;
+      })
+      .join("");
+}
+
+function forgeImportReportLine(
+  item,
+  kind
+) {
+  const icon =
+    kind === "rejected"
+      ? "✕"
+      : "⚠";
+
+  return `
+    <div
+      style="
+        padding:9px 0;
+        border-bottom:1px solid #e6edf7;
+      "
+    >
+      <strong>
+        ${icon}
+        ${escapeImportHtml(
+          item.person || "Record"
+        )}
+      </strong>
+      <div style="color:#51627c;margin-top:3px;">
+        ${escapeImportHtml(
+          item.file || ""
+        )}
+        ${item.row ? ` · row ${item.row}` : ""}
+      </div>
+      <div style="margin-top:3px;">
+        ${escapeImportHtml(
+          item.message || ""
+        )}
+      </div>
+    </div>
+  `;
+}
+
+function forgeRenderSafeImportReport(report) {
+  setText(
+    "importTotal",
+    report.total
+  );
+
+  setText(
+    "importNew",
+    report.created
+  );
+
+  setText(
+    "importExisting",
+    report.updated
+  );
+
+  setText(
+    "importDuplicates",
+    report.warnings.length
+  );
+
+  setText(
+    "importRejected",
+    report.rejected.length
+  );
+
+  const progress =
+    document.getElementById(
+      "importProgress"
+    );
+
+  if (progress) {
+    progress.classList.remove("hidden");
+
+    progress.innerHTML = `
+      <strong>Import complete.</strong>
+      ${report.filesProcessed} file${
+        report.filesProcessed === 1 ? "" : "s"
+      } processed ·
+      ${report.created} new ·
+      ${report.updated} updated ·
+      ${report.unchanged} unchanged ·
+      ${report.warnings.length} warning${
+        report.warnings.length === 1 ? "" : "s"
+      } ·
+      ${report.rejected.length} rejected.
+    `;
+  }
+
+  const box =
+    document.getElementById(
+      "importSafetyReport"
+    );
+
+  if (!box) return;
+
+  const fileSummary =
+    report.fileResults
+      .map((file) => `
+        <div style="margin-bottom:8px;">
+          <strong>
+            ${escapeImportHtml(file.name)}
+          </strong>
+          — ${escapeImportHtml(file.type)}
+          · ${file.rows} rows
+          ${
+            file.skipped
+              ? ` · <span style="color:#9a5b00;">SKIPPED: ${escapeImportHtml(file.reason)}</span>`
+              : ""
+          }
+        </div>
+      `)
+      .join("");
+
+  const warningLines =
+    report.warnings
+      .map((item) =>
+        forgeImportReportLine(
+          item,
+          "warning"
+        )
+      )
+      .join("");
+
+  const rejectedLines =
+    report.rejected
+      .map((item) =>
+        forgeImportReportLine(
+          item,
+          "rejected"
+        )
+      )
+      .join("");
+
+  box.innerHTML = `
+    <div style="margin-bottom:14px;">
+      <strong>Files reviewed</strong>
+      <div style="margin-top:6px;">
+        ${fileSummary || "No files."}
+      </div>
+    </div>
+
+    ${
+      report.warnings.length
+        ? `
+          <div style="margin-top:12px;">
+            <strong>
+              Warnings (${report.warnings.length})
+            </strong>
+            ${warningLines}
+          </div>
+        `
+        : ""
+    }
+
+    ${
+      report.rejected.length
+        ? `
+          <div style="margin-top:14px;">
+            <strong>
+              Rejected rows (${report.rejected.length})
+            </strong>
+            ${rejectedLines}
+          </div>
+        `
+        : ""
+    }
+
+    ${
+      !report.warnings.length &&
+      !report.rejected.length
+        ? `
+          <div style="padding:10px 0;">
+            ✓ No identity conflicts or rejected rows.
+          </div>
+        `
+        : ""
+    }
+  `;
+
+  box.classList.remove("hidden");
+}
+
+async function forgeRunSafeMultiSourceImport(
+  files
+) {
+  if (!getActiveOrganizationId()) {
+    throw new Error(
+      "FORGE does not have an active organization selected."
+    );
+  }
+
+  // Always start from the current saved organization.
+  await loadCSV();
+
+  const analysis =
+    await forgeImportAnalyzeFiles(
+      files
+    );
+
+  const report = {
+    total: 0,
+    created: 0,
+    updated: 0,
+    unchanged: 0,
+    ignored: 0,
+    warnings: [],
+    rejected: [],
+    filesProcessed: 0,
+    fileResults: []
+  };
+
+  // Process team structure first if provided.
+  // Then recruit, XCEL, compliance, then generic.
+  const order = {
+    team: 1,
+    recruit: 2,
+    xcel: 3,
+    compliance: 4,
+    generic: 5,
+    unknown: 99
+  };
+
+  analysis.files.sort(
+    (a, b) =>
+      (order[a.profile.type] ?? 99) -
+      (order[b.profile.type] ?? 99)
+  );
+
+  for (const item of analysis.files) {
+    const type =
+      item.profile.type;
+
+    if (type === "unknown") {
+      report.fileResults.push({
+        name: item.file.name,
+        type: "Unrecognized CSV",
+        rows: item.rows.length,
+        skipped: true,
+        reason: item.profile.reason
+      });
+
+      forgeImportAddWarning(
+        report,
+        {
+          file: item.file.name,
+          row: null,
+          person: "File skipped",
+          message:
+            item.profile.reason
+        }
+      );
+
+      continue;
+    }
+
+    report.filesProcessed++;
+
+    report.fileResults.push({
+      name: item.file.name,
+      type:
+        forgeImportSourceLabel(type),
+      rows: item.rows.length,
+      skipped: false,
+      reason: ""
+    });
+
+    for (
+      let index = 0;
+      index < item.rows.length;
+      index++
+    ) {
+      const incoming =
+        forgeImportCanonicalRow(
+          item.rows[index]
+        );
+
+      await forgeImportProcessRow(
+        incoming,
+        type,
+        {
+          report,
+          file: item.file.name,
+          row: index + 2
+        }
+      );
+    }
+  }
+
+  await loadCSV();
+
+  return report;
+}
+
+// ----------------------------------------------------------
+// Multi-file selection preview
+// ----------------------------------------------------------
+
+importFileInput?.addEventListener(
+  "change",
+  async () => {
+    if (!selectedImportFiles.length) {
+      return;
+    }
+
+    try {
+      const analysis =
+        await forgeImportAnalyzeFiles(
+          selectedImportFiles
+        );
+
+      forgeImportRenderFilePreview(
+        analysis
+      );
+    } catch (error) {
+      console.error(
+        "FORGE IMPORT PREVIEW ERROR:",
+        error
+      );
+    }
+  }
+);
+
+// ----------------------------------------------------------
+// Run the safe batch
+// ----------------------------------------------------------
+
+confirmImport?.addEventListener(
+  "click",
+  async () => {
+
+    if (!selectedImportFiles.length) {
+      return;
+    }
+
+    const button =
+      document.getElementById(
+        "confirmImport"
+      );
+
+    const progress =
+      document.getElementById(
+        "importProgress"
+      );
+
+    const reportBox =
+      document.getElementById(
+        "importSafetyReport"
+      );
+
+    if (button) {
+      button.disabled = true;
+      button.textContent =
+        "Reviewing & Importing...";
+    }
+
+    if (progress) {
+      progress.classList.remove("hidden");
+      progress.textContent =
+        "FORGE is validating identities, hierarchy, and progress before saving...";
+    }
+
+    reportBox?.classList.add("hidden");
+
+    try {
+      const report =
+        await forgeRunSafeMultiSourceImport(
+          selectedImportFiles
+        );
+
+      forgeRenderSafeImportReport(
+        report
+      );
+
+      if (button) {
+        button.textContent =
+          "Import Complete";
+      }
+
+    } catch (error) {
+      console.error(
+        "FORGE SAFE IMPORT ERROR:",
+        error
+      );
+
+      if (progress) {
+        progress.textContent =
+          "Import stopped: " +
+          (
+            error?.message ||
+            String(error)
+          );
+      }
+
+      if (button) {
+        button.disabled = false;
+        button.textContent =
+          "Try Import Again";
+      }
+    }
+  }
+);
+
+// ----------------------------------------------------------
+// Review modal close/cancel
+// ----------------------------------------------------------
+
+[
+  "closeImportReview",
+  "cancelImport"
+].forEach((buttonId) => {
+  document
+    .getElementById(buttonId)
+    ?.addEventListener(
+      "click",
+      () => {
+        document
+          .getElementById(
+            "importReviewModal"
+          )
+          ?.classList.add("hidden");
+
+        selectedImportFiles = [];
+        renderSelectedImportFiles();
+
+        const progress =
+          document.getElementById(
+            "importProgress"
+          );
+
+        progress?.classList.add("hidden");
+
+        const report =
+          document.getElementById(
+            "importSafetyReport"
+          );
+
+        report?.classList.add("hidden");
+      }
+    );
+});
