@@ -13059,57 +13059,24 @@ document
 
 function collapseEntireTeamMap() {
 
-  teamMapCollapsed.clear();
-
-
-  const visibleRootCode =
+  const rootCode =
     normalizeTeamMapCode(
       teamMapFocusCode ||
       teamMapRootCode
     );
 
+  if (!rootCode) return;
 
-  teamMapMembers.forEach(member => {
+  // Collapse the visible upline/root itself.
+  // buildTeamMapNode() will stop rendering all children,
+  // so only the upline remains visible.
+  teamMapCollapsed.clear();
+  teamMapCollapsed.add(rootCode);
 
-    const code =
-      normalizeTeamMapCode(
-        member.code
-      );
-
-    if (!code) return;
-
-
-    // Never collapse the top/root person.
-    // Their direct leaders must remain visible.
-    if (
-      code === visibleRootCode
-    ) {
-      return;
-    }
-
-
-    const children =
-      teamMapChildren(
-        member.code
-      );
-
-
-    // Collapse leaders below the root.
-    // This hides their teams but keeps
-    // the leaders themselves visible.
-    if (
-      children.length > 0
-    ) {
-      teamMapCollapsed.add(code);
-    }
-
-  });
-
+  teamMapDirectOnlyMode = false;
 
   drawTeamMap();
-
   updateTeamMapCollapseButton();
-
 
   setTimeout(
     fitTeamMapToScreen,
@@ -13140,13 +13107,8 @@ function updateTeamMapCollapseButton() {
 
   if (!button) return;
 
-  const hasCollapsed =
-    teamMapCollapsed.size > 0;
-
   button.textContent =
-    hasCollapsed
-      ? "Expand All"
-      : "Collapse All";
+    "Collapse All";
 }
 
 // ==========================================================
@@ -16029,25 +15991,18 @@ function syncTeamMapStage() {
 
 function collapseForgeTeamMap() {
 
-  teamMapDirectOnlyMode = false;
-
-  teamMapCollapsed =
-    new Set(
-      teamMapMembers
-        .filter(
-          member =>
-            member?.code &&
-            teamMapChildren(
-              member.code
-            ).length > 0
-        )
-        .map(
-          member =>
-            normalizeTeamMapCode(
-              member.code
-            )
-        )
+  const rootCode =
+    normalizeTeamMapCode(
+      teamMapFocusCode ||
+      teamMapRootCode
     );
+
+  if (!rootCode) return;
+
+  teamMapCollapsed.clear();
+  teamMapCollapsed.add(rootCode);
+
+  teamMapDirectOnlyMode = false;
 
   drawTeamMap();
 
