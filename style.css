@@ -30400,3 +30400,242 @@ body.forge-drawer-open {
 #teamMapTreeView.hidden{display:none!important}
 @media(max-width:1100px){.forge-enterprise-layout{grid-template-columns:250px minmax(0,1fr)}.forge-enterprise-top-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.forge-enterprise-toolbar{flex-wrap:wrap}.forge-enterprise-search{flex-basis:100%;min-width:100%}.forge-enterprise-layout{grid-template-columns:1fr}.forge-enterprise-sidebar{position:static;max-height:360px}.forge-enterprise-top-grid{grid-template-columns:1fr}}
+
+/* ==========================================
+   FORGE PREMIUM TEAM MAP
+========================================== */
+
+.team-map-shell {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.055), transparent 34%),
+    #f8fbff;
+  border: 1px solid #e4ebf5;
+  border-radius: 24px;
+  box-shadow:
+    0 20px 60px rgba(15, 35, 65, 0.06),
+    0 2px 8px rgba(15, 35, 65, 0.03);
+  overflow: hidden;
+}
+
+
+/* HEADER */
+
+.team-map-header {
+  padding: 24px 28px 20px;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid #edf1f7;
+}
+
+
+/* TOOLBAR */
+
+.team-map-zoom-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid #edf1f7;
+}
+
+.team-map-tool-btn {
+  height: 38px;
+  padding: 0 13px;
+  border-radius: 10px;
+  border: 1px solid #dfe7f1;
+  background: #ffffff;
+  color: #19385f;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.18s ease;
+}
+
+.team-map-tool-btn:hover {
+  transform: translateY(-1px);
+  border-color: #adc5e8;
+  box-shadow: 0 5px 14px rgba(22, 61, 111, 0.08);
+}
+
+
+/* CANVAS */
+
+.team-map-canvas {
+  position: relative;
+  min-height: 620px;
+
+  background-color: #fbfdff;
+  background-image:
+    linear-gradient(rgba(32, 83, 145, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(32, 83, 145, 0.035) 1px, transparent 1px);
+
+  background-size: 32px 32px;
+
+  overflow: auto;
+}
+
+
+/* MEMBER CARDS */
+
+.team-map-node {
+  width: 132px;
+  min-height: 82px;
+
+  padding: 15px 12px;
+
+  border-radius: 16px;
+  border: 1.5px solid #b8d0ee;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.98),
+      rgba(240,247,255,0.98)
+    );
+
+  box-shadow:
+    0 8px 22px rgba(26, 71, 123, 0.07),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+
+  color: #102f55;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+
+  cursor: pointer;
+}
+
+.team-map-node:hover {
+  transform: translateY(-3px);
+
+  border-color: #3578d4;
+
+  box-shadow:
+    0 14px 32px rgba(27, 82, 151, 0.13),
+    inset 0 1px 0 rgba(255,255,255,0.95);
+}
+
+.team-map-node-name {
+  font-size: 13px;
+  line-height: 1.25;
+  font-weight: 800;
+  color: #102f55;
+}
+
+.team-map-node-code {
+  margin-top: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #7f91a8;
+}
+
+
+/* SMALL EXPAND CONTROL */
+
+.team-map-node-toggle {
+  position: absolute;
+
+  top: -12px;
+  left: 50%;
+
+  width: 24px;
+  height: 24px;
+
+  transform: translateX(-50%);
+
+  border-radius: 999px;
+
+  background: #ffffff;
+  border: 1px solid #b8cae1;
+
+  color: #17487f;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  box-shadow: 0 3px 9px rgba(21, 55, 95, 0.12);
+}
+
+
+/* CONNECTION LINES */
+
+.team-map-connector {
+  stroke: #9db5d2;
+  stroke-width: 1.5;
+  opacity: 0.78;
+}
+
+
+/* FULLSCREEN */
+
+.team-map-stage {
+  background: #f6f9fd;
+}
+
+.team-map-stage-header {
+  min-height: 82px;
+  padding: 0 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #071e3e,
+      #0c315f
+    );
+
+  box-shadow: 0 10px 35px rgba(5, 28, 59, 0.16);
+}
+
+.team-stage-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.team-stage-btn,
+.team-stage-icon-btn {
+  height: 40px;
+
+  border: 1px solid rgba(255,255,255,0.20);
+  background: rgba(255,255,255,0.08);
+
+  color: #ffffff;
+
+  border-radius: 12px;
+
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.team-stage-btn {
+  padding: 0 15px;
+}
+
+.team-stage-icon-btn {
+  width: 40px;
+}
+
+.team-stage-btn:hover,
+.team-stage-icon-btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.team-stage-exit-btn {
+  height: 42px;
+  padding: 0 17px;
+
+  border: none;
+  border-radius: 13px;
+
+  background: #ffffff;
+  color: #0b2a51;
+
+  font-weight: 800;
+  cursor: pointer;
+}
