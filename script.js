@@ -102,6 +102,61 @@ const pipelineStages = [
   "Licensed",
   "Contracted"
 ];
+
+// ==========================================================
+// FORGE MANUAL-AGENT / JOURNEY NORMALIZATION HELPERS
+// ==========================================================
+
+function normalizeJourneyStage(value) {
+  const stage = String(value || "").trim();
+  const normalized = stage.toLowerCase();
+
+  if (
+    normalized === "not started" ||
+    normalized === "not placed" ||
+    normalized === "new" ||
+    normalized === "pending"
+  ) {
+    return "Not Placed";
+  }
+
+  if (normalized === "quiz sent") return "Quiz Sent";
+
+  if (
+    normalized === "xcel" ||
+    normalized === "xcel completed"
+  ) {
+    return "XCEL Completed";
+  }
+
+  if (normalized === "exam passed") return "Exam Passed";
+  if (normalized === "licensed") return "Licensed";
+  if (normalized === "contracted") return "Contracted";
+
+  return pipelineStages.includes(stage)
+    ? stage
+    : "Not Placed";
+}
+
+function isInternalManualAgentCode(code) {
+  return String(code || "")
+    .trim()
+    .toUpperCase()
+    .startsWith("MANUAL-");
+}
+
+function getVisibleAgentCode(agentOrCode) {
+  const code =
+    typeof agentOrCode === "object"
+      ? agentOrCode?.code
+      : agentOrCode;
+
+  if (!code || isInternalManualAgentCode(code)) {
+    return "";
+  }
+
+  return String(code).trim();
+}
 const homePipelineStages = [
   "Not Placed",
   "Quiz Sent",
@@ -3849,8 +3904,8 @@ allAgents = (data || []).map((agent) => ({
   coordinatorId: agent.coordinator_id || null,
 
   // Journey
-  stage: agent.stage || "Not Placed",
-  pipelineStage: agent.stage || "Not Placed",
+  stage: normalizeJourneyStage(agent.stage),
+  pipelineStage: normalizeJourneyStage(agent.stage),
 
   // Team status
   teamStatus: agent.team_status || "",
@@ -4873,17 +4928,33 @@ document.addEventListener("click", (event) => {
 
 //---Clear form after saving-------------
 function clearAgentForm() {
-  document.getElementById("newAgentName").value = "";
-  document.getElementById("newAgentEmail").value = "";
-  document.getElementById("newAgentPhone").value = "";
-  document.getElementById("newAgentCode").value = "";
-  document.getElementById("newAgentUpline").value = "";
-  document.getElementById("newAgentStage").value = "";
+  const setValue = (id, value = "") => {
+    const field = document.getElementById(id);
+    if (field) field.value = value;
+  };
+
+  setValue("newAgentName");
+  setValue("newAgentEmail");
+  setValue("newAgentPhone");
+  setValue("newAgentCode");
+  setValue("newAgentUpline");
+  setValue("newAgentUplineCode");
+  setValue("newAgentStage", "Not Placed");
+
+  const suggestions =
+    document.getElementById("uplineSuggestions");
+
+  if (suggestions) {
+    suggestions.innerHTML = "";
+    suggestions.classList.add("hidden");
+  }
 }
 
 // Make the button actually update Supabase
 async function updateJourneyStage(agent, newStage) {
   if (!agent?.id || !newStage) return;
+
+  newStage = normalizeJourneyStage(newStage);
 
   const oldStage = agent.stage;
 
@@ -5117,10 +5188,17 @@ document
         .getElementById("newAgentUpline")
         ?.value.trim() || "";
 
-    const stage =
+    const uplineCode =
       document
-        .getElementById("newAgentStage")
-        ?.value || "Not Placed";
+        .getElementById("newAgentUplineCode")
+        ?.value.trim() || null;
+
+    const stage =
+      normalizeJourneyStage(
+        document
+          .getElementById("newAgentStage")
+          ?.value || "Not Placed"
+      );
 
 
     if (!name) {
@@ -5147,14 +5225,24 @@ document
 
     if (!code) {
 
-      const cleanName =
-        normalizeMatchName(name)
-          .toUpperCase();
+      if (
+        selectedAgent?.code &&
+        isInternalManualAgentCode(
+          selectedAgent.code
+        )
+      ) {
+        // Preserve the database key without showing it to the user.
+        code = selectedAgent.code;
+      } else {
+        const cleanName =
+          normalizeMatchName(name)
+            .toUpperCase();
 
-      code =
-        `MANUAL-${cleanName}-${Date.now()
-          .toString()
-          .slice(-6)}`;
+        code =
+          `MANUAL-${cleanName}-${Date.now()
+            .toString()
+            .slice(-6)}`;
+      }
     }
 
 
@@ -5183,6 +5271,7 @@ document
           phone: phone || null,
           agent_code: code,
           upline_name: upline || null,
+          upline_code: uplineCode || null,
           stage,
           import_source:
             selectedAgent.importSource ||
@@ -5234,6 +5323,9 @@ document
 
           upline_name:
             upline || null,
+
+          upline_code:
+            uplineCode || null,
 
           stage,
 
@@ -5337,7 +5429,7 @@ document.addEventListener("click", (e) => {
     selectedAgent.phone || "";
 
   document.getElementById("newAgentCode").value =
-    selectedAgent.code || "";
+    getVisibleAgentCode(selectedAgent);
 
   const uplineInput =
     document.getElementById("newAgentUpline");
@@ -5671,9 +5763,7 @@ function showAgentProfile(agent) {
 
   setText(
     "profileCoordinator",
-    agent.upline ||
-    agent.coordinator ||
-    "-"
+    agent.upline || "-"
   );
 
   setText(
@@ -5690,7 +5780,7 @@ function showAgentProfile(agent) {
 
   setText(
     "profileCode",
-    agent.code || "-"
+    getVisibleAgentCode(agent) || "-"
   );
 
   setText(
@@ -18028,6 +18118,12 @@ function setupUplineAutocomplete() {
     return;
   }
 
+  if (input.dataset.uplineAutocompleteReady === "1") {
+    return;
+  }
+
+  input.dataset.uplineAutocompleteReady = "1";
+
 
   function closeSuggestions() {
     suggestions.innerHTML = "";
@@ -18119,7 +18215,7 @@ function setupUplineAutocomplete() {
               agent.name
             )}"
             data-upline-code="${escapeForgeText(
-              agent.code || ""
+              getVisibleAgentCode(agent)
             )}"
           >
             <span>
@@ -18130,11 +18226,11 @@ function setupUplineAutocomplete() {
               </strong>
 
               ${
-                agent.code
+                getVisibleAgentCode(agent)
                   ? `
                     <small>
                       ${escapeForgeText(
-                        agent.code
+                        getVisibleAgentCode(agent)
                       )}
                     </small>
                   `
@@ -18210,4 +18306,18 @@ function setupUplineAutocomplete() {
 
     }
   );
+}
+
+/* ==========================================================
+   FORGE UPLINE AUTOCOMPLETE INITIALIZER
+========================================================== */
+
+if (document.readyState === "loading") {
+  document.addEventListener(
+    "DOMContentLoaded",
+    setupUplineAutocomplete,
+    { once: true }
+  );
+} else {
+  setupUplineAutocomplete();
 }
