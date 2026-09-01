@@ -4877,7 +4877,6 @@ function clearAgentForm() {
   document.getElementById("newAgentPhone").value = "";
   document.getElementById("newAgentCode").value = "";
   document.getElementById("newAgentUpline").value = "";
-  document.getElementById("newAgentCoordinator").value = "";
   document.getElementById("newAgentStage").value = "";
 }
 
@@ -5112,11 +5111,6 @@ document
         ?.value.trim()
         .toUpperCase();
 
-    const coordinator =
-      document
-        .getElementById("newAgentCoordinator")
-        ?.value || "";
-
     const upline =
       document
         .getElementById("newAgentUpline")
@@ -5332,16 +5326,40 @@ document
 document.addEventListener("click", (e) => {
   if (!e.target.closest(".edit-agent-btn") || !selectedAgent) return;
 
-  document.getElementById("newAgentName").value        = selectedAgent.name        || "";
-  document.getElementById("newAgentEmail").value       = selectedAgent.email       || "";
-  document.getElementById("newAgentPhone").value       = selectedAgent.phone       || "";
-  document.getElementById("newAgentCode").value        = selectedAgent.code        || "";
-  document.getElementById("newAgentCoordinator").value = selectedAgent.coordinator || "";
-  if (document.getElementById("newAgentUpline"))
-    document.getElementById("newAgentUpline").value    = selectedAgent.upline      || "";
-  document.getElementById("newAgentStage").value       = selectedAgent.stage       || "";
+  document.getElementById("newAgentName").value =
+    selectedAgent.name || "";
 
-  document.getElementById("addAgentModal").classList.remove("hidden");
+  document.getElementById("newAgentEmail").value =
+    selectedAgent.email || "";
+
+  document.getElementById("newAgentPhone").value =
+    selectedAgent.phone || "";
+
+  document.getElementById("newAgentCode").value =
+    selectedAgent.code || "";
+
+  const uplineInput =
+    document.getElementById("newAgentUpline");
+
+  if (uplineInput) {
+    uplineInput.value =
+      selectedAgent.upline || "";
+  }
+
+  const uplineCodeInput =
+    document.getElementById("newAgentUplineCode");
+
+  if (uplineCodeInput) {
+    uplineCodeInput.value =
+      selectedAgent.uplineCode || "";
+  }
+
+  document.getElementById("newAgentStage").value =
+    selectedAgent.stage || "Not Placed";
+
+  document
+    .getElementById("addAgentModal")
+    .classList.remove("hidden");
 });
 
 //  PAGE NAVIGATION 
