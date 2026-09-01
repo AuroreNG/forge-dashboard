@@ -5833,82 +5833,226 @@ function showAgentProfile(agent) {
 //  AGENTS PAGE 
 
 function renderAgentsPage() {
-  const list = document.getElementById("agentsList");
+
+  const list =
+    document.getElementById(
+      "agentsList"
+    );
+
   if (!list) return;
+
 
   const searchValue =
     String(
-      document.getElementById("agentsSearch")?.value || ""
+      document
+        .getElementById(
+          "agentsSearch"
+        )
+        ?.value || ""
     )
       .trim()
       .toLowerCase();
 
+
+  // ========================================================
+  // SEARCH + PRIORITY
+  // Exact person first.
+  // Their recruits/upline matches after.
+  // ========================================================
+
   const filteredAgents =
-    allAgents.filter((agent) => {
+    allAgents
+      .map((agent) => {
 
-      const name =
-        String(
-          agent.name ||
-          getAgentDisplayName(agent) ||
-          ""
-        ).toLowerCase();
+        const name =
+          String(
+            agent.name ||
+            getAgentDisplayName(agent) ||
+            ""
+          )
+            .trim()
+            .toLowerCase();
 
-      const upline =
-        String(
-          agent.upline ||
-          agent.coordinator ||
-          ""
-        ).toLowerCase();
+        const upline =
+          String(
+            agent.upline ||
+            ""
+          )
+            .trim()
+            .toLowerCase();
 
-      const code =
-        String(
-          agent.code ||
-          ""
-        ).toLowerCase();
+        const code =
+          String(
+            agent.code ||
+            ""
+          )
+            .trim()
+            .toLowerCase();
 
-      const email =
-        String(
-          agent.email ||
-          ""
-        ).toLowerCase();
+        const email =
+          String(
+            agent.email ||
+            ""
+          )
+            .trim()
+            .toLowerCase();
 
-      const phone =
-        String(
-          agent.phone ||
-          ""
-        ).toLowerCase();
+        const phone =
+          String(
+            agent.phone ||
+            ""
+          )
+            .trim()
+            .toLowerCase();
 
-      const stage =
-        String(
-          agent.stage ||
-          ""
-        ).toLowerCase();
+        const stage =
+          String(
+            agent.stage ||
+            ""
+          )
+            .trim()
+            .toLowerCase();
 
-      const status =
-        String(
-          agent.teamStatus ||
-          agent.status ||
-          ""
-        ).toLowerCase();
+        const status =
+          String(
+            agent.teamStatus ||
+            agent.status ||
+            ""
+          )
+            .trim()
+            .toLowerCase();
 
-      return (
-        name.includes(searchValue) ||
-        upline.includes(searchValue) ||
-        code.includes(searchValue) ||
-        email.includes(searchValue) ||
-        phone.includes(searchValue) ||
-        stage.includes(searchValue) ||
-        status.includes(searchValue)
+
+        if (!searchValue) {
+          return {
+            agent,
+            score: 0
+          };
+        }
+
+
+        let score = -1;
+
+
+        // Exact person
+        if (
+          name === searchValue
+        ) {
+          score = 1000;
+        }
+
+        // Person name begins with search
+        else if (
+          name.startsWith(
+            searchValue
+          )
+        ) {
+          score = 900;
+        }
+
+        // Person name contains search
+        else if (
+          name.includes(
+            searchValue
+          )
+        ) {
+          score = 800;
+        }
+
+        // Exact code
+        else if (
+          code === searchValue
+        ) {
+          score = 750;
+        }
+
+        // Other personal information
+        else if (
+          code.includes(searchValue) ||
+          email.includes(searchValue) ||
+          phone.includes(searchValue)
+        ) {
+          score = 650;
+        }
+
+        // People recruited by / under searched person
+        else if (
+          upline === searchValue
+        ) {
+          score = 500;
+        }
+
+        else if (
+          upline.includes(
+            searchValue
+          )
+        ) {
+          score = 450;
+        }
+
+        // Stage/status search
+        else if (
+          stage.includes(searchValue) ||
+          status.includes(searchValue)
+        ) {
+          score = 200;
+        }
+
+
+        return {
+          agent,
+          score
+        };
+
+      })
+      .filter(
+        (item) =>
+          !searchValue ||
+          item.score >= 0
+      )
+      .sort(
+        (a, b) => {
+
+          if (
+            b.score !== a.score
+          ) {
+            return (
+              b.score -
+              a.score
+            );
+          }
+
+          return String(
+            getAgentDisplayName(
+              a.agent
+            )
+          ).localeCompare(
+            String(
+              getAgentDisplayName(
+                b.agent
+              )
+            )
+          );
+
+        }
+      )
+      .map(
+        (item) =>
+          item.agent
       );
-    });
+
 
   list.innerHTML = "";
+
 
   // ========================================================
   // NOTHING FOUND
   // ========================================================
 
-  if (filteredAgents.length === 0) {
+  if (
+    filteredAgents.length === 0
+  ) {
+
     list.innerHTML = `
       <div class="agents-empty">
         No agents found
@@ -5916,101 +6060,164 @@ function renderAgentsPage() {
     `;
 
     document
-      .getElementById("agentProfile")
-      ?.classList.add("hidden");
+      .getElementById(
+        "agentProfile"
+      )
+      ?.classList.add(
+        "hidden"
+      );
 
     document
-      .getElementById("agentProfileEmpty")
-      ?.classList.remove("hidden");
+      .getElementById(
+        "agentProfileEmpty"
+      )
+      ?.classList.remove(
+        "hidden"
+      );
 
     return;
   }
 
+
   // ========================================================
-  // DETERMINE WHICH AGENT SHOULD BE OPEN
+  // DETERMINE WHICH AGENT SHOULD OPEN
   // ========================================================
 
   let agentToShow = null;
 
-  if (selectedAgent) {
+
+  // When searching, always open the
+  // strongest matching person first.
+  if (searchValue) {
+
+    agentToShow =
+      filteredAgents[0];
+
+  }
+
+  // When not searching, preserve
+  // whatever agent was already selected.
+  else if (selectedAgent) {
+
     agentToShow =
       filteredAgents.find(
         (agent) =>
           String(agent.id) ===
-          String(selectedAgent.id)
+          String(
+            selectedAgent.id
+          )
       ) || null;
+
   }
+
 
   if (!agentToShow) {
-    agentToShow = filteredAgents[0];
+    agentToShow =
+      filteredAgents[0];
   }
 
-  selectedAgent = agentToShow;
 
-  showAgentProfile(selectedAgent);
+  selectedAgent =
+    agentToShow;
+
+  showAgentProfile(
+    selectedAgent
+  );
+
 
   // ========================================================
   // BUILD LEFT AGENT LIST
   // ========================================================
 
-  filteredAgents.forEach((agent) => {
+  filteredAgents.forEach(
+    (agent) => {
 
-    const item =
-      document.createElement("div");
+      const item =
+        document.createElement(
+          "div"
+        );
 
-    item.className =
-      "agent-list-item";
+      item.className =
+        "agent-list-item";
 
-    const isSelected =
-      String(agent.id) ===
-      String(selectedAgent?.id);
 
-    if (isSelected) {
-      item.classList.add("active");
-    }
+      const isSelected =
+        String(agent.id) ===
+        String(
+          selectedAgent?.id
+        );
 
-    item.innerHTML = `
-      <b>
-        ${getAgentDisplayName(agent)}
-      </b>
 
-      <span>
-        ${
-          agent.upline ||
-          agent.coordinator ||
-          "No upline"
-        }
+      if (isSelected) {
+        item.classList.add(
+          "active"
+        );
+      }
 
-        <small
-          class="stage-dot ${getStageColor(agent.stage)}"
-        ></small>
 
-        ${agent.stage || "Not Placed"}
-      </span>
-    `;
+      item.innerHTML = `
+        <b>
+          ${getAgentDisplayName(
+            agent
+          )}
+        </b>
 
-    item.addEventListener(
-      "click",
-      () => {
+        <span>
+          ${
+            agent.upline ||
+            "No upline"
+          }
 
-        selectedAgent = agent;
+          <small
+            class="stage-dot ${getStageColor(
+              agent.stage
+            )}"
+          ></small>
 
-        document
-          .querySelectorAll(
-            "#agentsPage .agent-list-item"
-          )
-          .forEach((row) =>
-            row.classList.remove("active")
+          ${
+            agent.stage ||
+            "Not Placed"
+          }
+        </span>
+      `;
+
+
+      item.addEventListener(
+        "click",
+        () => {
+
+          selectedAgent =
+            agent;
+
+          document
+            .querySelectorAll(
+              "#agentsPage .agent-list-item"
+            )
+            .forEach(
+              (row) =>
+                row.classList.remove(
+                  "active"
+                )
+            );
+
+          item.classList.add(
+            "active"
           );
 
-        item.classList.add("active");
+          showAgentProfile(
+            agent
+          );
 
-        showAgentProfile(agent);
-      }
-    );
+        }
+      );
 
-    list.appendChild(item);
-  });
+
+      list.appendChild(
+        item
+      );
+
+    }
+  );
 }
 
 
