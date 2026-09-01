@@ -102,61 +102,6 @@ const pipelineStages = [
   "Licensed",
   "Contracted"
 ];
-
-// ==========================================================
-// FORGE MANUAL-AGENT / JOURNEY NORMALIZATION HELPERS
-// ==========================================================
-
-function normalizeJourneyStage(value) {
-  const stage = String(value || "").trim();
-  const normalized = stage.toLowerCase();
-
-  if (
-    normalized === "not started" ||
-    normalized === "not placed" ||
-    normalized === "new" ||
-    normalized === "pending"
-  ) {
-    return "Not Placed";
-  }
-
-  if (normalized === "quiz sent") return "Quiz Sent";
-
-  if (
-    normalized === "xcel" ||
-    normalized === "xcel completed"
-  ) {
-    return "XCEL Completed";
-  }
-
-  if (normalized === "exam passed") return "Exam Passed";
-  if (normalized === "licensed") return "Licensed";
-  if (normalized === "contracted") return "Contracted";
-
-  return pipelineStages.includes(stage)
-    ? stage
-    : "Not Placed";
-}
-
-function isInternalManualAgentCode(code) {
-  return String(code || "")
-    .trim()
-    .toUpperCase()
-    .startsWith("MANUAL-");
-}
-
-function getVisibleAgentCode(agentOrCode) {
-  const code =
-    typeof agentOrCode === "object"
-      ? agentOrCode?.code
-      : agentOrCode;
-
-  if (!code || isInternalManualAgentCode(code)) {
-    return "";
-  }
-
-  return String(code).trim();
-}
 const homePipelineStages = [
   "Not Placed",
   "Quiz Sent",
@@ -3904,8 +3849,8 @@ allAgents = (data || []).map((agent) => ({
   coordinatorId: agent.coordinator_id || null,
 
   // Journey
-  stage: normalizeJourneyStage(agent.stage),
-  pipelineStage: normalizeJourneyStage(agent.stage),
+  stage: agent.stage || "Not Placed",
+  pipelineStage: agent.stage || "Not Placed",
 
   // Team status
   teamStatus: agent.team_status || "",
@@ -4928,33 +4873,17 @@ document.addEventListener("click", (event) => {
 
 //---Clear form after saving-------------
 function clearAgentForm() {
-  const setValue = (id, value = "") => {
-    const field = document.getElementById(id);
-    if (field) field.value = value;
-  };
-
-  setValue("newAgentName");
-  setValue("newAgentEmail");
-  setValue("newAgentPhone");
-  setValue("newAgentCode");
-  setValue("newAgentUpline");
-  setValue("newAgentUplineCode");
-  setValue("newAgentStage", "Not Placed");
-
-  const suggestions =
-    document.getElementById("uplineSuggestions");
-
-  if (suggestions) {
-    suggestions.innerHTML = "";
-    suggestions.classList.add("hidden");
-  }
+  document.getElementById("newAgentName").value = "";
+  document.getElementById("newAgentEmail").value = "";
+  document.getElementById("newAgentPhone").value = "";
+  document.getElementById("newAgentCode").value = "";
+  document.getElementById("newAgentUpline").value = "";
+  document.getElementById("newAgentStage").value = "";
 }
 
 // Make the button actually update Supabase
 async function updateJourneyStage(agent, newStage) {
   if (!agent?.id || !newStage) return;
-
-  newStage = normalizeJourneyStage(newStage);
 
   const oldStage = agent.stage;
 
@@ -5150,8 +5079,6 @@ document.querySelector(".add-agent-btn")?.addEventListener("click", () => {
   selectedAgent = null;
   clearAgentForm();
   addAgentModal.classList.remove("hidden");
-  setupUplineAutocomplete();
-  setTimeout(() => document.getElementById("newAgentUpline")?.focus(), 30);
 });
 
 document.getElementById("cancelAddAgent")?.addEventListener("click", () => {
@@ -5190,17 +5117,10 @@ document
         .getElementById("newAgentUpline")
         ?.value.trim() || "";
 
-    const uplineCode =
-      document
-        .getElementById("newAgentUplineCode")
-        ?.value.trim() || null;
-
     const stage =
-      normalizeJourneyStage(
-        document
-          .getElementById("newAgentStage")
-          ?.value || "Not Placed"
-      );
+      document
+        .getElementById("newAgentStage")
+        ?.value || "Not Placed";
 
 
     if (!name) {
@@ -5227,24 +5147,14 @@ document
 
     if (!code) {
 
-      if (
-        selectedAgent?.code &&
-        isInternalManualAgentCode(
-          selectedAgent.code
-        )
-      ) {
-        // Preserve the database key without showing it to the user.
-        code = selectedAgent.code;
-      } else {
-        const cleanName =
-          normalizeMatchName(name)
-            .toUpperCase();
+      const cleanName =
+        normalizeMatchName(name)
+          .toUpperCase();
 
-        code =
-          `MANUAL-${cleanName}-${Date.now()
-            .toString()
-            .slice(-6)}`;
-      }
+      code =
+        `MANUAL-${cleanName}-${Date.now()
+          .toString()
+          .slice(-6)}`;
     }
 
 
@@ -5273,7 +5183,6 @@ document
           phone: phone || null,
           agent_code: code,
           upline_name: upline || null,
-          upline_code: uplineCode || null,
           stage,
           import_source:
             selectedAgent.importSource ||
@@ -5325,9 +5234,6 @@ document
 
           upline_name:
             upline || null,
-
-          upline_code:
-            uplineCode || null,
 
           stage,
 
@@ -5431,7 +5337,7 @@ document.addEventListener("click", (e) => {
     selectedAgent.phone || "";
 
   document.getElementById("newAgentCode").value =
-    getVisibleAgentCode(selectedAgent);
+    selectedAgent.code || "";
 
   const uplineInput =
     document.getElementById("newAgentUpline");
@@ -5765,7 +5671,9 @@ function showAgentProfile(agent) {
 
   setText(
     "profileCoordinator",
-    agent.upline || "-"
+    agent.upline ||
+    agent.coordinator ||
+    "-"
   );
 
   setText(
@@ -5782,7 +5690,7 @@ function showAgentProfile(agent) {
 
   setText(
     "profileCode",
-    getVisibleAgentCode(agent) || "-"
+    agent.code || "-"
   );
 
   setText(
@@ -5833,226 +5741,82 @@ function showAgentProfile(agent) {
 //  AGENTS PAGE 
 
 function renderAgentsPage() {
-
-  const list =
-    document.getElementById(
-      "agentsList"
-    );
-
+  const list = document.getElementById("agentsList");
   if (!list) return;
-
 
   const searchValue =
     String(
-      document
-        .getElementById(
-          "agentsSearch"
-        )
-        ?.value || ""
+      document.getElementById("agentsSearch")?.value || ""
     )
       .trim()
       .toLowerCase();
 
-
-  // ========================================================
-  // SEARCH + PRIORITY
-  // Exact person first.
-  // Their recruits/upline matches after.
-  // ========================================================
-
   const filteredAgents =
-    allAgents
-      .map((agent) => {
+    allAgents.filter((agent) => {
 
-        const name =
-          String(
-            agent.name ||
-            getAgentDisplayName(agent) ||
-            ""
-          )
-            .trim()
-            .toLowerCase();
+      const name =
+        String(
+          agent.name ||
+          getAgentDisplayName(agent) ||
+          ""
+        ).toLowerCase();
 
-        const upline =
-          String(
-            agent.upline ||
-            ""
-          )
-            .trim()
-            .toLowerCase();
+      const upline =
+        String(
+          agent.upline ||
+          agent.coordinator ||
+          ""
+        ).toLowerCase();
 
-        const code =
-          String(
-            agent.code ||
-            ""
-          )
-            .trim()
-            .toLowerCase();
+      const code =
+        String(
+          agent.code ||
+          ""
+        ).toLowerCase();
 
-        const email =
-          String(
-            agent.email ||
-            ""
-          )
-            .trim()
-            .toLowerCase();
+      const email =
+        String(
+          agent.email ||
+          ""
+        ).toLowerCase();
 
-        const phone =
-          String(
-            agent.phone ||
-            ""
-          )
-            .trim()
-            .toLowerCase();
+      const phone =
+        String(
+          agent.phone ||
+          ""
+        ).toLowerCase();
 
-        const stage =
-          String(
-            agent.stage ||
-            ""
-          )
-            .trim()
-            .toLowerCase();
+      const stage =
+        String(
+          agent.stage ||
+          ""
+        ).toLowerCase();
 
-        const status =
-          String(
-            agent.teamStatus ||
-            agent.status ||
-            ""
-          )
-            .trim()
-            .toLowerCase();
+      const status =
+        String(
+          agent.teamStatus ||
+          agent.status ||
+          ""
+        ).toLowerCase();
 
-
-        if (!searchValue) {
-          return {
-            agent,
-            score: 0
-          };
-        }
-
-
-        let score = -1;
-
-
-        // Exact person
-        if (
-          name === searchValue
-        ) {
-          score = 1000;
-        }
-
-        // Person name begins with search
-        else if (
-          name.startsWith(
-            searchValue
-          )
-        ) {
-          score = 900;
-        }
-
-        // Person name contains search
-        else if (
-          name.includes(
-            searchValue
-          )
-        ) {
-          score = 800;
-        }
-
-        // Exact code
-        else if (
-          code === searchValue
-        ) {
-          score = 750;
-        }
-
-        // Other personal information
-        else if (
-          code.includes(searchValue) ||
-          email.includes(searchValue) ||
-          phone.includes(searchValue)
-        ) {
-          score = 650;
-        }
-
-        // People recruited by / under searched person
-        else if (
-          upline === searchValue
-        ) {
-          score = 500;
-        }
-
-        else if (
-          upline.includes(
-            searchValue
-          )
-        ) {
-          score = 450;
-        }
-
-        // Stage/status search
-        else if (
-          stage.includes(searchValue) ||
-          status.includes(searchValue)
-        ) {
-          score = 200;
-        }
-
-
-        return {
-          agent,
-          score
-        };
-
-      })
-      .filter(
-        (item) =>
-          !searchValue ||
-          item.score >= 0
-      )
-      .sort(
-        (a, b) => {
-
-          if (
-            b.score !== a.score
-          ) {
-            return (
-              b.score -
-              a.score
-            );
-          }
-
-          return String(
-            getAgentDisplayName(
-              a.agent
-            )
-          ).localeCompare(
-            String(
-              getAgentDisplayName(
-                b.agent
-              )
-            )
-          );
-
-        }
-      )
-      .map(
-        (item) =>
-          item.agent
+      return (
+        name.includes(searchValue) ||
+        upline.includes(searchValue) ||
+        code.includes(searchValue) ||
+        email.includes(searchValue) ||
+        phone.includes(searchValue) ||
+        stage.includes(searchValue) ||
+        status.includes(searchValue)
       );
-
+    });
 
   list.innerHTML = "";
-
 
   // ========================================================
   // NOTHING FOUND
   // ========================================================
 
-  if (
-    filteredAgents.length === 0
-  ) {
-
+  if (filteredAgents.length === 0) {
     list.innerHTML = `
       <div class="agents-empty">
         No agents found
@@ -6060,164 +5824,101 @@ function renderAgentsPage() {
     `;
 
     document
-      .getElementById(
-        "agentProfile"
-      )
-      ?.classList.add(
-        "hidden"
-      );
+      .getElementById("agentProfile")
+      ?.classList.add("hidden");
 
     document
-      .getElementById(
-        "agentProfileEmpty"
-      )
-      ?.classList.remove(
-        "hidden"
-      );
+      .getElementById("agentProfileEmpty")
+      ?.classList.remove("hidden");
 
     return;
   }
 
-
   // ========================================================
-  // DETERMINE WHICH AGENT SHOULD OPEN
+  // DETERMINE WHICH AGENT SHOULD BE OPEN
   // ========================================================
 
   let agentToShow = null;
 
-
-  // When searching, always open the
-  // strongest matching person first.
-  if (searchValue) {
-
-    agentToShow =
-      filteredAgents[0];
-
-  }
-
-  // When not searching, preserve
-  // whatever agent was already selected.
-  else if (selectedAgent) {
-
+  if (selectedAgent) {
     agentToShow =
       filteredAgents.find(
         (agent) =>
           String(agent.id) ===
-          String(
-            selectedAgent.id
-          )
+          String(selectedAgent.id)
       ) || null;
-
   }
-
 
   if (!agentToShow) {
-    agentToShow =
-      filteredAgents[0];
+    agentToShow = filteredAgents[0];
   }
 
+  selectedAgent = agentToShow;
 
-  selectedAgent =
-    agentToShow;
-
-  showAgentProfile(
-    selectedAgent
-  );
-
+  showAgentProfile(selectedAgent);
 
   // ========================================================
   // BUILD LEFT AGENT LIST
   // ========================================================
 
-  filteredAgents.forEach(
-    (agent) => {
+  filteredAgents.forEach((agent) => {
 
-      const item =
-        document.createElement(
-          "div"
-        );
+    const item =
+      document.createElement("div");
 
-      item.className =
-        "agent-list-item";
+    item.className =
+      "agent-list-item";
 
+    const isSelected =
+      String(agent.id) ===
+      String(selectedAgent?.id);
 
-      const isSelected =
-        String(agent.id) ===
-        String(
-          selectedAgent?.id
-        );
-
-
-      if (isSelected) {
-        item.classList.add(
-          "active"
-        );
-      }
-
-
-      item.innerHTML = `
-        <b>
-          ${getAgentDisplayName(
-            agent
-          )}
-        </b>
-
-        <span>
-          ${
-            agent.upline ||
-            "No upline"
-          }
-
-          <small
-            class="stage-dot ${getStageColor(
-              agent.stage
-            )}"
-          ></small>
-
-          ${
-            agent.stage ||
-            "Not Placed"
-          }
-        </span>
-      `;
-
-
-      item.addEventListener(
-        "click",
-        () => {
-
-          selectedAgent =
-            agent;
-
-          document
-            .querySelectorAll(
-              "#agentsPage .agent-list-item"
-            )
-            .forEach(
-              (row) =>
-                row.classList.remove(
-                  "active"
-                )
-            );
-
-          item.classList.add(
-            "active"
-          );
-
-          showAgentProfile(
-            agent
-          );
-
-        }
-      );
-
-
-      list.appendChild(
-        item
-      );
-
+    if (isSelected) {
+      item.classList.add("active");
     }
-  );
+
+    item.innerHTML = `
+      <b>
+        ${getAgentDisplayName(agent)}
+      </b>
+
+      <span>
+        ${
+          agent.upline ||
+          agent.coordinator ||
+          "No upline"
+        }
+
+        <small
+          class="stage-dot ${getStageColor(agent.stage)}"
+        ></small>
+
+        ${agent.stage || "Not Placed"}
+      </span>
+    `;
+
+    item.addEventListener(
+      "click",
+      () => {
+
+        selectedAgent = agent;
+
+        document
+          .querySelectorAll(
+            "#agentsPage .agent-list-item"
+          )
+          .forEach((row) =>
+            row.classList.remove("active")
+          );
+
+        item.classList.add("active");
+
+        showAgentProfile(agent);
+      }
+    );
+
+    list.appendChild(item);
+  });
 }
 
 
@@ -8137,17 +7838,123 @@ document.addEventListener("click", (event) => {
   if (msgEl)    msgEl.value    = "";
 });
 
+// ==========================================================
+// COMMAND CENTER CONTACT ACTIONS
+// Call / Text / Email / WhatsApp now launch the real channel.
+// Other action buttons still use FORGE Smart Composer.
+// ==========================================================
+
+function forgeCleanPhoneForLink(value) {
+  let digits = String(value || "").replace(/\D/g, "");
+
+  // Default US/Canada behavior for 10-digit numbers.
+  if (digits.length === 10) {
+    digits = "1" + digits;
+  }
+
+  return digits;
+}
+
+function forgeOpenCommandChannel(method) {
+  if (!selectedAgent) {
+    alert("Please select an agent first.");
+    return;
+  }
+
+  const phone = forgeCleanPhoneForLink(selectedAgent.phone);
+  const email = String(selectedAgent.email || "").trim();
+
+  const stage = selectedAgent.stage || "Not Placed";
+  const template =
+    typeof getStageMessageTemplate === "function"
+      ? getStageMessageTemplate(
+          stage,
+          method,
+          selectedAgent,
+          method === "WhatsApp" ? "friendly" : "default"
+        )
+      : { subject: "", body: "" };
+
+  const subject = template?.subject || "";
+  const message = template?.body || "";
+
+  if (method === "Call") {
+    if (!phone) {
+      alert(`${getAgentDisplayName(selectedAgent)} does not have a phone number in FORGE.`);
+      return;
+    }
+
+    window.location.href = `tel:+${phone}`;
+    return;
+  }
+
+  if (method === "Text") {
+    if (!phone) {
+      alert(`${getAgentDisplayName(selectedAgent)} does not have a phone number in FORGE.`);
+      return;
+    }
+
+    const separator = /iPhone|iPad|iPod/i.test(navigator.userAgent) ? "&" : "?";
+    window.location.href =
+      `sms:+${phone}${separator}body=${encodeURIComponent(message)}`;
+    return;
+  }
+
+  if (method === "Email") {
+    if (!email) {
+      alert(`${getAgentDisplayName(selectedAgent)} does not have an email address in FORGE.`);
+      return;
+    }
+
+    window.location.href =
+      `mailto:${encodeURIComponent(email)}` +
+      `?subject=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(message)}`;
+    return;
+  }
+
+  if (method === "WhatsApp") {
+    if (!phone) {
+      alert(`${getAgentDisplayName(selectedAgent)} does not have a phone number in FORGE.`);
+      return;
+    }
+
+    const url =
+      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+    window.open(url, "_blank", "noopener,noreferrer");
+    return;
+  }
+
+  openSmartComposer(method);
+}
+
 document.addEventListener("click", (event) => {
   const actionBtn = event.target.closest(
-  ".quick-actions button, .command-channel-actions button, .command-add-activity, #takeActionBtn, .take-action-btn, [data-compose]"
-);
+    ".quick-actions button, .command-channel-actions button, .command-add-activity, #takeActionBtn, .take-action-btn, [data-compose]"
+  );
 
   if (!actionBtn) return;
 
   event.preventDefault();
   event.stopPropagation();
 
-  const method = actionBtn.dataset.method || "Text";
+  const method =
+    actionBtn.dataset.method ||
+    actionBtn.dataset.compose ||
+    "Text";
+
+  // The four communication buttons in the Command hero
+  // should actually open the communication channel.
+  if (
+    actionBtn.closest(".command-channel-actions") &&
+    ["Call", "Text", "Email", "WhatsApp"].includes(method)
+  ) {
+    forgeOpenCommandChannel(method);
+    return;
+  }
+
+  // Keep the rest of FORGE's workflow/composer behavior.
   openSmartComposer(method);
 });
 
@@ -18303,143 +18110,210 @@ confirmImport?.addEventListener(
 });
 
 function setupUplineAutocomplete() {
-  const input = document.getElementById("newAgentUpline");
-  const codeInput = document.getElementById("newAgentUplineCode");
-  const suggestions = document.getElementById("uplineSuggestions");
 
-  if (!input || !codeInput || !suggestions) return;
-  if (input.dataset.uplineAutocompleteReady === "1") return;
-  input.dataset.uplineAutocompleteReady = "1";
+  const input =
+    document.getElementById(
+      "newAgentUpline"
+    );
 
-  let activeIndex = -1;
+  const codeInput =
+    document.getElementById(
+      "newAgentUplineCode"
+    );
 
-  const closeSuggestions = () => {
+  const suggestions =
+    document.getElementById(
+      "uplineSuggestions"
+    );
+
+  if (
+    !input ||
+    !codeInput ||
+    !suggestions
+  ) {
+    return;
+  }
+
+
+  function closeSuggestions() {
     suggestions.innerHTML = "";
-    suggestions.classList.add("hidden");
-    activeIndex = -1;
-  };
+    suggestions.classList.add(
+      "hidden"
+    );
+  }
 
-  const matchingAgents = (searchText = "") => {
-    const query = String(searchText).trim().toLowerCase();
 
-    return [...allAgents]
-      .filter(agent => {
-        if (!agent?.name) return false;
-        if (selectedAgent?.id && String(agent.id) === String(selectedAgent.id)) return false;
+  function showSuggestions(
+    searchText
+  ) {
 
-        const name = String(agent.name).toLowerCase();
-        const code = String(agent.code || "").toLowerCase();
-        return !query || name.includes(query) || code.includes(query);
-      })
-      .sort((a, b) => {
-        const q = query;
-        const an = String(a.name || "").toLowerCase();
-        const bn = String(b.name || "").toLowerCase();
-        const aStarts = q && an.startsWith(q) ? 0 : 1;
-        const bStarts = q && bn.startsWith(q) ? 0 : 1;
-        return aStarts - bStarts || an.localeCompare(bn);
-      })
-      .slice(0, 10);
-  };
+    const query =
+      String(
+        searchText || ""
+      )
+        .trim()
+        .toLowerCase();
 
-  const showSuggestions = (searchText = "") => {
-    const matches = matchingAgents(searchText);
+
+    if (!query) {
+      closeSuggestions();
+      return;
+    }
+
+
+    const matches =
+      [...allAgents]
+        .filter(agent => {
+
+          if (!agent?.name) {
+            return false;
+          }
+
+
+          if (
+            selectedAgent?.id &&
+            String(agent.id) ===
+            String(
+              selectedAgent.id
+            )
+          ) {
+            return false;
+          }
+
+
+          return String(
+            agent.name
+          )
+            .toLowerCase()
+            .includes(query);
+
+        })
+        .sort(
+          (a, b) =>
+            String(a.name)
+              .localeCompare(
+                String(b.name)
+              )
+        )
+        .slice(0, 8);
+
 
     if (!matches.length) {
+
       suggestions.innerHTML = `
         <div class="upline-no-match">
-          No matching person found in this organization.
+          No matching upline found.
+          You can keep the name you typed.
         </div>
       `;
-      suggestions.classList.remove("hidden");
-      activeIndex = -1;
+
+      suggestions.classList.remove(
+        "hidden"
+      );
+
       return;
     }
 
-    suggestions.innerHTML = matches.map(agent => {
-      const visibleCode = getVisibleAgentCode(agent);
-      const internalCode = String(agent.code || "");
 
-      return `
-        <button
-          type="button"
-          class="upline-suggestion"
-          data-upline-name="${escapeForgeText(agent.name)}"
-          data-upline-code="${escapeForgeText(internalCode)}"
-        >
-          <span>
-            <strong>${escapeForgeText(agent.name)}</strong>
-            ${visibleCode ? `<small>${escapeForgeText(visibleCode)}</small>` : ""}
-          </span>
-        </button>
-      `;
-    }).join("");
+    suggestions.innerHTML =
+      matches
+        .map(agent => `
+          <button
+            type="button"
+            class="upline-suggestion"
+            data-upline-name="${escapeForgeText(
+              agent.name
+            )}"
+            data-upline-code="${escapeForgeText(
+              agent.code || ""
+            )}"
+          >
+            <span>
+              <strong>
+                ${escapeForgeText(
+                  agent.name
+                )}
+              </strong>
 
-    suggestions.classList.remove("hidden");
-    activeIndex = -1;
-  };
+              ${
+                agent.code
+                  ? `
+                    <small>
+                      ${escapeForgeText(
+                        agent.code
+                      )}
+                    </small>
+                  `
+                  : ""
+              }
+            </span>
+          </button>
+        `)
+        .join("");
 
-  input.addEventListener("focus", () => {
-    showSuggestions(input.value);
-  });
 
-  input.addEventListener("input", () => {
-    codeInput.value = "";
-    showSuggestions(input.value);
-  });
+    suggestions.classList.remove(
+      "hidden"
+    );
+  }
 
-  suggestions.addEventListener("mousedown", event => {
-    const option = event.target.closest(".upline-suggestion");
-    if (!option) return;
-    event.preventDefault();
 
-    input.value = option.dataset.uplineName || "";
-    codeInput.value = option.dataset.uplineCode || "";
-    closeSuggestions();
-  });
+  input.addEventListener(
+    "input",
+    () => {
 
-  input.addEventListener("keydown", event => {
-    const options = [...suggestions.querySelectorAll(".upline-suggestion")];
-    if (!options.length || suggestions.classList.contains("hidden")) return;
+      // Once they start typing again,
+      // reset the selected code until
+      // they choose a suggestion.
+      codeInput.value = "";
 
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      activeIndex = Math.min(activeIndex + 1, options.length - 1);
-    } else if (event.key === "ArrowUp") {
-      event.preventDefault();
-      activeIndex = Math.max(activeIndex - 1, 0);
-    } else if (event.key === "Enter" && activeIndex >= 0) {
-      event.preventDefault();
-      options[activeIndex].dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
-      return;
-    } else if (event.key === "Escape") {
+      showSuggestions(
+        input.value
+      );
+
+    }
+  );
+
+
+  suggestions.addEventListener(
+    "click",
+    event => {
+
+      const option =
+        event.target.closest(
+          ".upline-suggestion"
+        );
+
+      if (!option) return;
+
+
+      input.value =
+        option.dataset
+          .uplineName || "";
+
+      codeInput.value =
+        option.dataset
+          .uplineCode || "";
+
+
       closeSuggestions();
-      return;
-    } else {
-      return;
+
     }
+  );
 
-    options.forEach((option, index) => option.classList.toggle("is-active", index === activeIndex));
-    options[activeIndex]?.scrollIntoView({ block: "nearest" });
-  });
 
-  document.addEventListener("click", event => {
-    if (!event.target.closest("#addAgentModal .autocomplete-field")) {
-      closeSuggestions();
+  document.addEventListener(
+    "click",
+    event => {
+
+      if (
+        !event.target.closest(
+          ".autocomplete-field"
+        )
+      ) {
+        closeSuggestions();
+      }
+
     }
-  });
-}
-
-/* ==========================================================
-   FORGE UPLINE AUTOCOMPLETE INITIALIZER
-========================================================== */
-
-function initializeForgeUplineAutocomplete() {
-  setupUplineAutocomplete();
-}
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initializeForgeUplineAutocomplete, { once: true });
-} else {
-  initializeForgeUplineAutocomplete();
+  );
 }

@@ -21728,7 +21728,7 @@ body.forge-drawer-open {
 /* main two-column shell */
 #commandPage .command-layout-v2 {
   display: grid !important;
-  grid-template-columns: 470px minmax(0, 1fr) !important;
+  grid-template-columns: 410px minmax(0, 1fr) !important;
   gap: 20px !important;
   align-items: stretch !important;
 
@@ -21751,9 +21751,9 @@ body.forge-drawer-open {
   flex-direction: column !important;
 
   width: 100% !important;
-  height: calc(100vh - 54px) !important;
-  min-height: 860px !important;
-  max-height: none !important;
+  height: calc(100vh - 92px) !important;
+  min-height: 820px !important;
+  max-height: 960px !important;
 
   padding: 22px 18px 16px !important;
 
@@ -22424,7 +22424,7 @@ body.forge-drawer-open {
 /* responsive */
 @media (max-width: 1200px) {
   #commandPage .command-layout-v2 {
-    grid-template-columns: 400px minmax(0, 1fr) !important;
+    grid-template-columns: 350px minmax(0, 1fr) !important;
   }
 }
 
@@ -32683,36 +32683,244 @@ body.forge-drawer-open {
   font-size: 12px;
 }
 
-/* =========================================================
-   COMMAND CENTER SIDEBAR — DESKTOP FILL-SPACE FINAL OVERRIDE
-========================================================= */
-@media (min-width: 1201px) {
+/* ==========================================================
+   FORGE COMMAND CENTER — WORKSPACE POLISH
+   Wider working sidebar, cleaner controls, full-height list.
+========================================================== */
+
+#commandPage.command-page {
+  padding: 22px 18px 28px !important;
+}
+
+#commandPage .command-layout,
+#commandPage .command-layout-v2 {
+  grid-template-columns: minmax(390px, 34%) minmax(0, 1fr) !important;
+  gap: 22px !important;
+  align-items: stretch !important;
+}
+
+#commandPage .command-sidebar {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: calc(100vh - 220px) !important;
+  min-height: 720px !important;
+  max-height: calc(100vh - 150px) !important;
+  padding: 24px 20px 18px !important;
+  border-radius: 26px !important;
+}
+
+#commandPage .command-sidebar-heading {
+  flex: 0 0 auto;
+  margin-bottom: 14px;
+}
+
+#commandPage .command-sidebar-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+#commandPage #commandAgentTotal {
+  min-width: 96px;
+  height: 42px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d8e3f2;
+  border-radius: 999px;
+  background: #fff;
+  color: #173b70;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+#commandPage .command-primary-tabs {
+  flex: 0 0 auto;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0 0 12px !important;
+  padding: 4px;
+  border: 1px solid #dfe8f4;
+  border-radius: 15px;
+  background: #f7faff;
+}
+
+#commandPage .command-filter {
+  min-height: 42px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: #416080;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+#commandPage .command-filter.active {
+  background: linear-gradient(135deg, #235fce, #154dbe);
+  color: #fff;
+  box-shadow: 0 7px 16px rgba(32, 89, 190, .18);
+}
+
+#commandPage .command-search-wrap {
+  flex: 0 0 auto;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+#commandPage .command-search-wrap > span {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #527199;
+  z-index: 2;
+}
+
+#commandPage #commandSearch {
+  width: 100% !important;
+  height: 52px !important;
+  padding: 0 16px 0 40px !important;
+  margin: 0 !important;
+  border-radius: 15px !important;
+}
+
+#commandPage .command-sidebar-tools {
+  flex: 0 0 auto;
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+#commandPage .command-stage-chips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+#commandPage .command-stage-chip {
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 8px;
+  border: 1px solid #dfe7f2;
+  border-radius: 11px;
+  background: #fff;
+  color: #315378;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+#commandPage .command-stage-chip.active {
+  border-color: #96b9ef;
+  background: #edf5ff;
+  color: #1256bd;
+}
+
+#commandPage .command-sort {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #dfe7f2;
+  border-radius: 11px;
+  background: #fff;
+  color: #274868;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+#commandPage #commandAgentList {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  padding: 0 4px 4px 0 !important;
+  gap: 9px !important;
+}
+
+#commandPage .command-agent-row {
+  width: 100%;
+  min-height: 74px !important;
+  grid-template-columns: 46px minmax(0, 1fr) 18px !important;
+  padding: 12px 14px !important;
+  border-radius: 16px !important;
+}
+
+#commandPage .command-agent-row b {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  font-size: 14px !important;
+}
+
+#commandPage #commandPagination {
+  flex: 0 0 auto;
+  padding-top: 10px;
+  border-top: 1px solid #e6edf6;
+}
+
+#commandPage .command-sidebar-collapse {
+  flex: 0 0 auto;
+  margin-top: 10px;
+  min-height: 44px;
+  border-radius: 13px;
+}
+
+#commandPage .command-main {
+  min-width: 0 !important;
+  min-height: 720px !important;
+  padding: 26px !important;
+  border-radius: 26px !important;
+}
+
+/* Communication channels should look clearly actionable. */
+#commandPage .command-channel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+#commandPage .command-channel-actions button {
+  min-width: 104px;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid #dce6f3;
+  border-radius: 12px;
+  background: rgba(255,255,255,.94);
+  color: #173d72;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+#commandPage .command-channel-actions button:hover {
+  transform: translateY(-1px);
+  border-color: #9dbbe8;
+  box-shadow: 0 8px 18px rgba(21, 73, 145, .10);
+}
+
+#commandPage .command-channel-actions .whatsapp-action {
+  color: #17724a;
+}
+
+@media (max-width: 1180px) {
+  #commandPage .command-layout,
   #commandPage .command-layout-v2 {
-    grid-template-columns: 470px minmax(0, 1fr) !important;
+    grid-template-columns: 340px minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  #commandPage .command-layout,
+  #commandPage .command-layout-v2 {
+    grid-template-columns: 1fr !important;
   }
 
-  #commandPage .command-sidebar-v2 {
-    width: 100% !important;
-    min-width: 470px !important;
-    height: calc(100vh - 54px) !important;
-    min-height: 860px !important;
-    max-height: none !important;
-  }
-
-  #commandPage #commandAgentList {
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow-y: auto !important;
-  }
-
-  #commandPage .command-agent-copy {
-    min-width: 0 !important;
-  }
-
-  #commandPage .command-agent-row b {
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: clip !important;
+  #commandPage .command-sidebar {
+    height: auto !important;
+    max-height: 650px !important;
+    min-height: 520px !important;
   }
 }

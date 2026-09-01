@@ -5,54 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FORGE Dashboard</title>
   <link rel="stylesheet" href="style.css?v=15" />
-
-<style>
-/* FORGE upline autocomplete */
-#addAgentModal .modal-card { overflow: visible !important; }
-#addAgentModal .autocomplete-field {
-  position: relative;
-  width: 100%;
-  z-index: 50;
-}
-#addAgentModal #newAgentUpline {
-  width: 100%;
-  box-sizing: border-box;
-}
-#addAgentModal .upline-suggestions {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
-  z-index: 10050;
-  max-height: 260px;
-  overflow-y: auto;
-  padding: 6px;
-  border: 1px solid #d7e1ee;
-  border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 18px 40px rgba(15, 42, 80, .18);
-}
-#addAgentModal .upline-suggestions.hidden { display: none !important; }
-#addAgentModal .upline-suggestion {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 12px;
-  border: 0;
-  border-radius: 9px;
-  background: transparent;
-  color: #102f55;
-  text-align: left;
-  cursor: pointer;
-}
-#addAgentModal .upline-suggestion:hover,
-#addAgentModal .upline-suggestion.is-active { background: #eef5ff; }
-#addAgentModal .upline-suggestion strong { display:block; font-size:13px; font-weight:800; }
-#addAgentModal .upline-suggestion small { display:block; margin-top:2px; font-size:11px; color:#7a8ca6; }
-#addAgentModal .upline-no-match { padding: 11px 12px; color:#71829a; font-size:12px; }
-</style>
 </head>
 <body>
   <div class="app">
@@ -1167,7 +1119,8 @@
 </div>
 
     <select id="newAgentStage">
-      <option value="" disabled selected>Select Current Pipeline Stage</option>
+      <option value="" disabled selected>
+      Select Current Pipeline Stage
       <option value="Not Placed">Not Placed</option>
   <option value="Quiz Sent">Quiz Sent</option>
   <option value="XCEL Completed">XCEL Completed</option>
