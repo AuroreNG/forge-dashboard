@@ -32924,3 +32924,180 @@ body.forge-drawer-open {
     min-height: 520px !important;
   }
 }
+
+
+/* ==========================================================
+   FORGE SMART EXAM SCHEDULER
+========================================================== */
+
+.agent-exam-schedule-field {
+  margin-top: 4px;
+}
+
+.agent-exam-schedule-field > label {
+  display: block;
+  margin: 0 0 8px;
+  color: #17375f;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.agent-exam-schedule-inputs {
+  display: grid;
+  grid-template-columns: 1.35fr .9fr;
+  gap: 10px;
+}
+
+.agent-exam-schedule-inputs input {
+  width: 100%;
+  min-width: 0;
+}
+
+.agent-exam-schedule-field > small {
+  display: block;
+  margin: 7px 2px 0;
+  color: #7b8ca3;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.command-exam-scheduler {
+  width: 100%;
+  margin-top: 18px;
+  padding: 15px 16px;
+  display: grid;
+  grid-template-columns: 44px minmax(180px, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  border: 1px solid #d9e6f7;
+  border-radius: 17px;
+  background:
+    linear-gradient(135deg, rgba(247,251,255,.98), rgba(255,255,255,.94));
+  box-shadow: 0 8px 22px rgba(18, 61, 119, .05);
+}
+
+.command-exam-scheduler.hidden {
+  display: none !important;
+}
+
+.command-exam-scheduler-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: #edf5ff;
+  color: #1f63ce;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.command-exam-scheduler-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.command-exam-eyebrow {
+  color: #6480a4;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.command-exam-scheduler-copy strong {
+  color: #102f58;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.command-exam-scheduler-copy small {
+  color: #6f8199;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.command-exam-scheduler-controls {
+  display: grid;
+  grid-template-columns: 132px 105px auto auto;
+  gap: 7px;
+  align-items: center;
+}
+
+.command-exam-scheduler-controls input {
+  min-width: 0;
+  height: 38px;
+  padding: 0 9px;
+  border: 1px solid #dbe5f1;
+  border-radius: 10px;
+  background: #fff;
+  color: #17375f;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.command-exam-save,
+.command-exam-clear {
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.command-exam-save {
+  border: 0;
+  background: linear-gradient(135deg, #2563eb, #174eae);
+  color: #fff;
+  box-shadow: 0 7px 16px rgba(37,99,235,.16);
+}
+
+.command-exam-clear {
+  border: 1px solid #dde5ef;
+  background: #fff;
+  color: #65758b;
+}
+
+.command-exam-scheduler[data-exam-state="today"],
+.command-exam-scheduler[data-exam-state="tomorrow"],
+.command-exam-scheduler[data-exam-state="soon"] {
+  border-color: #f2ca79;
+  background: linear-gradient(135deg, #fffaf0, #fffdf8);
+}
+
+.command-exam-scheduler[data-exam-state="today"] .command-exam-scheduler-icon,
+.command-exam-scheduler[data-exam-state="tomorrow"] .command-exam-scheduler-icon,
+.command-exam-scheduler[data-exam-state="soon"] .command-exam-scheduler-icon {
+  background: #fff1cf;
+  color: #c57a00;
+}
+
+.command-exam-scheduler[data-exam-state="overdue"] {
+  border-color: #f1b5b5;
+  background: linear-gradient(135deg, #fff7f7, #fff);
+}
+
+.command-exam-scheduler[data-exam-state="overdue"] .command-exam-scheduler-icon {
+  background: #ffeded;
+  color: #c83f3f;
+}
+
+@media (max-width: 1250px) {
+  .command-exam-scheduler {
+    grid-template-columns: 44px 1fr;
+  }
+
+  .command-exam-scheduler-controls {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr auto auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .agent-exam-schedule-inputs,
+  .command-exam-scheduler-controls {
+    grid-template-columns: 1fr;
+  }
+}

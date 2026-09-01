@@ -1118,6 +1118,23 @@
 
 </div>
 
+    <div class="agent-exam-schedule-field">
+      <label for="newAgentExamDate">Scheduled Exam</label>
+      <div class="agent-exam-schedule-inputs">
+        <input
+          id="newAgentExamDate"
+          type="date"
+          aria-label="Scheduled exam date"
+        />
+        <input
+          id="newAgentExamTime"
+          type="time"
+          aria-label="Scheduled exam time"
+        />
+      </div>
+      <small>Optional. FORGE will use this date for reminders and exam preparation.</small>
+    </div>
+
     <select id="newAgentStage">
       <option value="" disabled selected>
       Select Current Pipeline Stage
@@ -2786,6 +2803,48 @@ JavaScript opens these when an import button is clicked.
               </button>
 
             </div>
+
+            <section id="commandExamScheduler" class="command-exam-scheduler hidden">
+              <div class="command-exam-scheduler-icon">◇</div>
+
+              <div class="command-exam-scheduler-copy">
+                <span class="command-exam-eyebrow">STATE EXAM</span>
+                <strong id="commandExamStatusTitle">Exam not scheduled</strong>
+                <small id="commandExamStatusText">
+                  Add the confirmed exam date so FORGE can guide the follow-up.
+                </small>
+              </div>
+
+              <div class="command-exam-scheduler-controls">
+                <input
+                  id="commandExamDate"
+                  type="date"
+                  aria-label="Exam date"
+                />
+                <input
+                  id="commandExamTime"
+                  type="time"
+                  aria-label="Exam time"
+                />
+
+                <button
+                  type="button"
+                  id="saveCommandExamDate"
+                  class="command-exam-save"
+                >
+                  Save Exam
+                </button>
+
+                <button
+                  type="button"
+                  id="clearCommandExamDate"
+                  class="command-exam-clear hidden"
+                >
+                  Clear
+                </button>
+              </div>
+            </section>
+
 
           </div>
 

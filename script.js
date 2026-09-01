@@ -3868,6 +3868,9 @@ allAgents = (data || []).map((agent) => ({
   // Recruit information
   recruitDate: agent.recruit_date || "",
 
+  // Exam scheduling
+  examScheduledAt: agent.exam_scheduled_at || "",
+
   // Import information
   importSource: agent.import_source || "",
 
@@ -4879,6 +4882,14 @@ function clearAgentForm() {
   document.getElementById("newAgentCode").value = "";
   document.getElementById("newAgentUpline").value = "";
   document.getElementById("newAgentStage").value = "";
+  const examDateInput =
+    document.getElementById("newAgentExamDate");
+  const examTimeInput =
+    document.getElementById("newAgentExamTime");
+
+  if (examDateInput) examDateInput.value = "";
+  if (examTimeInput) examTimeInput.value = "";
+
 }
 
 // Make the button actually update Supabase
@@ -5122,6 +5133,23 @@ document
         .getElementById("newAgentStage")
         ?.value || "Not Placed";
 
+    const examDate =
+      document
+        .getElementById("newAgentExamDate")
+        ?.value || "";
+
+    const examTime =
+      document
+        .getElementById("newAgentExamTime")
+        ?.value || "";
+
+    const examScheduledAt =
+      examDate
+        ? new Date(
+            `${examDate}T${examTime || "09:00"}:00`
+          ).toISOString()
+        : null;
+
 
     if (!name) {
       alert("Please enter the agent name.");
@@ -5184,6 +5212,7 @@ document
           agent_code: code,
           upline_name: upline || null,
           stage,
+          exam_scheduled_at: examScheduledAt,
           import_source:
             selectedAgent.importSource ||
             "Manual"
@@ -5236,6 +5265,9 @@ document
             upline || null,
 
           stage,
+
+          exam_scheduled_at:
+            examScheduledAt,
 
           team_status:
             null,
@@ -5357,6 +5389,50 @@ document.addEventListener("click", (e) => {
 
   document.getElementById("newAgentStage").value =
     selectedAgent.stage || "Not Placed";
+
+  const examValue =
+    selectedAgent.examScheduledAt ||
+    selectedAgent.exam_scheduled_at ||
+    "";
+
+  if (examValue) {
+    const examDateObj = new Date(examValue);
+
+    if (!Number.isNaN(examDateObj.getTime())) {
+      const localDate = new Date(
+        examDateObj.getTime() -
+        examDateObj.getTimezoneOffset() * 60000
+      );
+
+      const isoLocal =
+        localDate.toISOString();
+
+      const examDateInput =
+        document.getElementById("newAgentExamDate");
+
+      const examTimeInput =
+        document.getElementById("newAgentExamTime");
+
+      if (examDateInput) {
+        examDateInput.value =
+          isoLocal.slice(0, 10);
+      }
+
+      if (examTimeInput) {
+        examTimeInput.value =
+          isoLocal.slice(11, 16);
+      }
+    }
+  } else {
+    const examDateInput =
+      document.getElementById("newAgentExamDate");
+
+    const examTimeInput =
+      document.getElementById("newAgentExamTime");
+
+    if (examDateInput) examDateInput.value = "";
+    if (examTimeInput) examTimeInput.value = "";
+  }
 
   document
     .getElementById("addAgentModal")
@@ -7121,6 +7197,572 @@ function renderCommandJourney(agent) {
     );
 }
 
+
+// ==========================================================
+// FORGE SMART EXAM SCHEDULER
+// Stores exam_scheduled_at in Supabase and turns the date
+// into actionable Command Center intelligence.
+// ==========================================================
+
+function forgeExamDateValue(agent) {
+  return (
+    agent?.examScheduledAt ||
+    agent?.exam_scheduled_at ||
+    ""
+  );
+}
+
+function forgeFormatExamDate(value, includeTime = true) {
+  if (!value) return "";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return date.toLocaleString(
+    undefined,
+    includeTime
+      ? {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit"
+        }
+      : {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+          year: "numeric"
+        }
+  );
+}
+
+function forgeGetExamTiming(value) {
+  if (!value) {
+    return {
+      state: "unscheduled",
+      days: null,
+      label: "Exam not scheduled",
+      detail:
+        "Add the confirmed exam date so FORGE can guide the follow-up."
+    };
+  }
+
+  const exam = new Date(value);
+  if (Number.isNaN(exam.getTime())) {
+    return {
+      state: "unscheduled",
+      days: null,
+      label: "Exam not scheduled",
+      detail:
+        "Add the confirmed exam date so FORGE can guide the follow-up."
+    };
+  }
+
+  const now = new Date();
+
+  const startToday =
+    new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+
+  const startExam =
+    new Date(
+      exam.getFullYear(),
+      exam.getMonth(),
+      exam.getDate()
+    );
+
+  const days =
+    Math.round(
+      (startExam - startToday) /
+      86400000
+    );
+
+  if (days < 0) {
+    return {
+      state: "overdue",
+      days,
+      label: "Exam date has passed",
+      detail:
+        `${forgeFormatExamDate(value)} · Confirm the result and update the Journey.`
+    };
+  }
+
+  if (days === 0) {
+    return {
+      state: "today",
+      days,
+      label: "Exam is today",
+      detail:
+        `${forgeFormatExamDate(value)} · Send encouragement and confirm the result afterward.`
+    };
+  }
+
+  if (days === 1) {
+    return {
+      state: "tomorrow",
+      days,
+      label: "Exam is tomorrow",
+      detail:
+        `${forgeFormatExamDate(value)} · Send final preparation and reminder.`
+    };
+  }
+
+  if (days <= 3) {
+    return {
+      state: "soon",
+      days,
+      label: `Exam in ${days} days`,
+      detail:
+        `${forgeFormatExamDate(value)} · High-priority exam preparation window.`
+    };
+  }
+
+  if (days <= 7) {
+    return {
+      state: "week",
+      days,
+      label: `Exam in ${days} days`,
+      detail:
+        `${forgeFormatExamDate(value)} · Keep preparation and accountability active.`
+    };
+  }
+
+  return {
+    state: "scheduled",
+    days,
+    label: `Exam in ${days} days`,
+    detail:
+      `${forgeFormatExamDate(value)} · Exam is scheduled and on track.`
+  };
+}
+
+function renderCommandExamScheduler(agent) {
+  const panel =
+    document.getElementById(
+      "commandExamScheduler"
+    );
+
+  if (!panel || !agent) return;
+
+  const dateInput =
+    document.getElementById(
+      "commandExamDate"
+    );
+
+  const timeInput =
+    document.getElementById(
+      "commandExamTime"
+    );
+
+  const clearButton =
+    document.getElementById(
+      "clearCommandExamDate"
+    );
+
+  const title =
+    document.getElementById(
+      "commandExamStatusTitle"
+    );
+
+  const text =
+    document.getElementById(
+      "commandExamStatusText"
+    );
+
+  const existing =
+    forgeExamDateValue(agent);
+
+  // The scheduler is most useful around the exam,
+  // but keep it visible whenever a saved date exists.
+  const shouldShow =
+    existing ||
+    [
+      "XCEL Completed",
+      "Exam Scheduled",
+      "Exam Passed"
+    ].includes(agent.stage);
+
+  panel.classList.toggle(
+    "hidden",
+    !shouldShow
+  );
+
+  if (!shouldShow) return;
+
+  panel.dataset.examState =
+    forgeGetExamTiming(existing).state;
+
+  if (existing) {
+    const date = new Date(existing);
+
+    if (!Number.isNaN(date.getTime())) {
+      const local =
+        new Date(
+          date.getTime() -
+          date.getTimezoneOffset() * 60000
+        )
+          .toISOString();
+
+      if (dateInput) {
+        dateInput.value =
+          local.slice(0, 10);
+      }
+
+      if (timeInput) {
+        timeInput.value =
+          local.slice(11, 16);
+      }
+    }
+  } else {
+    if (dateInput) {
+      dateInput.value = "";
+      dateInput.min =
+        new Date()
+          .toISOString()
+          .slice(0, 10);
+    }
+
+    if (timeInput) {
+      timeInput.value = "";
+    }
+  }
+
+  const timing =
+    forgeGetExamTiming(existing);
+
+  if (title) {
+    title.textContent =
+      timing.label;
+  }
+
+  if (text) {
+    text.textContent =
+      timing.detail;
+  }
+
+  clearButton?.classList.toggle(
+    "hidden",
+    !existing
+  );
+}
+
+function applyExamIntelligence(agent, intelligence) {
+  const examValue =
+    forgeExamDateValue(agent);
+
+  if (
+    !examValue ||
+    ![
+      "XCEL Completed",
+      "Exam Scheduled"
+    ].includes(agent?.stage)
+  ) {
+    return intelligence;
+  }
+
+  const timing =
+    forgeGetExamTiming(examValue);
+
+  const copy = {
+    ...intelligence
+  };
+
+  if (
+    timing.state === "today"
+  ) {
+    copy.title =
+      "State exam is today";
+    copy.text =
+      "Send encouragement now and confirm the exam result afterward.";
+    copy.primary =
+      "Support Exam Day";
+    copy.insight =
+      "Exam-day priority";
+    copy.playbook =
+      "Exam Day Success Plan";
+  }
+
+  else if (
+    timing.state === "tomorrow" ||
+    timing.state === "soon"
+  ) {
+    copy.title =
+      timing.label;
+    copy.text =
+      "Use the final preparation window: confirm logistics, documents, and confidence.";
+    copy.primary =
+      "Prepare for Exam";
+    copy.insight =
+      "Exam approaching";
+    copy.playbook =
+      "3-Step Final Exam Prep";
+  }
+
+  else if (
+    timing.state === "overdue"
+  ) {
+    copy.title =
+      "Exam date passed — confirm result";
+    copy.text =
+      "Follow up now. If the agent passed, move them forward; if not, create a retake plan.";
+    copy.primary =
+      "Confirm Exam Result";
+    copy.insight =
+      "Result needs confirmation";
+    copy.playbook =
+      "Exam Result Follow-Up";
+  }
+
+  else {
+    copy.title =
+      `Exam scheduled · ${forgeFormatExamDate(examValue, false)}`;
+    copy.text =
+      `${timing.label}. Keep study accountability active until exam day.`;
+    copy.primary =
+      "Prepare for Exam";
+    copy.insight =
+      "Exam date confirmed";
+    copy.playbook =
+      "3-Step Exam Preparation";
+  }
+
+  return copy;
+}
+
+async function saveForgeExamSchedule() {
+  if (!selectedAgent?.id) {
+    alert(
+      "Select an agent first."
+    );
+    return;
+  }
+
+  const date =
+    document
+      .getElementById(
+        "commandExamDate"
+      )
+      ?.value || "";
+
+  const time =
+    document
+      .getElementById(
+        "commandExamTime"
+      )
+      ?.value || "09:00";
+
+  if (!date) {
+    alert(
+      "Choose the exam date first."
+    );
+    return;
+  }
+
+  const exam =
+    new Date(
+      `${date}T${time}:00`
+    );
+
+  if (
+    Number.isNaN(
+      exam.getTime()
+    )
+  ) {
+    alert(
+      "The exam date is not valid."
+    );
+    return;
+  }
+
+  const saveButton =
+    document.getElementById(
+      "saveCommandExamDate"
+    );
+
+  const oldText =
+    saveButton?.textContent ||
+    "Save Exam";
+
+  if (saveButton) {
+    saveButton.disabled = true;
+    saveButton.textContent =
+      "Saving...";
+  }
+
+  try {
+    const value =
+      exam.toISOString();
+
+    const { error } =
+      await forgeSupabase
+        .from("agents")
+        .update({
+          exam_scheduled_at:
+            value
+        })
+        .eq(
+          "organization_id",
+          getActiveOrganizationId()
+        )
+        .eq(
+          "id",
+          selectedAgent.id
+        );
+
+    if (error) {
+      throw error;
+    }
+
+    selectedAgent.examScheduledAt =
+      value;
+
+    selectedAgent.exam_scheduled_at =
+      value;
+
+    const match =
+      allAgents.find(
+        agent =>
+          String(agent.id) ===
+          String(
+            selectedAgent.id
+          )
+      );
+
+    if (match) {
+      match.examScheduledAt =
+        value;
+      match.exam_scheduled_at =
+        value;
+    }
+
+    logCoordinatorActivity?.(
+      selectedAgent,
+      "Exam Schedule",
+      `State exam scheduled for ${forgeFormatExamDate(value)}.`
+    );
+
+    showCommandProfile(
+      selectedAgent
+    );
+
+  } catch (error) {
+    console.error(
+      "FORGE EXAM SCHEDULE SAVE ERROR:",
+      error
+    );
+
+    alert(
+      "FORGE could not save the exam date: " +
+      (
+        error?.message ||
+        String(error)
+      )
+    );
+  } finally {
+    if (saveButton) {
+      saveButton.disabled = false;
+      saveButton.textContent =
+        oldText;
+    }
+  }
+}
+
+async function clearForgeExamSchedule() {
+  if (!selectedAgent?.id) return;
+
+  if (
+    !confirm(
+      "Clear this agent's scheduled exam date?"
+    )
+  ) {
+    return;
+  }
+
+  try {
+    const { error } =
+      await forgeSupabase
+        .from("agents")
+        .update({
+          exam_scheduled_at:
+            null
+        })
+        .eq(
+          "organization_id",
+          getActiveOrganizationId()
+        )
+        .eq(
+          "id",
+          selectedAgent.id
+        );
+
+    if (error) {
+      throw error;
+    }
+
+    selectedAgent.examScheduledAt =
+      "";
+
+    selectedAgent.exam_scheduled_at =
+      "";
+
+    const match =
+      allAgents.find(
+        agent =>
+          String(agent.id) ===
+          String(
+            selectedAgent.id
+          )
+      );
+
+    if (match) {
+      match.examScheduledAt = "";
+      match.exam_scheduled_at = "";
+    }
+
+    showCommandProfile(
+      selectedAgent
+    );
+
+  } catch (error) {
+    console.error(
+      "FORGE EXAM SCHEDULE CLEAR ERROR:",
+      error
+    );
+
+    alert(
+      "FORGE could not clear the exam date: " +
+      (
+        error?.message ||
+        String(error)
+      )
+    );
+  }
+}
+
+document
+  .getElementById(
+    "saveCommandExamDate"
+  )
+  ?.addEventListener(
+    "click",
+    saveForgeExamSchedule
+  );
+
+document
+  .getElementById(
+    "clearCommandExamDate"
+  )
+  ?.addEventListener(
+    "click",
+    clearForgeExamSchedule
+  );
+
+
 function showCommandProfile(agent) {
   if (!agent) return;
 
@@ -7142,7 +7784,7 @@ function showCommandProfile(agent) {
   const stage =
     agent.stage || "Not Placed";
 
-  const intelligence =
+  let intelligence =
     commandStageIntelligence[stage] ||
     {
       title: "Review this agent",
@@ -7154,6 +7796,12 @@ function showCommandProfile(agent) {
       playbook:
         "3-Step Action Playbook"
     };
+
+  intelligence =
+    applyExamIntelligence(
+      agent,
+      intelligence
+    );
 
   const days =
     getCommandDays(agent);
@@ -7257,6 +7905,8 @@ function showCommandProfile(agent) {
     intelligence.text
   );
 
+
+  renderCommandExamScheduler(agent);
 
   renderCommandJourney(agent);
 
@@ -7875,8 +8525,27 @@ function forgeOpenCommandChannel(method) {
         )
       : { subject: "", body: "" };
 
-  const subject = template?.subject || "";
-  const message = template?.body || "";
+  let subject = template?.subject || "";
+  let message = template?.body || "";
+
+  const examValue =
+    forgeExamDateValue(selectedAgent);
+
+  if (
+    examValue &&
+    ["Text", "Email", "WhatsApp"].includes(method)
+  ) {
+    const examLine =
+      `\n\nYour state exam is scheduled for ${forgeFormatExamDate(examValue)}.`;
+
+    if (
+      !String(message)
+        .toLowerCase()
+        .includes("exam is scheduled")
+    ) {
+      message += examLine;
+    }
+  }
 
   if (method === "Call") {
     if (!phone) {
