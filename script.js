@@ -1757,6 +1757,7 @@ function normalizeAgent(row) {
   };
 }
 
+
 function normalizeRecruitAgent(row) {
   return {
     name: cleanAgentName(
@@ -18001,3 +18002,212 @@ confirmImport?.addEventListener(
       }
     );
 });
+
+function setupUplineAutocomplete() {
+
+  const input =
+    document.getElementById(
+      "newAgentUpline"
+    );
+
+  const codeInput =
+    document.getElementById(
+      "newAgentUplineCode"
+    );
+
+  const suggestions =
+    document.getElementById(
+      "uplineSuggestions"
+    );
+
+  if (
+    !input ||
+    !codeInput ||
+    !suggestions
+  ) {
+    return;
+  }
+
+
+  function closeSuggestions() {
+    suggestions.innerHTML = "";
+    suggestions.classList.add(
+      "hidden"
+    );
+  }
+
+
+  function showSuggestions(
+    searchText
+  ) {
+
+    const query =
+      String(
+        searchText || ""
+      )
+        .trim()
+        .toLowerCase();
+
+
+    if (!query) {
+      closeSuggestions();
+      return;
+    }
+
+
+    const matches =
+      [...allAgents]
+        .filter(agent => {
+
+          if (!agent?.name) {
+            return false;
+          }
+
+
+          if (
+            selectedAgent?.id &&
+            String(agent.id) ===
+            String(
+              selectedAgent.id
+            )
+          ) {
+            return false;
+          }
+
+
+          return String(
+            agent.name
+          )
+            .toLowerCase()
+            .includes(query);
+
+        })
+        .sort(
+          (a, b) =>
+            String(a.name)
+              .localeCompare(
+                String(b.name)
+              )
+        )
+        .slice(0, 8);
+
+
+    if (!matches.length) {
+
+      suggestions.innerHTML = `
+        <div class="upline-no-match">
+          No matching upline found.
+          You can keep the name you typed.
+        </div>
+      `;
+
+      suggestions.classList.remove(
+        "hidden"
+      );
+
+      return;
+    }
+
+
+    suggestions.innerHTML =
+      matches
+        .map(agent => `
+          <button
+            type="button"
+            class="upline-suggestion"
+            data-upline-name="${escapeForgeText(
+              agent.name
+            )}"
+            data-upline-code="${escapeForgeText(
+              agent.code || ""
+            )}"
+          >
+            <span>
+              <strong>
+                ${escapeForgeText(
+                  agent.name
+                )}
+              </strong>
+
+              ${
+                agent.code
+                  ? `
+                    <small>
+                      ${escapeForgeText(
+                        agent.code
+                      )}
+                    </small>
+                  `
+                  : ""
+              }
+            </span>
+          </button>
+        `)
+        .join("");
+
+
+    suggestions.classList.remove(
+      "hidden"
+    );
+  }
+
+
+  input.addEventListener(
+    "input",
+    () => {
+
+      // Once they start typing again,
+      // reset the selected code until
+      // they choose a suggestion.
+      codeInput.value = "";
+
+      showSuggestions(
+        input.value
+      );
+
+    }
+  );
+
+
+  suggestions.addEventListener(
+    "click",
+    event => {
+
+      const option =
+        event.target.closest(
+          ".upline-suggestion"
+        );
+
+      if (!option) return;
+
+
+      input.value =
+        option.dataset
+          .uplineName || "";
+
+      codeInput.value =
+        option.dataset
+          .uplineCode || "";
+
+
+      closeSuggestions();
+
+    }
+  );
+
+
+  document.addEventListener(
+    "click",
+    event => {
+
+      if (
+        !event.target.closest(
+          ".autocomplete-field"
+        )
+      ) {
+        closeSuggestions();
+      }
+
+    }
+  );
+}
