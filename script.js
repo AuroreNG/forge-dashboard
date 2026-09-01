@@ -8394,6 +8394,13 @@ document.getElementById("sendAction")?.addEventListener("click", () => {
 function completeSmartAction(method, message, subject = "") {
   const phone = (selectedAgent.phone || "").replace(/\D/g, "");
   const email = selectedAgent.email || "";
+
+  if (method === "Email" && !email) {
+    alert(
+      `${getAgentDisplayName(selectedAgent)} does not have an email address in FORGE.`
+    );
+    return;
+  }
   const callOutcome = document.getElementById("callOutcome")?.value || "";
   const activityMessage = method === "Call" && callOutcome
     ? `${message}
@@ -8413,8 +8420,11 @@ Outcome: ${callOutcome}`
   }
 
   if (method === "Email" && email) {
-    window.location.href =
-      `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+    forgeOpenMailClient(
+      email,
+      subject,
+      message
+    );
   }
 
   if (method === "WhatsApp" && phone) {
@@ -8505,6 +8515,55 @@ function forgeCleanPhoneForLink(value) {
   return digits;
 }
 
+
+function forgeOpenMailClient(email, subject = "", message = "") {
+  const cleanEmail =
+    String(email || "").trim();
+
+  if (!cleanEmail) {
+    return false;
+  }
+
+  const mailto =
+    `mailto:${cleanEmail}` +
+    `?subject=${encodeURIComponent(subject || "")}` +
+    `&body=${encodeURIComponent(message || "")}`;
+
+  try {
+    // A real link click is more reliable than window.location
+    // when FORGE is embedded inside GoHighLevel / an iframe.
+    const link =
+      document.createElement("a");
+
+    link.href = mailto;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.style.display = "none";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    return true;
+  } catch (error) {
+    console.warn(
+      "FORGE could not open the email client with a link:",
+      error
+    );
+
+    try {
+      window.open(mailto, "_blank");
+      return true;
+    } catch (fallbackError) {
+      console.error(
+        "FORGE email fallback failed:",
+        fallbackError
+      );
+      return false;
+    }
+  }
+}
+
 function forgeOpenCommandChannel(method) {
   if (!selectedAgent) {
     alert("Please select an agent first.");
@@ -8571,14 +8630,25 @@ function forgeOpenCommandChannel(method) {
 
   if (method === "Email") {
     if (!email) {
-      alert(`${getAgentDisplayName(selectedAgent)} does not have an email address in FORGE.`);
+      alert(
+        `${getAgentDisplayName(selectedAgent)} does not have an email address in FORGE.`
+      );
       return;
     }
 
-    window.location.href =
-      `mailto:${encodeURIComponent(email)}` +
-      `?subject=${encodeURIComponent(subject)}` +
-      `&body=${encodeURIComponent(message)}`;
+    const opened =
+      forgeOpenMailClient(
+        email,
+        subject,
+        message
+      );
+
+    if (!opened) {
+      alert(
+        "Your browser blocked the email app. Please allow pop-ups for FORGE and try again."
+      );
+    }
+
     return;
   }
 
