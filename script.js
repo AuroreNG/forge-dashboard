@@ -5150,6 +5150,8 @@ document.querySelector(".add-agent-btn")?.addEventListener("click", () => {
   selectedAgent = null;
   clearAgentForm();
   addAgentModal.classList.remove("hidden");
+  setupUplineAutocomplete();
+  setTimeout(() => document.getElementById("newAgentUpline")?.focus(), 30);
 });
 
 document.getElementById("cancelAddAgent")?.addEventListener("click", () => {
@@ -18094,230 +18096,143 @@ confirmImport?.addEventListener(
 });
 
 function setupUplineAutocomplete() {
+  const input = document.getElementById("newAgentUpline");
+  const codeInput = document.getElementById("newAgentUplineCode");
+  const suggestions = document.getElementById("uplineSuggestions");
 
-  const input =
-    document.getElementById(
-      "newAgentUpline"
-    );
-
-  const codeInput =
-    document.getElementById(
-      "newAgentUplineCode"
-    );
-
-  const suggestions =
-    document.getElementById(
-      "uplineSuggestions"
-    );
-
-  if (
-    !input ||
-    !codeInput ||
-    !suggestions
-  ) {
-    return;
-  }
-
-  if (input.dataset.uplineAutocompleteReady === "1") {
-    return;
-  }
-
+  if (!input || !codeInput || !suggestions) return;
+  if (input.dataset.uplineAutocompleteReady === "1") return;
   input.dataset.uplineAutocompleteReady = "1";
 
+  let activeIndex = -1;
 
-  function closeSuggestions() {
+  const closeSuggestions = () => {
     suggestions.innerHTML = "";
-    suggestions.classList.add(
-      "hidden"
-    );
-  }
+    suggestions.classList.add("hidden");
+    activeIndex = -1;
+  };
 
+  const matchingAgents = (searchText = "") => {
+    const query = String(searchText).trim().toLowerCase();
 
-  function showSuggestions(
-    searchText
-  ) {
+    return [...allAgents]
+      .filter(agent => {
+        if (!agent?.name) return false;
+        if (selectedAgent?.id && String(agent.id) === String(selectedAgent.id)) return false;
 
-    const query =
-      String(
-        searchText || ""
-      )
-        .trim()
-        .toLowerCase();
+        const name = String(agent.name).toLowerCase();
+        const code = String(agent.code || "").toLowerCase();
+        return !query || name.includes(query) || code.includes(query);
+      })
+      .sort((a, b) => {
+        const q = query;
+        const an = String(a.name || "").toLowerCase();
+        const bn = String(b.name || "").toLowerCase();
+        const aStarts = q && an.startsWith(q) ? 0 : 1;
+        const bStarts = q && bn.startsWith(q) ? 0 : 1;
+        return aStarts - bStarts || an.localeCompare(bn);
+      })
+      .slice(0, 10);
+  };
 
-
-    if (!query) {
-      closeSuggestions();
-      return;
-    }
-
-
-    const matches =
-      [...allAgents]
-        .filter(agent => {
-
-          if (!agent?.name) {
-            return false;
-          }
-
-
-          if (
-            selectedAgent?.id &&
-            String(agent.id) ===
-            String(
-              selectedAgent.id
-            )
-          ) {
-            return false;
-          }
-
-
-          return String(
-            agent.name
-          )
-            .toLowerCase()
-            .includes(query);
-
-        })
-        .sort(
-          (a, b) =>
-            String(a.name)
-              .localeCompare(
-                String(b.name)
-              )
-        )
-        .slice(0, 8);
-
+  const showSuggestions = (searchText = "") => {
+    const matches = matchingAgents(searchText);
 
     if (!matches.length) {
-
       suggestions.innerHTML = `
         <div class="upline-no-match">
-          No matching upline found.
-          You can keep the name you typed.
+          No matching person found in this organization.
         </div>
       `;
-
-      suggestions.classList.remove(
-        "hidden"
-      );
-
+      suggestions.classList.remove("hidden");
+      activeIndex = -1;
       return;
     }
 
+    suggestions.innerHTML = matches.map(agent => {
+      const visibleCode = getVisibleAgentCode(agent);
+      const internalCode = String(agent.code || "");
 
-    suggestions.innerHTML =
-      matches
-        .map(agent => `
-          <button
-            type="button"
-            class="upline-suggestion"
-            data-upline-name="${escapeForgeText(
-              agent.name
-            )}"
-            data-upline-code="${escapeForgeText(
-              getVisibleAgentCode(agent)
-            )}"
-          >
-            <span>
-              <strong>
-                ${escapeForgeText(
-                  agent.name
-                )}
-              </strong>
+      return `
+        <button
+          type="button"
+          class="upline-suggestion"
+          data-upline-name="${escapeForgeText(agent.name)}"
+          data-upline-code="${escapeForgeText(internalCode)}"
+        >
+          <span>
+            <strong>${escapeForgeText(agent.name)}</strong>
+            ${visibleCode ? `<small>${escapeForgeText(visibleCode)}</small>` : ""}
+          </span>
+        </button>
+      `;
+    }).join("");
 
-              ${
-                getVisibleAgentCode(agent)
-                  ? `
-                    <small>
-                      ${escapeForgeText(
-                        getVisibleAgentCode(agent)
-                      )}
-                    </small>
-                  `
-                  : ""
-              }
-            </span>
-          </button>
-        `)
-        .join("");
+    suggestions.classList.remove("hidden");
+    activeIndex = -1;
+  };
 
+  input.addEventListener("focus", () => {
+    showSuggestions(input.value);
+  });
 
-    suggestions.classList.remove(
-      "hidden"
-    );
-  }
+  input.addEventListener("input", () => {
+    codeInput.value = "";
+    showSuggestions(input.value);
+  });
 
+  suggestions.addEventListener("mousedown", event => {
+    const option = event.target.closest(".upline-suggestion");
+    if (!option) return;
+    event.preventDefault();
 
-  input.addEventListener(
-    "input",
-    () => {
+    input.value = option.dataset.uplineName || "";
+    codeInput.value = option.dataset.uplineCode || "";
+    closeSuggestions();
+  });
 
-      // Once they start typing again,
-      // reset the selected code until
-      // they choose a suggestion.
-      codeInput.value = "";
+  input.addEventListener("keydown", event => {
+    const options = [...suggestions.querySelectorAll(".upline-suggestion")];
+    if (!options.length || suggestions.classList.contains("hidden")) return;
 
-      showSuggestions(
-        input.value
-      );
-
-    }
-  );
-
-
-  suggestions.addEventListener(
-    "click",
-    event => {
-
-      const option =
-        event.target.closest(
-          ".upline-suggestion"
-        );
-
-      if (!option) return;
-
-
-      input.value =
-        option.dataset
-          .uplineName || "";
-
-      codeInput.value =
-        option.dataset
-          .uplineCode || "";
-
-
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, options.length - 1);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+    } else if (event.key === "Enter" && activeIndex >= 0) {
+      event.preventDefault();
+      options[activeIndex].dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      return;
+    } else if (event.key === "Escape") {
       closeSuggestions();
-
+      return;
+    } else {
+      return;
     }
-  );
 
+    options.forEach((option, index) => option.classList.toggle("is-active", index === activeIndex));
+    options[activeIndex]?.scrollIntoView({ block: "nearest" });
+  });
 
-  document.addEventListener(
-    "click",
-    event => {
-
-      if (
-        !event.target.closest(
-          ".autocomplete-field"
-        )
-      ) {
-        closeSuggestions();
-      }
-
+  document.addEventListener("click", event => {
+    if (!event.target.closest("#addAgentModal .autocomplete-field")) {
+      closeSuggestions();
     }
-  );
+  });
 }
 
 /* ==========================================================
    FORGE UPLINE AUTOCOMPLETE INITIALIZER
 ========================================================== */
 
-if (document.readyState === "loading") {
-  document.addEventListener(
-    "DOMContentLoaded",
-    setupUplineAutocomplete,
-    { once: true }
-  );
-} else {
+function initializeForgeUplineAutocomplete() {
   setupUplineAutocomplete();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeForgeUplineAutocomplete, { once: true });
+} else {
+  initializeForgeUplineAutocomplete();
 }
