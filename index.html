@@ -1095,39 +1095,39 @@
 
     <input id="newAgentCode" placeholder="Agent Code">
 
-   <label>Upline</label>
-<input
-  id="newAgentUpline"
-  placeholder="Enter upline name"
-/>
+<label>Upline</label>
 
-<label>Coordinator</label>
-<select id="newAgentCoordinator">
-  <option value="">Select Coordinator</option>
-  <option value="Miranda">Miranda</option>
-  <option value="Prince">Prince</option>
-  <option value="Freddy">Freddy</option>
-  <option value="Georgette">Georgette</option>
-</select>
+<div class="autocomplete-field">
+
+  <input
+    id="newAgentUpline"
+    type="text"
+    placeholder="Start typing upline name..."
+    autocomplete="off"
+  />
+
+  <input
+    id="newAgentUplineCode"
+    type="hidden"
+  />
+
+  <div
+    id="uplineSuggestions"
+    class="upline-suggestions hidden"
+  ></div>
+
+</div>
 
     <select id="newAgentStage">
       <option value="" disabled selected>
       Select Current Pipeline Stage
-      </option>
       <option value="Not Placed">Not Placed</option>
-      <option value="Not Started">Not Started</option>
-      <option value="Quiz Sent">Quiz Sent</option>
-      <option value="Quiz Passed">Quiz Passed</option>
-      <option value="XCEL Completed">XCEL Completed</option>
-      <option value="Simulation Exams">Simulation Exams</option>
-      <option value="Exam Scheduled">Exam Scheduled</option>
-      <option value="Exam Passed">Exam Passed</option>
-      <option value="Fingerprints">Fingerprints</option>
-      <option value="Applied For License">Applied For License</option>
-      <option value="Licensed">Licensed</option>
-      <option value="Compliance">Compliance</option>
-      <option value="Contracted">Contracted</option>
-    </select>
+  <option value="Quiz Sent">Quiz Sent</option>
+  <option value="XCEL Completed">XCEL Completed</option>
+  <option value="Exam Passed">Exam Passed</option>
+  <option value="Licensed">Licensed</option>
+  <option value="Contracted">Contracted</option>
+</select>
 
     <div class="modal-actions">
       <button id="cancelAddAgent">Cancel</button>
