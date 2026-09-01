@@ -21728,7 +21728,7 @@ body.forge-drawer-open {
 /* main two-column shell */
 #commandPage .command-layout-v2 {
   display: grid !important;
-  grid-template-columns: 410px minmax(0, 1fr) !important;
+  grid-template-columns: 470px minmax(0, 1fr) !important;
   gap: 20px !important;
   align-items: stretch !important;
 
@@ -21751,9 +21751,9 @@ body.forge-drawer-open {
   flex-direction: column !important;
 
   width: 100% !important;
-  height: calc(100vh - 92px) !important;
-  min-height: 820px !important;
-  max-height: 960px !important;
+  height: calc(100vh - 54px) !important;
+  min-height: 860px !important;
+  max-height: none !important;
 
   padding: 22px 18px 16px !important;
 
@@ -22424,7 +22424,7 @@ body.forge-drawer-open {
 /* responsive */
 @media (max-width: 1200px) {
   #commandPage .command-layout-v2 {
-    grid-template-columns: 350px minmax(0, 1fr) !important;
+    grid-template-columns: 400px minmax(0, 1fr) !important;
   }
 }
 
@@ -32681,4 +32681,38 @@ body.forge-drawer-open {
   color: #74859c;
 
   font-size: 12px;
+}
+
+/* =========================================================
+   COMMAND CENTER SIDEBAR — DESKTOP FILL-SPACE FINAL OVERRIDE
+========================================================= */
+@media (min-width: 1201px) {
+  #commandPage .command-layout-v2 {
+    grid-template-columns: 470px minmax(0, 1fr) !important;
+  }
+
+  #commandPage .command-sidebar-v2 {
+    width: 100% !important;
+    min-width: 470px !important;
+    height: calc(100vh - 54px) !important;
+    min-height: 860px !important;
+    max-height: none !important;
+  }
+
+  #commandPage #commandAgentList {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+  }
+
+  #commandPage .command-agent-copy {
+    min-width: 0 !important;
+  }
+
+  #commandPage .command-agent-row b {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
 }
