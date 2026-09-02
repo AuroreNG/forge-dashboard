@@ -8648,6 +8648,183 @@ function closeForgeEmailComposer() {
     );
 }
 
+
+function forgeSetEmailStatus(message) {
+  const status =
+    document.getElementById(
+      "forgeEmailStatus"
+    );
+
+  if (status) {
+    status.textContent =
+      message || "";
+  }
+}
+
+async function forgeCopyEmailContent() {
+  const subject =
+    document
+      .getElementById(
+        "forgeEmailSubject"
+      )
+      ?.value || "";
+
+  const body =
+    document
+      .getElementById(
+        "forgeEmailBody"
+      )
+      ?.value || "";
+
+  const content =
+    subject
+      ? `${subject}\n\n${body}`
+      : body;
+
+  if (!content.trim()) {
+    forgeSetEmailStatus(
+      "There is nothing to copy."
+    );
+    return;
+  }
+
+  try {
+    if (
+      navigator.clipboard &&
+      window.isSecureContext
+    ) {
+      await navigator.clipboard.writeText(
+        content
+      );
+
+      forgeSetEmailStatus(
+        "Email copied."
+      );
+
+      return;
+    }
+  } catch (error) {
+    console.warn(
+      "Modern clipboard copy failed:",
+      error
+    );
+  }
+
+  // Fallback for embedded browsers / older permissions.
+  const textarea =
+    document.createElement(
+      "textarea"
+    );
+
+  textarea.value =
+    content;
+
+  textarea.setAttribute(
+    "readonly",
+    ""
+  );
+
+  textarea.style.position =
+    "fixed";
+
+  textarea.style.left =
+    "-9999px";
+
+  document.body.appendChild(
+    textarea
+  );
+
+  textarea.select();
+  textarea.setSelectionRange(
+    0,
+    textarea.value.length
+  );
+
+  let copied = false;
+
+  try {
+    copied =
+      document.execCommand(
+        "copy"
+      );
+  } catch (error) {
+    console.error(
+      "Clipboard fallback failed:",
+      error
+    );
+  }
+
+  textarea.remove();
+
+  forgeSetEmailStatus(
+    copied
+      ? "Email copied."
+      : "Copy was blocked. Select the message and copy it manually."
+  );
+}
+
+// IMPORTANT:
+// index.html loads script.js BEFORE the email modal markup.
+// Event delegation guarantees these controls work even though
+// the modal elements are parsed after this script runs.
+document.addEventListener(
+  "click",
+  async (event) => {
+
+    const closeButton =
+      event.target.closest(
+        "#closeForgeEmailModal, #cancelForgeEmail"
+      );
+
+    if (closeButton) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      closeForgeEmailComposer();
+      return;
+    }
+
+
+    const copyButton =
+      event.target.closest(
+        "#copyForgeEmail"
+      );
+
+    if (copyButton) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      await forgeCopyEmailContent();
+      return;
+    }
+
+
+    const gmailButton =
+      event.target.closest(
+        "#openForgeEmailInGmail"
+      );
+
+    if (gmailButton) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      openForgeEmailInGmail();
+      return;
+    }
+
+
+    // Clicking the dark backdrop closes the modal,
+    // but clicking the card itself does not.
+    if (
+      event.target?.id ===
+      "forgeEmailModal"
+    ) {
+      closeForgeEmailComposer();
+    }
+
+  }
+);
+
 function openForgeEmailInGmail() {
   if (!selectedAgent) {
     alert(
@@ -8694,84 +8871,6 @@ function openForgeEmailInGmail() {
     "noopener,noreferrer"
   );
 }
-
-document
-  .getElementById(
-    "closeForgeEmailModal"
-  )
-  ?.addEventListener(
-    "click",
-    closeForgeEmailComposer
-  );
-
-document
-  .getElementById(
-    "cancelForgeEmail"
-  )
-  ?.addEventListener(
-    "click",
-    closeForgeEmailComposer
-  );
-
-document
-  .getElementById(
-    "copyForgeEmail"
-  )
-  ?.addEventListener(
-    "click",
-    async () => {
-      const subject =
-        document
-          .getElementById(
-            "forgeEmailSubject"
-          )
-          ?.value || "";
-
-      const body =
-        document
-          .getElementById(
-            "forgeEmailBody"
-          )
-          ?.value || "";
-
-      const content =
-        subject
-          ? `${subject}\n\n${body}`
-          : body;
-
-      try {
-        await navigator
-          .clipboard
-          .writeText(
-            content
-          );
-
-        const status =
-          document.getElementById(
-            "forgeEmailStatus"
-          );
-
-        if (status) {
-          status.textContent =
-            "Email copied.";
-        }
-      } catch (error) {
-        console.error(
-          "FORGE EMAIL COPY ERROR:",
-          error
-        );
-      }
-    }
-  );
-
-document
-  .getElementById(
-    "openForgeEmailInGmail"
-  )
-  ?.addEventListener(
-    "click",
-    openForgeEmailInGmail
-  );
 
 document.addEventListener(
   "keydown",
