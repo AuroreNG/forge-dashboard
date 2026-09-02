@@ -33808,3 +33808,28 @@ body.forge-drawer-open {
     width: 100%;
   }
 }
+
+
+/* FORGE email logo reliability */
+.forge-email-brand-logo-wrap img.hidden {
+  display: none !important;
+}
+
+#forgeEmailOrgFallback {
+  font-weight: 900;
+  letter-spacing: -.02em;
+}
+
+#forgeEmailModal[data-brand="bizzall"] #forgeEmailOrgFallback {
+  color: #ffffff;
+}
+
+#forgeEmailModal[data-brand="apex"] #forgeEmailOrgFallback {
+  color: #f2d878;
+}
+
+/* Slightly cleaner preview spacing */
+.forge-email-preview-frame {
+  padding: 18px;
+}
+

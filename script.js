@@ -8583,12 +8583,12 @@ function getForgeOrganizationEmailBrand() {
 
   // Built-in branding for the two organizations supplied for FORGE.
   if (key.includes("apex")) {
-    brand.logo = brand.logo || "./assets/apex-wealth-building-logo.png";
+    brand.logo = brand.logo || "https://forge.bizzallone.com/assets/apex-wealth-building-logo.png";
     brand.primary = org.email_primary_color || "#071d13";
     brand.accent = org.email_accent_color || "#c9a227";
     brand.tagline = org.email_tagline || "We build wealth. We impact lives.";
   } else if (key.includes("bizzall")) {
-    brand.logo = brand.logo || "./assets/bizzall-logo.png";
+    brand.logo = brand.logo || "https://forge.bizzallone.com/assets/bizzall-logo.png";
     brand.primary = org.email_primary_color || "#071b3d";
     brand.accent = org.email_accent_color || "#1769d2";
     brand.tagline = org.email_tagline || "Business for all";
@@ -8680,6 +8680,34 @@ function forgeEscapeEmailHtml(value = "") {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+
+function forgeStripDuplicateGreeting(value = "", firstName = "") {
+  let text = String(value || "").trim();
+  if (!text) return "";
+
+  const escapedName =
+    String(firstName || "")
+      .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  const genericGreeting =
+    /^(hi|hello|dear)\s+[^\n,]{1,60},?\s*(?:\n+|$)/i;
+
+  const namedGreeting = escapedName
+    ? new RegExp(
+        `^(hi|hello|dear)\\s+${escapedName},?\\s*(?:\\n+|$)`,
+        "i"
+      )
+    : null;
+
+  if (namedGreeting && namedGreeting.test(text)) {
+    text = text.replace(namedGreeting, "").trimStart();
+  } else if (genericGreeting.test(text)) {
+    text = text.replace(genericGreeting, "").trimStart();
+  }
+
+  return text;
 }
 
 function forgeEmailParagraphs(value = "") {
@@ -8875,6 +8903,12 @@ function forgeBuildBrandedEmailHtml(agent, subject, body) {
   const stage =
     agent?.stage || "Not Placed";
 
+  const cleanBody =
+    forgeStripDuplicateGreeting(
+      body,
+      firstName
+    );
+
   const nextStep =
     forgeEmailNextStep(stage, agent);
 
@@ -8986,7 +9020,7 @@ function forgeBuildBrandedEmailHtml(agent, subject, body) {
                 </div>
 
                 <div style="margin-top:18px;">
-                  ${forgeEmailParagraphs(body)}
+                  ${forgeEmailParagraphs(cleanBody)}
                 </div>
 
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:24px 0 0;">
@@ -9244,8 +9278,13 @@ async function forgeSendBrandedEmail() {
       error?.message ||
       String(error);
 
+    const friendlyMessage =
+      /Failed to send a request to the Edge Function/i.test(message)
+        ? "Email sending is not connected yet. The FORGE preview is working, but the Supabase Edge Function must be deployed before Send Branded Email can deliver."
+        : message;
+
     forgeSetEmailStatus(
-      `Could not send: ${message}`
+      `Could not send: ${friendlyMessage}`
     );
   } finally {
     if (button) {
