@@ -8565,6 +8565,74 @@ function forgeOpenMailClient(email, subject = "", message = "") {
 }
 
 
+
+function getForgeOrganizationEmailBrand() {
+  const org = currentOrganization || {};
+  const name = String(org.name || "Organization").trim();
+  const key = name.toLowerCase();
+
+  // Database values win, so future organizations can be branded
+  // without changing this JavaScript file.
+  const brand = {
+    name,
+    logo: org.email_logo_url || org.logo_url || "",
+    primary: org.email_primary_color || org.primary_color || "#0b397a",
+    accent: org.email_accent_color || org.accent_color || "#2563eb",
+    tagline: org.email_tagline || org.tagline || "Powered by FORGE"
+  };
+
+  // Built-in branding for the two organizations supplied for FORGE.
+  if (key.includes("apex")) {
+    brand.logo = brand.logo || "./assets/apex-wealth-building-logo.png";
+    brand.primary = org.email_primary_color || "#071d13";
+    brand.accent = org.email_accent_color || "#c9a227";
+    brand.tagline = org.email_tagline || "We build wealth. We impact lives.";
+  } else if (key.includes("bizzall")) {
+    brand.logo = brand.logo || "./assets/bizzall-logo.png";
+    brand.primary = org.email_primary_color || "#071b3d";
+    brand.accent = org.email_accent_color || "#1769d2";
+    brand.tagline = org.email_tagline || "Business for all";
+  }
+
+  return brand;
+}
+
+function renderForgeOrganizationEmailBrand() {
+  const brand = getForgeOrganizationEmailBrand();
+  const card = document.getElementById("forgeEmailCard");
+  const logo = document.getElementById("forgeEmailOrgLogo");
+  const fallback = document.getElementById("forgeEmailOrgFallback");
+
+  setText("forgeEmailOrgName", brand.name);
+  setText("forgeEmailOrgTagline", brand.tagline);
+
+  if (card) {
+    card.style.setProperty("--org-primary", brand.primary);
+    card.style.setProperty("--org-accent", brand.accent);
+  }
+
+  if (logo && brand.logo) {
+    logo.src = brand.logo;
+    logo.alt = `${brand.name} logo`;
+    logo.classList.remove("hidden");
+    fallback?.classList.add("hidden");
+
+    logo.onerror = () => {
+      logo.classList.add("hidden");
+      if (fallback) {
+        fallback.textContent = brand.name;
+        fallback.classList.remove("hidden");
+      }
+    };
+  } else {
+    logo?.classList.add("hidden");
+    if (fallback) {
+      fallback.textContent = brand.name;
+      fallback.classList.remove("hidden");
+    }
+  }
+}
+
 function openForgeEmailComposer(agent, subject = "", message = "") {
   if (!agent) {
     alert("Please select an agent first.");
@@ -8585,6 +8653,9 @@ function openForgeEmailComposer(agent, subject = "", message = "") {
     document.getElementById(
       "forgeEmailModal"
     );
+
+  // Brand every email composer from the active organization.
+  renderForgeOrganizationEmailBrand();
 
   const subjectInput =
     document.getElementById(

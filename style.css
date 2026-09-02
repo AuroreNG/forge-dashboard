@@ -33316,3 +33316,81 @@ body.forge-drawer-open {
     width: 100%;
   }
 }
+
+
+/* ==========================================================
+   ORGANIZATION-BRANDED EMAIL COMPOSER
+========================================================== */
+.forge-email-card {
+  --org-primary: #0b397a;
+  --org-accent: #2563eb;
+}
+
+.forge-email-card::before {
+  content: "";
+  display: block;
+  height: 5px;
+  background: linear-gradient(90deg, var(--org-primary), var(--org-accent));
+}
+
+.forge-email-brand {
+  margin: 22px 28px 0;
+  min-height: 92px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid #e0e8f3;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(247,250,255,.96));
+  box-shadow: 0 10px 28px rgba(18,48,88,.07);
+}
+
+.forge-email-brand-logo-wrap {
+  width: 150px;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex: 0 0 150px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.forge-email-org-logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.forge-email-org-fallback {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  text-align: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--org-primary), var(--org-accent));
+  color: #fff;
+  font-weight: 900;
+  letter-spacing: .06em;
+}
+
+.forge-email-brand-copy { min-width: 0; flex: 1; }
+.forge-email-brand-copy span { display:block; color:#8392a8; font-size:9px; font-weight:900; letter-spacing:.12em; }
+.forge-email-brand-copy strong { display:block; margin-top:4px; color:#102f55; font-size:15px; font-weight:900; }
+.forge-email-brand-copy small { display:block; margin-top:3px; color:#70839b; font-size:11px; font-weight:650; }
+.forge-email-powered { align-self:flex-start; padding:6px 9px; border:1px solid #dce6f2; border-radius:999px; color:#315a8d; background:#fff; font-size:9px; font-weight:900; letter-spacing:.08em; }
+
+#openForgeEmailInGmail {
+  background: linear-gradient(135deg, var(--org-primary), var(--org-accent));
+}
+
+@media (max-width: 640px) {
+  .forge-email-brand { align-items:flex-start; flex-wrap:wrap; }
+  .forge-email-brand-logo-wrap { width:120px; flex-basis:120px; }
+  .forge-email-powered { margin-left:auto; }
+}

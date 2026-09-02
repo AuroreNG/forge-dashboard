@@ -3612,7 +3612,7 @@ TEAM INTELLIGENCE DRAWER
      FORGE EMAIL COMPOSER
 ========================================================= -->
 <div id="forgeEmailModal" class="modal hidden">
-  <div class="forge-email-card">
+  <div class="forge-email-card" id="forgeEmailCard">
     <div class="forge-email-header">
       <div>
         <span class="forge-email-eyebrow">FORGE COMMUNICATION</span>
@@ -3628,6 +3628,19 @@ TEAM INTELLIGENCE DRAWER
       >
         ×
       </button>
+    </div>
+
+    <div class="forge-email-brand" id="forgeEmailBrand">
+      <div class="forge-email-brand-logo-wrap">
+        <img id="forgeEmailOrgLogo" class="forge-email-org-logo" alt="Organization logo" />
+        <div id="forgeEmailOrgFallback" class="forge-email-org-fallback hidden"></div>
+      </div>
+      <div class="forge-email-brand-copy">
+        <span>MESSAGE FROM</span>
+        <strong id="forgeEmailOrgName">Organization</strong>
+        <small id="forgeEmailOrgTagline">Powered by FORGE</small>
+      </div>
+      <div class="forge-email-powered">FORGE</div>
     </div>
 
     <div class="forge-email-recipient">
