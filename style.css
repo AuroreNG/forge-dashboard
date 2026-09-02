@@ -33649,3 +33649,162 @@ body.forge-drawer-open {
       #154f9f
     );
 }
+
+
+/* ==========================================================
+   FORGE BRANDED EMAIL — EDIT / PREVIEW / SEND
+========================================================== */
+
+.forge-email-tabs {
+  margin: 18px 28px 0;
+  padding: 4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  border: 1px solid #dce5ef;
+  border-radius: 13px;
+  background: #f4f7fa;
+}
+
+.forge-email-tab {
+  height: 38px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.forge-email-tab.active {
+  background: #fff;
+  color: var(--org-primary, #0a2b59);
+  box-shadow: 0 3px 10px rgba(20, 45, 78, .08);
+}
+
+.forge-email-edit-panel.hidden,
+.forge-email-preview-panel.hidden {
+  display: none !important;
+}
+
+.forge-email-preview-panel {
+  margin: 18px 28px 0;
+}
+
+.forge-email-preview-toolbar {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.forge-email-preview-toolbar span {
+  color: #1d3654;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.forge-email-preview-toolbar small {
+  color: #8190a3;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.forge-email-preview-frame {
+  max-height: 470px;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid #dce5ef;
+  border-radius: 16px;
+  background: #eef2f5;
+}
+
+.forge-email-preview-frame > table,
+.forge-email-preview-frame > div {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.forge-email-actions {
+  flex-wrap: wrap;
+}
+
+.forge-email-send {
+  min-width: 170px;
+  border: 1px solid var(--org-accent, #3f8cff) !important;
+  background:
+    linear-gradient(
+      135deg,
+      var(--org-primary, #0a2b59),
+      color-mix(in srgb, var(--org-primary, #0a2b59) 78%, white)
+    ) !important;
+  color: #fff !important;
+  box-shadow:
+    0 10px 22px rgba(7, 45, 76, .19);
+}
+
+.forge-email-send:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 28px rgba(7, 45, 76, .24);
+}
+
+.forge-email-send:disabled {
+  opacity: .62;
+  cursor: wait;
+}
+
+.forge-email-gmail-fallback {
+  border: 1px solid #d9e1eb !important;
+  background: #fff !important;
+  color: #6d7b8d !important;
+  box-shadow: none !important;
+}
+
+/* Apex send button — emerald + gold */
+#forgeEmailModal[data-brand="apex"] .forge-email-send {
+  border-color: #d4af37 !important;
+  background:
+    linear-gradient(
+      135deg,
+      #032a22,
+      #063f31 62%,
+      #0b5c47
+    ) !important;
+  color: #fff !important;
+  box-shadow:
+    0 12px 25px rgba(3,42,34,.25),
+    inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-tab.active {
+  color: #063f31;
+  box-shadow:
+    0 3px 11px rgba(3,42,34,.10),
+    inset 0 -2px 0 #d4af37;
+}
+
+/* Bizzall send button — navy + sapphire */
+#forgeEmailModal[data-brand="bizzall"] .forge-email-send {
+  border-color: #8ec0ff !important;
+  background:
+    linear-gradient(
+      135deg,
+      #061a38,
+      #0a2b59 62%,
+      #154f9f
+    ) !important;
+}
+
+@media (max-width: 640px) {
+  .forge-email-tabs,
+  .forge-email-preview-panel {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .forge-email-send {
+    width: 100%;
+  }
+}

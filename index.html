@@ -3617,7 +3617,7 @@ TEAM INTELLIGENCE DRAWER
       <div>
         <span class="forge-email-eyebrow">FORGE COMMUNICATION</span>
         <h3>Send Email</h3>
-        <p>Review the message, then open it in Gmail.</p>
+        <p>Create a polished organization-branded email, preview it, then send it directly from FORGE.</p>
       </div>
 
       <button
@@ -3642,6 +3642,17 @@ TEAM INTELLIGENCE DRAWER
       </div>
       <div class="forge-email-powered">FORGE</div>
     </div>
+
+    <div class="forge-email-tabs" role="tablist" aria-label="Email view">
+      <button type="button" class="forge-email-tab active" data-forge-email-tab="edit">
+        Edit
+      </button>
+      <button type="button" class="forge-email-tab" data-forge-email-tab="preview">
+        Preview
+      </button>
+    </div>
+
+    <div id="forgeEmailEditPanel" class="forge-email-edit-panel">
 
     <div class="forge-email-recipient">
       <div class="forge-email-avatar" id="forgeEmailAvatar">A</div>
@@ -3671,6 +3682,16 @@ TEAM INTELLIGENCE DRAWER
       ></textarea>
     </div>
 
+    </div>
+
+    <div id="forgeEmailPreviewPanel" class="forge-email-preview-panel hidden">
+      <div class="forge-email-preview-toolbar">
+        <span>Recipient preview</span>
+        <small>What the agent will receive</small>
+      </div>
+      <div id="forgeEmailPreviewFrame" class="forge-email-preview-frame"></div>
+    </div>
+
     <div class="forge-email-status" id="forgeEmailStatus"></div>
 
     <div class="forge-email-actions">
@@ -3682,8 +3703,12 @@ TEAM INTELLIGENCE DRAWER
         Copy Email
       </button>
 
-      <button type="button" id="openForgeEmailInGmail">
-        Open in Gmail
+      <button type="button" id="sendForgeBrandedEmail" class="forge-email-send">
+        Send Branded Email
+      </button>
+
+      <button type="button" id="openForgeEmailInGmail" class="forge-email-gmail-fallback">
+        Gmail Backup
       </button>
     </div>
   </div>

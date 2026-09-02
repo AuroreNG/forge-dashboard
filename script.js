@@ -8672,6 +8672,639 @@ function applyForgeEmailModalBrandKey() {
 }
 
 
+
+function forgeEscapeEmailHtml(value = "") {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function forgeEmailParagraphs(value = "") {
+  return String(value || "")
+    .trim()
+    .split(/\n{2,}/)
+    .filter(Boolean)
+    .map((paragraph) => {
+      const safe =
+        forgeEscapeEmailHtml(paragraph)
+          .replace(/\n/g, "<br>");
+      return `<p style="margin:0 0 16px;font-size:16px;line-height:1.65;color:#25364a;">${safe}</p>`;
+    })
+    .join("");
+}
+
+function forgeEmailJourneyStages() {
+  return [
+    "Not Placed",
+    "Quiz Sent",
+    "XCEL Completed",
+    "Exam Scheduled",
+    "Exam Passed",
+    "Licensed",
+    "Contracted"
+  ];
+}
+
+function forgeEmailStageLabel(stage) {
+  const labels = {
+    "Not Placed": "Start",
+    "Quiz Sent": "Quiz",
+    "XCEL Completed": "XCEL",
+    "Exam Scheduled": "Exam",
+    "Exam Passed": "Passed",
+    "Licensed": "Licensed",
+    "Contracted": "Contracted"
+  };
+
+  return labels[stage] || stage || "Journey";
+}
+
+function forgeEmailStageIndex(stage) {
+  const order = forgeEmailJourneyStages();
+
+  // Exam Scheduled is represented by a saved exam date even if the main
+  // Journey stage is still XCEL Completed.
+  if (
+    stage === "XCEL Completed" &&
+    selectedAgent &&
+    forgeExamDateValue?.(selectedAgent)
+  ) {
+    return order.indexOf("Exam Scheduled");
+  }
+
+  const index =
+    order.indexOf(stage);
+
+  return index >= 0 ? index : 0;
+}
+
+function forgeEmailNextStep(stage, agent) {
+  const examValue =
+    typeof forgeExamDateValue === "function"
+      ? forgeExamDateValue(agent)
+      : "";
+
+  if (
+    examValue &&
+    ["XCEL Completed", "Exam Scheduled"].includes(stage)
+  ) {
+    return {
+      eyebrow: "STATE EXAM",
+      title: "Your exam is scheduled",
+      text:
+        `Your state exam is confirmed for ${forgeFormatExamDate(examValue)}. Keep preparing and make sure you have everything you need before exam day.`,
+      button: "PREPARE FOR YOUR EXAM"
+    };
+  }
+
+  const steps = {
+    "Not Placed": {
+      eyebrow: "GET STARTED",
+      title: "Begin your licensing journey",
+      text:
+        "Your first step is to complete the readiness check so your team can guide you through the right licensing path.",
+      button: "START YOUR NEXT STEP"
+    },
+    "Quiz Sent": {
+      eyebrow: "YOUR NEXT STEP",
+      title: "Complete your readiness quiz",
+      text:
+        "Complete your licensing readiness quiz so your team can move you into the next stage of your journey.",
+      button: "COMPLETE YOUR NEXT STEP"
+    },
+    "XCEL Completed": {
+      eyebrow: "YOUR NEXT STEP",
+      title: "Schedule your state exam",
+      text:
+        "Your licensing course is complete. Schedule your state exam while the material is still fresh, then share the confirmed date with your team.",
+      button: "SCHEDULE YOUR EXAM"
+    },
+    "Exam Passed": {
+      eyebrow: "CONGRATULATIONS",
+      title: "You passed your exam",
+      text:
+        "Excellent work. Your next focus is fingerprints and the state licensing application so you can become fully licensed.",
+      button: "CONTINUE TO LICENSING"
+    },
+    "Licensed": {
+      eyebrow: "MILESTONE REACHED",
+      title: "You are licensed",
+      text:
+        "You reached a major milestone. The next step is contracting so you can move into production.",
+      button: "START CONTRACTING"
+    },
+    "Contracted": {
+      eyebrow: "READY FOR PRODUCTION",
+      title: "Your business launch starts now",
+      text:
+        "You are contracted and ready to move into fast-start activity, field training, and your first client appointments.",
+      button: "LAUNCH PRODUCTION"
+    }
+  };
+
+  return steps[stage] || {
+    eyebrow: "YOUR NEXT STEP",
+    title: "Keep your momentum moving",
+    text:
+      "Review your current milestone and complete the next action so your licensing journey continues moving forward.",
+    button: "CONTINUE YOUR JOURNEY"
+  };
+}
+
+function forgeResolveEmailBrandForHtml() {
+  const brand =
+    typeof getForgeOrganizationEmailBrand === "function"
+      ? getForgeOrganizationEmailBrand()
+      : {
+          name: currentOrganization?.name || "Your Organization",
+          logo: "",
+          primary: "#0a2b59",
+          accent: "#3f8cff",
+          tagline: "Powered by FORGE"
+        };
+
+  const key =
+    forgeEmailBrandKey?.(brand.name) || "default";
+
+  if (key === "apex") {
+    return {
+      ...brand,
+      primary: "#063f31",
+      primaryDeep: "#032a22",
+      accent: "#d4af37",
+      accentLight: "#f2d878",
+      surface: "#f7faf8",
+      name: brand.name || "Apex Wealth Building"
+    };
+  }
+
+  if (key === "bizzall") {
+    return {
+      ...brand,
+      primary: "#0a2b59",
+      primaryDeep: "#061a38",
+      accent: "#3f8cff",
+      accentLight: "#8ec0ff",
+      surface: "#f6f9fd",
+      name: brand.name || "Bizzall"
+    };
+  }
+
+  return {
+    ...brand,
+    primaryDeep: brand.primary || "#0a2b59",
+    accentLight: brand.accent || "#3f8cff",
+    surface: "#f7f9fc"
+  };
+}
+
+function forgeBuildBrandedEmailHtml(agent, subject, body) {
+  const brand =
+    forgeResolveEmailBrandForHtml();
+
+  const firstName =
+    String(
+      getAgentDisplayName(agent) || "there"
+    )
+      .trim()
+      .split(/\s+/)[0];
+
+  const stage =
+    agent?.stage || "Not Placed";
+
+  const nextStep =
+    forgeEmailNextStep(stage, agent);
+
+  const stages =
+    forgeEmailJourneyStages();
+
+  const currentIndex =
+    forgeEmailStageIndex(stage);
+
+  const journeyHtml =
+    stages
+      .map((item, index) => {
+        const complete =
+          index <= currentIndex;
+
+        const dotBackground =
+          complete
+            ? brand.primary
+            : "#e9edf2";
+
+        const dotBorder =
+          complete
+            ? brand.accent
+            : "#d8dee7";
+
+        const textColor =
+          complete
+            ? brand.primary
+            : "#7f8b9c";
+
+        return `
+          <td style="width:${100 / stages.length}%;text-align:center;vertical-align:top;padding:0 2px;">
+            <div style="width:28px;height:28px;border-radius:999px;margin:0 auto 7px;background:${dotBackground};border:2px solid ${dotBorder};color:#fff;font-size:12px;line-height:24px;font-weight:800;">
+              ${complete ? "✓" : ""}
+            </div>
+            <div style="font-size:10px;line-height:1.15;font-weight:700;color:${textColor};">
+              ${forgeEscapeEmailHtml(forgeEmailStageLabel(item))}
+            </div>
+          </td>
+        `;
+      })
+      .join("");
+
+  const logoHtml =
+    brand.logo
+      ? `<img src="${forgeEscapeEmailHtml(brand.logo)}" alt="${forgeEscapeEmailHtml(brand.name)}" style="display:block;max-width:180px;max-height:72px;object-fit:contain;">`
+      : `<div style="font-size:24px;font-weight:900;color:#fff;">${forgeEscapeEmailHtml(brand.name)}</div>`;
+
+  const coordinatorName =
+    selectedCoordinator &&
+    selectedCoordinator !== "All"
+      ? selectedCoordinator
+      : "Your Licensing Team";
+
+  const examValue =
+    typeof forgeExamDateValue === "function"
+      ? forgeExamDateValue(agent)
+      : "";
+
+  const examBlock =
+    examValue
+      ? `
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:20px 0 0;border-collapse:separate;">
+          <tr>
+            <td style="padding:16px 18px;border:1px solid ${brand.accent};border-radius:14px;background:#fffdf7;">
+              <div style="font-size:10px;letter-spacing:.12em;font-weight:900;color:${brand.primary};">STATE EXAM</div>
+              <div style="margin-top:5px;font-size:18px;font-weight:800;color:${brand.primaryDeep};">${forgeEscapeEmailHtml(forgeFormatExamDate(examValue))}</div>
+              <div style="margin-top:4px;font-size:13px;color:#687788;">FORGE will keep this date visible in your licensing workflow.</div>
+            </td>
+          </tr>
+        </table>
+      `
+      : "";
+
+  return `
+<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#eef2f5;font-family:Arial,Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#eef2f5;padding:28px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="620" cellspacing="0" cellpadding="0" style="width:100%;max-width:620px;background:#ffffff;border-radius:22px;overflow:hidden;box-shadow:0 14px 40px rgba(18,35,55,.10);">
+            <tr>
+              <td style="height:5px;background:${brand.accent};font-size:0;line-height:0;">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td style="padding:24px 28px;background:${brand.primaryDeep};">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="vertical-align:middle;">
+                      ${logoHtml}
+                    </td>
+                    <td align="right" style="vertical-align:middle;color:${brand.accentLight};font-size:10px;font-weight:800;letter-spacing:.12em;">
+                      LICENSING JOURNEY
+                    </td>
+                  </tr>
+                </table>
+                <div style="margin-top:12px;font-size:12px;color:${brand.accentLight};font-weight:600;">
+                  ${forgeEscapeEmailHtml(brand.tagline || "Powered by FORGE")}
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:34px 34px 16px;">
+                <div style="font-size:28px;font-weight:850;color:${brand.primaryDeep};line-height:1.2;">
+                  Hi ${forgeEscapeEmailHtml(firstName)},
+                </div>
+
+                <div style="margin-top:18px;">
+                  ${forgeEmailParagraphs(body)}
+                </div>
+
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:24px 0 0;">
+                  <tr>
+                    <td style="padding:22px;border:1px solid ${brand.accent};border-radius:16px;background:${brand.surface};">
+                      <div style="font-size:10px;letter-spacing:.14em;font-weight:900;color:${brand.accentDeep || brand.primary};">
+                        ${forgeEscapeEmailHtml(nextStep.eyebrow)}
+                      </div>
+                      <div style="margin-top:7px;font-size:22px;line-height:1.25;font-weight:850;color:${brand.primaryDeep};">
+                        ${forgeEscapeEmailHtml(nextStep.title)}
+                      </div>
+                      <div style="margin-top:9px;font-size:14px;line-height:1.55;color:#58697a;">
+                        ${forgeEscapeEmailHtml(nextStep.text)}
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+
+                ${examBlock}
+
+                <table role="presentation" cellspacing="0" cellpadding="0" style="margin:24px auto 28px;">
+                  <tr>
+                    <td align="center" style="border-radius:12px;background:${brand.primary};border:1px solid ${brand.accent};">
+                      <span style="display:inline-block;padding:14px 24px;color:#fff;font-size:12px;font-weight:900;letter-spacing:.04em;">
+                        ${forgeEscapeEmailHtml(nextStep.button)} →
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+
+                <div style="padding-top:22px;border-top:1px solid #e9edf2;">
+                  <div style="font-size:11px;font-weight:900;letter-spacing:.12em;color:${brand.primary};">
+                    YOUR JOURNEY
+                  </div>
+                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:16px;">
+                    <tr>
+                      ${journeyHtml}
+                    </tr>
+                  </table>
+                </div>
+
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:30px;">
+                  <tr>
+                    <td style="padding:18px 20px;border-radius:14px;background:#f7f9fb;">
+                      <div style="font-size:11px;color:#7a8796;font-weight:800;">YOUR SUPPORT TEAM</div>
+                      <div style="margin-top:5px;font-size:16px;color:${brand.primaryDeep};font-weight:850;">
+                        ${forgeEscapeEmailHtml(coordinatorName)}
+                      </div>
+                      <div style="margin-top:3px;font-size:12px;color:#69798a;">
+                        ${forgeEscapeEmailHtml(brand.name)}
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td align="center" style="padding:22px 24px;background:${brand.primaryDeep};">
+                <div style="font-size:12px;color:#fff;font-weight:800;">${forgeEscapeEmailHtml(brand.name)}</div>
+                <div style="margin-top:5px;font-size:10px;color:${brand.accentLight};">${forgeEscapeEmailHtml(brand.tagline || "")}</div>
+                <div style="margin-top:12px;font-size:9px;color:rgba(255,255,255,.58);letter-spacing:.08em;">POWERED BY FORGE</div>
+              </td>
+            </tr>
+          </table>
+
+          <div style="max-width:620px;margin:12px auto 0;text-align:center;font-size:10px;line-height:1.5;color:#8a95a3;">
+            This message was prepared through FORGE for ${forgeEscapeEmailHtml(brand.name)}.
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
+function forgeRenderEmailPreview() {
+  if (!selectedAgent) return;
+
+  const subject =
+    document.getElementById("forgeEmailSubject")
+      ?.value || "";
+
+  const body =
+    document.getElementById("forgeEmailBody")
+      ?.value || "";
+
+  const preview =
+    document.getElementById("forgeEmailPreviewFrame");
+
+  if (!preview) return;
+
+  preview.innerHTML =
+    forgeBuildBrandedEmailHtml(
+      selectedAgent,
+      subject,
+      body
+    );
+}
+
+function forgeSetEmailTab(tabName = "edit") {
+  document
+    .querySelectorAll(".forge-email-tab")
+    .forEach((button) => {
+      button.classList.toggle(
+        "active",
+        button.dataset.forgeEmailTab === tabName
+      );
+    });
+
+  document
+    .getElementById("forgeEmailEditPanel")
+    ?.classList.toggle(
+      "hidden",
+      tabName !== "edit"
+    );
+
+  document
+    .getElementById("forgeEmailPreviewPanel")
+    ?.classList.toggle(
+      "hidden",
+      tabName !== "preview"
+    );
+
+  if (tabName === "preview") {
+    forgeRenderEmailPreview();
+  }
+}
+
+async function forgeSendBrandedEmail() {
+  if (!selectedAgent) {
+    alert("Please select an agent first.");
+    return;
+  }
+
+  const to =
+    String(selectedAgent.email || "").trim();
+
+  if (!to) {
+    alert(
+      `${getAgentDisplayName(selectedAgent)} does not have an email address in FORGE.`
+    );
+    return;
+  }
+
+  const subject =
+    document.getElementById("forgeEmailSubject")
+      ?.value.trim() || "";
+
+  const body =
+    document.getElementById("forgeEmailBody")
+      ?.value || "";
+
+  if (!subject) {
+    forgeSetEmailStatus(
+      "Add a subject before sending."
+    );
+    forgeSetEmailTab("edit");
+    return;
+  }
+
+  const button =
+    document.getElementById("sendForgeBrandedEmail");
+
+  const oldText =
+    button?.textContent || "Send Branded Email";
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Sending...";
+  }
+
+  forgeSetEmailStatus(
+    "Sending your branded email..."
+  );
+
+  try {
+    const brand =
+      forgeResolveEmailBrandForHtml();
+
+    const html =
+      forgeBuildBrandedEmailHtml(
+        selectedAgent,
+        subject,
+        body
+      );
+
+    if (
+      !forgeSupabase?.functions?.invoke
+    ) {
+      throw new Error(
+        "Supabase Functions is not available in this FORGE build."
+      );
+    }
+
+    const { data, error } =
+      await forgeSupabase.functions.invoke(
+        "send-branded-email",
+        {
+          body: {
+            to,
+            subject,
+            html,
+            text: body,
+            organizationId:
+              getActiveOrganizationId(),
+            organizationName:
+              brand.name,
+            agentId:
+              selectedAgent.id || null
+          }
+        }
+      );
+
+    if (error) {
+      throw error;
+    }
+
+    if (
+      data &&
+      data.ok === false
+    ) {
+      throw new Error(
+        data.error ||
+        "Email service returned an error."
+      );
+    }
+
+    forgeSetEmailStatus(
+      "✓ Branded email sent successfully."
+    );
+
+    if (
+      typeof logCoordinatorActivity === "function"
+    ) {
+      logCoordinatorActivity(
+        selectedAgent,
+        "Email",
+        `Branded email sent: ${subject}`
+      );
+    }
+
+    setTimeout(
+      closeForgeEmailComposer,
+      900
+    );
+
+  } catch (error) {
+    console.error(
+      "FORGE BRANDED EMAIL SEND ERROR:",
+      error
+    );
+
+    const message =
+      error?.message ||
+      String(error);
+
+    forgeSetEmailStatus(
+      `Could not send: ${message}`
+    );
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = oldText;
+    }
+  }
+}
+
+document.addEventListener(
+  "click",
+  async (event) => {
+    const tab =
+      event.target.closest(
+        "[data-forge-email-tab]"
+      );
+
+    if (tab) {
+      event.preventDefault();
+      forgeSetEmailTab(
+        tab.dataset.forgeEmailTab
+      );
+      return;
+    }
+
+    const sendButton =
+      event.target.closest(
+        "#sendForgeBrandedEmail"
+      );
+
+    if (sendButton) {
+      event.preventDefault();
+      event.stopPropagation();
+      await forgeSendBrandedEmail();
+      return;
+    }
+  }
+);
+
+document.addEventListener(
+  "input",
+  (event) => {
+    if (
+      event.target?.id === "forgeEmailSubject" ||
+      event.target?.id === "forgeEmailBody"
+    ) {
+      if (
+        !document
+          .getElementById("forgeEmailPreviewPanel")
+          ?.classList.contains("hidden")
+      ) {
+        forgeRenderEmailPreview();
+      }
+    }
+  }
+);
+
+
+
 function openForgeEmailComposer(agent, subject = "", message = "") {
   if (!agent) {
     alert("Please select an agent first.");
@@ -8742,8 +9375,10 @@ function openForgeEmailComposer(agent, subject = "", message = "") {
 
   if (status) {
     status.textContent =
-      "Gmail will open in a new tab with this email prefilled.";
+      "Preview the organization-branded email, then send it directly from FORGE.";
   }
+
+  forgeSetEmailTab("edit");
 
   modal?.classList.remove(
     "hidden"
