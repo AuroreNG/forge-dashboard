@@ -3607,5 +3607,74 @@ TEAM INTELLIGENCE DRAWER
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./supabase-config.js?v=2"></script>
 <script src="script.js?v=7"></script>
+
+<!-- =========================================================
+     FORGE EMAIL COMPOSER
+========================================================= -->
+<div id="forgeEmailModal" class="modal hidden">
+  <div class="forge-email-card">
+    <div class="forge-email-header">
+      <div>
+        <span class="forge-email-eyebrow">FORGE COMMUNICATION</span>
+        <h3>Send Email</h3>
+        <p>Review the message, then open it in Gmail.</p>
+      </div>
+
+      <button
+        type="button"
+        id="closeForgeEmailModal"
+        class="forge-email-close"
+        aria-label="Close email composer"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="forge-email-recipient">
+      <div class="forge-email-avatar" id="forgeEmailAvatar">A</div>
+
+      <div>
+        <span>To</span>
+        <strong id="forgeEmailRecipientName">Agent</strong>
+        <small id="forgeEmailRecipientAddress">-</small>
+      </div>
+    </div>
+
+    <div class="forge-email-field">
+      <label for="forgeEmailSubject">Subject</label>
+      <input
+        id="forgeEmailSubject"
+        type="text"
+        placeholder="Email subject"
+      />
+    </div>
+
+    <div class="forge-email-field">
+      <label for="forgeEmailBody">Message</label>
+      <textarea
+        id="forgeEmailBody"
+        rows="10"
+        placeholder="Write your email..."
+      ></textarea>
+    </div>
+
+    <div class="forge-email-status" id="forgeEmailStatus"></div>
+
+    <div class="forge-email-actions">
+      <button type="button" id="cancelForgeEmail">
+        Cancel
+      </button>
+
+      <button type="button" id="copyForgeEmail">
+        Copy Email
+      </button>
+
+      <button type="button" id="openForgeEmailInGmail">
+        Open in Gmail
+      </button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

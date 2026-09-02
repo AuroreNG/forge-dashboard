@@ -8420,8 +8420,8 @@ Outcome: ${callOutcome}`
   }
 
   if (method === "Email" && email) {
-    forgeOpenMailClient(
-      email,
+    openForgeEmailComposer(
+      selectedAgent,
       subject,
       message
     );
@@ -8564,6 +8564,235 @@ function forgeOpenMailClient(email, subject = "", message = "") {
   }
 }
 
+
+function openForgeEmailComposer(agent, subject = "", message = "") {
+  if (!agent) {
+    alert("Please select an agent first.");
+    return;
+  }
+
+  const email =
+    String(agent.email || "").trim();
+
+  if (!email) {
+    alert(
+      `${getAgentDisplayName(agent)} does not have an email address in FORGE.`
+    );
+    return;
+  }
+
+  const modal =
+    document.getElementById(
+      "forgeEmailModal"
+    );
+
+  const subjectInput =
+    document.getElementById(
+      "forgeEmailSubject"
+    );
+
+  const bodyInput =
+    document.getElementById(
+      "forgeEmailBody"
+    );
+
+  setText(
+    "forgeEmailRecipientName",
+    getAgentDisplayName(agent)
+  );
+
+  setText(
+    "forgeEmailRecipientAddress",
+    email
+  );
+
+  setText(
+    "forgeEmailAvatar",
+    getInitials(
+      getAgentDisplayName(agent)
+    )
+  );
+
+  if (subjectInput) {
+    subjectInput.value =
+      subject || "";
+  }
+
+  if (bodyInput) {
+    bodyInput.value =
+      message || "";
+  }
+
+  const status =
+    document.getElementById(
+      "forgeEmailStatus"
+    );
+
+  if (status) {
+    status.textContent =
+      "Gmail will open in a new tab with this email prefilled.";
+  }
+
+  modal?.classList.remove(
+    "hidden"
+  );
+}
+
+function closeForgeEmailComposer() {
+  document
+    .getElementById(
+      "forgeEmailModal"
+    )
+    ?.classList.add(
+      "hidden"
+    );
+}
+
+function openForgeEmailInGmail() {
+  if (!selectedAgent) {
+    alert(
+      "Please select an agent first."
+    );
+    return;
+  }
+
+  const email =
+    String(
+      selectedAgent.email || ""
+    ).trim();
+
+  if (!email) {
+    alert(
+      `${getAgentDisplayName(selectedAgent)} does not have an email address in FORGE.`
+    );
+    return;
+  }
+
+  const subject =
+    document
+      .getElementById(
+        "forgeEmailSubject"
+      )
+      ?.value || "";
+
+  const body =
+    document
+      .getElementById(
+        "forgeEmailBody"
+      )
+      ?.value || "";
+
+  const gmailUrl =
+    "https://mail.google.com/mail/?view=cm&fs=1" +
+    `&to=${encodeURIComponent(email)}` +
+    `&su=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(body)}`;
+
+  window.open(
+    gmailUrl,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+document
+  .getElementById(
+    "closeForgeEmailModal"
+  )
+  ?.addEventListener(
+    "click",
+    closeForgeEmailComposer
+  );
+
+document
+  .getElementById(
+    "cancelForgeEmail"
+  )
+  ?.addEventListener(
+    "click",
+    closeForgeEmailComposer
+  );
+
+document
+  .getElementById(
+    "copyForgeEmail"
+  )
+  ?.addEventListener(
+    "click",
+    async () => {
+      const subject =
+        document
+          .getElementById(
+            "forgeEmailSubject"
+          )
+          ?.value || "";
+
+      const body =
+        document
+          .getElementById(
+            "forgeEmailBody"
+          )
+          ?.value || "";
+
+      const content =
+        subject
+          ? `${subject}\n\n${body}`
+          : body;
+
+      try {
+        await navigator
+          .clipboard
+          .writeText(
+            content
+          );
+
+        const status =
+          document.getElementById(
+            "forgeEmailStatus"
+          );
+
+        if (status) {
+          status.textContent =
+            "Email copied.";
+        }
+      } catch (error) {
+        console.error(
+          "FORGE EMAIL COPY ERROR:",
+          error
+        );
+      }
+    }
+  );
+
+document
+  .getElementById(
+    "openForgeEmailInGmail"
+  )
+  ?.addEventListener(
+    "click",
+    openForgeEmailInGmail
+  );
+
+document.addEventListener(
+  "keydown",
+  event => {
+    if (
+      event.key === "Escape" &&
+      !document
+        .getElementById(
+          "forgeEmailModal"
+        )
+        ?.classList.contains(
+          "hidden"
+        )
+    ) {
+      closeForgeEmailComposer();
+    }
+  }
+);
+
+
+
 function forgeOpenCommandChannel(method) {
   if (!selectedAgent) {
     alert("Please select an agent first.");
@@ -8636,18 +8865,11 @@ function forgeOpenCommandChannel(method) {
       return;
     }
 
-    const opened =
-      forgeOpenMailClient(
-        email,
-        subject,
-        message
-      );
-
-    if (!opened) {
-      alert(
-        "Your browser blocked the email app. Please allow pop-ups for FORGE and try again."
-      );
-    }
+    openForgeEmailComposer(
+      selectedAgent,
+      subject,
+      message
+    );
 
     return;
   }

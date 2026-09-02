@@ -33101,3 +33101,218 @@ body.forge-drawer-open {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================================
+   FORGE EMAIL COMPOSER
+========================================================== */
+
+#forgeEmailModal {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(10, 29, 57, .42);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+#forgeEmailModal.hidden {
+  display: none !important;
+}
+
+.forge-email-card {
+  width: min(100%, 620px);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border: 1px solid #dbe5f2;
+  border-radius: 26px;
+  background: linear-gradient(180deg, #ffffff, #f8fbff);
+  box-shadow: 0 30px 80px rgba(7, 37, 82, .22);
+}
+
+.forge-email-header {
+  position: relative;
+  padding: 26px 28px 20px;
+  border-bottom: 1px solid #e8eef6;
+}
+
+.forge-email-eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  color: #52739d;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.forge-email-header h3 {
+  margin: 0;
+  color: #0b2b55;
+  font-size: 26px;
+  font-weight: 850;
+}
+
+.forge-email-header p {
+  margin: 7px 0 0;
+  color: #6b7f98;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.forge-email-close {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #dbe4ef;
+  border-radius: 11px;
+  background: #fff;
+  color: #173b68;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.forge-email-recipient {
+  margin: 22px 28px 0;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #e0e8f3;
+  border-radius: 16px;
+  background: #fbfdff;
+}
+
+.forge-email-avatar {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #2563eb, #0b397a);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.forge-email-recipient span,
+.forge-email-recipient small {
+  display: block;
+}
+
+.forge-email-recipient span {
+  color: #7a8ca4;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.forge-email-recipient strong {
+  display: block;
+  margin-top: 2px;
+  color: #17375f;
+  font-size: 14px;
+}
+
+.forge-email-recipient small {
+  margin-top: 2px;
+  color: #6d7e94;
+  font-size: 12px;
+}
+
+.forge-email-field {
+  margin: 18px 28px 0;
+}
+
+.forge-email-field label {
+  display: block;
+  margin-bottom: 7px;
+  color: #17375f;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.forge-email-field input,
+.forge-email-field textarea {
+  width: 100%;
+  border: 1px solid #dbe5f2;
+  border-radius: 13px;
+  background: #fff;
+  color: #102f55;
+  font: inherit;
+  outline: none;
+}
+
+.forge-email-field input {
+  height: 46px;
+  padding: 0 14px;
+}
+
+.forge-email-field textarea {
+  min-height: 210px;
+  padding: 14px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.forge-email-field input:focus,
+.forge-email-field textarea:focus {
+  border-color: #7ba4dd;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .08);
+}
+
+.forge-email-status {
+  min-height: 18px;
+  margin: 12px 28px 0;
+  color: #5f7898;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.forge-email-actions {
+  margin-top: 16px;
+  padding: 18px 28px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid #e8eef6;
+}
+
+.forge-email-actions button {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+#cancelForgeEmail,
+#copyForgeEmail {
+  border: 1px solid #d8e2ee;
+  background: #fff;
+  color: #26486f;
+}
+
+#openForgeEmailInGmail {
+  border: 0;
+  background: linear-gradient(135deg, #2563eb, #164fb7);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(37,99,235,.18);
+}
+
+@media (max-width: 640px) {
+  .forge-email-actions {
+    flex-direction: column;
+  }
+
+  .forge-email-actions button {
+    width: 100%;
+  }
+}
