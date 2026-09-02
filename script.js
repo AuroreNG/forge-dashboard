@@ -8633,6 +8633,45 @@ function renderForgeOrganizationEmailBrand() {
   }
 }
 
+
+function forgeEmailBrandKey(organizationName = "") {
+  const name =
+    String(organizationName || "")
+      .trim()
+      .toLowerCase();
+
+  if (name.includes("apex")) {
+    return "apex";
+  }
+
+  if (name.includes("bizzall")) {
+    return "bizzall";
+  }
+
+  return "default";
+}
+
+function applyForgeEmailModalBrandKey() {
+  const modal =
+    document.getElementById(
+      "forgeEmailModal"
+    );
+
+  if (!modal) return;
+
+  const organizationName =
+    currentOrganization?.name ||
+    selectedAgent?.organizationName ||
+    selectedAgent?.organization_name ||
+    "";
+
+  modal.dataset.brand =
+    forgeEmailBrandKey(
+      organizationName
+    );
+}
+
+
 function openForgeEmailComposer(agent, subject = "", message = "") {
   if (!agent) {
     alert("Please select an agent first.");
@@ -8648,6 +8687,8 @@ function openForgeEmailComposer(agent, subject = "", message = "") {
     );
     return;
   }
+
+  applyForgeEmailModalBrandKey();
 
   const modal =
     document.getElementById(

@@ -33394,3 +33394,258 @@ body.forge-drawer-open {
   .forge-email-brand-logo-wrap { width:120px; flex-basis:120px; }
   .forge-email-powered { margin-left:auto; }
 }
+
+
+/* ==========================================================
+   FORGE EMAIL BRANDING — APEX PREMIUM EMERALD + GOLD
+========================================================== */
+
+#forgeEmailModal[data-brand="apex"] {
+  --brand-primary: #063f31;
+  --brand-primary-deep: #032a22;
+  --brand-primary-soft: #0b5c47;
+  --brand-accent: #d4af37;
+  --brand-accent-light: #f2d878;
+  --brand-accent-deep: #a57b0f;
+  --brand-ink: #0d2f28;
+  --brand-muted: #6f7c78;
+  --brand-border: rgba(212, 175, 55, .34);
+  --brand-glow: rgba(212, 175, 55, .18);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-card {
+  border: 1px solid rgba(212, 175, 55, .34);
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #fcfdfc 72%,
+      #f8fbf9 100%
+    );
+  box-shadow:
+    0 30px 90px rgba(2, 42, 32, .24),
+    0 0 0 1px rgba(255,255,255,.75) inset;
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-brand-header {
+  position: relative;
+  overflow: hidden;
+  margin: 18px 18px 0;
+  padding: 18px 20px;
+  border: 1px solid rgba(212, 175, 55, .38);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 86% -30%, rgba(242, 216, 120, .28), transparent 38%),
+    linear-gradient(
+      135deg,
+      #032a22 0%,
+      #063f31 52%,
+      #0a5a44 100%
+    );
+  box-shadow:
+    0 14px 28px rgba(3, 42, 34, .16),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-brand-header::after {
+  content: "";
+  position: absolute;
+  top: -80px;
+  right: -10px;
+  width: 210px;
+  height: 210px;
+  border: 16px solid rgba(212, 175, 55, .7);
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  transform: rotate(16deg);
+  pointer-events: none;
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-brand-logo,
+#forgeEmailModal[data-brand="apex"] .forge-email-brand-logo-wrap {
+  position: relative;
+  z-index: 2;
+  border: 1px solid rgba(212,175,55,.62);
+  background: rgba(0,0,0,.16);
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.14),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-brand-eyebrow,
+#forgeEmailModal[data-brand="apex"] .forge-email-brand-header .forge-email-eyebrow {
+  color: var(--brand-accent-light);
+  letter-spacing: .14em;
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-brand-name,
+#forgeEmailModal[data-brand="apex"] .forge-email-brand-header strong,
+#forgeEmailModal[data-brand="apex"] .forge-email-brand-header h3 {
+  color: #fff;
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-brand-tagline,
+#forgeEmailModal[data-brand="apex"] .forge-email-brand-header small,
+#forgeEmailModal[data-brand="apex"] .forge-email-brand-header p {
+  color: #efd77e;
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-platform-badge {
+  position: relative;
+  z-index: 2;
+  border-color: rgba(212,175,55,.72);
+  background: rgba(255,255,255,.94);
+  color: var(--brand-primary);
+  box-shadow: 0 4px 12px rgba(0,0,0,.09);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-close {
+  border-color: rgba(212,175,55,.55);
+  background: #fff;
+  color: var(--brand-primary);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-close:hover {
+  border-color: var(--brand-accent);
+  background: #fffdf5;
+  color: var(--brand-primary-deep);
+  box-shadow: 0 7px 16px var(--brand-glow);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-recipient {
+  border-color: rgba(6,63,49,.13);
+  background:
+    linear-gradient(135deg, #ffffff, #f8fbf9);
+  box-shadow: 0 8px 20px rgba(6,63,49,.045);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-avatar {
+  border: 1px solid rgba(212,175,55,.55);
+  background:
+    radial-gradient(circle at 35% 25%, #13745a, #063f31 64%, #032a22);
+  box-shadow:
+    0 8px 18px rgba(3,42,34,.2),
+    inset 0 1px 0 rgba(255,255,255,.16);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-recipient span,
+#forgeEmailModal[data-brand="apex"] .forge-email-field label {
+  color: var(--brand-accent-deep);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-recipient strong,
+#forgeEmailModal[data-brand="apex"] .forge-email-field input,
+#forgeEmailModal[data-brand="apex"] .forge-email-field textarea {
+  color: var(--brand-ink);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-field input,
+#forgeEmailModal[data-brand="apex"] .forge-email-field textarea {
+  border-color: rgba(6,63,49,.20);
+  background: #fff;
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-field input:focus,
+#forgeEmailModal[data-brand="apex"] .forge-email-field textarea:focus {
+  border-color: var(--brand-primary-soft);
+  box-shadow:
+    0 0 0 3px rgba(6,63,49,.08),
+    0 8px 20px rgba(6,63,49,.05);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-status {
+  color: var(--brand-primary);
+}
+
+#forgeEmailModal[data-brand="apex"] .forge-email-actions {
+  border-top-color: rgba(6,63,49,.10);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.94), #f8fbf9);
+}
+
+#forgeEmailModal[data-brand="apex"] #cancelForgeEmail,
+#forgeEmailModal[data-brand="apex"] #copyForgeEmail {
+  border-color: rgba(165,123,15,.52);
+  background: #fff;
+  color: var(--brand-primary);
+}
+
+#forgeEmailModal[data-brand="apex"] #cancelForgeEmail:hover,
+#forgeEmailModal[data-brand="apex"] #copyForgeEmail:hover {
+  border-color: var(--brand-accent);
+  background: #fffdf7;
+  box-shadow: 0 7px 16px var(--brand-glow);
+}
+
+#forgeEmailModal[data-brand="apex"] #openForgeEmailInGmail {
+  border: 1px solid rgba(212,175,55,.75);
+  background:
+    linear-gradient(
+      135deg,
+      #032a22 0%,
+      #063f31 60%,
+      #0b5c47 100%
+    );
+  color: #fff;
+  box-shadow:
+    0 11px 24px rgba(3,42,34,.23),
+    inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+#forgeEmailModal[data-brand="apex"] #openForgeEmailInGmail:hover {
+  transform: translateY(-1px);
+  border-color: var(--brand-accent-light);
+  box-shadow:
+    0 15px 30px rgba(3,42,34,.26),
+    0 0 0 3px rgba(212,175,55,.08);
+}
+
+/* subtle premium gold top line */
+#forgeEmailModal[data-brand="apex"] .forge-email-card::before {
+  content: "";
+  display: block;
+  height: 4px;
+  background:
+    linear-gradient(
+      90deg,
+      #063f31,
+      #d4af37 38%,
+      #f2d878 50%,
+      #d4af37 62%,
+      #063f31
+    );
+}
+
+/* ==========================================================
+   BIZZALL — PREMIUM NAVY + SAPPHIRE + SILVER
+========================================================== */
+
+#forgeEmailModal[data-brand="bizzall"] {
+  --brand-primary: #0a2b59;
+  --brand-primary-deep: #061a38;
+  --brand-primary-soft: #154f9f;
+  --brand-accent: #3f8cff;
+  --brand-accent-light: #8ec0ff;
+  --brand-ink: #102d54;
+}
+
+#forgeEmailModal[data-brand="bizzall"] .forge-email-brand-header {
+  background:
+    radial-gradient(circle at 86% -30%, rgba(142,192,255,.24), transparent 38%),
+    linear-gradient(
+      135deg,
+      #061a38 0%,
+      #0a2b59 55%,
+      #154f9f 100%
+    );
+}
+
+#forgeEmailModal[data-brand="bizzall"] #openForgeEmailInGmail {
+  background:
+    linear-gradient(
+      135deg,
+      #0a2b59,
+      #154f9f
+    );
+}
