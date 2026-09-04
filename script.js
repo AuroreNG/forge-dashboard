@@ -9513,24 +9513,43 @@ function forgeRenderEmailPreview() {
   if (!preview) return;
 
   try {
-    const emailHtml =
+    const fullHtml =
       forgeBuildBrandedEmailHtml(
         selectedAgent,
         subject,
         body
       );
 
+    const parser =
+      new DOMParser();
+
     const parsed =
-      new DOMParser().parseFromString(
-        emailHtml,
+      parser.parseFromString(
+        fullHtml,
         "text/html"
       );
 
-    preview.innerHTML =
-      parsed?.body?.innerHTML ||
-      emailHtml;
+    const previewBody =
+      parsed?.body?.innerHTML || "";
 
-    preview.scrollTop = 0;
+    if (!previewBody.trim()) {
+      throw new Error(
+        "FORGE generated an empty email preview."
+      );
+    }
+
+    preview.innerHTML =
+      previewBody;
+
+    preview.style.display =
+      "block";
+
+    preview.style.minHeight =
+      "520px";
+
+    preview.style.background =
+      "#ffffff";
+
   } catch (error) {
     console.error(
       "FORGE EMAIL PREVIEW ERROR:",
@@ -9538,13 +9557,22 @@ function forgeRenderEmailPreview() {
     );
 
     preview.innerHTML = `
-      <div style="padding:24px;text-align:center;color:#6b7c8f;font:600 13px/1.5 Arial,sans-serif;">
-        Preview could not be rendered. You can still return to Edit and send the email.
+      <div style="
+        min-height:360px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:32px;
+        text-align:center;
+        color:#66788a;
+        font-weight:700;
+      ">
+        Preview could not be rendered.
+        Please return to Edit and try again.
       </div>
     `;
   }
 }
-
 function forgeSetEmailTab(tabName = "edit") {
   document
     .querySelectorAll(".forge-email-tab")
