@@ -33833,3 +33833,38 @@ body.forge-drawer-open {
   padding: 18px;
 }
 
+
+
+/* ==========================================================
+   FORGE SMART LICENSING — RESIDENT STATE
+========================================================== */
+.agent-state-field {
+  margin: 14px 0 8px;
+}
+
+.agent-state-field label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #27415f;
+}
+
+.agent-state-field select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid #d7e1eb;
+  border-radius: 11px;
+  background: #fff;
+  color: #18324f;
+  font: inherit;
+}
+
+.agent-state-field small {
+  display: block;
+  margin-top: 6px;
+  color: #7b8b9e;
+  font-size: 10px;
+  line-height: 1.35;
+}
