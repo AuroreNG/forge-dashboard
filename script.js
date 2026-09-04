@@ -9445,7 +9445,7 @@ function forgeBuildBrandedEmailHtml(agent, subject, body, options = {}) {
                 <table role="presentation" cellspacing="0" cellpadding="0" style="margin:24px auto 28px;">
                   <tr>
                     <td align="center" style="border-radius:12px;background:${brand.primary};border:1px solid ${brand.accent};">
-                      <a href="${forgeEscapeEmailHtml(nextStep.url || FORGE_LICENSING_LINKS.quiz)}"
+                      <a href="${forgeEscapeEmailHtml(options.nextStepUrl || nextStep.url || FORGE_LICENSING_LINKS.quiz)}"
                          target="_blank"
                          style="display:inline-block;padding:14px 24px;color:#fff;text-decoration:none;font-size:12px;font-weight:900;letter-spacing:.04em;">
                         ${forgeEscapeEmailHtml(nextStep.button)} →
@@ -9553,6 +9553,38 @@ function forgeSetEmailTab(tabName = "edit") {
   }
 }
 
+
+async function forgeCreateAgentNextStepLink(agent) {
+  const agentId = agent?.id;
+
+  if (!agentId) {
+    throw new Error("This agent does not have a database ID yet.");
+  }
+
+  if (!forgeSupabase?.functions?.invoke) {
+    throw new Error("Supabase Functions is not available in this FORGE build.");
+  }
+
+  const { data, error } = await forgeSupabase.functions.invoke(
+    "create-agent-next-step-link",
+    {
+      body: {
+        agentId
+      }
+    }
+  );
+
+  if (error) throw error;
+
+  if (!data?.ok || !data?.url) {
+    throw new Error(
+      data?.error || "FORGE could not create the secure agent link."
+    );
+  }
+
+  return data.url;
+}
+
 async function forgeSendBrandedEmail() {
   if (!selectedAgent) {
     alert("Please select an agent first.");
@@ -9604,12 +9636,24 @@ async function forgeSendBrandedEmail() {
     const brand =
       forgeResolveEmailBrandForHtml();
 
+    forgeSetEmailStatus(
+      "Creating the agent's secure next-step link..."
+    );
+
+    const nextStepUrl =
+      await forgeCreateAgentNextStepLink(
+        selectedAgent
+      );
+
     const html =
       forgeBuildBrandedEmailHtml(
         selectedAgent,
         subject,
         body,
-        { forSend: true }
+        {
+          forSend: true,
+          nextStepUrl
+        }
       );
 
     const logoAsset =
@@ -10091,7 +10135,7 @@ document.addEventListener(
 
 
 
-function forgeOpenCommandChannel(method) {
+async function forgeOpenCommandChannel(method) {
   if (!selectedAgent) {
     alert("Please select an agent first.");
     return;
@@ -10149,9 +10193,31 @@ function forgeOpenCommandChannel(method) {
       return;
     }
 
-    const separator = /iPhone|iPad|iPod/i.test(navigator.userAgent) ? "&" : "?";
-    window.location.href =
-      `sms:+${phone}${separator}body=${encodeURIComponent(message)}`;
+    try {
+      const nextStepUrl =
+        await forgeCreateAgentNextStepLink(
+          selectedAgent
+        );
+
+      const secureMessage =
+        `${message}\n\nContinue your licensing here:\n${nextStepUrl}`;
+
+      const separator =
+        /iPhone|iPad|iPod/i.test(navigator.userAgent)
+          ? "&"
+          : "?";
+
+      window.location.href =
+        `sms:+${phone}${separator}body=${encodeURIComponent(secureMessage)}`;
+    } catch (error) {
+      console.error("FORGE SECURE TEXT LINK ERROR:", error);
+      alert(
+        `FORGE could not create the secure licensing link: ${
+          error?.message || String(error)
+        }`
+      );
+    }
+
     return;
   }
 
@@ -10178,10 +10244,32 @@ function forgeOpenCommandChannel(method) {
       return;
     }
 
-    const url =
-      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    try {
+      const nextStepUrl =
+        await forgeCreateAgentNextStepLink(
+          selectedAgent
+        );
 
-    window.open(url, "_blank", "noopener,noreferrer");
+      const secureMessage =
+        `${message}\n\nContinue your licensing here:\n${nextStepUrl}`;
+
+      const url =
+        `https://wa.me/${phone}?text=${encodeURIComponent(secureMessage)}`;
+
+      window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    } catch (error) {
+      console.error("FORGE SECURE WHATSAPP LINK ERROR:", error);
+      alert(
+        `FORGE could not create the secure licensing link: ${
+          error?.message || String(error)
+        }`
+      );
+    }
+
     return;
   }
 
