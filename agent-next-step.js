@@ -71,3 +71,148 @@ $("saveStateBtn").addEventListener("click",async()=>{
   try{render(await api("set_state",{residentState:state}))}catch(e){$("errorText").textContent=e.message;show("errorView")}
 });
 init();
+
+/* ==========================================================
+   FORGE LICENSED WORKSPACE + E&O CERTIFICATE REQUEST
+========================================================== */
+let forgePublicAgentData = null;
+
+function forgeStageName(payload){
+  return String(
+    payload?.agent?.stage ||
+    payload?.stage ||
+    payload?.nextStep?.stage ||
+    ""
+  ).trim();
+}
+
+function forgeAgentCode(payload){
+  return String(
+    payload?.agent?.code ||
+    payload?.agent?.agentCode ||
+    payload?.agent?.agent_code ||
+    ""
+  ).trim();
+}
+
+function forgeFriendlyDate(value){
+  if(!value) return "";
+  const d=new Date(`${value}T12:00:00`);
+  if(Number.isNaN(d.getTime())) return value;
+  return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+}
+
+function forgeEoEmailText(){
+  const name=$("eoAgentName")?.value?.trim() || forgePublicAgentData?.agent?.name || "Agent";
+  const code=$("eoAgentCode")?.value?.trim() || forgeAgentCode(forgePublicAgentData) || "Pending";
+  const date=forgeFriendlyDate($("eoPurchaseDate")?.value) || "[purchase date]";
+  return `Hello,
+
+${name} (Agent Code: ${code}) has purchased Errors & Omissions (E&O) coverage on ${date}.
+
+Could you please send the E&O certificate so the agent can complete the remaining contracting requirements?
+
+Agent Name: ${name}
+Agent Code: ${code}
+E&O Purchase Date: ${date}
+
+Proof of payment is attached for reference.
+
+Thank you.`;
+}
+
+function forgeRefreshEoPreview(){
+  const name=$("eoAgentName")?.value?.trim() || forgePublicAgentData?.agent?.name || "Agent";
+  const code=$("eoAgentCode")?.value?.trim() || forgeAgentCode(forgePublicAgentData) || "Pending";
+  if($("eoSubjectPreview")) $("eoSubjectPreview").textContent=`E&O Certificate Request | ${name} | ${code}`;
+  if($("eoBodyPreview")) $("eoBodyPreview").textContent=forgeEoEmailText();
+}
+
+function forgeApplyStageWorkspace(payload){
+  forgePublicAgentData=payload;
+  const stage=forgeStageName(payload);
+  const licensed=stage.toLowerCase()==="licensed" ||
+    String(payload?.nextStep?.title||"").toLowerCase().includes("complete contracting");
+  const contracted=stage.toLowerCase()==="contracted" ||
+    Number(payload?.nextStep?.progress)===100;
+
+  $("licensedWorkspace")?.classList.toggle("hidden",!licensed);
+  $("contractedExpansion")?.classList.toggle("hidden",!contracted);
+
+  if(licensed){
+    if($("nextStep")) $("nextStep").classList.add("hidden");
+    const name=payload?.agent?.name || payload?.agent?.firstName || "Agent";
+    const code=forgeAgentCode(payload);
+    if($("eoAgentName")) $("eoAgentName").value=name;
+    if($("eoAgentCode")) $("eoAgentCode").value=code || "Pending";
+    forgeRefreshEoPreview();
+  }
+}
+
+$("openEoRequestBtn")?.addEventListener("click",()=>{
+  $("eoRequestPanel")?.classList.toggle("hidden");
+  forgeRefreshEoPreview();
+  setTimeout(()=>$("eoRequestPanel")?.scrollIntoView({behavior:"smooth",block:"nearest"}),50);
+});
+
+$("eoPurchaseDate")?.addEventListener("change",forgeRefreshEoPreview);
+$("eoProof")?.addEventListener("change",(event)=>{
+  const file=event.target.files?.[0];
+  if($("eoFileName")) $("eoFileName").textContent=file ? file.name : "Choose screenshot or receipt";
+});
+
+async function forgeFileToBase64(file){
+  return await new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(String(reader.result||"").split(",")[1]||"");
+    reader.onerror=()=>reject(reader.error||new Error("Could not read attachment."));
+    reader.readAsDataURL(file);
+  });
+}
+
+$("sendEoRequestBtn")?.addEventListener("click",async()=>{
+  const btn=$("sendEoRequestBtn");
+  const status=$("eoSendStatus");
+  const date=$("eoPurchaseDate")?.value;
+  const file=$("eoProof")?.files?.[0];
+
+  if(!date){status.textContent="Please enter the date you purchased E&O.";return}
+  if(!file){status.textContent="Please upload your E&O payment screenshot or receipt.";return}
+  if(file.size>8*1024*1024){status.textContent="Please choose a file smaller than 8 MB.";return}
+
+  try{
+    btn.disabled=true;
+    btn.textContent="SENDING REQUEST…";
+    status.textContent="Securely sending your request…";
+
+    const attachmentBase64=await forgeFileToBase64(file);
+    const token=new URLSearchParams(location.search).get("t")||"";
+    const name=$("eoAgentName")?.value?.trim()||"Agent";
+    const code=$("eoAgentCode")?.value?.trim()||"Pending";
+
+    const response=await fetch(`${FUNCTIONS_BASE}/send-eo-request`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        token,
+        purchaseDate:date,
+        attachmentBase64,
+        attachmentName:file.name,
+        attachmentType:file.type||"application/octet-stream",
+        subject:`E&O Certificate Request | ${name} | ${code}`,
+        message:forgeEoEmailText()
+      })
+    });
+
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok || !result?.ok) throw new Error(result?.error||"Request could not be sent.");
+
+    status.textContent="✓ E&O certificate request sent successfully.";
+    btn.textContent="REQUEST SENT ✓";
+  }catch(error){
+    console.error("FORGE E&O SEND ERROR:",error);
+    status.textContent=error?.message||"Request could not be sent.";
+    btn.disabled=false;
+    btn.textContent="SEND E&O CERTIFICATE REQUEST →";
+  }
+});
