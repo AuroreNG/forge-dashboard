@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#071b34">
+  <title>Your Next Step | FORGE</title>
+  <link rel="stylesheet" href="./agent-next-step.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="card" id="appCard">
+      <div class="brand-row">
+        <div class="org-brand">
+          <img id="orgLogo" class="org-logo hidden" alt="">
+          <div id="orgFallback" class="org-fallback">FORGE</div>
+        </div>
+        <div class="secure-pill"><span class="lock">✓</span> Secure link</div>
+      </div>
+
+      <div id="loadingView" class="view center-view">
+        <div class="loader"></div>
+        <p>Preparing your next step…</p>
+      </div>
+
+      <div id="errorView" class="view hidden">
+        <div class="status-icon">!</div>
+        <p class="eyebrow">LINK UNAVAILABLE</p>
+        <h1>We couldn't open this step.</h1>
+        <p class="lead" id="errorText">This secure link may be invalid or expired. Please contact your licensing team for a new link.</p>
+      </div>
+
+      <div id="stateView" class="view hidden">
+        <p class="eyebrow">ONE QUICK QUESTION</p>
+        <h1>What is your resident state?</h1>
+        <p class="lead">We’ll use it to send you to the correct Life Insurance licensing resource.</p>
+
+        <label class="field-label" for="residentState">Resident state</label>
+        <select id="residentState">
+          <option value="">Select your state</option>
+        </select>
+        <button id="saveStateBtn" class="primary-btn" disabled>CONTINUE <span>→</span></button>
+        <p class="microcopy">You only need to do this once.</p>
+      </div>
+
+      <div id="nextView" class="view hidden">
+        <div class="success-mark">✓</div>
+        <p class="eyebrow" id="nextEyebrow">YOUR NEXT STEP</p>
+        <h1 id="nextTitle">Keep moving forward</h1>
+        <p class="lead" id="nextText"></p>
+
+        <div class="agent-chip">
+          <div>
+            <span class="chip-label">Agent</span>
+            <strong id="agentName">—</strong>
+          </div>
+          <div class="chip-right">
+            <span class="chip-label">Resident state</span>
+            <strong id="agentState">—</strong>
+          </div>
+        </div>
+
+        <a id="nextActionBtn" class="primary-btn action-link" href="#" target="_blank" rel="noopener">
+          CONTINUE <span>→</span>
+        </a>
+
+        <div class="progress-wrap">
+          <div class="progress-copy">
+            <span>Your licensing journey</span>
+            <strong id="progressLabel">In progress</strong>
+          </div>
+          <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+        </div>
+
+        <p class="microcopy">Only your current action is shown here so you always know exactly what to do next.</p>
+      </div>
+
+      <footer>
+        <span id="footerOrg">Your licensing team</span>
+        <span>Powered by <b>FORGE</b></span>
+      </footer>
+    </section>
+  </main>
+  <script src="./agent-next-step.js"></script>
+</body>
+</html>
