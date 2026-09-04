@@ -9497,60 +9497,66 @@ function forgeBuildBrandedEmailHtml(agent, subject, body, options = {}) {
 }
 
 function forgeRenderEmailPreview() {
-  if (!selectedAgent) return;
-
-  const subject =
-    document.getElementById("forgeEmailSubject")
-      ?.value || "";
-
-  const body =
-    document.getElementById("forgeEmailBody")
-      ?.value || "";
-
   const preview =
     document.getElementById("forgeEmailPreviewFrame");
 
-  if (!preview) return;
+  if (!preview) {
+    console.error("FORGE: Preview container not found.");
+    return;
+  }
+
+  if (!selectedAgent) {
+    preview.innerHTML = `
+      <div style="padding:40px;text-align:center;">
+        Select an agent to preview the email.
+      </div>
+    `;
+    return;
+  }
 
   try {
-    const fullHtml =
+    const subject =
+      document.getElementById("forgeEmailSubject")
+        ?.value || "";
+
+    const body =
+      document.getElementById("forgeEmailBody")
+        ?.value || "";
+
+    const emailHtml =
       forgeBuildBrandedEmailHtml(
         selectedAgent,
         subject,
         body
       );
 
-    const parser =
-      new DOMParser();
+    /*
+     * The email builder returns a COMPLETE HTML document.
+     * We cannot safely insert <html>, <head>, and <body>
+     * directly inside a DIV.
+     *
+     * Parse it first and display only the BODY.
+     */
+    const parser = new DOMParser();
 
-    const parsed =
+    const emailDocument =
       parser.parseFromString(
-        fullHtml,
+        emailHtml,
         "text/html"
       );
 
-    const previewBody =
-      parsed?.body?.innerHTML || "";
-
-    if (!previewBody.trim()) {
-      throw new Error(
-        "FORGE generated an empty email preview."
-      );
-    }
-
     preview.innerHTML =
-      previewBody;
+      emailDocument.body.innerHTML;
 
-    preview.style.display =
-      "block";
+    preview.style.display = "block";
+    preview.style.background = "#ffffff";
 
-    preview.style.minHeight =
-      "520px";
-
-    preview.style.background =
-      "#ffffff";
+    console.log(
+      "FORGE EMAIL PREVIEW RENDERED"
+    );
 
   } catch (error) {
+
     console.error(
       "FORGE EMAIL PREVIEW ERROR:",
       error
@@ -9567,12 +9573,19 @@ function forgeRenderEmailPreview() {
         color:#66788a;
         font-weight:700;
       ">
-        Preview could not be rendered.
-        Please return to Edit and try again.
+        Preview error: ${
+          String(
+            error?.message ||
+            error ||
+            "Unknown error"
+          )
+        }
       </div>
     `;
   }
 }
+
+
 function forgeSetEmailTab(tabName = "edit") {
   document
     .querySelectorAll(".forge-email-tab")
