@@ -9147,6 +9147,74 @@ function forgeLicensingResourcesHtml(brand, agent) {
   `;
 }
 
+
+function forgeStateRequirementNote(stage, agent) {
+  const state =
+    String(
+      agent?.residentState ||
+      agent?.resident_state ||
+      forgeAgentResidentState?.(agent) ||
+      ""
+    )
+      .trim()
+      .toUpperCase();
+
+  if (!state) {
+    return "";
+  }
+
+  const config =
+    typeof forgeStateLicensingConfig === "function"
+      ? forgeStateLicensingConfig(agent)
+      : null;
+
+  if (stage === "XCEL Completed") {
+    if (config?.examProvider) {
+      return `${state} exam provider: ${config.examProvider}.`;
+    }
+
+    return `Review your ${state} exam scheduling requirements.`;
+  }
+
+  if (
+    stage === "Exam Scheduled"
+  ) {
+    return `Your ${state} licensing exam is the next major milestone.`;
+  }
+
+  if (
+    stage === "Exam Passed"
+  ) {
+    if (
+      config?.fingerprintRequired === true
+    ) {
+      return `${state} requires fingerprinting before the resident licensing process is complete.`;
+    }
+
+    if (
+      config?.fingerprintRequired === false
+    ) {
+      return `Continue with the remaining ${state} resident license application requirements.`;
+    }
+
+    return `Review the remaining ${state} licensing requirements before submitting your application.`;
+  }
+
+  if (
+    stage === "Licensed"
+  ) {
+    return `Your ${state} resident license is active. Complete your remaining contracting requirements.`;
+  }
+
+  if (
+    stage === "Contracted"
+  ) {
+    return `Your ${state} resident licensing and contracting journey is complete.`;
+  }
+
+  return "";
+}
+
 function forgeEmailNextStep(stage, agent) {
   const examValue =
     typeof forgeExamDateValue === "function"
@@ -9530,14 +9598,8 @@ function forgeRenderEmailPreview() {
         body
       );
 
-    /*
-     * The email builder returns a COMPLETE HTML document.
-     * We cannot safely insert <html>, <head>, and <body>
-     * directly inside a DIV.
-     *
-     * Parse it first and display only the BODY.
-     */
-    const parser = new DOMParser();
+    const parser =
+      new DOMParser();
 
     const emailDocument =
       parser.parseFromString(
@@ -9556,7 +9618,6 @@ function forgeRenderEmailPreview() {
     );
 
   } catch (error) {
-
     console.error(
       "FORGE EMAIL PREVIEW ERROR:",
       error
@@ -9584,8 +9645,6 @@ function forgeRenderEmailPreview() {
     `;
   }
 }
-
-
 function forgeSetEmailTab(tabName = "edit") {
   document
     .querySelectorAll(".forge-email-tab")
