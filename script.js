@@ -9249,12 +9249,12 @@ function forgeResolveEmailBrandForHtml() {
     return {
       ...brand,
       key,
-      primary: "#063f31",
-      primaryDeep: "#032a22",
-      accent: "#d4af37",
-      accentLight: "#f2d878",
-      accentDeep: "#a57b0f",
-      surface: "#f7faf8",
+      primary: "#067647",
+      primaryDeep: "#034d32",
+      accent: "#18a566",
+      accentLight: "#a7f3d0",
+      accentDeep: "#047857",
+      surface: "#f3fbf7",
       name: brand.name || "Apex Wealth Building"
     };
   }
@@ -9346,17 +9346,13 @@ function forgeBuildBrandedEmailHtml(agent, subject, body, options = {}) {
       })
       .join("");
 
-  const logoAsset = forgeOrganizationLogoAsset();
-  const logoSrc = options.forSend && logoAsset
-    ? "cid:forge-org-logo"
-    : logoAsset
-      ? `data:${logoAsset.mime};base64,${logoAsset.data}`
-      : brand.logo;
-
-  const logoHtml =
-    logoSrc
-      ? `<img src="${forgeEscapeEmailHtml(logoSrc)}" alt="${forgeEscapeEmailHtml(brand.name)}" style="display:block;max-width:180px;max-height:72px;object-fit:contain;">`
-      : `<div style="font-size:24px;font-weight:900;color:#fff;">${forgeEscapeEmailHtml(brand.name)}</div>`;
+  // Text-only organization branding is intentional.
+  // This avoids broken external/CID logo images in previews and email clients.
+  const logoHtml = `
+    <div style="font-size:24px;line-height:1.15;font-weight:900;color:#fff;letter-spacing:-.02em;">
+      ${forgeEscapeEmailHtml(brand.name)}
+    </div>
+  `;
 
   const coordinatorName =
     selectedCoordinator &&
@@ -9516,12 +9512,37 @@ function forgeRenderEmailPreview() {
 
   if (!preview) return;
 
-  preview.innerHTML =
-    forgeBuildBrandedEmailHtml(
-      selectedAgent,
-      subject,
-      body
+  try {
+    const emailHtml =
+      forgeBuildBrandedEmailHtml(
+        selectedAgent,
+        subject,
+        body
+      );
+
+    const parsed =
+      new DOMParser().parseFromString(
+        emailHtml,
+        "text/html"
+      );
+
+    preview.innerHTML =
+      parsed?.body?.innerHTML ||
+      emailHtml;
+
+    preview.scrollTop = 0;
+  } catch (error) {
+    console.error(
+      "FORGE EMAIL PREVIEW ERROR:",
+      error
     );
+
+    preview.innerHTML = `
+      <div style="padding:24px;text-align:center;color:#6b7c8f;font:600 13px/1.5 Arial,sans-serif;">
+        Preview could not be rendered. You can still return to Edit and send the email.
+      </div>
+    `;
+  }
 }
 
 function forgeSetEmailTab(tabName = "edit") {
@@ -9656,8 +9677,7 @@ async function forgeSendBrandedEmail() {
         }
       );
 
-    const logoAsset =
-      forgeOrganizationLogoAsset();
+    const logoAsset = null;
 
     if (
       !forgeSupabase?.functions?.invoke

@@ -8,13 +8,32 @@ let token="", payload=null;
 function show(id){views.forEach(v=>$(v).classList.toggle("hidden",v!==id))}
 function applyBrand(b={}){
   const card=$("appCard");
-  card.style.setProperty("--primary",b.primary||"#0a2b59");
-  card.style.setProperty("--deep",b.deep||b.primary||"#061a38");
-  card.style.setProperty("--accent",b.accent||"#3f8cff");
-  card.style.setProperty("--soft",b.soft||"#eef5ff");
-  $("footerOrg").textContent=b.name||"Your licensing team";
-  if(b.logoUrl){$("orgLogo").src=b.logoUrl;$("orgLogo").alt=b.name||"Organization";$("orgLogo").classList.remove("hidden");$("orgFallback").classList.add("hidden")}
-  else {$("orgFallback").textContent=b.name||"FORGE"}
+  const name=String(b.name||"FORGE");
+  const lower=name.toLowerCase();
+  const isApex=lower.includes("apex");
+  const isBizzall=lower.includes("bizzall");
+
+  const palette=isApex
+    ? {primary:"#067647",deep:"#034d32",accent:"#18a566",soft:"#eefbf4"}
+    : isBizzall
+      ? {primary:"#062d6f",deep:"#031c48",accent:"#2e7df6",soft:"#eef5ff"}
+      : {primary:b.primary||"#0a2b59",deep:b.deep||b.primary||"#061a38",accent:b.accent||"#3f8cff",soft:b.soft||"#eef5ff"};
+
+  card.style.setProperty("--primary",palette.primary);
+  card.style.setProperty("--deep",palette.deep);
+  card.style.setProperty("--accent",palette.accent);
+  card.style.setProperty("--soft",palette.soft);
+
+  document.body.dataset.org=isApex?"apex":isBizzall?"bizzall":"default";
+
+  $("orgName").textContent=name;
+  $("orgTagline").textContent=isApex
+    ? "BUILD • PROTECT • CREATE LEGACY"
+    : isBizzall
+      ? "PEOPLE • OPPORTUNITY • REAL RESULTS"
+      : "";
+
+  $("footerOrg").textContent=name;
 }
 async function api(action,body={}){
   const r=await fetch(`${SUPABASE_FUNCTION_BASE}/agent-next-step`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action,token,...body})});
