@@ -8204,30 +8204,42 @@ function openSmartComposer(method = "Text") {
   const template = getStageMessageTemplate(stage, method, selectedAgent, currentMessageVariant);
 
   setText("smartMethodBadge", method);
-  setText("actionTitle", `${method} - ${selectedAgent.name}`);
-  setText("actionSubtitle", getActionSubtitle(method, stage));
+  setText("actionTitle", `Message - ${selectedAgent.name}`);
+  setText("actionSubtitle", getActionSubtitleV2(method, stage));
   setText("messageLabel", getActionMessageLabel(method));
 
   setText("smartAgentName", selectedAgent.name || "-");
   setText("smartAgentStage", stage);
   setText("smartAgentUpline", selectedAgent.upline || selectedAgent.coordinator || "-");
-  setText("templatePickerHint", getTemplatePickerHint(method));
+  setText("templatePickerHint", "Select a template or write your own message.");
+
+  const initials = String(selectedAgent.name || "A")
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map(part => part[0] || "")
+    .join("")
+    .toUpperCase();
+  setText("smartAgentInitials", initials || "A");
+
+  const agentStatus =
+    stage === "Contracted" ? "Production Ready" :
+    stage === "Licensed" ? "Licensed" :
+    stage === "Exam Passed" ? "Exam Passed" :
+    "Agent";
+  setText("smartAgentStatus", agentStatus);
+  setText("smartStageNext", forgeComposerStageNext(stage));
 
   const phoneEl = document.getElementById("smartAgentPhone");
   if (phoneEl) {
     if (selectedAgent.phone) {
       phoneEl.innerHTML = `
-        <a href="tel:${selectedAgent.phone.replace(/\D/g, "")}"
-           class="phone-link">
-            ${selectedAgent.phone}
+        <a href="tel:${selectedAgent.phone.replace(/\D/g, "")}" class="phone-link">
+          ${selectedAgent.phone}
         </a>
       `;
     } else {
-      phoneEl.innerHTML = `
-        <span class="missing-phone">
-          No phone number on file
-        </span>
-      `;
+      phoneEl.innerHTML = `<span class="missing-phone">No phone on file</span>`;
     }
   }
 
@@ -8243,6 +8255,10 @@ function openSmartComposer(method = "Text") {
 
   if (subjectEl) subjectEl.value = draft?.subject ?? template.subject ?? "";
   if (messageEl) messageEl.value = draft?.body ?? template.body ?? "";
+
+  forgeUpdateComposerTemplateMeta(method, currentMessageVariant, stage);
+  forgeUpdateComposerCount();
+  forgeUpdateSendButton(method);
 }
 
 /*Helper*/
@@ -8268,37 +8284,37 @@ function getTemplatePickerHint(method) {
 function getTemplateOptionsForMethod(method) {
   const libraries = {
     Text: [
-      { key: "default", label: "Balanced" },
-      { key: "friendly", label: "Warm" },
-      { key: "direct", label: "Direct" },
-      { key: "urgent", label: "Urgent" }
+      { key: "default", icon: "🚀", label: "Next Step", desc: "Recommended stage-aware follow-up." },
+      { key: "friendly", icon: "⭐", label: "Encouragement", desc: "Celebrate progress and keep momentum." },
+      { key: "direct", icon: "📌", label: "Direct Action", desc: "One clear action with no extra wording." },
+      { key: "urgent", icon: "⏰", label: "Follow Up", desc: "Use when the next step is still waiting." }
     ],
     Email: [
-      { key: "default", label: "Professional" },
-      { key: "concise", label: "Concise" },
-      { key: "accountability", label: "Accountability" },
-      { key: "celebration", label: "Celebration" }
+      { key: "default", icon: "🚀", label: "Next Step", desc: "Professional stage-aware email." },
+      { key: "celebration", icon: "⭐", label: "Congratulations", desc: "Celebrate the milestone and guide forward." },
+      { key: "concise", icon: "✉️", label: "Concise", desc: "Short professional follow-up." },
+      { key: "accountability", icon: "⏰", label: "Action Needed", desc: "Clear accountability without sounding harsh." }
     ],
     WhatsApp: [
-      { key: "friendly", label: "Warm" },
-      { key: "default", label: "Balanced" },
-      { key: "direct", label: "Direct" },
-      { key: "urgent", label: "Reminder" }
+      { key: "friendly", icon: "💚", label: "Warm Next Step", desc: "Conversational and encouraging." },
+      { key: "default", icon: "🚀", label: "Balanced", desc: "Clear next step with support." },
+      { key: "direct", icon: "📌", label: "Direct", desc: "Short action-focused message." },
+      { key: "urgent", icon: "⏰", label: "Reminder", desc: "Friendly follow-up when progress stalls." }
     ],
     Call: [
-      { key: "opening", label: "Live Call" },
-      { key: "voicemail", label: "Voicemail" },
-      { key: "objection", label: "Obstacle" },
-      { key: "followup", label: "Follow-Up" }
+      { key: "opening", icon: "📞", label: "Live Call", desc: "Guide the conversation toward one commitment." },
+      { key: "voicemail", icon: "🎙️", label: "Voicemail", desc: "Short callback message." },
+      { key: "objection", icon: "🧭", label: "Remove Blocker", desc: "Identify what is stopping progress." },
+      { key: "followup", icon: "🔁", label: "Follow-Up", desc: "Confirm completion and next date." }
     ],
     Zoom: [
-      { key: "invite", label: "Invite" },
-      { key: "reminder", label: "Reminder" }
+      { key: "invite", icon: "🎥", label: "Support Invite", desc: "Invite them to a focused support session." },
+      { key: "reminder", icon: "📅", label: "Meeting Reminder", desc: "Confirm the scheduled support session." }
     ],
     Note: [
-      { key: "summary", label: "Summary" },
-      { key: "nextstep", label: "Next Step" },
-      { key: "attempted", label: "Attempted" }
+      { key: "summary", icon: "📝", label: "Summary", desc: "Document the current status." },
+      { key: "nextstep", icon: "➡️", label: "Next Step", desc: "Record the exact action required." },
+      { key: "attempted", icon: "📍", label: "Attempted Contact", desc: "Document an outreach attempt." }
     ]
   };
 
@@ -8314,16 +8330,27 @@ function renderTemplateOptions(method) {
     currentMessageVariant = options[0]?.key || "default";
   }
 
-  container.innerHTML = options.map((option) => `
-    <button
-      type="button"
-      class="template-chip ${option.key === currentMessageVariant ? "active" : ""}"
-      data-template-variant="${option.key}"
-      data-template-method="${method}"
-    >
-      ${option.label}
-    </button>
-  `).join("");
+  const stage = selectedAgent?.stage || "Not Placed";
+
+  container.innerHTML = options.map((option, index) => {
+    const active = option.key === currentMessageVariant;
+    const stageLabel = index === 0 ? ` - ${stage}` : "";
+    return `
+      <button
+        type="button"
+        class="template-card ${active ? "active" : ""}"
+        data-template-variant="${option.key}"
+        data-template-method="${method}"
+      >
+        <span class="template-card-icon">${option.icon}</span>
+        <span class="template-card-copy">
+          <strong>${option.label}${stageLabel}</strong>
+          <small>${option.desc}</small>
+        </span>
+        <span class="template-card-check">${active ? "✓" : ""}</span>
+      </button>
+    `;
+  }).join("");
 }
 
 function getSavedActionDraft(agent, method, variant) {
@@ -8354,6 +8381,8 @@ function refreshComposerTemplate() {
   const messageEl = document.getElementById("actionMessage");
   if (subjectEl) subjectEl.value = template.subject || "";
   if (messageEl) messageEl.value = template.body || "";
+  forgeUpdateComposerTemplateMeta(currentDeliveryMethod, currentMessageVariant, stage);
+  forgeUpdateComposerCount();
 }
 
 function setActiveDelivery(method) {
@@ -8363,14 +8392,70 @@ function setActiveDelivery(method) {
 }
 
 function getActionSubtitle(method, stage) {
-  if (method === "Call") return `Call script for ${stage}.`;
-  if (method === "Email") return `Email template for ${stage}.`;
-  if (method === "WhatsApp") return `WhatsApp message for ${stage}.`;
-  if (method === "Zoom") return `Zoom invite for ${stage}.`;
-  if (method === "Note") return `Coordinator note for ${stage}.`;
-  return `Text message for ${stage}.`;
+  return getActionSubtitleV2(method, stage);
 }
 
+function getActionSubtitleV2(method, stage) {
+  const action = forgeComposerStageNext(stage);
+  if (method === "Call") return `Use a focused call script to help them ${action.toLowerCase()}.`;
+  if (method === "Email") return `Send a polished email with the exact next step.`;
+  if (method === "WhatsApp") return `Send a warm, conversational message with one clear action.`;
+  if (method === "Zoom") return `Invite them to a focused support session.`;
+  if (method === "Note") return `Document the current status and next action.`;
+  return `Send a personalized message to move them to the next step.`;
+}
+
+
+function forgeComposerStageNext(stage) {
+  const map = {
+    "Not Placed": "Start the licensing journey",
+    "Quiz Sent": "Complete the readiness quiz",
+    "Quiz Passed": "Begin XCEL pre-licensing",
+    "XCEL Completed": "Schedule the state exam",
+    "Exam Passed": "Complete state licensing requirements",
+    "Licensed": "Finish contracting requirements",
+    "Contracted": "Launch production and build inventory"
+  };
+  return map[stage] || "Complete the next FORGE step";
+}
+
+function forgeUpdateSendButton(method) {
+  const button = document.getElementById("sendAction");
+  if (!button) return;
+  const labels = {
+    Text: "➤ Send Text",
+    Email: "➤ Continue to Email",
+    WhatsApp: "➤ Send WhatsApp",
+    Call: "☎ Start Call",
+    Zoom: "➤ Copy Zoom Invite",
+    Note: "✓ Save Note"
+  };
+  button.textContent = labels[method] || "➤ Send";
+}
+
+function forgeUpdateComposerCount() {
+  const box = document.getElementById("actionMessage");
+  const count = document.getElementById("smartMessageCount");
+  if (!box || !count) return;
+  count.textContent = `${box.value.length} / ${box.maxLength || 1600}`;
+}
+
+function forgeUpdateComposerTemplateMeta(method, variant, stage) {
+  const options = getTemplateOptionsForMethod(method);
+  const option = options.find(item => item.key === variant) || options[0];
+  setText("smartTemplateTitle", `${option?.icon || "🚀"} ${option?.label || "Next Step"} - ${stage}`);
+  setText("smartTemplateDescription", option?.desc || "Stage-aware follow-up message");
+}
+
+function forgeInsertAtCursor(textarea, text) {
+  if (!textarea) return;
+  const start = textarea.selectionStart ?? textarea.value.length;
+  const end = textarea.selectionEnd ?? textarea.value.length;
+  textarea.value = textarea.value.slice(0, start) + text + textarea.value.slice(end);
+  textarea.focus();
+  textarea.selectionStart = textarea.selectionEnd = start + text.length;
+  textarea.dispatchEvent(new Event("input", { bubbles: true }));
+}
 
 function openActionModal() {
   if (!selectedAgent) { alert("Please select an agent first."); return; }
@@ -8822,7 +8907,6 @@ function forgeProductionLinkForCurrentOrganization() {
 
 const FORGE_LICENSING_LINKS = {
   quiz: "https://triumph-elite.ins.everbornops.com/platform/licensing",
-  xcel: "https://my.xcelsolutions.com/portal/login/globalfinancialimpact?logout=true",
   sircon: "https://www.sircon.com/",
   nipr: "https://nipr.com/licensing-center/apply-for-a-license",
   successCE: "https://app.successce.com/v2Theme/Customer/Login.aspx",
@@ -10451,6 +10535,57 @@ document.addEventListener("click", (event) => {
   renderTemplateOptions(currentDeliveryMethod);
   refreshComposerTemplate();
 });
+document.addEventListener("input", (event) => {
+  if (event.target?.id === "actionMessage") {
+    forgeUpdateComposerCount();
+  }
+});
+
+document.addEventListener("click", (event) => {
+  const toggle = event.target.closest("#smartVariableToggle");
+  const menu = document.getElementById("smartVariableMenu");
+
+  if (toggle && menu) {
+    event.preventDefault();
+    event.stopPropagation();
+    menu.classList.toggle("hidden");
+    return;
+  }
+
+  const variable = event.target.closest("[data-smart-variable]");
+  if (variable) {
+    event.preventDefault();
+    forgeInsertAtCursor(
+      document.getElementById("actionMessage"),
+      variable.dataset.smartVariable || ""
+    );
+    menu?.classList.add("hidden");
+    return;
+  }
+
+  if (!event.target.closest(".smart-variable-menu")) {
+    menu?.classList.add("hidden");
+  }
+
+  if (event.target.closest("#smartCustomMessage")) {
+    event.preventDefault();
+    const box = document.getElementById("actionMessage");
+    if (box) {
+      box.value = "";
+      box.focus();
+      forgeUpdateComposerCount();
+    }
+  }
+
+  if (event.target.closest("#smartPreviewButton")) {
+    event.preventDefault();
+    const box = document.getElementById("actionMessage");
+    if (!box) return;
+    box.focus();
+    box.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+});
+
 //  ACTIVITY LOG 
 
 function saveActivityLog() {
@@ -12841,14 +12976,14 @@ function getStageMessageTemplate(stage, method, agent, variant = "default") {
     },
     "Quiz Passed": {
       milestone: "passing the readiness quiz",
-      nextStep: "begin your XCEL pre-licensing course",
-      request: "Open your personal FORGE Journey and use the XCEL button to begin your training.",
+      nextStep: "move into XCEL and begin exam preparation",
+      request: "Please confirm once you have access to XCEL and let me know if you need help getting started.",
       urgency: "I want to keep your momentum strong while everything is still fresh."
     },
     "XCEL Completed": {
       milestone: "completing XCEL",
       nextStep: "schedule your state exam",
-      request: "Schedule through the official provider, then return to your personal FORGE Journey and save the confirmed exam date and time.",
+      request: "Please schedule your state exam and send me the confirmed date.",
       urgency: "It is best to do that quickly while the material is still fresh."
     },
     "Exam Passed": {
@@ -12870,10 +13005,10 @@ function getStageMessageTemplate(stage, method, agent, variant = "default") {
       urgency: "I do not want you to sit licensed without moving into the next stage."
     },
     "Contracted": {
-      milestone: "reaching the contracting stage",
-      nextStep: "complete appointment and fast-start activity",
-      request: "Please confirm once your appointment steps are submitted and we will prepare your next launch steps.",
-      urgency: "You are now very close to production."
+      milestone: "completing your licensing and contracting journey",
+      nextStep: "launch production by building your prospect inventory and scheduling your first field-training activity",
+      request: "Open your FORGE Journey, begin your prospect list, and schedule your first field-training activity so you can start serving families.",
+      urgency: "You are officially ready for business. Your next win is activity and production."
     }
   };
 

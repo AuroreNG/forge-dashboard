@@ -3143,106 +3143,171 @@ FORGE AI ACTION MODAL
 Appears when coordinator clicks Take Action
 ========================================== -->
  <div id="actionModal" class="modal hidden">
-  <div class="smart-action-panel">
+  <div class="smart-action-panel smart-action-panel-v2">
 
-    <button id="closeActionModal" class="smart-close">&#x2715;</button>
+    <button id="closeActionModal" class="smart-close smart-close-v2" aria-label="Close">&#x2715;</button>
 
-    <div class="smart-action-head">
-      <span id="smartMethodBadge">Text</span>
-      <div>
-        <h2 id="actionTitle">Take Action</h2>
-        <p id="actionSubtitle">Choose a communication method.</p>
+    <div class="smart-action-topbar">
+      <div class="smart-action-head smart-action-head-v2">
+        <span id="smartMethodBadge" class="smart-method-badge">Text</span>
+        <div>
+          <h2 id="actionTitle">Message - Agent</h2>
+          <p id="actionSubtitle">Send a personalized message to move them to the next step.</p>
+        </div>
+      </div>
+
+      <div class="smart-ready-card">
+        <span class="smart-ready-dot"></span>
+        <div>
+          <strong>Ready</strong>
+          <small id="smartLastMessage">Personalized for this stage</small>
+        </div>
       </div>
     </div>
 
-    <div class="smart-agent-box">
-  <div>
-    <small>Agent</small>
-    <strong id="smartAgentName">&#x2014;</strong>
-  </div>
+    <div class="smart-agent-box smart-agent-box-v2">
+      <div class="smart-agent-summary">
+        <span class="smart-agent-avatar" id="smartAgentInitials">A</span>
+        <div>
+          <small>Agent</small>
+          <strong id="smartAgentName">&#x2014;</strong>
+          <span class="smart-agent-status" id="smartAgentStatus">Agent</span>
+        </div>
+      </div>
 
-  <div>
-    <small>Phone</small>
-    <strong id="smartAgentPhone">&#x2014;</strong>
-  </div>
+      <div class="smart-agent-meta">
+        <span class="smart-meta-icon">&#x260E;</span>
+        <div>
+          <small>Phone</small>
+          <strong id="smartAgentPhone">&#x2014;</strong>
+          <span>Tap to call</span>
+        </div>
+      </div>
 
-  <div>
-    <small>Stage</small>
-    <strong id="smartAgentStage">&#x2014;</strong>
-  </div>
+      <div class="smart-agent-meta">
+        <span class="smart-meta-icon">&#x25C8;</span>
+        <div>
+          <small>Stage</small>
+          <strong id="smartAgentStage">&#x2014;</strong>
+          <span id="smartStageNext">Next step ready</span>
+        </div>
+      </div>
 
-  <div>
-    <small>Upline</small>
-    <strong id="smartAgentUpline">&#x2014;</strong>
-  </div>
-</div>
+      <div class="smart-agent-meta">
+        <span class="smart-meta-icon">&#x2442;</span>
+        <div>
+          <small>Upline</small>
+          <strong id="smartAgentUpline">&#x2014;</strong>
+          <span>Team Leader</span>
+        </div>
+      </div>
+    </div>
 
-    <div class="delivery-buttons">
+    <div class="delivery-buttons delivery-buttons-v2">
       <button class="delivery active" data-delivery="Text">&#x1F4AC; Text</button>
       <button class="delivery" data-delivery="Email">&#x2709; Email</button>
       <button class="delivery" data-delivery="WhatsApp">&#x1F7E2; WhatsApp</button>
-      <button class="delivery" data-delivery="Call">&#x1F4DE; Call</button>
+      <button class="delivery" data-delivery="Call">&#x260E; Call</button>
       <button class="delivery" data-delivery="Zoom">&#x1F3A5; Zoom</button>
       <button class="delivery" data-delivery="Note">&#x1F4DD; Note</button>
+      <button type="button" class="smart-custom-message" id="smartCustomMessage">+ Custom Message</button>
     </div>
 
-    <div class="template-picker">
-      <div class="template-picker-head">
-        <label>Template Options</label>
-        <span id="templatePickerHint">Choose a starting template for this channel.</span>
-      </div>
-      <div id="messageTemplateOptions" class="template-options"></div>
+    <div class="smart-composer-grid">
+      <section class="smart-template-column">
+        <div class="smart-section-title">
+          <span class="smart-step-number">1</span>
+          <div>
+            <h3>Choose a Template</h3>
+            <p id="templatePickerHint">Select a template or write your own message.</p>
+          </div>
+        </div>
+
+        <div id="messageTemplateOptions" class="template-options template-options-v2"></div>
+
+        <button type="button" class="smart-preview-btn" id="smartPreviewButton">
+          &#x25C9; Preview Message
+        </button>
+      </section>
+
+      <section class="smart-message-column">
+        <div class="smart-message-column-head">
+          <div class="smart-section-title">
+            <span class="smart-step-number">2</span>
+            <div>
+              <h3>Personalize Your Message</h3>
+              <p>Edit the message, add variables, and send.</p>
+            </div>
+          </div>
+
+          <div class="smart-variable-menu">
+            <button type="button" id="smartVariableToggle">Insert Variables &#x2304;</button>
+            <div id="smartVariableMenu" class="smart-variable-popover hidden">
+              <button type="button" data-smart-variable="{{first_name}}">First name</button>
+              <button type="button" data-smart-variable="{{full_name}}">Full name</button>
+              <button type="button" data-smart-variable="{{stage}}">Stage</button>
+              <button type="button" data-smart-variable="{{upline}}">Upline</button>
+              <button type="button" data-smart-variable="{{sender_name}}">Sender name</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="smart-message-card">
+          <div class="smart-message-card-head">
+            <div>
+              <strong id="smartTemplateTitle">Next Step</strong>
+              <span id="smartTemplateDescription">Stage-aware follow-up message</span>
+            </div>
+            <span class="smart-recommended-pill">Recommended</span>
+          </div>
+
+          <div id="emailSubjectWrap" class="smart-field hidden">
+            <label>Email Subject</label>
+            <input id="actionSubject" placeholder="Subject line" />
+          </div>
+
+          <div class="smart-field smart-message-field">
+            <label id="messageLabel" class="sr-only">Message</label>
+            <textarea id="actionMessage" rows="12" maxlength="1600"></textarea>
+            <div class="smart-message-tools">
+              <span id="smartMessageCount">0 / 1600</span>
+            </div>
+          </div>
+
+          <div id="callOutcomeWrap" class="smart-field hidden">
+            <label>Call Outcome</label>
+            <select id="callOutcome">
+              <option>No Answer</option>
+              <option>Left Voicemail</option>
+              <option>Spoke With Agent</option>
+              <option>Completed Step</option>
+              <option>Needs Help</option>
+              <option>Scheduled Follow-Up</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="smart-tip">
+          <span>&#x1F4A1;</span>
+          <p><strong>Tip:</strong> Personalize with their name, next step, and one clear question or action.</p>
+        </div>
+
+        <div class="ai-toolbar ai-toolbar-v2">
+          <button id="rewriteProfessional">&#x1F4C8; Professional</button>
+          <button id="rewriteFriendly">&#x1F60A; Friendlier</button>
+          <button id="rewriteShorter">&#x2702; Shorter</button>
+          <button id="copyActionMessage">&#x1F4CB; Copy</button>
+        </div>
+      </section>
     </div>
 
-    <div id="emailSubjectWrap" class="smart-field hidden">
-      <label>Email Subject</label>
-      <input id="actionSubject" placeholder="Subject line" />
+    <div class="action-footer action-footer-v2">
+      <button id="cancelAction" class="action-btn secondary">Cancel</button>
+      <button id="saveDraft" class="action-btn ghost">&#x1F4BE; Save Draft</button>
+      <button id="sendAction" class="action-btn primary">&#x27A4; Send Text</button>
     </div>
-
-    <div class="smart-field">
-      <label id="messageLabel">Message</label>
-      <textarea id="actionMessage" rows="9"></textarea>
-    </div>
-
-    <div id="callOutcomeWrap" class="smart-field hidden">
-      <label>Call Outcome</label>
-      <select id="callOutcome">
-        <option>No Answer</option>
-        <option>Left Voicemail</option>
-        <option>Spoke With Agent</option>
-        <option>Completed Step</option>
-        <option>Needs Help</option>
-        <option>Scheduled Follow-Up</option>
-      </select>
-    </div>
-
-    <div class="ai-toolbar">
-      <button id="rewriteProfessional">&#x1F4C8; Professional</button>
-      <button id="rewriteFriendly">&#x1F60A; Friendlier</button>
-      <button id="rewriteShorter">&#x2702; Shorter</button>
-      <button id="copyActionMessage">&#x1F4CB; Copy</button>
-    </div>
-
-    <div class="action-footer">
-      <button id="cancelAction" class="action-btn secondary">
-        Cancel
-      </button>
-
-      <button id="saveDraft" class="action-btn ghost">
-        Save Draft
-      </button>
-
-      <button id="sendAction" class="action-btn primary">
-        Send & Complete Step
-      </button>
-    </div>
-    <!-- closes .action-footer -->
-
 
   </div>
-  <!-- closes .smart-action-panel -->
-
-
 </div>
 <!-- closes #actionModal -->
 
