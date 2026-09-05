@@ -34004,3 +34004,109 @@ body.forge-drawer-open {
   color: #062d6f !important;
   box-shadow: inset 0 0 0 2px #2e7df6, 0 3px 10px rgba(6,45,111,.06) !important;
 }
+/* ==========================================================
+   FORGE COMMAND CENTER — FINAL GAP FIX
+   Keeps the agent rail close to the workspace at desktop widths.
+   Added 2026-09-04.
+========================================================== */
+#commandPage .command-layout,
+#commandPage .command-layout-v2 {
+  display: grid !important;
+  grid-template-columns: 320px minmax(0, 1fr) !important;
+  column-gap: 16px !important;
+  row-gap: 16px !important;
+  width: 100% !important;
+  max-width: none !important;
+  align-items: start !important;
+}
+
+#commandPage .command-sidebar,
+#commandPage .command-sidebar-v2 {
+  width: 320px !important;
+  min-width: 320px !important;
+  max-width: 320px !important;
+  margin: 0 !important;
+}
+
+#commandPage .command-main,
+#commandPage .command-main-v2 {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+/* The V2 workspace is already made of individual cards, so do not
+   add a second padded shell around it. This is what created the
+   visual dead-space between the rail and the Intelligence card. */
+#commandPage .command-main-v2 {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#commandPage #commandProfile {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#commandPage .command-intelligence-hero,
+#commandPage .command-focus-grid,
+#commandPage .command-activity-panel,
+#commandPage .command-activity-shell {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Collapsed rail stays compact and keeps the same tight spacing. */
+#commandPage.command-sidebar-collapsed .command-layout,
+#commandPage.command-sidebar-collapsed .command-layout-v2 {
+  grid-template-columns: 82px minmax(0, 1fr) !important;
+  column-gap: 16px !important;
+}
+
+#commandPage.command-sidebar-collapsed .command-sidebar,
+#commandPage.command-sidebar-collapsed .command-sidebar-v2 {
+  width: 82px !important;
+  min-width: 82px !important;
+  max-width: 82px !important;
+}
+
+@media (max-width: 1180px) {
+  #commandPage .command-layout,
+  #commandPage .command-layout-v2 {
+    grid-template-columns: 290px minmax(0, 1fr) !important;
+    column-gap: 14px !important;
+  }
+
+  #commandPage .command-sidebar,
+  #commandPage .command-sidebar-v2 {
+    width: 290px !important;
+    min-width: 290px !important;
+    max-width: 290px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  #commandPage .command-layout,
+  #commandPage .command-layout-v2,
+  #commandPage.command-sidebar-collapsed .command-layout,
+  #commandPage.command-sidebar-collapsed .command-layout-v2 {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  #commandPage .command-sidebar,
+  #commandPage .command-sidebar-v2,
+  #commandPage.command-sidebar-collapsed .command-sidebar,
+  #commandPage.command-sidebar-collapsed .command-sidebar-v2 {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+}
