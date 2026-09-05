@@ -8822,6 +8822,7 @@ function forgeProductionLinkForCurrentOrganization() {
 
 const FORGE_LICENSING_LINKS = {
   quiz: "https://triumph-elite.ins.everbornops.com/platform/licensing",
+  xcel: "https://my.xcelsolutions.com/portal/login/globalfinancialimpact?logout=true",
   sircon: "https://www.sircon.com/",
   nipr: "https://nipr.com/licensing-center/apply-for-a-license",
   successCE: "https://app.successce.com/v2Theme/Customer/Login.aspx",
@@ -10320,7 +10321,7 @@ async function forgeOpenCommandChannel(method) {
         );
 
       const secureMessage =
-        `${message}\n\nContinue your licensing here:\n${nextStepUrl}`;
+        `${message}\n\nContinue your FORGE journey here:\n${nextStepUrl}`;
 
       const separator =
         /iPhone|iPad|iPod/i.test(navigator.userAgent)
@@ -10371,7 +10372,7 @@ async function forgeOpenCommandChannel(method) {
         );
 
       const secureMessage =
-        `${message}\n\nContinue your licensing here:\n${nextStepUrl}`;
+        `${message}\n\nContinue your FORGE journey here:\n${nextStepUrl}`;
 
       const url =
         `https://wa.me/${phone}?text=${encodeURIComponent(secureMessage)}`;
@@ -12840,14 +12841,14 @@ function getStageMessageTemplate(stage, method, agent, variant = "default") {
     },
     "Quiz Passed": {
       milestone: "passing the readiness quiz",
-      nextStep: "move into XCEL and begin exam preparation",
-      request: "Please confirm once you have access to XCEL and let me know if you need help getting started.",
+      nextStep: "begin your XCEL pre-licensing course",
+      request: "Open your personal FORGE Journey and use the XCEL button to begin your training.",
       urgency: "I want to keep your momentum strong while everything is still fresh."
     },
     "XCEL Completed": {
       milestone: "completing XCEL",
       nextStep: "schedule your state exam",
-      request: "Please schedule your state exam and send me the confirmed date.",
+      request: "Schedule through the official provider, then return to your personal FORGE Journey and save the confirmed exam date and time.",
       urgency: "It is best to do that quickly while the material is still fresh."
     },
     "Exam Passed": {
