@@ -8194,6 +8194,13 @@ function openSmartComposer(method = "Text") {
   const modal = document.getElementById("actionModal");
   if (!modal) return;
 
+  // Keep the composer truly viewport-centered even when Command sits
+  // inside a transformed/grid container. Moving the fixed modal to body
+  // prevents the left sidebar from clipping or offsetting the workspace.
+  if (modal.parentElement !== document.body) {
+    document.body.appendChild(modal);
+  }
+
   modal.classList.remove("hidden");
 
   currentDeliveryMethod = method;

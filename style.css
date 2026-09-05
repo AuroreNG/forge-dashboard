@@ -34815,3 +34815,312 @@ body.forge-drawer-open {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   FORGE SMART COMPOSER — COMPACT / VIEWPORT SAFE V2
+   Fixes oversized + right-shifted composer on desktop.
+   ========================================================= */
+
+#actionModal.modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 18px !important;
+  overflow: auto !important;
+  box-sizing: border-box !important;
+}
+
+#actionModal.modal.hidden {
+  display: none !important;
+}
+
+#actionModal .smart-action-panel-v2 {
+  width: min(1080px, calc(100vw - 36px)) !important;
+  max-width: 1080px !important;
+  max-height: calc(100vh - 36px) !important;
+  margin: auto !important;
+  padding: 20px 22px 18px !important;
+  border-radius: 22px !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+#actionModal .smart-close-v2 {
+  top: 16px !important;
+  right: 16px !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+  font-size: 17px !important;
+}
+
+#actionModal .smart-action-topbar {
+  align-items: center !important;
+  margin-bottom: 12px !important;
+  padding-right: 52px !important;
+}
+
+#actionModal .smart-action-head-v2 {
+  gap: 12px !important;
+}
+
+#actionModal .smart-method-badge {
+  min-width: 58px !important;
+  height: 46px !important;
+  padding: 0 12px !important;
+  border-radius: 13px !important;
+  font-size: 12px !important;
+}
+
+#actionModal .smart-action-head-v2 h2 {
+  font-size: 22px !important;
+  margin-bottom: 3px !important;
+}
+
+#actionModal .smart-action-head-v2 p {
+  font-size: 12px !important;
+}
+
+#actionModal .smart-ready-card {
+  min-width: 145px !important;
+  padding: 9px 11px !important;
+}
+
+#actionModal .smart-agent-box-v2 {
+  grid-template-columns: 1.35fr 1fr 1fr 1fr !important;
+  gap: 8px !important;
+  margin-bottom: 10px !important;
+}
+
+#actionModal .smart-agent-box-v2 > div {
+  min-height: 70px !important;
+  border-radius: 14px !important;
+}
+
+#actionModal .smart-agent-summary,
+#actionModal .smart-agent-meta {
+  gap: 9px !important;
+  padding: 10px 11px !important;
+}
+
+#actionModal .smart-agent-avatar {
+  width: 42px !important;
+  height: 42px !important;
+  flex-basis: 42px !important;
+  font-size: 14px !important;
+}
+
+#actionModal .smart-meta-icon {
+  width: 36px !important;
+  height: 36px !important;
+  flex-basis: 36px !important;
+  border-radius: 11px !important;
+  font-size: 16px !important;
+}
+
+#actionModal .smart-agent-box-v2 small {
+  font-size: 9.5px !important;
+}
+
+#actionModal .smart-agent-box-v2 strong {
+  font-size: 12px !important;
+}
+
+#actionModal .smart-agent-box-v2 span:not(.smart-agent-avatar):not(.smart-meta-icon) {
+  font-size: 9px !important;
+}
+
+#actionModal .delivery-buttons-v2 {
+  grid-template-columns: repeat(6, minmax(0, 1fr)) 1.12fr !important;
+  gap: 7px !important;
+  margin-bottom: 12px !important;
+}
+
+#actionModal .delivery-buttons-v2 .delivery,
+#actionModal .smart-custom-message {
+  min-height: 40px !important;
+  border-radius: 12px !important;
+  font-size: 11px !important;
+  padding: 0 8px !important;
+}
+
+#actionModal .smart-composer-grid {
+  grid-template-columns: 300px minmax(0, 1fr) !important;
+  gap: 16px !important;
+  padding-top: 0 !important;
+}
+
+#actionModal .smart-template-column {
+  padding-right: 14px !important;
+}
+
+#actionModal .smart-section-title {
+  gap: 9px !important;
+  margin-bottom: 9px !important;
+}
+
+#actionModal .smart-step-number {
+  width: 27px !important;
+  height: 27px !important;
+  flex-basis: 27px !important;
+  font-size: 12px !important;
+}
+
+#actionModal .smart-section-title h3 {
+  font-size: 15px !important;
+  margin-bottom: 2px !important;
+}
+
+#actionModal .smart-section-title p {
+  font-size: 10.5px !important;
+}
+
+#actionModal .template-options-v2 {
+  gap: 7px !important;
+}
+
+#actionModal .template-card {
+  grid-template-columns: 34px minmax(0, 1fr) 20px !important;
+  min-height: 56px !important;
+  gap: 8px !important;
+  padding: 8px 9px !important;
+  border-radius: 13px !important;
+}
+
+#actionModal .template-card-icon {
+  width: 31px !important;
+  height: 31px !important;
+  border-radius: 9px !important;
+  font-size: 15px !important;
+}
+
+#actionModal .template-card-copy strong {
+  font-size: 11.5px !important;
+}
+
+#actionModal .template-card-copy small {
+  margin-top: 2px !important;
+  font-size: 9.5px !important;
+}
+
+#actionModal .template-card-check {
+  width: 19px !important;
+  height: 19px !important;
+  font-size: 10px !important;
+}
+
+#actionModal .smart-preview-btn {
+  min-height: 38px !important;
+  margin-top: 8px !important;
+  border-radius: 11px !important;
+  font-size: 10.5px !important;
+}
+
+#actionModal .smart-message-column-head {
+  margin-bottom: 8px !important;
+}
+
+#actionModal #smartVariableToggle {
+  min-height: 36px !important;
+  padding: 0 11px !important;
+  border-radius: 11px !important;
+  font-size: 10.5px !important;
+}
+
+#actionModal .smart-message-card {
+  border-radius: 14px !important;
+}
+
+#actionModal .smart-message-card-head {
+  padding: 10px 12px !important;
+}
+
+#actionModal .smart-message-card-head strong {
+  font-size: 11.5px !important;
+}
+
+#actionModal .smart-message-card-head div > span {
+  font-size: 9.5px !important;
+}
+
+#actionModal .smart-message-field textarea {
+  min-height: 190px !important;
+  max-height: 250px !important;
+  padding: 13px 14px 31px !important;
+  font-size: 12px !important;
+  line-height: 1.48 !important;
+}
+
+#actionModal .smart-tip {
+  margin-top: 8px !important;
+  padding: 8px 10px !important;
+  border-radius: 11px !important;
+}
+
+#actionModal .smart-tip p {
+  font-size: 10px !important;
+}
+
+#actionModal .ai-toolbar-v2 {
+  gap: 6px !important;
+  margin-top: 7px !important;
+}
+
+#actionModal .ai-toolbar-v2 button {
+  min-height: 30px !important;
+  padding: 0 8px !important;
+  border-radius: 9px !important;
+  font-size: 9.5px !important;
+}
+
+#actionModal .action-footer-v2 {
+  gap: 9px !important;
+  margin-top: 12px !important;
+  padding-top: 11px !important;
+}
+
+#actionModal .action-footer-v2 .action-btn {
+  min-height: 43px !important;
+  border-radius: 12px !important;
+  font-size: 11.5px !important;
+}
+
+@media (max-width: 1120px) {
+  #actionModal .smart-action-panel-v2 {
+    width: min(960px, calc(100vw - 28px)) !important;
+  }
+  #actionModal .smart-composer-grid {
+    grid-template-columns: 270px minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  #actionModal.modal {
+    padding: 10px !important;
+    align-items: flex-start !important;
+  }
+  #actionModal .smart-action-panel-v2 {
+    width: 100% !important;
+    max-width: 760px !important;
+    max-height: calc(100vh - 20px) !important;
+    padding: 16px 14px !important;
+  }
+  #actionModal .smart-agent-box-v2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  #actionModal .delivery-buttons-v2 {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+  #actionModal .smart-composer-grid {
+    grid-template-columns: 1fr !important;
+  }
+  #actionModal .smart-template-column {
+    padding-right: 0 !important;
+    padding-bottom: 12px !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid #e2eaf6 !important;
+  }
+}
